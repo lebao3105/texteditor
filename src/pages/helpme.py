@@ -5,8 +5,8 @@ vi = gettext.translation('base', localedir='po', languages=['vi'])
 vi.install()
 _ = vi.gettext
 
-def help_run():
-    help_win = Tk()
+def help_run(self):
+    help_win = Toplevel(self)
     help_win.title(_("Help"))
     help_win.geometry("300x300")
     help_win.rowconfigure(0, weight=1)

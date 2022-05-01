@@ -5,8 +5,8 @@ vi = gettext.translation('base', localedir='po', languages=['vi'])
 vi.install()
 _ = vi.gettext
 
-def about_run():
-    about_win = Tk()
+def about_run(self):
+    about_win = Toplevel(self)
     about_win.title(_("About"))
     about_win.geometry("300x300")
     about_win.rowconfigure(0, weight=1)
