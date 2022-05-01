@@ -1,0 +1,112 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2022 Le Bao Nguyen
+# Le Bao Nguyen <bao12345yocoo@gmail.com>, 2022.
+msgid ""
+msgstr ""
+"Project-Id-Version: 1.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2022-05-01 16:50+0700\n"
+"PO-Revision-Date: 2022-05-01 16:19+007\n"
+"Last-Translator: Le Bao Nguyen <bao12345yocoo@gmail.com>\n"
+"Language-Team: Main <bao12345yocoo@gmail.com>\n"
+"Language: Vietnamese\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=cp1252\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: pygettext.py 1.5\n"
+
+#: src/main.py:13 src/pages/about.py:18
+msgid "Text editor"
+msgstr "Trinh chinh sua van ban"
+
+#: src/main.py:23
+msgid "Quit"
+msgstr "Thoat"
+
+#: src/main.py:23
+msgid "Do you really want to quit?"
+msgstr "Ban co chac chan muon thoat ung dung nay?"
+
+#: src/main.py:36
+msgid "New"
+msgstr "Tao moi"
+
+#: src/main.py:37
+msgid "Open"
+msgstr "Mo"
+
+#: src/main.py:38
+msgid "Save"
+msgstr "Luu"
+
+#: src/main.py:39
+msgid "Save as"
+msgstr "Luu nhu..."
+
+#: src/main.py:41
+msgid "Exit"
+msgstr "Thoat"
+
+#: src/main.py:42
+msgid "File"
+msgstr "Tep"
+
+#: src/main.py:45
+msgid "Undo"
+msgstr "Hoan tac"
+
+#: src/main.py:46
+msgid "Redo"
+msgstr "Thuc hien lai hanh dong"
+
+#: src/main.py:48
+msgid "Cut"
+msgstr "Cat"
+
+#: src/main.py:49
+msgid "Copy"
+msgstr "Sao chep"
+
+#: src/main.py:50
+msgid "Paste"
+msgstr "Dan"
+
+#: src/main.py:52
+msgid "Select all"
+msgstr "Chon tat ca"
+
+#: src/main.py:53
+msgid "Edit"
+msgstr "Sua"
+
+#: src/main.py:56 src/main.py:58 src/pages/helpme.py:10 src/pages/helpme.py:18
+msgid "Help"
+msgstr "Tro giup"
+
+#: src/main.py:57 src/pages/about.py:10
+msgid "About"
+msgstr "Ve ung dung nay"
+
+#: src/pages/about.py:19
+msgid "Version 1.0."
+msgstr "Phien ban 1.0"
+
+#: src/pages/about.py:20
+msgid "Author: "
+msgstr "Nha xuat ban: "
+
+#: src/pages/about.py:21
+msgid "License: "
+msgstr "Giay phep: "
+
+#: src/pages/helpme.py:19
+msgid "How to use this application?"
+msgstr "Lam the nao de su dung ung dung nay?"
+
+#: src/pages/helpme.py:20
+msgid "Just do what you need like any other text editor,"
+msgstr "Hay lam nhung gi ban can nhu bao trinh chinh sua van ban khac,"
+
+#: src/pages/helpme.py:21
+msgid "but no tabs support."
+msgstr "nhung khong co tab nao ca."

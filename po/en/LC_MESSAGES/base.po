@@ -1,0 +1,112 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2022 Le Bao Nguyen
+# Le Bao Nguyen <bao12345yocoo@gmail.com>, 2022.
+msgid ""
+msgstr ""
+"Project-Id-Version: 1.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2022-05-01 16:23+0700\n"
+"PO-Revision-Date: 2022-04-30 10:19+007\n"
+"Last-Translator: Le Bao Nguyen <bao12345yocoo@gmail.com>\n"
+"Language-Team: Main <bao12345yocoo@gmail.com>\n"
+"Language: English\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=cp1252\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: pygettext.py 1.5\n"
+
+#: src/main.py:13 src/pages/about.py:18
+msgid "Text editor"
+msgstr ""
+
+#: src/main.py:23
+msgid "Quit"
+msgstr ""
+
+#: src/main.py:23
+msgid "Do you really want to quit?"
+msgstr ""
+
+#: src/main.py:36
+msgid "New"
+msgstr ""
+
+#: src/main.py:37
+msgid "Open"
+msgstr ""
+
+#: src/main.py:38
+msgid "Save"
+msgstr ""
+
+#: src/main.py:39
+msgid "Save as"
+msgstr ""
+
+#: src/main.py:41
+msgid "Exit"
+msgstr ""
+
+#: src/main.py:42
+msgid "File"
+msgstr ""
+
+#: src/main.py:45
+msgid "Undo"
+msgstr ""
+
+#: src/main.py:46
+msgid "Redo"
+msgstr ""
+
+#: src/main.py:48
+msgid "Cut"
+msgstr ""
+
+#: src/main.py:49
+msgid "Copy"
+msgstr ""
+
+#: src/main.py:50
+msgid "Paste"
+msgstr ""
+
+#: src/main.py:52
+msgid "Select all"
+msgstr ""
+
+#: src/main.py:53
+msgid "Edit"
+msgstr ""
+
+#: src/main.py:56 src/main.py:58 src/pages/helpme.py:10 src/pages/helpme.py:18
+msgid "Help"
+msgstr ""
+
+#: src/main.py:57 src/pages/about.py:10
+msgid "About"
+msgstr ""
+
+#: src/pages/about.py:19
+msgid "Version 1.0."
+msgstr ""
+
+#: src/pages/about.py:20
+msgid "Author: "
+msgstr ""
+
+#: src/pages/about.py:21
+msgid "License: "
+msgstr ""
+
+#: src/pages/helpme.py:19
+msgid "How to use this application?"
+msgstr ""
+
+#: src/pages/helpme.py:20
+msgid "Just do what you need like any other text editor,"
+msgstr ""
+
+#: src/pages/helpme.py:21
+msgid "but no tabs support."
+msgstr ""
