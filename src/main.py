@@ -4,15 +4,19 @@ import pages.about
 import pages.helpme
 import gettext
 
-vi = gettext.translation('base', localedir='po', languages=['vi'])
-vi.install()
-_ = vi.gettext
+language = ""
 
 def main_win():
+    if language == "en":
+        en = gettext.translation('base', localedir='po', languages=['en'])
+        en.install()
+        _ = en.gettext
+    elif language == "vi":
+        vi = gettext.translation('base', localedir='po', languages=['vi'])
+        vi.install()
+        _ = vi.gettext
     window = Tk()
     window.title(_("Text editor"))
-    window.rowconfigure(0, weight=1)
-    window.columnconfigure(0, weight=1)
     place_widgets(window)
     window.mainloop()
 
@@ -53,12 +57,9 @@ def place_widgets(self):
     self.menu_bar.add_cascade(label=_("Edit"), menu=self.edit_menu)
     ## Help & About
     self.help_menu = Menu(self.menu_bar, tearoff=0)
-    self.help_menu.add_command(label=_("Help"), command=pages.helpme.help_run)
-    self.help_menu.add_command(label=_("About"), command=pages.about.about_run)
+    self.help_menu.add_command(label=_("Help"), command=lambda: pages.helpme.help_run(self))
+    self.help_menu.add_command(label=_("About"), command=lambda: pages.about.about_run(self))
     self.menu_bar.add_cascade(label=_("Help"), menu=self.help_menu)
 
     self.config(menu=self.menu_bar)
-    self.text_editor.grid(row=0, column=1, sticky="nsew")
-
-if __name__ == "__main__":
-    main_win()
+    self.text_editor.grid(row=0, column=0, sticky="nsew")
