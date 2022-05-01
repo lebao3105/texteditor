@@ -1,13 +1,15 @@
 ## Text-editor
 A graphical text editor for Windows, macOS, Linux, BSD, and other operating systems.
 
-## Build
-Install python version 3 which includes ```pip```. Then run the following command:
+## Running
+Just run:
 ```
-pip install python-gettext
+python src/main.py
 ```
 
-Now do:
+or:
 ```
-python main.py
+python3 src/main.py
 ```
+
+You will need python 3.8+ with tkinter installed to run this program.
