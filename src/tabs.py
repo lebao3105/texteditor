@@ -16,7 +16,7 @@ def place_textbox(self):
     self.text_editor = Text(self, wrap="word", undo=True, font=("Arial", 12))
     self.text_editor.pack(expand=True, fill="both")
     # Scrollbar
-    self.scroll = ttk.Scrollbar(self, orient="vertical", command=self.text_editor.yview)
+    self.scroll = ttk.Scrollbar(self.text_editor, orient="vertical", command=self.text_editor.yview)
     self.scroll.pack(side="right", fill="y")
     self.text_editor.configure(yscrollcommand=self.scroll.set)
 
