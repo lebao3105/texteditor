@@ -32,7 +32,7 @@ def place_menu(self):
     self.menu_bar = Menu(self)
     ## File
     self.file_menu = Menu(self.menu_bar, tearoff=0)
-    self.file_menu.add_command(label=_("New"), command=do_nothing)
+    self.file_menu.add_command(label=_("New"), command=lambda: tabs.add_tab(self))
     self.file_menu.add_command(label=_("Open"), command=do_nothing)
     self.file_menu.add_command(label=_("Save"), command=do_nothing)
     self.file_menu.add_command(label=_("Save as"), command=do_nothing)
@@ -60,14 +60,14 @@ def place_menu(self):
     self.notebook = ttk.Notebook(self)
     self.firsttab = Frame(self.notebook)
     tabs.place_textbox(self.firsttab)
-    self.notebook.add(self.firsttab, text=_("Untitled"))
+    self.notebook.add(self.firsttab, text=_("Untitled "))
 
 def place_widgets(self):
     self.notebook.pack(expand=True, fill="both")
     # Close & New tab right-click menu for tabs
     self.tab_right_click = Menu(self.notebook, tearoff=0)
     self.tab_right_click.add_command(label=_("New tab"), command=lambda: tabs.add_tab(self))
-    self.tab_right_click.add_command(label=_("Close tab"), command=lambda: self.notebook.forget(self.notebook.select()))
+    self.tab_right_click.add_command(label=_("Close tab"), command=lambda: tabs.tabs_close(self))
     self.bind("<Button-3>", lambda event: self.tab_right_click.post(event.x_root, event.y_root))
 
 # Still keep this
