@@ -1,22 +1,19 @@
 from tkinter import *
+from tkinter import ttk
 from tkinter.messagebox import askyesno
 import pages.about
 import pages.helpme
 import gettext
-
-language = ""
+import tabs
 
 def main_win():
-    if language == "en":
-        en = gettext.translation('base', localedir='po', languages=['en'])
-        en.install()
-        _ = en.gettext
-    elif language == "vi":
-        vi = gettext.translation('base', localedir='po', languages=['vi'])
-        vi.install()
-        _ = vi.gettext
+    vi = gettext.translation('base', localedir='po', languages=['vi'])
+    vi.install()
+    _ = vi.gettext
+
     window = Tk()
     window.title(_("Text editor"))
+    place_menu(window)
     place_widgets(window)
     window.mainloop()
 
@@ -30,9 +27,7 @@ def ask_quit(self):
         self.destroy()
         exit()
 
-def place_widgets(self):
-    # Create a text editor widget
-    self.text_editor = Text(self)
+def place_menu(self):
     # Menu bar
     self.menu_bar = Menu(self)
     ## File
@@ -60,6 +55,21 @@ def place_widgets(self):
     self.help_menu.add_command(label=_("Help"), command=lambda: pages.helpme.help_run(self))
     self.help_menu.add_command(label=_("About"), command=lambda: pages.about.about_run(self))
     self.menu_bar.add_cascade(label=_("Help"), menu=self.help_menu)
-
     self.config(menu=self.menu_bar)
-    self.text_editor.grid(row=0, column=0, sticky="nsew")
+    # Create a notebook
+    self.notebook = ttk.Notebook(self)
+    self.firsttab = Frame(self.notebook)
+    tabs.place_textbox(self.firsttab)
+    self.notebook.add(self.firsttab, text=_("Untitled"))
+
+def place_widgets(self):
+    self.notebook.pack(expand=True, fill="both")
+    # Close & New tab right-click menu for tabs
+    self.tab_right_click = Menu(self.notebook, tearoff=0)
+    self.tab_right_click.add_command(label=_("New tab"), command=lambda: tabs.add_tab(self))
+    self.tab_right_click.add_command(label=_("Close"), command=lambda: self.notebook.forget(self.notebook.select()))
+    self.bind("<Button-3>", lambda event: self.tab_right_click.post(event.x_root, event.y_root))
+
+# Still keep this
+if __name__ == "__main__":
+    main_win()
