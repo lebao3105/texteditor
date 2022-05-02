@@ -1,6 +1,7 @@
 from tkinter import *
 from tkinter import ttk
 import gettext
+_ = gettext.gettext
 
 def add_tab(self):
     tab_name = self.notebook.index("end") + 1
@@ -18,3 +19,14 @@ def place_textbox(self):
     self.scroll = ttk.Scrollbar(self, orient="vertical", command=self.text_editor.yview)
     self.scroll.pack(side="right", fill="y")
     self.text_editor.configure(yscrollcommand=self.scroll.set)
+
+def tabs_close(self):
+    # Automatically close the window if there's only one tab
+    if self.notebook.index("end") == 1:
+        print(_("No other tabs left, closing the window..."))
+        self.destroy()
+    # If not, just close the selected tab and keep
+    else:
+        index = str(self.notebook.index(self.notebook.select()))
+        print(_("Closing tab...") + index)
+        self.notebook.forget(self.notebook.select())
