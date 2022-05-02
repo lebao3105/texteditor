@@ -21,7 +21,7 @@ def do_nothing():
     print("Nothing")
 
 def ask_quit(self):
-    answer = askyesno(_("Quit"), _("Do you really want to quit?"))
+    answer = askyesno(_("Quit"), _("Are you sure want to quit?"))
     if answer == True:
         self.quit()
         self.destroy()
@@ -67,7 +67,7 @@ def place_widgets(self):
     # Close & New tab right-click menu for tabs
     self.tab_right_click = Menu(self.notebook, tearoff=0)
     self.tab_right_click.add_command(label=_("New tab"), command=lambda: tabs.add_tab(self))
-    self.tab_right_click.add_command(label=_("Close"), command=lambda: self.notebook.forget(self.notebook.select()))
+    self.tab_right_click.add_command(label=_("Close tab"), command=lambda: self.notebook.forget(self.notebook.select()))
     self.bind("<Button-3>", lambda event: self.tab_right_click.post(event.x_root, event.y_root))
 
 # Still keep this
