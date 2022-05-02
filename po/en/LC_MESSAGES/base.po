@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-05-01 16:23+0700\n"
+"POT-Creation-Date: 2022-05-02 10:27+0700\n"
 "PO-Revision-Date: 2022-04-30 10:19+007\n"
 "Last-Translator: Le Bao Nguyen <bao12345yocoo@gmail.com>\n"
 "Language-Team: Main <bao12345yocoo@gmail.com>\n"
@@ -15,75 +15,75 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: pygettext.py 1.5\n"
 
-#: src/main.py:13 src/pages/about.py:18
+#: src/main.py:22 src/pages/about.py:18
 msgid "Text editor"
 msgstr ""
 
-#: src/main.py:23
+#: src/main.py:30
 msgid "Quit"
 msgstr ""
 
-#: src/main.py:23
+#: src/main.py:30
 msgid "Do you really want to quit?"
 msgstr ""
 
-#: src/main.py:36
+#: src/main.py:43
 msgid "New"
 msgstr ""
 
-#: src/main.py:37
+#: src/main.py:44
 msgid "Open"
 msgstr ""
 
-#: src/main.py:38
+#: src/main.py:45
 msgid "Save"
 msgstr ""
 
-#: src/main.py:39
+#: src/main.py:46
 msgid "Save as"
 msgstr ""
 
-#: src/main.py:41
+#: src/main.py:48
 msgid "Exit"
 msgstr ""
 
-#: src/main.py:42
+#: src/main.py:49
 msgid "File"
 msgstr ""
 
-#: src/main.py:45
+#: src/main.py:52
 msgid "Undo"
 msgstr ""
 
-#: src/main.py:46
+#: src/main.py:53
 msgid "Redo"
 msgstr ""
 
-#: src/main.py:48
+#: src/main.py:55
 msgid "Cut"
 msgstr ""
 
-#: src/main.py:49
+#: src/main.py:56
 msgid "Copy"
 msgstr ""
 
-#: src/main.py:50
+#: src/main.py:57
 msgid "Paste"
 msgstr ""
 
-#: src/main.py:52
+#: src/main.py:59
 msgid "Select all"
 msgstr ""
 
-#: src/main.py:53
+#: src/main.py:60
 msgid "Edit"
 msgstr ""
 
-#: src/main.py:56 src/main.py:58 src/pages/helpme.py:10 src/pages/helpme.py:18
+#: src/main.py:63 src/main.py:65 src/pages/helpme.py:10 src/pages/helpme.py:18
 msgid "Help"
 msgstr ""
 
-#: src/main.py:57 src/pages/about.py:10
+#: src/main.py:64 src/pages/about.py:10
 msgid "About"
 msgstr ""
 
