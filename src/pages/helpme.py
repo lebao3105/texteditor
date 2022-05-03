@@ -4,7 +4,7 @@ import gettext
 vi = gettext.translation('base', localedir='po', languages=['vi'])
 vi.install()
 _ = vi.gettext
-
+    
 def help_run(self):
     help_win = Toplevel(self)
     help_win.title(_("Help"))
@@ -12,6 +12,7 @@ def help_run(self):
     help_win.rowconfigure(0, weight=1)
     help_win.columnconfigure(0, weight=1)
     help_win.resizable(False, False)
+    help_win.grab_set()
     place_texts(help_win)
 
 def place_texts(self):

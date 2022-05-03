@@ -7,12 +7,12 @@ _ = vi.gettext
 
 def about_run(self):
     about_win = Toplevel(self)
-    self.eval(f'tk::PlaceWindow {str(about_win)} center')
     about_win.title(_("About"))
     about_win.geometry("300x300")
     about_win.rowconfigure(0, weight=1)
     about_win.columnconfigure(0, weight=1)
     about_win.resizable(False, False)
+    about_win.grab_set()
     place_texts(about_win)
 
 def place_texts(self):
