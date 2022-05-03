@@ -13,6 +13,8 @@ def main_win():
 
     window = Tk()
     window.title(_("Text editor"))
+    window.eval('tk::PlaceWindow . center')
+    window.geometry("810x610")
     place_menu(window)
     place_widgets(window)
     window.mainloop()
