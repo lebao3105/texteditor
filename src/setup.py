@@ -3,6 +3,7 @@
 from tkinter import *
 from tkinter import ttk
 import gettext
+from tkinter.font import BOLD
 import main
 
 _ = gettext.gettext
@@ -20,9 +21,20 @@ def setup():
 # I could check for Bottles's solution, but now let's make our new 
 # world.
 def place_setup_widgets(self):
-    self.header = Label(self, text=_("Welcome"), font=("Arial", 20))
-    self.header.grid(row=1, column=0, padx=10, pady=10)
+    self.header = Label(self, text=_("Welcome"), font=("Helvetica", 20))
+    self.text = Label(self, text=_("Welcome to your new application!"), font=("Helvetica", 12))
+    self.text2 = Label(self, text=_("Press next to continue"), font=("Helvetica", 12))
+    self.next_button = Button(self, text=_("Next"), command=lambda: next_button_clicked(self))
+    self.header.place(relx=0.5, rely=0.1, anchor=CENTER)
+    self.text.place(relx=0.5, rely=0.2, anchor=CENTER)
+    self.text2.place(relx=0.5, rely=0.3, anchor=CENTER)
+    self.next_button.place(relx=0.5, rely=0.4, anchor=CENTER)
+
+
+def next_button_clicked(self):
+    self.destroy()
+    main.main()
 
 if __name__ == "__main__":
     setup()
-    main.main_win()
+    #main.main_win()
