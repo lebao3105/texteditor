@@ -13,7 +13,6 @@ def main_win():
 
     window = Tk()
     window.title(_("Text editor"))
-    window.eval('tk::PlaceWindow . center')
     window.geometry("810x610")
     place_menu(window)
     place_widgets(window)
@@ -69,7 +68,7 @@ def place_widgets(self):
     # Close & New tab right-click menu for tabs
     self.tab_right_click = Menu(self.notebook, tearoff=0)
     self.tab_right_click.add_command(label=_("New tab"), command=lambda: tabs.add_tab(self))
-    self.tab_right_click.add_command(label=_("Close tab"), command=lambda: tabs.tabs_close(self))
+    self.tab_right_click.add_command(label=_("Close the current opening tab"), command=lambda: tabs.tabs_close(self))
     self.bind("<Button-3>", lambda event: self.tab_right_click.post(event.x_root, event.y_root))
 
 # Still keep this
