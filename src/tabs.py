@@ -17,7 +17,9 @@ def place_textbox(self):
     self.text_editor.pack(expand=True, fill="both")
     # Scrollbar
     self.scroll = ttk.Scrollbar(self.text_editor, orient="vertical", command=self.text_editor.yview)
+    self.scroll2 = ttk.Scrollbar(self.text_editor, orient="horizontal", command=self.text_editor.xview)
     self.scroll.pack(side="right", fill="y")
+    self.scroll2.pack(side="bottom", fill="x")
     self.text_editor.configure(yscrollcommand=self.scroll.set)
 
 def tabs_close(self):
@@ -26,7 +28,6 @@ def tabs_close(self):
         print(_("No other tabs left, closing the window..."))
         self.destroy()
     # If not, just close the selected tab and keep
+    # the main window open
     else:
-        index = str(self.notebook.index(self.notebook.select()))
-        print(_("Closing tab ") + index + "...")
         self.notebook.forget(self.notebook.select())
