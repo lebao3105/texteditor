@@ -89,7 +89,6 @@ msgid "About"
 msgstr "Ve ung dung nay"
 
 #: src/main.py:64 src/tabs.py:9
-#, fuzzy
 msgid "Untitled "
 msgstr "Chua co tieu de "
 
@@ -147,7 +146,6 @@ msgid "Just do what you need like any other text editor,"
 msgstr "Hay lam nhung gi ban can nhu bao trinh chinh sua van ban khac,"
 
 #: src/pages/helpme.py:22
-#, fuzzy
 msgid "with tabs support."
 msgstr "voi kieu tab duoc ho tro."
 
