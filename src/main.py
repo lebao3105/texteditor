@@ -7,9 +7,10 @@ import gettext
 import tabs
 
 def main_win():
-    vi = gettext.translation('base', localedir='po', languages=['vi'])
-    vi.install()
-    _ = vi.gettext
+    gettext.bindtextdomain("src", "./po")
+    gettext.textdomain("src")
+    _ = gettext.gettext
+  
 
     window = Tk()
     window.title(_("Text editor"))
