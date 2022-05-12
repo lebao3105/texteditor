@@ -3,18 +3,15 @@ from tkinter import ttk
 from tkinter.messagebox import askyesno
 import pages.about
 import pages.helpme
-import gettext
+import miscs.init
 import tabs
 
 def main_win():
-    gettext.bindtextdomain("src", "./po")
-    gettext.textdomain("src")
-    _ = gettext.gettext
-  
-
     window = Tk()
-    window.title(_("Text editor"))
+    window._ = ""
+    miscs.init.initialize(window, 1)
     window.geometry("810x610")
+    window.title(_("Text editor"))
     place_menu(window)
     place_widgets(window)
     window.mainloop()

@@ -2,14 +2,14 @@
 # Will run for the first-run.
 from tkinter import *
 from tkinter import ttk
-import gettext
+import miscs.init
+import miscs.get_config
 from tkinter.font import BOLD
 import main
 
-_ = gettext.gettext
-
 def setup():
     setup_win = Tk()
+    miscs.init.initialize(setup_win, 1)
     setup_win.title(_("Setup your new application"))
     setup_win.resizable(False, False)
     setup_win.geometry("600x600")
@@ -22,20 +22,19 @@ def setup():
 # world.
 def place_setup_widgets(self):
     self.header = Label(self, text=_("Welcome"), font=("Helvetica", 20))
-    self.text = Label(self, text=_("Welcome to your new application!"), font=("Helvetica", 12))
+    self.text1 = Label(self, text=_("Welcome to your new application!"), font=("Helvetica", 12))
     self.text2 = Label(self, text=_("Press next to continue"), font=("Helvetica", 12))
     self.next_button = Button(self, text=_("Next"), command=lambda: next_button_clicked(self))
     self.header.place(relx=0.5, rely=0.1, anchor=CENTER)
-    self.text.place(relx=0.5, rely=0.2, anchor=CENTER)
+    self.text1.place(relx=0.5, rely=0.2, anchor=CENTER)
     self.text2.place(relx=0.5, rely=0.3, anchor=CENTER)
     self.next_button.place(relx=0.5, rely=0.4, anchor=CENTER)
-
+    run_theme(self)
 
 def destroy(self):
     self.header.destroy()
-    self.text.destroy()
+    self.text1.destroy()
     self.text2.destroy()
-
 
 def next_button_clicked(self):
     # Destroy other widgets, although it's not necessary.
@@ -44,14 +43,16 @@ def next_button_clicked(self):
     ## Texts
     self.header = Label(self, text=_("Apperance"), font=("Helvetica", 20))
     self.text1 = Label(self, text=_("Choose your color"), font=("Helvetica", 12))
-
+    self.text2 = Label(self, text=_("Choose your theme"), font=("Helvetica", 12))
     ## Colors
     options = [
-        _("Dark"),
         _("Light"),
+        _("Dark"),
+        _("Colorful")
     ]
 
     sub_options = [
+        _("Default"),
         _("Green"),
         _("Blue"),
         _("Red"),
@@ -75,16 +76,25 @@ def next_button_clicked(self):
 
     # Place all
     self.header.place(relx=0.5, rely=0.1, anchor=CENTER)
-    self.text1.place(relx=0.5, rely=0.2, anchor=CENTER)
+    self.text2.place(relx=0.5, rely=0.4, anchor=CENTER)
     self.color_menu.place(relx=0.5, rely=0.3, anchor=CENTER)
+    self.text1.place(relx=0.5, rely=0.2, anchor=CENTER)
     self.color_sub.place(relx=0.5, rely=0.4, anchor=CENTER)
     self.next_button.place(relx=0.5, rely=0.5, anchor=CENTER)
+    run_theme(self)
 
 def color_changed(self):
     if self.color_var.get() == _("Dark"):
         self.color_sub.configure(state="readonly")
+        miscs.get_config.change_config(self.sub_color_var.get())
     else:
         self.color_sub.configure(state="disabled")
+
+def run_theme(self):
+    miscs.get_config.set_windows_color(self)
+    miscs.get_config.change_text_color(self.header)
+    miscs.get_config.change_text_color(self.text1)
+    miscs.get_config.change_text_color(self.text2)
 
 if __name__ == "__main__":
     setup()

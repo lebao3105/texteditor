@@ -1,5 +1,6 @@
 from tkinter import *
 from tkinter import ttk
+import miscs.init
 import gettext
 _ = gettext.gettext
 
@@ -21,6 +22,7 @@ def place_textbox(self):
     self.scroll.pack(side="right", fill="y")
     self.scroll2.pack(side="bottom", fill="x")
     self.text_editor.configure(yscrollcommand=self.scroll.set)
+    miscs.init.initialize(self.text_editor, 2)
 
 def tabs_close(self):
     # Automatically close the window if there's only one tab
