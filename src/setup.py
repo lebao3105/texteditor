@@ -31,9 +31,60 @@ def place_setup_widgets(self):
     self.next_button.place(relx=0.5, rely=0.4, anchor=CENTER)
 
 
+def destroy(self):
+    self.header.destroy()
+    self.text.destroy()
+    self.text2.destroy()
+
+
 def next_button_clicked(self):
-    self.destroy()
-    main.main()
+    # Destroy other widgets, although it's not necessary.
+    destroy(self)
+    # Now create new items
+    ## Texts
+    self.header = Label(self, text=_("Apperance"), font=("Helvetica", 20))
+    self.text1 = Label(self, text=_("Choose your color"), font=("Helvetica", 12))
+
+    ## Colors
+    options = [
+        _("Dark"),
+        _("Light"),
+    ]
+
+    sub_options = [
+        _("Green"),
+        _("Blue"),
+        _("Red"),
+    ]
+
+    self.color_var = StringVar()
+    self.color_var.set(options[0])
+
+    self.sub_color_var = StringVar()
+    self.sub_color_var.set(sub_options[0])
+
+    ## Combo boxes
+    self.color_menu = ttk.Combobox(self, textvariable=self.color_var, 
+                                    values=options, state="readonly")
+    self.color_menu.current(0)
+    self.color_sub = ttk.Combobox(self, textvariable=self.sub_color_var,
+                                    values=sub_options, state="disbled")
+    self.color_sub.current(0)
+    self.color_menu.bind("<<ComboboxSelected>>", lambda event: color_changed(self))
+    self.color_sub.bind("<<ComboboxSelected>>", lambda event: color_changed(self))
+
+    # Place all
+    self.header.place(relx=0.5, rely=0.1, anchor=CENTER)
+    self.text1.place(relx=0.5, rely=0.2, anchor=CENTER)
+    self.color_menu.place(relx=0.5, rely=0.3, anchor=CENTER)
+    self.color_sub.place(relx=0.5, rely=0.4, anchor=CENTER)
+    self.next_button.place(relx=0.5, rely=0.5, anchor=CENTER)
+
+def color_changed(self):
+    if self.color_var.get() == _("Dark"):
+        self.color_sub.configure(state="readonly")
+    else:
+        self.color_sub.configure(state="disabled")
 
 if __name__ == "__main__":
     setup()
