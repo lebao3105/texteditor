@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-05-12 16:05+0700\n"
+"POT-Creation-Date: 2022-05-12 16:45+0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,87 +17,87 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: src/main.py:15 src/pages/about.py:19
+#: src/main.py:16 src/pages/about.py:19
 msgid "Text editor"
 msgstr ""
 
-#: src/main.py:25
+#: src/main.py:26
 msgid "Quit"
 msgstr ""
 
-#: src/main.py:25
+#: src/main.py:26
 msgid "Are you sure want to quit?"
 msgstr ""
 
-#: src/main.py:36
+#: src/main.py:37
 msgid "New"
 msgstr ""
 
-#: src/main.py:37
+#: src/main.py:38
 msgid "Open"
 msgstr ""
 
-#: src/main.py:38
+#: src/main.py:39
 msgid "Save"
 msgstr ""
 
-#: src/main.py:39
+#: src/main.py:40
 msgid "Save as"
 msgstr ""
 
-#: src/main.py:41
+#: src/main.py:42
 msgid "Exit"
 msgstr ""
 
-#: src/main.py:42
+#: src/main.py:43
 msgid "File"
 msgstr ""
 
-#: src/main.py:45
+#: src/main.py:46
 msgid "Undo"
 msgstr ""
 
-#: src/main.py:46
+#: src/main.py:47
 msgid "Redo"
 msgstr ""
 
-#: src/main.py:48
+#: src/main.py:49
 msgid "Cut"
 msgstr ""
 
-#: src/main.py:49
+#: src/main.py:50
 msgid "Copy"
 msgstr ""
 
-#: src/main.py:50
+#: src/main.py:51
 msgid "Paste"
 msgstr ""
 
-#: src/main.py:52
+#: src/main.py:53
 msgid "Select all"
 msgstr ""
 
-#: src/main.py:53
+#: src/main.py:54
 msgid "Edit"
 msgstr ""
 
-#: src/main.py:56 src/main.py:58 src/pages/helpme.py:10 src/pages/helpme.py:19
+#: src/main.py:57 src/main.py:59 src/pages/helpme.py:10 src/pages/helpme.py:19
 msgid "Help"
 msgstr ""
 
-#: src/main.py:57 src/pages/about.py:10
+#: src/main.py:58 src/pages/about.py:10
 msgid "About"
 msgstr ""
 
-#: src/main.py:64 src/tabs.py:9
+#: src/main.py:65 src/tabs.py:9
 msgid "Untitled "
 msgstr ""
 
-#: src/main.py:70
+#: src/main.py:71
 msgid "New tab"
 msgstr ""
 
-#: src/main.py:71
+#: src/main.py:72
 msgid "Close the current opening tab"
 msgstr ""
 
@@ -119,6 +119,34 @@ msgstr ""
 
 #: src/setup.py:27
 msgid "Next"
+msgstr ""
+
+#: src/setup.py:45
+msgid "Apperance"
+msgstr ""
+
+#: src/setup.py:46
+msgid "Choose your color"
+msgstr ""
+
+#: src/setup.py:50 src/setup.py:84
+msgid "Dark"
+msgstr ""
+
+#: src/setup.py:51
+msgid "Light"
+msgstr ""
+
+#: src/setup.py:55
+msgid "Green"
+msgstr ""
+
+#: src/setup.py:56
+msgid "Blue"
+msgstr ""
+
+#: src/setup.py:57
+msgid "Red"
 msgstr ""
 
 #: src/tabs.py:28
