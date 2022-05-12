@@ -24,7 +24,6 @@ msgid "Quit"
 msgstr "Thoat"
 
 #: src/main.py:25
-#, fuzzy
 msgid "Are you sure want to quit?"
 msgstr "Ban co chac chan muon thoat ung dung nay?"
 
