@@ -1,16 +1,18 @@
+# Import modules
+## Tkinter
 from tkinter import *
 from tkinter import ttk
-from tkinter.messagebox import askyesno
+## Pages
 import pages.about
 import pages.helpme
+## Some needed functions
 import miscs.init
+import miscs.file_operations
 import tabs
 
 def main_win():
     window = Tk()
     window._ = ""
-    p1 = PhotoImage(file = "data/org.lebao3105.texteditor.Devel.png")
-    window.iconphoto(False, p1)
     miscs.init.initialize(window, 1)
     window.geometry("810x610")
     window.title(window._("Text editor"))
@@ -20,13 +22,6 @@ def main_win():
 
 def do_nothing():
     print("Nothing")
-
-def ask_quit(self):
-    answer = askyesno(self._("Quit"), self._("Are you sure want to quit?"))
-    if answer == True:
-        self.quit()
-        self.destroy()
-        exit()
 
 def place_menu(self):
     # Menu bar
@@ -38,7 +33,7 @@ def place_menu(self):
                                 command=lambda: tabs.add_tab(self))
     self.file_menu.add_command(label=self._("Open"), 
                                 accelerator="Ctrl+O",
-                                command=do_nothing)
+                                command=lambda: miscs.file_operations.open_file(self))
     self.file_menu.add_command(label=self._("Save"),
                                 accelerator="Ctrl+S",
                                 command=do_nothing)
@@ -48,7 +43,7 @@ def place_menu(self):
     self.file_menu.add_separator()
     self.file_menu.add_command(label=self._("Exit"), 
                                 accelerator="Alt+F4",
-                                command=lambda: ask_quit(self))
+                                command=lambda: miscs.init.ask_quit(self))
     self.menu_bar.add_cascade(label=self._("File"), menu=self.file_menu)
     ## Edit
     self.edit_menu = Menu(self.menu_bar, tearoff=0)
@@ -88,23 +83,28 @@ def place_menu(self):
     self.firsttab = Frame(self.notebook)
     tabs.place_textbox(self.firsttab)
     self.notebook.add(self.firsttab, text=self._("Untitled "))
+    # Bind the function to the event
+    binder(self)
 
 
 def place_widgets(self):
     self.notebook.pack(expand=True, fill="both")
     # Close & New tab right-click menu for tabs
     self.tab_right_click = Menu(self.notebook, tearoff=0)
-    self.tab_right_click.add_command(label=self._("New tab"), command=lambda: tabs.add_tab(self))
-    self.tab_right_click.add_command(label=self._("Close the current opening tab"), command=lambda: tabs.tabs_close(self))
+    self.tab_right_click.add_command(label=self._("New tab"), 
+                                    accelerator="Ctrl+N",    
+                                    command=lambda: tabs.add_tab(self))
+    self.tab_right_click.add_command(label=self._("Close the current opening tab"), 
+                                    accelerator="Ctrl+W",
+                                    command=lambda: tabs.tabs_close(self))
     self.bind("<Button-3>", lambda event: self.tab_right_click.post(event.x_root, event.y_root))
 
 def binder(self):
-    # Menu items
     self.bind("<Control-n>", lambda event: tabs.add_tab(self))
-    self.bind("<Control-o>", lambda event: do_nothing)
+    self.bind("<Control-o>", lambda event: miscs.file_operations.open_file(self))
     self.bind("<Control-s>", lambda event: do_nothing)
     self.bind("<Control-Shift-s>", lambda event: do_nothing)
-    self.bind("<Alt-F4>", lambda event: ask_quit(self))
+    self.bind("<Alt-F4>", lambda event: miscs.init.ask_quit(self))
     self.bind("<Control-a>", lambda event: do_nothing)
     self.bind("<Control-z>", lambda event: do_nothing)
     self.bind("<Control-y>", lambda event: do_nothing)
@@ -113,6 +113,7 @@ def binder(self):
     self.bind("<Control-v>", lambda event: do_nothing)
     self.bind("<Alt-F1>", lambda event: pages.helpme.help_run(self))
     self.bind("<Alt-F2>", lambda event: pages.about.about_run(self))
+    self.bind("<Control-w>", lambda event: tabs.tabs_close(self))
 
 # Still keep this
 if __name__ == "__main__":
