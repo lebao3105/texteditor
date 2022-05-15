@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Application
+Name=Text Editor (Tkinter)
+Comment=A text editor written on Python using Tkinter
+Exec=python3 /usr/local/texteditor/main.py
+Icon=/usr/local/share/icons/hicolor/org.lebao3105.texteditor.Devel.svg
+Terminal=false
+Categories=Utility;TextEditor;
+Keywords=TextEditor;Python;
+StartupNotify=true
