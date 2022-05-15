@@ -28,7 +28,7 @@ def tabs_close(self):
     # Automatically close the window if there's only one tab
     if self.notebook.index("end") == 1:
         print(_("No other tabs left, closing the window..."))
-        self.destroy()
+        miscs.init.ask_quit(self)
     # If not, just close the selected tab and keep
     # the main window open
     else:
