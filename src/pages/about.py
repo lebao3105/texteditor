@@ -17,11 +17,11 @@ def place_texts(self):
     version = Label(self, text=_("Version 1.0."))
     author = Label(self, text=_("Author: ")+("Le Bao Nguyen"))
     license_text = Label(self, text=_("License: ")+("GPLv3"))
-
-    name.grid(row=0, column=0, sticky="ew", padx=5, pady=5)
-    version.grid(row=1, column=0, sticky="ew", padx=5)
-    author.grid(row=2, column=0, sticky="ew", padx=5)
-    license_text.grid(row=3, column=0, sticky="ew", padx=5)
+    
+    name.grid(row=1, column=0, sticky="ew", padx=5, pady=5)
+    version.grid(row=2, column=0, sticky="ew", padx=5)
+    author.grid(row=3, column=0, sticky="ew", padx=5)
+    license_text.grid(row=4, column=0, sticky="ew", padx=5)
     init.initialize(self, 2)
     get_config.change_text_color(name)
     get_config.change_text_color(version)

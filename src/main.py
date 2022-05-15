@@ -9,6 +9,8 @@ import tabs
 def main_win():
     window = Tk()
     window._ = ""
+    p1 = PhotoImage(file = "data/org.lebao3105.texteditor.Devel.png")
+    window.iconphoto(False, p1)
     miscs.init.initialize(window, 1)
     window.geometry("810x610")
     window.title(_("Text editor"))
