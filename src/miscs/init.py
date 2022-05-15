@@ -1,6 +1,8 @@
 # Initialize for this application
 # Including language, and configures.
 import gettext
+from tkinter import PhotoImage
+from tkinter.messagebox import askyesno
 from . import get_config
 import os
 
@@ -11,12 +13,18 @@ def initialize(self, part):
             gettext.bindtextdomain('base', 'po')
             gettext.textdomain('base')
             self._ = gettext.gettext
-            """
-            en = gettext.translation('base', localedir='po', languages=['en'])
-            en.install()
-            """
         else:
             raise Exception("Could not find the language directory!")
+
+        p1 = PhotoImage(file="data/org.lebao3105.texteditor.Devel.png")
+        self.iconphoto(False, p1)
     elif part == 2:
         # Initialize the configures
         get_config.set_windows_color(self)
+
+def ask_quit(self):
+    answer = askyesno(self._("Quit"), self._("Are you sure want to quit?"))
+    if answer == True:
+        self.quit()
+        self.destroy()
+        exit()
