@@ -74,7 +74,7 @@ def place_menu(self):
                                 accelerator="Alt+F1",
                                 command=lambda: pages.helpme.help_run(self))
     self.help_menu.add_command(label=self._("About"), 
-                                accelerator="Alt+F2",
+                                accelerator="Alt+F3",
                                 command=lambda: pages.about.about_run(self))
     self.menu_bar.add_cascade(label=self._("Help"), menu=self.help_menu)
     self.config(menu=self.menu_bar)
@@ -112,9 +112,8 @@ def binder(self):
     self.bind("<Control-c>", lambda event: do_nothing)
     self.bind("<Control-v>", lambda event: do_nothing)
     self.bind("<Alt-F1>", lambda event: pages.helpme.help_run(self))
-    self.bind("<Alt-F2>", lambda event: pages.about.about_run(self))
+    self.bind("<Alt-F3>", lambda event: pages.about.about_run(self))
     self.bind("<Control-w>", lambda event: tabs.tabs_close(self))
 
-# Still keep this
 if __name__ == "__main__":
     main_win()
