@@ -16,7 +16,13 @@ def initialize(self, part):
         else:
             raise Exception("Could not find the language directory!")
 
-        p1 = PhotoImage(file="data/org.lebao3105.texteditor.Devel.png")
+        if os.path.isfile("data/org.lebao3105.texteditor.Devel.png"):
+            p1 = PhotoImage(file="data/org.lebao3105.texteditor.Devel.png")
+        elif os.path.isfile("icon.png"):
+            p1 = PhotoImage(file="icon.png")
+        elif os.path.isfile("src/icon.png"):
+            p1 = PhotoImage(file="src/icon.png")
+
         self.iconphoto(False, p1)
     elif part == 2:
         # Initialize the configures
