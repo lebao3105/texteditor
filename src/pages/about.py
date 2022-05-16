@@ -1,5 +1,4 @@
 from tkinter import *
-from PIL import Image, ImageTk
 import sys
 from os import path
 sys.path.append(path.dirname(path.dirname(path.abspath(__file__))))
@@ -16,14 +15,11 @@ def about_run(self):
     place_texts(about_win)
 
 def place_texts(self):
-    test = ImageTk.PhotoImage(Image.open("data/org.lebao3105.texteditor.Devel.png"))
-    label_image = Label(self, image=test)
     name = Label(self, text=self._("Text editor"))
     version = Label(self, text=self._("Version 1.0."))
     author = Label(self, text=self._("Author: ")+("Le Bao Nguyen"))
     license_text = Label(self, text=self._("License: ")+("GPLv3"))
     
-    label_image.grid(row=0, column=0, sticky="ew", padx=5, pady=5)
     name.grid(row=1, column=0, sticky="ew", padx=5, pady=5)
     version.grid(row=2, column=0, sticky="ew", padx=5)
     author.grid(row=3, column=0, sticky="ew", padx=5)
