@@ -1,12 +1,12 @@
 [Desktop Entry]
-Type=Application
 Name=Text Editor (Tkinter)
-Version=1.0
+Type=Application
 Encoding=UTF-8
 Comment=A text editor written on Python using Tkinter
-Exec=/usr/share/texteditor/main.py
+Exec=bash -c 'python3 /usr/share/texteditor/main.py'
 Icon=/usr/share/icons/hicolor/scalable/apps/org.lebao3105.texteditor.Devel.svg
 Categories=Utility;TextEditor;
 Keywords=TextEditor;Python;
 Terminal=true
+NoDisplay=true
 StartupNotify=true
