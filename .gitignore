@@ -7,3 +7,5 @@ src/__pycache__
 po/*/*/*.po~
 # msgfmt outputs
 po/*/*/*.mo
+# Py2exe outputs
+src/dist/
