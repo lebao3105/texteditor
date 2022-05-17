@@ -5,10 +5,10 @@ import os
 
 if platform == "win32":
     searchdir = os.getenv("USERPROFILE\Documents")
-    script_type = ("UNIX Shell Script", "*.sh")
+    script_type = ("Windows Shell Script", "*.bat, *.cmd")
 elif platform == "linux":
     searchdir = os.getenv("HOME/Documents")
-    script_type = ("Windows Shell Script", "*.bat, *.cmd")
+    script_type = ("UNIX Shell Script", "*.sh")
 
 def open_file(self):
     file_name = askopenfilename(initialdir=searchdir, title=self._("Select a file to open"), 
