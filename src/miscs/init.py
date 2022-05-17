@@ -13,11 +13,20 @@ def initialize(self, part):
             gettext.bindtextdomain('base', 'po')
             gettext.textdomain('base')
             self._ = gettext.gettext
+        # Py2exe support
+        elif os.path.isdir("../po"):
+            gettext.bindtextdomain('base', '../po')
+            gettext.textdomain('base')
+            self._ = gettext.gettext
         else:
             raise Exception("Could not find the language directory!")
 
+        # Test for installation support (linux)
         if os.path.isfile("data/org.lebao3105.texteditor.Devel.png"):
             p1 = PhotoImage(file="data/org.lebao3105.texteditor.Devel.png")
+        # Also
+        elif os.path.isfile("../data/org.lebao3105.texteditor.Devel.png"):
+            p1 = PhotoImage(file="../data/org.lebao3105.texteditor.Devel.png")
         elif os.path.isfile("icon.png"):
             p1 = PhotoImage(file="icon.png")
         elif os.path.isfile("src/icon.png"):
