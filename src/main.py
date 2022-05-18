@@ -16,8 +16,8 @@ def main_win():
     miscs.init.initialize(window, 1)
     window.geometry("810x610")
     window.title(window._("Text editor"))
-    place_menu(window)
     place_widgets(window)
+    place_menu(window)
     window.mainloop()
 
 def do_nothing():
@@ -30,10 +30,10 @@ def place_menu(self):
     self.file_menu = Menu(self.menu_bar, tearoff=0)
     self.file_menu.add_command(label=self._("New"), 
                                 accelerator="Ctrl+N",
-                                command=lambda: tabs.add_tab(self))
+                                command=lambda: tabs.add_tab(self, self))
     self.file_menu.add_command(label=self._("Open"), 
                                 accelerator="Ctrl+O",
-                                command=lambda: miscs.file_operations.open_file(self.fisttab))
+                                command=lambda: miscs.file_operations.open_file(self))
     self.file_menu.add_command(label=self._("Save"),
                                 accelerator="Ctrl+S",
                                 command=do_nothing)
@@ -78,29 +78,29 @@ def place_menu(self):
                                 command=lambda: pages.about.about_run(self))
     self.menu_bar.add_cascade(label=self._("Help"), menu=self.help_menu)
     self.config(menu=self.menu_bar)
-    # Create a notebook
-    self.notebook = ttk.Notebook(self)
-    self.firsttab = Frame(self.notebook)
-    tabs.place_textbox(self.firsttab)
-    self.notebook.add(self.firsttab, text=self._("Untitled "))
-    # Bind the function to the event
-    binder(self)
 
 
 def place_widgets(self):
+    # Create a notebook
+    self.notebook = ttk.Notebook(self)
+    self.firsttab = Frame(self.notebook)
+    tabs.place_textbox(self.firsttab, self)
+    self.notebook.add(self.firsttab, text=self._("Untitled "))
     self.notebook.pack(expand=True, fill="both")
     # Close & New tab right-click menu for tabs
     self.tab_right_click = Menu(self.notebook, tearoff=0)
     self.tab_right_click.add_command(label=self._("New tab"), 
                                     accelerator="Ctrl+N",    
-                                    command=lambda: tabs.add_tab(self))
+                                    command=lambda: tabs.add_tab(self, self))
     self.tab_right_click.add_command(label=self._("Close the current opening tab"), 
                                     accelerator="Ctrl+W",
                                     command=lambda: tabs.tabs_close(self))
     self.bind("<Button-3>", lambda event: self.tab_right_click.post(event.x_root, event.y_root))
+    # Bind the function to the event
+    binder(self)
 
 def binder(self):
-    self.bind("<Control-n>", lambda event: tabs.add_tab(self))
+    self.bind("<Control-n>", lambda event: tabs.add_tab(self, self))
     self.bind("<Control-o>", lambda event: miscs.file_operations.open_file(self))
     self.bind("<Control-s>", lambda event: do_nothing)
     self.bind("<Control-Shift-s>", lambda event: do_nothing)
