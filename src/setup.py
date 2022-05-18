@@ -5,4 +5,10 @@ import os
 if not os.path.isfile("pages/__init__.py") or not os.path.isfile("miscs/__init__.py") or not os.path.isfile("__init__.py"):
 	raise Exception("Needed files not found!")
 
-setup(windows=['main.py'])
+setup(windows = ['main.py'],
+      options = {
+		  'py2exe': {
+			  'optimize': 2
+			}
+	  }
+)

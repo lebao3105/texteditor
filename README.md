@@ -18,13 +18,28 @@ A graphical text editor for Windows, macOS, Linux, BSD, and other operating syst
 Always generate .mo files first:
 ```
 ./upd_trans.sh -upd
+# If you see wrong text, do:
+./upd_trans.sh -tep # Generate new .pot file
+# Translate the application by opening <language code>/LC_MESSAGES
+# /base.po, save it then:
+./upd_trans.sh -upd
 ```
 
 If you see error ```/bin/bash^M: bad interpreter: No such file or directory``` (usually heppends in bash shell), do:
 ```
+# Generate .mo files
 for i in $(ls -d po/*/); do
     msgfmt ${i%%/}/LC_MESSAGES/base -o ${i%%/}/LC_MESSAGES/base.mo
 done
+
+# Wrong text in the program
+xgettext -d base -o po/base.pot src/{main,tabs}.py src/pages/*.py
+for i in $(ls -d po/*/); do
+    msgmerge -U ${i%%/}/LC*/base.po po/base.pot
+done
+
+# Edit .po file in <your language code>/LC_MESSAGES folder, then
+# re-generate .mo files
 ```
 
 Now run:

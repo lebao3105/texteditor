@@ -9,3 +9,5 @@ po/*/*/*.po~
 po/*/*/*.mo
 # Py2exe outputs
 src/dist/
+# No vscode configurations
+.vscode/

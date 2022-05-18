@@ -33,7 +33,7 @@ def place_menu(self):
                                 command=lambda: tabs.add_tab(self))
     self.file_menu.add_command(label=self._("Open"), 
                                 accelerator="Ctrl+O",
-                                command=lambda: miscs.file_operations.open_file(self))
+                                command=lambda: miscs.file_operations.open_file(self.fisttab))
     self.file_menu.add_command(label=self._("Save"),
                                 accelerator="Ctrl+S",
                                 command=do_nothing)
