@@ -3,7 +3,12 @@ from tkinter.filedialog import *
 from sys import platform
 import os, sys
 
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+sys.path.append(os.path.dirname(
+                    os.path.dirname(
+                        os.path.abspath(__file__)
+                    )
+                )
+            )
 import tabs
 
 if platform == "win32":
@@ -24,10 +29,14 @@ def open_file(self):
                                 filetypes=(("Text files", "*.txt"), script_type, ("All files", "*.*")))
     if file_name:
         find_text_editor(self)
-        print(self.text_editor.get(1.0, END))
+        #print(self.text_editor.get(1.0, END))
+
         if self.text_editor.get(1.0, END) != "\n":
-            #tabs.add_tab(self, self)
-            print("None.")
+            tabs.add_tab(self, self)
+            pass
+        else:
+            pass
+        
         with open(file_name, "r") as f:
             self.text_editor.insert(1.0, f.read())
             self.title(self._("Text editor") + " - " + file_name)
