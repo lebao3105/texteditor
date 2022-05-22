@@ -11,6 +11,10 @@ sys.path.append(os.path.dirname(
             )
 import tabs
 
+# Made this to prevent the application from 
+# running save_as() right after starting up.
+is_safe_to_save_as = False
+
 if platform == "win32":
     searchdir = os.getenv("USERPROFILE\Documents")
     script_type = ("Windows Shell Script", "*.bat, *.cmd")
@@ -29,8 +33,6 @@ def open_file(self):
                                 filetypes=(("Text files", "*.txt"), script_type, ("All files", "*.*")))
     if file_name:
         find_text_editor(self)
-        #print(self.text_editor.get(1.0, END))
-
         if self.text_editor.get(1.0, END) != "\n":
             tabs.add_tab(self, self)
             pass
@@ -42,16 +44,27 @@ def open_file(self):
             self.title(self._("Text editor") + " - " + file_name)
 
 def save_file(self):
+    global is_safe_to_save_as
     find_text_editor(self)
     if self.text_editor.get(1.0, END) == "\n":
-        save_as(self)
+        if is_safe_to_save_as:
+            save_as(self)
+        else:
+            pass
+    else:
+        with open(self.title().split(" - ")[1], "w") as f:
+            f.write(self.text_editor.get(1.0, END))
+            is_safe_to_save_as = True
 
 def save_as(self):
-    find_text_editor(self)
-    file_name = asksaveasfilename(initialdir=searchdir, 
-                                title=self._("Save as"),
-                                filetypes=(("Text files", "*.txt"), script_type, 
-                                ("All files", "*.*")))
-    if file_name:
-        with open(file_name, "w") as f:
-            f.write(self.text_editor.get(1.0, END))
+    if is_safe_to_save_as:
+        find_text_editor(self)
+        file_name = asksaveasfilename(initialdir=searchdir, 
+                                    title=self._("Save as"),
+                                    filetypes=(("Text files", "*.txt"), script_type, 
+                                    ("All files", "*.*")))
+        if file_name:
+            with open(file_name, "w") as f:
+                f.write(self.text_editor.get(1.0, END))
+    else:
+        pass
