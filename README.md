@@ -66,3 +66,4 @@ You will need python 3.8+ with tkinter installed to use this program.
 
 ## Screenshots
 ![image](https://user-images.githubusercontent.com/77564176/166142604-791a81ca-4f4c-47db-b037-b5525c7cf313.png)
+![image](https://user-images.githubusercontent.com/77564176/169689858-a131cd42-1d6d-4d2a-976d-7daef4fab5ac.png)
