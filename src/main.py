@@ -39,7 +39,7 @@ def place_menu(self):
                                 command=miscs.file_operations.save_file(self))
     self.file_menu.add_command(label=self._("Save as"), 
                                 accelerator="Ctrl+Shift+S",
-                                command=do_nothing)
+                                command=miscs.file_operations.save_as(self))
     self.file_menu.add_separator()
     self.file_menu.add_command(label=self._("Exit"), 
                                 accelerator="Alt+F4",
@@ -103,7 +103,7 @@ def binder(self):
     self.bind("<Control-n>", lambda event: tabs.add_tab(self, self))
     self.bind("<Control-o>", lambda event: miscs.file_operations.open_file(self))
     self.bind("<Control-s>", lambda event: miscs.file_operations.save_file(self))
-    self.bind("<Control-Shift-s>", lambda event: do_nothing)
+    self.bind("<Control-Shift-s>", lambda event: miscs.file_operations.save_as(self))
     self.bind("<Alt-F4>", lambda event: miscs.init.ask_quit(self))
     self.bind("<Control-a>", lambda event: do_nothing)
     self.bind("<Control-z>", lambda event: do_nothing)
