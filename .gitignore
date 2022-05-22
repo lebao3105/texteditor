@@ -11,3 +11,8 @@ po/*/*/*.mo
 src/dist/
 # No vscode configurations
 .vscode/
+# debuild build directory
+## note that .deb file will be placed in ../
+build/
+# another directory
+src/texteditor.egg*
