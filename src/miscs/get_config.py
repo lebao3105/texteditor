@@ -38,7 +38,7 @@ def check_if_its_a_window(self):
     else:
         return False
 
-# At least we make this independently frin set_window_color(self).
+# At least we made this independently from set_window_color(self).
 def change_text_color(self):
     check_exists()
     with open(dir + "config.ini", "r") as configfile:
@@ -52,13 +52,25 @@ def change_text_color(self):
         if parser.get("global", "sub_color") == "default":
             return True
         elif parser.get("global", "sub_color") == "Green":
-            self.configure(fg=constants.GREEN_TEXT, bg=item)
+            if not check_dark_mode(self, item):
+                self.configure(fg=constants.GREEN_TEXT, bg=item)
         elif parser.get("global", "sub_color") == "Blue":
-            self.configure(fg=constants.BLUE_TEXT, bg=item)
+            if not check_dark_mode(self, item):
+                self.configure(fg=constants.BLUE_TEXT, bg=item)
         elif parser.get("global", "sub_color") == "Red":
-            self.configure(fg=constants.RED_TEXT, bg=item)
+            if not check_dark_mode(self, item):
+                self.configure(fg=constants.RED_TEXT, bg=item)
         else:
             return False
+
+# Check if we are in dark mode which allows us 
+# to change the text color
+def check_dark_mode(self, color):
+    if color == constants.DARK_BG:
+        self.configure(fg=constants.LIGHT_TEXT)
+        return True
+    else:
+        return False
 
 def set_windows_color(self):
     check_exists()
@@ -70,7 +82,8 @@ def set_windows_color(self):
             change_color(self, 'dark')
         elif config["global"]["color"] == "light":
             change_color(self, 'light')
-        
+    
+    # For TopLevel windows
     if check_if_its_a_window(self) == "Toplevel":
         self.geometry(config["other_windows"]["width"] + "x" + config["other_windows"]["height"])
         self.resizable(False, False)
@@ -96,7 +109,7 @@ def change_color(self, color):
     if check_if_its_a_window(self) == "Text":
         self.configure(bg=item, fg=sub_item)
 
-# Use for the setup window only
+# Change the configures
 def change_config(self):
     check_exists()
     with open(dir + "config.ini", "r") as configfile:
