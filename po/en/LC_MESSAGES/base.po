@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-05-12 22:02+0700\n"
+"POT-Creation-Date: 2022-05-21 14:53+0700\n"
 "PO-Revision-Date: 2022-04-30 10:19+007\n"
 "Last-Translator: Le Bao Nguyen <bao12345yocoo@gmail.com>\n"
 "Language-Team: Main <bao12345yocoo@gmail.com>\n"
@@ -15,174 +15,122 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: pygettext.py 1.5\n"
 
-#: src/main.py:14 src/pages/about.py:16
+#: src/main.py:18 src/pages/about.py:18 src/miscs/file_operations.py:42
 msgid "Text editor"
 msgstr ""
 
-#: src/main.py:23
-msgid "Quit"
-msgstr ""
-
-#: src/main.py:23
-msgid "Are you sure want to quit?"
-msgstr ""
-
-#: src/main.py:34
+#: src/main.py:31
 msgid "New"
 msgstr ""
 
-#: src/main.py:35
+#: src/main.py:34
 msgid "Open"
 msgstr ""
 
-#: src/main.py:36
+#: src/main.py:37
 msgid "Save"
 msgstr ""
 
-#: src/main.py:37
+#: src/main.py:40 src/miscs/file_operations.py:52
 msgid "Save as"
 msgstr ""
 
-#: src/main.py:39
+#: src/main.py:44
 msgid "Exit"
 msgstr ""
 
-#: src/main.py:40
+#: src/main.py:47
 msgid "File"
 msgstr ""
 
-#: src/main.py:43
+#: src/main.py:50
 msgid "Undo"
 msgstr ""
 
-#: src/main.py:44
+#: src/main.py:53
 msgid "Redo"
 msgstr ""
 
-#: src/main.py:46
+#: src/main.py:57
 msgid "Cut"
 msgstr ""
 
-#: src/main.py:47
+#: src/main.py:60
 msgid "Copy"
 msgstr ""
 
-#: src/main.py:48
+#: src/main.py:63
 msgid "Paste"
 msgstr ""
 
-#: src/main.py:50
+#: src/main.py:67
 msgid "Select all"
 msgstr ""
 
-#: src/main.py:51
+#: src/main.py:70
 msgid "Edit"
 msgstr ""
 
-#: src/main.py:54 src/main.py:56 src/pages/helpme.py:10 src/pages/helpme.py:19
+#: src/main.py:73 src/main.py:79 src/pages/helpme.py:11 src/pages/helpme.py:20
 msgid "Help"
 msgstr ""
 
-#: src/main.py:55 src/pages/about.py:9
+#: src/main.py:76 src/pages/about.py:11
 msgid "About"
 msgstr ""
 
-#: src/main.py:62 src/tabs.py:10
+#: src/main.py:88 src/tabs.py:10
 msgid "Untitled "
 msgstr ""
 
-#: src/main.py:68
+#: src/main.py:92
 msgid "New tab"
 msgstr ""
 
-#: src/main.py:69
+#: src/main.py:95
 msgid "Close the current opening tab"
 msgstr ""
 
-#: src/setup.py:13
-msgid "Setup your new application"
-msgstr ""
-
-#: src/setup.py:24
-msgid "Welcome"
-msgstr ""
-
-#: src/setup.py:25
-msgid "Welcome to your new application!"
-msgstr ""
-
-#: src/setup.py:26
-msgid "Press next to continue"
-msgstr ""
-
-#: src/setup.py:27
-msgid "Next"
-msgstr ""
-
-#: src/setup.py:44
-msgid "Apperance"
-msgstr ""
-
-#: src/setup.py:45
-msgid "Choose your color"
-msgstr ""
-
-#: src/setup.py:46
-msgid "Choose your theme"
-msgstr ""
-
-#: src/setup.py:49
-msgid "Light"
-msgstr ""
-
-#: src/setup.py:50 src/setup.py:87
-msgid "Dark"
-msgstr ""
-
-#: src/setup.py:51
-msgid "Colorful"
-msgstr ""
-
-#: src/setup.py:55
-msgid "Default"
-msgstr ""
-
-#: src/setup.py:56
-msgid "Green"
-msgstr ""
-
-#: src/setup.py:57
-msgid "Blue"
-msgstr ""
-
-#: src/setup.py:58
-msgid "Red"
-msgstr ""
-
-#: src/tabs.py:30
+#: src/tabs.py:31
 msgid "No other tabs left, closing the window..."
 msgstr ""
 
-#: src/pages/about.py:17
-msgid "Version 1.0."
-msgstr ""
-
-#: src/pages/about.py:18
-msgid "Author: "
+#: src/tabs.py:50
+msgid "No other tabs left, cannot move the tab to the right."
 msgstr ""
 
 #: src/pages/about.py:19
+msgid "Version 1.0."
+msgstr ""
+
+#: src/pages/about.py:20
+msgid "Author: "
+msgstr ""
+
+#: src/pages/about.py:21
 msgid "License: "
 msgstr ""
 
-#: src/pages/helpme.py:20
+#: src/pages/helpme.py:21
 msgid "How to use this application?"
 msgstr ""
 
-#: src/pages/helpme.py:21
+#: src/pages/helpme.py:22
 msgid "Just do what you need like any other text editor,"
 msgstr ""
 
-#: src/pages/helpme.py:22
+#: src/pages/helpme.py:23
 msgid "with tabs support."
+msgstr ""
+
+#: src/miscs/file_operations.py:28
+msgid "Select a file to open"
+msgstr ""
+
+#: src/miscs/init.py:41
+msgid "Quit"
+msgstr ""
+
+#: src/miscs/init.py:41
+msgid "Are you sure want to quit?"
 msgstr ""

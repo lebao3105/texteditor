@@ -23,6 +23,7 @@ def main_win():
 def do_nothing():
     print("Nothing")
 
+
 def place_menu(self):
     # Menu bar
     self.menu_bar = Menu(self)

@@ -15,11 +15,13 @@ def about_run(self):
     place_texts(about_win)
 
 def place_texts(self):
+    img = Label(self, image=self.p2)
     name = Label(self, text=self._("Text editor"))
     version = Label(self, text=self._("Version 1.0."))
     author = Label(self, text=self._("Author: ")+("Le Bao Nguyen"))
     license_text = Label(self, text=self._("License: ")+("GPLv3"))
     
+    img.grid(row=0, column=0, rowspan=2, sticky=W+E+N+S)
     name.grid(row=1, column=0, sticky="ew", padx=5, pady=5)
     version.grid(row=2, column=0, sticky="ew", padx=5)
     author.grid(row=3, column=0, sticky="ew", padx=5)

@@ -2,6 +2,7 @@
 # Including language, and configures.
 import gettext
 from tkinter import PhotoImage
+from PIL import Image, ImageTk
 from tkinter.messagebox import askyesno
 from . import get_config
 import os
@@ -21,16 +22,19 @@ def initialize(self, part):
         else:
             raise Exception("Could not find the language directory!")
 
-        # Test for installation support (linux)
         if os.path.isfile("data/org.lebao3105.texteditor.Devel.png"):
             p1 = PhotoImage(file="data/org.lebao3105.texteditor.Devel.png")
+            self.p2 = ImageTk.PhotoImage(Image.open("data/org.lebao3105.texteditor.Devel.png"))
         # Also
         elif os.path.isfile("../data/org.lebao3105.texteditor.Devel.png"):
             p1 = PhotoImage(file="../data/org.lebao3105.texteditor.Devel.png")
+            self.p2 = ImageTk.PhotoImage(Image.open("../data/org.lebao3105.texteditor.Devel.png"))
         elif os.path.isfile("icon.png"):
             p1 = PhotoImage(file="icon.png")
+            self.p2 = ImageTk.PhotoImage(Image.open("icon.png"))
         elif os.path.isfile("src/icon.png"):
             p1 = PhotoImage(file="src/icon.png")
+            self.p2 = ImageTk.PhotoImage(Image.open("src/icon.png"))
 
         self.iconphoto(False, p1)
     elif part == 2:
