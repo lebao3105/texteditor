@@ -52,13 +52,13 @@ def change_text_color(self):
         if parser.get("global", "sub_color") == "default":
             return True
         elif parser.get("global", "sub_color") == "Green":
-            if not check_dark_mode(self, item):
+            if check_dark_mode(self, item):
                 self.configure(fg=constants.GREEN_TEXT, bg=item)
         elif parser.get("global", "sub_color") == "Blue":
-            if not check_dark_mode(self, item):
+            if check_dark_mode(self, item):
                 self.configure(fg=constants.BLUE_TEXT, bg=item)
         elif parser.get("global", "sub_color") == "Red":
-            if not check_dark_mode(self, item):
+            if check_dark_mode(self, item):
                 self.configure(fg=constants.RED_TEXT, bg=item)
         else:
             return False
