@@ -1,6 +1,4 @@
-# This is a basic workflow to help you get started with Actions
-
-name: CI
+name: Build Debian package (.deb file in ..)
 
 # Controls when the workflow will run
 on:
@@ -29,6 +27,7 @@ jobs:
       # Runs a single command using the runners shell
       - name: Install build tools
         run: |
+          sudo apt update && sudo apt upgarde -y
           sudo apt install devscripts python3-virtualenv python3-tk
 
       # Runs a set of commands using the runners shell
