@@ -27,7 +27,7 @@ jobs:
       # Runs a single command using the runners shell
       - name: Install build tools
         run: |
-          sudo apt update && sudo apt upgarde -y
+          sudo apt update && sudo apt upgrade -y
           sudo apt install devscripts python3-virtualenv python3-tk
 
       # Runs a set of commands using the runners shell
