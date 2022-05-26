@@ -15,4 +15,5 @@ src/dist/
 ## note that .deb file will be placed in ../
 build/
 # another directory
-src/texteditor.egg*
+src/texteditor.egg*/
+texteditor.egg-info/
