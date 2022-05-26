@@ -96,7 +96,6 @@ def place_widgets(self):
     self.tab_right_click.add_command(label=self._("Close the current opening tab"), 
                                     accelerator="Ctrl+W",
                                     command=lambda: tabs.tabs_close(self))
-    self.bind("<Button-3>", lambda event: self.tab_right_click.post(event.x_root, event.y_root))
     self.bind("Button-release", lambda event: tabs.move_tabs(self, event))
     # Bind the function to the event
     binder(self)
