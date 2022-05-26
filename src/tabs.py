@@ -1,8 +1,6 @@
 from tkinter import *
 from tkinter import ttk
 import miscs.init
-import gettext
-_ = gettext.gettext
 
 # For example:
 # We have 2 tabs: Untitled and Untitled 2. You close Untitled
@@ -16,7 +14,7 @@ def checker(self):
     if str(self.notebook.index("end")) in find_tab:
         return True
     # if this is the first tab yet
-    elif find_tab == _("Untitled "):
+    elif find_tab == self._("Untitled "):
         return True
     # what I mentioned before
     elif str(self.notebook.index("end") + 1) in find_tab:
@@ -28,7 +26,7 @@ def add_tab(self, root):
     else:
         tab_name = self.notebook.index("end") + 2
     new_tab = Frame(self.notebook)
-    self.notebook.add(new_tab, text=_("Untitled ") + str(tab_name))
+    self.notebook.add(new_tab, text=self._("Untitled ") + str(tab_name))
     place_textbox(new_tab, root)
     self.notebook.select(new_tab)
 
@@ -48,7 +46,7 @@ def place_textbox(self, root):
 def tabs_close(self):
     # Automatically close the window if there's only one tab
     if self.notebook.index("end") == 1:
-        print(_("No other tabs left, asking for close the window..."))
+        print(self._("No other tabs left, asking for close the window..."))
         miscs.init.ask_quit(self)
     # If not, just close the selected tab and keep
     # the main window open
