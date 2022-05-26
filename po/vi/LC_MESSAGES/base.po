@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-05-21 14:53+0700\n"
+"POT-Creation-Date: 2022-05-26 14:38+0700\n"
 "PO-Revision-Date: 2022-05-02 15:31+007\n"
 "Last-Translator: Le Bao Nguyen <bao12345yocoo@gmail.com>\n"
 "Language-Team: Main <bao12345yocoo@gmail.com>\n"
@@ -15,100 +15,101 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: pygettext.py 1.5\n"
 
-#: src/main.py:18 src/pages/about.py:18 src/miscs/file_operations.py:42
+#: src/main.py:18 src/pages/about.py:21
 msgid "Text editor"
 msgstr "Trinh chinh sua van ban"
 
-#: src/main.py:31
+#: src/main.py:32
 msgid "New"
 msgstr "Tao moi"
 
-#: src/main.py:34
+#: src/main.py:35
 msgid "Open"
 msgstr "Mo"
 
-#: src/main.py:37
+#: src/main.py:38
 msgid "Save"
 msgstr "Luu"
 
-#: src/main.py:40 src/miscs/file_operations.py:52
+#: src/main.py:41
 msgid "Save as"
 msgstr "Luu nhu..."
 
-#: src/main.py:44
+#: src/main.py:45
 msgid "Exit"
 msgstr "Thoat"
 
-#: src/main.py:47
+#: src/main.py:48
 msgid "File"
 msgstr "Tep"
 
-#: src/main.py:50
+#: src/main.py:51
 msgid "Undo"
 msgstr "Hoan tac"
 
-#: src/main.py:53
+#: src/main.py:54
 msgid "Redo"
 msgstr "Thuc hien lai hanh dong"
 
-#: src/main.py:57
+#: src/main.py:58
 msgid "Cut"
 msgstr "Cat"
 
-#: src/main.py:60
+#: src/main.py:61
 msgid "Copy"
 msgstr "Sao chep"
 
-#: src/main.py:63
+#: src/main.py:64
 msgid "Paste"
 msgstr "Dan"
 
-#: src/main.py:67
+#: src/main.py:68
 msgid "Select all"
 msgstr "Chon tat ca"
 
-#: src/main.py:70
+#: src/main.py:71
 msgid "Edit"
 msgstr "Sua"
 
-#: src/main.py:73 src/main.py:79 src/pages/helpme.py:11 src/pages/helpme.py:20
+#: src/main.py:74 src/main.py:80 src/pages/helpme.py:11 src/pages/helpme.py:20
 msgid "Help"
 msgstr "Tro giup"
 
-#: src/main.py:76 src/pages/about.py:11
+#: src/main.py:77 src/pages/about.py:11
 msgid "About"
 msgstr "Ve ung dung nay"
 
-#: src/main.py:88 src/tabs.py:10
+#: src/main.py:89 src/tabs.py:19 src/tabs.py:31
 msgid "Untitled "
 msgstr "Chua co tieu de "
 
-#: src/main.py:92
+#: src/main.py:93
 msgid "New tab"
 msgstr "Tab moi"
 
-#: src/main.py:95
+#: src/main.py:96
 msgid "Close the current opening tab"
 msgstr "Dong tab dang mo"
 
-#: src/tabs.py:31
-msgid "No other tabs left, closing the window..."
+#: src/tabs.py:51
+#, fuzzy
+msgid "No other tabs left, asking for close the window..."
 msgstr "Khong con tab nao nua, bat dau dong cua so..."
 
-#: src/tabs.py:50
-msgid "No other tabs left, cannot move the tab to the right."
-msgstr ""
-"Khong con tab nao nua nen khong the di chuyen tab nay sang ben phai duoc."
+#: src/pages/about.py:20
+#, fuzzy
+msgid "About this application"
+msgstr "Lam the nao de su dung ung dung nay?"
 
-#: src/pages/about.py:19
+#: src/pages/about.py:22
 msgid "Version 1.0."
 msgstr "Phien ban 1.0"
 
-#: src/pages/about.py:20
+#: src/pages/about.py:23
 msgid "Author: "
 msgstr "Nha xuat ban: "
 
-#: src/pages/about.py:21
+#: src/pages/about.py:24
 msgid "License: "
 msgstr "Giay phep: "
 
@@ -124,14 +125,15 @@ msgstr "Hay lam nhung gi ban can nhu bao trinh chinh sua van ban khac,"
 msgid "with tabs support."
 msgstr "voi kieu tab duoc ho tro."
 
-#: src/miscs/file_operations.py:28
-msgid "Select a file to open"
-msgstr "Chon mot tep de mo ra"
+#~ msgid "No other tabs left, cannot move the tab to the right."
+#~ msgstr ""
+#~ "Khong con tab nao nua nen khong the di chuyen tab nay sang ben phai duoc."
 
-#: src/miscs/init.py:41
-msgid "Quit"
-msgstr "Thoat"
+#~ msgid "Select a file to open"
+#~ msgstr "Chon mot tep de mo ra"
 
-#: src/miscs/init.py:41
-msgid "Are you sure want to quit?"
-msgstr "Ban co chac chan muon thoat?"
+#~ msgid "Quit"
+#~ msgstr "Thoat"
+
+#~ msgid "Are you sure want to quit?"
+#~ msgstr "Ban co chac chan muon thoat?"
