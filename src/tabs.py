@@ -4,13 +4,24 @@ import miscs.init
 import gettext
 _ = gettext.gettext
 
+def checker(self):
+    find_tab = self.notebook.tab(self.notebook.select(), "text")
+    if str(self.notebook.index("end")) in find_tab:
+        return True
+    elif find_tab == _("Untitled "):
+        return True
+    elif str(self.notebook.index("end") + 1) in find_tab:
+        return False
+
 def add_tab(self, root):
-    tab_name = self.notebook.index("end") + 1
+    if checker(self):
+        tab_name = self.notebook.index("end") + 1
+    else:
+        tab_name = self.notebook.index("end") + 2
     new_tab = Frame(self.notebook)
     self.notebook.add(new_tab, text=_("Untitled ") + str(tab_name))
     place_textbox(new_tab, root)
-    self.notebook.select(tab_name)
-    self.tab_name_entry.delete(0, END)
+    self.notebook.select(new_tab)
 
 def place_textbox(self, root):
     # Text box
@@ -28,23 +39,9 @@ def place_textbox(self, root):
 def tabs_close(self):
     # Automatically close the window if there's only one tab
     if self.notebook.index("end") == 1:
-        print(_("No other tabs left, closing the window..."))
+        print(_("No other tabs left, asking for close the window..."))
         miscs.init.ask_quit(self)
     # If not, just close the selected tab and keep
     # the main window open
     else:
         self.notebook.forget(self.notebook.select())
-
-def move_tabs(self):
-    # If there's more than one tab, move the selected tab to the right
-    if self.notebook.index("end") > 1:
-        y = self.get_tab().winfo_y() - 5
-
-        try:
-            self.notebook.insert(self.notebook.index("current") + 1, self.get_tab(), text=self.get_tab().winfo_children()[0].get(1.0, END))
-        except TclError:
-            return
-
-    # If there's only one tab, do nothing
-    else:
-        print(_("No other tabs left, cannot move the tab to the right."))   
