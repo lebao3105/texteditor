@@ -4,12 +4,21 @@ import miscs.init
 import gettext
 _ = gettext.gettext
 
+# For example:
+# We have 2 tabs: Untitled and Untitled 2. You close Untitled
+# and create a new tab. The new tab's name is Untitled 2 - not 3.
+# This is because tab_name = tabs number + 1, which can occur problem
+# like that.
 def checker(self):
+    # get the current tab name
     find_tab = self.notebook.tab(self.notebook.select(), "text")
+    # if the number in find_tab = tabs index, return True
     if str(self.notebook.index("end")) in find_tab:
         return True
+    # if this is the first tab yet
     elif find_tab == _("Untitled "):
         return True
+    # what I mentioned before
     elif str(self.notebook.index("end") + 1) in find_tab:
         return False
 
