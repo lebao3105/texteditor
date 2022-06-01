@@ -83,3 +83,8 @@ You will need python 3.8+ with tkinter installed to use this program.
     <img id="image" src="https://user-images.githubusercontent.com/77564176/166142604-791a81ca-4f4c-47db-b037-b5525c7cf313.png">
     <img id="image" src="https://user-images.githubusercontent.com/77564176/169689858-a131cd42-1d6d-4d2a-976d-7daef4fab5ac.png">
 </div>
+
+## Note
+* Text editor's UI works best on... Windows, not Linux! I see there are problems that I can't use Pillow on Linux - this will prevent us from seeing the icon in About.
+* Basic things (copy, paste, cut) are not implemented yet.
+* Code in this project may be too complex.
