@@ -57,13 +57,13 @@ def place_menu(self):
     self.edit_menu.add_separator()
     self.edit_menu.add_command(label=self._("Cut"), 
                                 accelerator="Ctrl+X",
-                                command=do_nothing)
+                                command=miscs.file_operations.cut(self))
     self.edit_menu.add_command(label=self._("Copy"), 
                                 accelerator="Ctrl+C",
-                                command=do_nothing)
+                                command=miscs.file_operations.copy(self))
     self.edit_menu.add_command(label=self._("Paste"), 
                                 accelerator="Ctrl+V",
-                                command=do_nothing)
+                                command=miscs.file_operations.paste(self))
     self.edit_menu.add_separator()
     self.edit_menu.add_command(label=self._("Select all"), 
                                 accelerator="Ctrl+A",
@@ -92,11 +92,11 @@ def place_widgets(self):
     self.tab_right_click = Menu(self.notebook, tearoff=0)
     self.tab_right_click.add_command(label=self._("New tab"), 
                                     accelerator="Ctrl+N",    
-                                    command=lambda: tabs.add_tab(self, self))
+                                    command=lambda: tabs.add_tab(self))
     self.tab_right_click.add_command(label=self._("Close the current opening tab"), 
                                     accelerator="Ctrl+W",
                                     command=lambda: tabs.tabs_close(self))
-    self.bind("<Button-3>", lambda event: self.tab_right_click.post(event.x_root, event.y_root))
+    self.notebook.bind("<Button-3>", lambda event: self.tab_right_click.post(event.x_root, event.y_root))
     # Bind the function to the event
     binder(self)
 
@@ -109,9 +109,9 @@ def binder(self):
     self.bind("<Control-a>", lambda event: do_nothing)
     self.bind("<Control-z>", lambda event: do_nothing)
     self.bind("<Control-y>", lambda event: do_nothing)
-    self.bind("<Control-x>", lambda event: do_nothing)
-    self.bind("<Control-c>", lambda event: do_nothing)
-    self.bind("<Control-v>", lambda event: do_nothing)
+    self.bind("<Control-x>", lambda event: miscs.file_operations.cut(self))
+    self.bind("<Control-c>", lambda event: miscs.file_operations.copy(self))
+    self.bind("<Control-v>", lambda event: miscs.file_operations.paste(self))
     self.bind("<Alt-F1>", lambda event: pages.helpme.help_run(self))
     self.bind("<Alt-F3>", lambda event: pages.about.about_run(self))
     self.bind("<Control-w>", lambda event: tabs.tabs_close(self))
