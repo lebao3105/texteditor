@@ -66,8 +66,7 @@ def place_menu(self):
                                 command=miscs.file_operations.paste(self))
     self.edit_menu.add_separator()
     self.edit_menu.add_command(label=self._("Select all"), 
-                                accelerator="Ctrl+A",
-                                command=do_nothing)
+                                accelerator="Ctrl+A")
     self.menu_bar.add_cascade(label=self._("Edit"), menu=self.edit_menu)
     ## Help & About
     self.help_menu = Menu(self.menu_bar, tearoff=0)
@@ -84,9 +83,7 @@ def place_menu(self):
 def place_widgets(self):
     # Create a notebook
     self.notebook = ttk.Notebook(self)
-    self.firsttab = Frame(self.notebook)
-    tabs.place_textbox(self.firsttab, self)
-    self.notebook.add(self.firsttab, text=self._("Untitled "))
+    tabs.add_tab(self)
     self.notebook.pack(expand=True, fill="both")
     # Close & New tab right-click menu for tabs
     self.tab_right_click = Menu(self.notebook, tearoff=0)
@@ -106,9 +103,6 @@ def binder(self):
     self.bind("<Control-s>", lambda event: miscs.file_operations.save_file(self))
     self.bind("<Control-Shift-s>", lambda event: miscs.file_operations.save_as(self))
     self.bind("<Alt-F4>", lambda event: miscs.init.ask_quit(self))
-    self.bind("<Control-a>", lambda event: do_nothing)
-    self.bind("<Control-z>", lambda event: do_nothing)
-    self.bind("<Control-y>", lambda event: do_nothing)
     self.bind("<Control-x>", lambda event: miscs.file_operations.cut(self))
     self.bind("<Control-c>", lambda event: miscs.file_operations.copy(self))
     self.bind("<Control-v>", lambda event: miscs.file_operations.paste(self))
