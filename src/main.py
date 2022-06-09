@@ -48,22 +48,21 @@ def place_menu(self):
     self.menu_bar.add_cascade(label=self._("File"), menu=self.file_menu)
     ## Edit
     self.edit_menu = Menu(self.menu_bar, tearoff=0)
-    self.edit_menu.add_command(label=self._("Undo"), 
-                                accelerator="Ctrl+Z",
-                                command=do_nothing)
-    self.edit_menu.add_command(label=self._("Redo"), 
-                                accelerator="Ctrl+Y",
-                                command=do_nothing)
+    self.edit_menu.add_command(label=self._("Undo"), accelerator="Ctrl+Z")
+    self.edit_menu.add_command(label=self._("Redo"), accelerator="Ctrl+Y")
     self.edit_menu.add_separator()
     self.edit_menu.add_command(label=self._("Cut"), 
                                 accelerator="Ctrl+X",
-                                command=miscs.file_operations.cut(self))
+                                #command=miscs.file_operations.cut(self)
+                                )
     self.edit_menu.add_command(label=self._("Copy"), 
                                 accelerator="Ctrl+C",
-                                command=miscs.file_operations.copy(self))
+                                #command=miscs.file_operations.copy(self)
+                                )
     self.edit_menu.add_command(label=self._("Paste"), 
                                 accelerator="Ctrl+V",
-                                command=miscs.file_operations.paste(self))
+                                #command=miscs.file_operations.paste(self)
+                                )
     self.edit_menu.add_separator()
     self.edit_menu.add_command(label=self._("Select all"), 
                                 accelerator="Ctrl+A")
@@ -103,12 +102,11 @@ def binder(self):
     self.bind("<Control-s>", lambda event: miscs.file_operations.save_file(self))
     self.bind("<Control-Shift-s>", lambda event: miscs.file_operations.save_as(self))
     self.bind("<Alt-F4>", lambda event: miscs.init.ask_quit(self))
-    self.bind("<Control-x>", lambda event: miscs.file_operations.cut(self))
-    self.bind("<Control-c>", lambda event: miscs.file_operations.copy(self))
-    self.bind("<Control-v>", lambda event: miscs.file_operations.paste(self))
     self.bind("<Alt-F1>", lambda event: pages.helpme.help_run(self))
     self.bind("<Alt-F3>", lambda event: pages.about.about_run(self))
+    self.bind("<Alt-F4>", lambda event: miscs.init.ask_quit(self))
     self.bind("<Control-w>", lambda event: tabs.tabs_close(self))
+    self.protocol("WM_DELETE_WINDOW", lambda: miscs.init.ask_quit(self))
 
 if __name__ == "__main__":
     main_win()
