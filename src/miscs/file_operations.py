@@ -14,6 +14,8 @@ import tabs
 # Made this to prevent the application from 
 # running some functions right after the startup.
 is_safe_to_do = False
+# Use this for closing the application
+is_saved = False
 
 if platform == "win32":
     searchdir = os.getenv("USERPROFILE\Documents")
@@ -23,7 +25,7 @@ elif platform == "linux":
     script_type = ("UNIX Shell Script", "*.sh")
 
 def find_text_editor(self):
-    if hasattr(self, "text_editor"):
+    if hasattr(self, 'text_editor'):
         return
     else:
         raise Exception("Text editor not found!")
@@ -45,6 +47,7 @@ def open_file(self):
 
 def save_file(self):
     global is_safe_to_do
+    global is_saved
     find_text_editor(self)
     if self.text_editor.get(1.0, END) == "\n":
         if is_safe_to_do:
@@ -55,8 +58,11 @@ def save_file(self):
         with open(self.title().split(" - ")[1], "w") as f:
             f.write(self.text_editor.get(1.0, END))
             is_safe_to_do = True
+            is_saved = True
 
 def save_as(self):
+    global is_safe_to_do
+    global is_saved
     if is_safe_to_do:
         find_text_editor(self)
         file_name = asksaveasfilename(initialdir=searchdir, 
@@ -66,29 +72,36 @@ def save_as(self):
         if file_name:
             with open(file_name, "w") as f:
                 f.write(self.text_editor.get(1.0, END))
+                is_saved = True
     else:
         pass
 
+"""
 def copy(self):
-    if is_safe_to_do:
+    global is_safe_to_do_more
+    if is_safe_to_do_more:
         find_text_editor(self)
         self.text_editor.clipboard_clear()
         self.text_editor.clipboard_append(self.text_editor.selection_get())
+        is_safe_to_do_more = True
     else:
         pass
 
 def paste(self):
-    if is_safe_to_do:
+    global is_safe_to_do_more
+    if is_safe_to_do_more:
         find_text_editor(self)
         self.text_editor.insert(INSERT, self.text_editor.clipboard_get())
     else:
         pass
 
 def cut(self):
-    if is_safe_to_do:
+    global is_safe_to_do_more
+    if is_safe_to_do_more:
         find_text_editor(self)
         self.text_editor.clipboard_clear()
         self.text_editor.clipboard_append(self.text_editor.selection_get())
         self.text_editor.delete(SEL_FIRST, SEL_LAST)
     else:
         pass
+"""
