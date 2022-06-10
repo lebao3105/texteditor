@@ -73,6 +73,9 @@ def place_right_click_menu(self, event, root):
         m.add_separator()
         m.add_command(label=root._("Save"), accelerator="Ctrl+S", event=event.widget.event_generate("<Control-s>"))
         m.add_command(label=root._("Save as"), accelerator="Ctrl+Shift+S", event=event.widget.event_generate("<Control-Shift-s>"))
+        m.add_separator()
+        m.add_command(label=root._("Undo"), accelerator="Ctrl+Z", event=event.widget.event_generate("<Control-z>"))
+        m.add_command(label=root._("Redo"), accelerator="Ctrl+Y", event=event.widget.event_generate("<Control-y>"))
         m.tk_popup(event.x_root, event.y_root)
     finally:
         m.grab_release()
