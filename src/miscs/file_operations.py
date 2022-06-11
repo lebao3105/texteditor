@@ -31,8 +31,10 @@ def find_text_editor(self):
         raise Exception("Text editor not found!")
 
 def open_file(self):
-    file_name = askopenfilename(initialdir=searchdir, title=self._("Select a file to open"), 
-                                filetypes=(("Text files", "*.txt"), script_type, ("All files", "*.*")))
+    file_name = askopenfilename(initialdir=searchdir,
+                                title=self._("Select a file to open"), 
+                                filetypes=(("Text files", "*.txt"),
+                                script_type, ("All files", "*.*")))
     if file_name:
         find_text_editor(self)
         if self.text_editor.get(1.0, END) != "\n":
@@ -55,10 +57,13 @@ def save_file(self):
         else:
             pass
     else:
-        with open(self.title().split(" - ")[1], "w") as f:
-            f.write(self.text_editor.get(1.0, END))
-            is_safe_to_do = True
-            is_saved = True
+        if self.title().split("-")[0] == self._("Text editor"):
+            save_as(self)
+        else:
+            with open(self.title().split(" - ")[0], "w") as f:
+                f.write(self.text_editor.get(1.0, END))
+                is_safe_to_do = True
+                is_saved = True
 
 def save_as(self):
     global is_safe_to_do
@@ -67,41 +72,11 @@ def save_as(self):
         find_text_editor(self)
         file_name = asksaveasfilename(initialdir=searchdir, 
                                     title=self._("Save as"),
-                                    filetypes=(("Text files", "*.txt"), script_type, 
-                                    ("All files", "*.*")))
+                                    filetypes=(("Text files", "*.txt"),
+                                    script_type, ("All files", "*.*")))
         if file_name:
             with open(file_name, "w") as f:
                 f.write(self.text_editor.get(1.0, END))
                 is_saved = True
     else:
         pass
-
-"""
-def copy(self):
-    global is_safe_to_do_more
-    if is_safe_to_do_more:
-        find_text_editor(self)
-        self.text_editor.clipboard_clear()
-        self.text_editor.clipboard_append(self.text_editor.selection_get())
-        is_safe_to_do_more = True
-    else:
-        pass
-
-def paste(self):
-    global is_safe_to_do_more
-    if is_safe_to_do_more:
-        find_text_editor(self)
-        self.text_editor.insert(INSERT, self.text_editor.clipboard_get())
-    else:
-        pass
-
-def cut(self):
-    global is_safe_to_do_more
-    if is_safe_to_do_more:
-        find_text_editor(self)
-        self.text_editor.clipboard_clear()
-        self.text_editor.clipboard_append(self.text_editor.selection_get())
-        self.text_editor.delete(SEL_FIRST, SEL_LAST)
-    else:
-        pass
-"""
