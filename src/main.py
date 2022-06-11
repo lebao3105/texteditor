@@ -20,10 +20,6 @@ def main_win():
     place_menu(window)
     window.mainloop()
 
-def do_nothing():
-    print("Nothing")
-
-
 def place_menu(self):
     # Menu bar
     self.menu_bar = Menu(self)
@@ -51,21 +47,11 @@ def place_menu(self):
     self.edit_menu.add_command(label=self._("Undo"), accelerator="Ctrl+Z")
     self.edit_menu.add_command(label=self._("Redo"), accelerator="Ctrl+Y")
     self.edit_menu.add_separator()
-    self.edit_menu.add_command(label=self._("Cut"), 
-                                accelerator="Ctrl+X",
-                                #command=miscs.file_operations.cut(self)
-                                )
-    self.edit_menu.add_command(label=self._("Copy"), 
-                                accelerator="Ctrl+C",
-                                #command=miscs.file_operations.copy(self)
-                                )
-    self.edit_menu.add_command(label=self._("Paste"), 
-                                accelerator="Ctrl+V",
-                                #command=miscs.file_operations.paste(self)
-                                )
+    self.edit_menu.add_command(label=self._("Cut"), accelerator="Ctrl+X")
+    self.edit_menu.add_command(label=self._("Copy"), accelerator="Ctrl+C")
+    self.edit_menu.add_command(label=self._("Paste"), accelerator="Ctrl+V")
     self.edit_menu.add_separator()
-    self.edit_menu.add_command(label=self._("Select all"), 
-                                accelerator="Ctrl+A")
+    self.edit_menu.add_command(label=self._("Select all"), accelerator="Ctrl+A")
     self.menu_bar.add_cascade(label=self._("Edit"), menu=self.edit_menu)
     ## Help & About
     self.help_menu = Menu(self.menu_bar, tearoff=0)
