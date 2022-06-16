@@ -13,6 +13,7 @@ import tabs
 def main_win():
     window = Tk()
     window._ = ""
+    miscs.init.initialize(window, 0)
     miscs.init.initialize(window, 1)
     window.geometry("810x610")
     window.title(window._("Text editor"))
@@ -27,7 +28,7 @@ def place_menu(self):
     self.file_menu = Menu(self.menu_bar, tearoff=0)
     self.file_menu.add_command(label=self._("New"), 
                                 accelerator="Ctrl+N",
-                                command=lambda: tabs.add_tab(self, self))
+                                command=lambda: tabs.add_tab(self))
     self.file_menu.add_command(label=self._("Open"), 
                                 accelerator="Ctrl+O",
                                 command=lambda: miscs.file_operations.open_file(self))
@@ -44,12 +45,22 @@ def place_menu(self):
     self.menu_bar.add_cascade(label=self._("File"), menu=self.file_menu)
     ## Edit
     self.edit_menu = Menu(self.menu_bar, tearoff=0)
-    self.edit_menu.add_command(label=self._("Undo"), accelerator="Ctrl+Z")
-    self.edit_menu.add_command(label=self._("Redo"), accelerator="Ctrl+Y")
+    self.edit_menu.add_command(label=self._("Undo"), accelerator="Ctrl+Z",
+                                #event=lambda: self.event_generate("<Control-z>")
+                                )
+    self.edit_menu.add_command(label=self._("Redo"), accelerator="Ctrl+Y",
+                                #command=lambda event: self.event_generate("<Control-y>")
+                                )
     self.edit_menu.add_separator()
-    self.edit_menu.add_command(label=self._("Cut"), accelerator="Ctrl+X")
-    self.edit_menu.add_command(label=self._("Copy"), accelerator="Ctrl+C")
-    self.edit_menu.add_command(label=self._("Paste"), accelerator="Ctrl+V")
+    self.edit_menu.add_command(label=self._("Cut"), accelerator="Ctrl+X",
+                                #command=lambda event: self.event_generate("<Control-x>")
+                                )
+    self.edit_menu.add_command(label=self._("Copy"), accelerator="Ctrl+C",
+                                #command=lambda event: self.event_generate("<Control-c>")
+                                )
+    self.edit_menu.add_command(label=self._("Paste"), accelerator="Ctrl+V",
+                                #command=lambda event: self.event_generate("<Control-v>")
+                                )
     self.edit_menu.add_separator()
     self.edit_menu.add_command(label=self._("Select all"), accelerator="Ctrl+A")
     self.menu_bar.add_cascade(label=self._("Edit"), menu=self.edit_menu)
@@ -83,7 +94,7 @@ def place_widgets(self):
     binder(self)
 
 def binder(self):
-    self.bind("<Control-n>", lambda event: tabs.add_tab(self, self))
+    self.bind("<Control-n>", lambda event: tabs.add_tab(self))
     self.bind("<Control-o>", lambda event: miscs.file_operations.open_file(self))
     self.bind("<Control-s>", lambda event: miscs.file_operations.save_file(self))
     self.bind("<Control-Shift-s>", lambda event: miscs.file_operations.save_as(self))
