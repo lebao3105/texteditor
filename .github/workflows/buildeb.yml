@@ -24,13 +24,13 @@ jobs:
         with:
           python-version: "3.10"
           
-      # Runs a single command using the runners shell
+      # Install required packages
       - name: Install build tools
         run: |
-          sudo apt update && sudo apt upgrade -y
-          sudo apt install devscripts python3-virtualenv python3-tk
+          sudo apt update && sudo apt install devscripts python3-virtualenv python3-tk
+          
 
-      # Runs a set of commands using the runners shell
+      # Build
       - name: Build package
         run: |
           debuild -us -uc -b
