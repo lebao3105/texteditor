@@ -11,7 +11,7 @@
 ## here, so I might use another Linux distribution.
 ## To see all targets, use make help.
 
-.PHONY: install help uninstall
+.PHONY: install help uninstall buildeb
 
 install: $(wildcard src/*.py src/*/*.py) $(wildcard po/base.pot po/*/*.po)
 	mkdir -p /usr/share/texteditor
@@ -36,19 +36,34 @@ uninstall:
 	gtk-update-icon-cache /usr/share/icons/hicolor
 	@echo Done.
 
+# The output may only use for deb based Linux distros!
+# Don't waste your time to run this target!
+buildeb:
+	@echo "Installing required packages..."
+	apt install devscripts python3-virtualenv python3-tk dh-make
+	@echo "Building Debian package..."
+	debuild -us -uc -b
+	@echo "Done."
+
 help:
 	@echo "Usage: make [target]"
+	@echo "Always run targets (except help) as root."
 	@echo "Targets:"
 	@echo "	install		Install the program"
 	@echo "	uninstall	Uninstall the program"
+	@echo "	buildeb		Build .deb package - only for deb based Linux distros!"
 	@echo "	help		Show this help"
+	@echo "----------------------------------------------------"
 	@echo "Before install, make sure that you have:"
 	@echo "	python3-tk	(or python-tk)"
 	@echo "	python3		(or python-is-python3)"
-	@echo "	python3-pip	(or python-pip) to install"
-	@echo "             configparser package"
-	@echo "If you have installed this application before,"
+	@echo "	python3-pip	(or python-pip) to install configparser package"
+	@echo "----------------------------------------------------"
+	@echo "Notes:"
+	@echo "* If you have installed this application before,"
 	@echo "Try to uninstall it first."
+	@echo "* When using buildeb target, you can pass --install argument, like this:"
+	@echo " make buildeb --install -> This will build + install the program."
 
 
 
