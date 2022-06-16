@@ -11,13 +11,13 @@ from . import get_config, file_operations
 import os
 
 # Arrays
-language = ["po", "../po"]
+language = ["po", "../po", "../../po"] # Added ../../po for files in ../pages
 icon = ["data/org.lebao3105.texteditor.Devel.png", 
         "../data/org.lebao3105.texteditor.Devel.png", 
         "icon.png", "src/icon.png"]
 
 def initialize(self, part):
-    if part == 1:
+    if part == 0:
         # Initialize the language
         for i in range(len(language)):
             if os.path.isdir(language[i]):
@@ -27,7 +27,9 @@ def initialize(self, part):
                 gettext.install(language[i])
                 break
             else:
-                raise Exception("Could not find the language directory!")
+                print("Directory " + language[i] + " not found!")
+                break
+    elif part == 1:
         # Initialize the icon
         # Note: This may not working on Linux - Why?
         for k in range(len(icon)):

@@ -27,7 +27,8 @@ jobs:
       # Install required packages
       - name: Install build tools
         run: |
-          sudo apt update && sudo apt install devscripts python3-virtualenv python3-tk
+          sudo apt update 
+          sudo apt install devscripts python3-virtualenv python3-tk dh-make
           
 
       # Build
