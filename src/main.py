@@ -49,16 +49,12 @@ class MainWindow(Tk):
         self.edit_menu.add_separator()
         addeditcmd(label=self._("Select all"), accelerator="Ctrl+A")
         self.menu_bar.add_cascade(label=self._("Edit"), menu=self.edit_menu)
-        
+
         ## Help & About
         self.help_menu = Menu(self.menu_bar, tearoff=0)
         addhelpcmd = self.help_menu.add_command
-        addhelpcmd(label=self._("Help"), 
-                                accelerator="Alt+F1",
-                                command=lambda: pages.helpme.Help(self))
-        addhelpcmd(label=self._("About"), 
-                                accelerator="Alt+F3",
-                                command=lambda: pages.about.About(self))
+        addhelpcmd(label=self._("Help"), command=lambda: pages.helpme.Help(self))
+        addhelpcmd(label=self._("About"), command=lambda: pages.about.About(self))
         self.menu_bar.add_cascade(label=self._("Help"), menu=self.help_menu)
         self.config(menu=self.menu_bar)
 
