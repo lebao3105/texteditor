@@ -2,6 +2,7 @@ from tkinter import *
 from tkinter.filedialog import *
 from sys import platform
 import os, sys
+from . import constants
 
 sys.path.append(os.path.dirname(
                     os.path.dirname(
@@ -46,6 +47,7 @@ def open_file(self):
         with open(file_name, "r") as f:
             self.text_editor.insert(1.0, f.read())
             self.title(self._("Text editor") + " - " + file_name)
+            FILES_ARR += file_name
 
 def save_file(self):
     global is_safe_to_do

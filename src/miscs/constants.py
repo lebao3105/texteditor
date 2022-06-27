@@ -9,4 +9,11 @@ BLUE_TEXT = "#0000ff"
 RED_TEXT = "#ff0000"
 
 # About & Help window size
+# Wight = width + height
 DEFAULT_OTHERS_WIGHT = 250
+
+# Opened files
+FILES_ARR = []
+
+# Untitled tab 
+UNTITLED = "Untitled "
