@@ -24,8 +24,6 @@ class Help(Toplevel):
         # Place widgets + change text color
         items = [self.label_help, self.label_help_text, self.label_help_text_2, self.label_help_text_3]
         for i in range(len(items)):
-            nums = [0, 1, 2, 3]
-            for k in nums:
-                i.grid(row=k, column=0, sticky="ew", padx=5)
-            get_config.change_text_color(i)
+            items[i].grid(row=i+1, column=0)
+            get_config.change_text_color(items[i])
         init.initialize(self, 2)
