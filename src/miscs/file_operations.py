@@ -17,6 +17,8 @@ import tabs
 is_safe_to_do = False
 # Use this for closing the application
 is_saved = False
+# Saved files
+saved_files = []
 
 if platform == "win32":
     searchdir = os.getenv("USERPROFILE\Documents")
@@ -47,25 +49,27 @@ def open_file(self):
         with open(file_name, "r") as f:
             self.text_editor.insert(1.0, f.read())
             self.title(self._("Text editor") + " - " + file_name)
-            FILES_ARR += file_name
+            constants.FILES_ARR += file_name
 
 def save_file(self):
     global is_safe_to_do
     global is_saved
     find_text_editor(self)
-    if self.text_editor.get(1.0, END) == "\n":
+    filefind = self.title().split(" - ")[0]
+    if (self.text_editor.get(1.0, END) == "\n") or (filefind in constants.FILES_ARR):
         if is_safe_to_do:
             save_as(self)
         else:
             pass
     else:
-        if self.title().split("-")[0] == self._("Text editor"):
+        if filefind == self._("Text editor"):
             save_as(self)
         else:
-            with open(self.title().split(" - ")[0], "w") as f:
-                f.write(self.text_editor.get(1.0, END))
-                is_safe_to_do = True
-                is_saved = True
+            with open(filefind, "w") as f:
+                f.write(self.text_editor.get(1.0, END))        
+        is_safe_to_do = True
+        is_saved = True
+        saved_files += filefind
 
 def save_as(self):
     global is_safe_to_do
@@ -80,5 +84,7 @@ def save_as(self):
             with open(file_name, "w") as f:
                 f.write(self.text_editor.get(1.0, END))
                 is_saved = True
+                constants.FILES_ARR += file_name
+                saved_files += file_name
     else:
         pass

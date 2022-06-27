@@ -72,16 +72,18 @@ class MainWindow(Tk):
 
     # Add commands to the menu
     def add_event(self):
-        self.edit_menu.entryconfigure("Undo", command=lambda: self.event_generate("<Control-z>"))
-        self.edit_menu.entryconfigure("Redo", command=lambda: self.event_generate("<Control-y>"))
-        self.edit_menu.entryconfigure("Cut", command=lambda: self.event_generate("<Control-x>"))
-        self.edit_menu.entryconfigure("Copy", command=lambda: self.event_generate("<Control-c>"))
-        self.edit_menu.entryconfigure("Paste", command=lambda: self.event_generate("<Control-v>"))
-        self.edit_menu.entryconfigure("Select all", command=lambda: self.event_generate("<Control-a>"))
-        self.file_menu.entryconfigure("Open", command=lambda: miscs.file_operations.open_file(self))
-        self.file_menu.entryconfigure("Save", command=lambda: miscs.file_operations.save_file(self))
-        self.file_menu.entryconfigure("Save as", command=lambda: miscs.file_operations.save_as(self))
-        self.file_menu.entryconfigure("Exit", command=lambda: miscs.init.ask_quit(self))
+        editcfg = self.edit_menu.entryconfigure
+        filecfg = self.file_menu.entryconfigure
+        editcfg("Undo", command=lambda: self.event_generate("<Control-z>"))
+        editcfg("Redo", command=lambda: self.event_generate("<Control-y>"))
+        editcfg("Cut", command=lambda: self.event_generate("<Control-x>"))
+        editcfg("Copy", command=lambda: self.event_generate("<Control-c>"))
+        editcfg("Paste", command=lambda: self.event_generate("<Control-v>"))
+        editcfg("Select all", command=lambda: self.event_generate("<Control-a>"))
+        filecfg("Open", command=lambda: miscs.file_operations.open_file(self))
+        filecfg("Save", command=lambda: miscs.file_operations.save_file(self))
+        filecfg("Save as", command=lambda: miscs.file_operations.save_as(self))
+        filecfg("Exit", command=lambda: miscs.init.ask_quit(self))
 
 if __name__ == "__main__":
     MainWindow()
