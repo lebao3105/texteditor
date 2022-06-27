@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-05-26 14:38+0700\n"
+"POT-Creation-Date: 2022-06-27 17:35+0700\n"
 "PO-Revision-Date: 2022-05-02 15:31+007\n"
 "Last-Translator: Le Bao Nguyen <bao12345yocoo@gmail.com>\n"
 "Language-Team: Main <bao12345yocoo@gmail.com>\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: pygettext.py 1.5\n"
 
-#: src/main.py:18 src/pages/about.py:21
+#: src/main.py:20 src/pages/about.py:23
 msgid "Text editor"
 msgstr "Trinh chinh sua van ban"
 
@@ -23,117 +23,137 @@ msgstr "Trinh chinh sua van ban"
 msgid "New"
 msgstr "Tao moi"
 
-#: src/main.py:35
+#: src/main.py:33
 msgid "Open"
 msgstr "Mo"
 
-#: src/main.py:38
+#: src/main.py:34 src/tabs.py:77
 msgid "Save"
 msgstr "Luu"
 
-#: src/main.py:41
+#: src/main.py:35 src/tabs.py:78
 msgid "Save as"
 msgstr "Luu nhu..."
 
-#: src/main.py:45
+#: src/main.py:37
 msgid "Exit"
 msgstr "Thoat"
 
-#: src/main.py:48
+#: src/main.py:38
 msgid "File"
 msgstr "Tep"
 
-#: src/main.py:51
+#: src/main.py:43 src/tabs.py:80
 msgid "Undo"
 msgstr "Hoan tac"
 
-#: src/main.py:54
+#: src/main.py:44 src/tabs.py:81
 msgid "Redo"
 msgstr "Thuc hien lai hanh dong"
 
-#: src/main.py:58
+#: src/main.py:46 src/tabs.py:75
 msgid "Cut"
 msgstr "Cat"
 
-#: src/main.py:61
+#: src/main.py:47 src/tabs.py:73
 msgid "Copy"
 msgstr "Sao chep"
 
-#: src/main.py:64
+#: src/main.py:48 src/tabs.py:74
 msgid "Paste"
 msgstr "Dan"
 
-#: src/main.py:68
+#: src/main.py:50
 msgid "Select all"
 msgstr "Chon tat ca"
 
-#: src/main.py:71
+#: src/main.py:51
 msgid "Edit"
 msgstr "Sua"
 
-#: src/main.py:74 src/main.py:80 src/pages/helpme.py:11 src/pages/helpme.py:20
+#: src/main.py:56 src/main.py:58 src/pages/helpme.py:10 src/pages/helpme.py:19
 msgid "Help"
 msgstr "Tro giup"
 
-#: src/main.py:77 src/pages/about.py:11
+#: src/main.py:57 src/pages/about.py:10
 msgid "About"
 msgstr "Ve ung dung nay"
 
-#: src/main.py:89 src/tabs.py:19 src/tabs.py:31
-msgid "Untitled "
-msgstr "Chua co tieu de "
-
-#: src/main.py:93
+#: src/main.py:69
 msgid "New tab"
 msgstr "Tab moi"
 
-#: src/main.py:96
+#: src/main.py:70
 msgid "Close the current opening tab"
 msgstr "Dong tab dang mo"
 
-#: src/tabs.py:51
+#: src/tabs.py:26
+#, fuzzy
+msgid "Text Editor "
+msgstr "Trinh chinh sua van ban"
+
+#: src/tabs.py:63
 #, fuzzy
 msgid "No other tabs left, asking for close the window..."
 msgstr "Khong con tab nao nua, bat dau dong cua so..."
 
-#: src/pages/about.py:20
+#: src/pages/about.py:22
 #, fuzzy
 msgid "About this application"
 msgstr "Lam the nao de su dung ung dung nay?"
 
-#: src/pages/about.py:22
+#: src/pages/about.py:24
 msgid "Version 1.0."
 msgstr "Phien ban 1.0"
 
-#: src/pages/about.py:23
+#: src/pages/about.py:25
 msgid "Author: "
 msgstr "Nha xuat ban: "
 
-#: src/pages/about.py:24
+#: src/pages/about.py:26
 msgid "License: "
 msgstr "Giay phep: "
 
-#: src/pages/helpme.py:21
+#: src/pages/helpme.py:20
 msgid "How to use this application?"
 msgstr "Lam the nao de su dung ung dung nay?"
 
-#: src/pages/helpme.py:22
+#: src/pages/helpme.py:21
 msgid "Just do what you need like any other text editor,"
 msgstr "Hay lam nhung gi ban can nhu bao trinh chinh sua van ban khac,"
 
-#: src/pages/helpme.py:23
+#: src/pages/helpme.py:22
 msgid "with tabs support."
 msgstr "voi kieu tab duoc ho tro."
 
-#~ msgid "No other tabs left, cannot move the tab to the right."
-#~ msgstr ""
-#~ "Khong con tab nao nua nen khong the di chuyen tab nay sang ben phai duoc."
+#: src/pages/prefs.py:16 src/pages/prefs.py:27
+msgid "Preferences"
+msgstr "Tuy chinh"
 
-#~ msgid "Select a file to open"
-#~ msgstr "Chon mot tep de mo ra"
+#: src/pages/prefs.py:30
+msgid "English"
+msgstr "Tieng Anh (English)"
 
-#~ msgid "Quit"
-#~ msgstr "Thoat"
+#: src/pages/prefs.py:30
+msgid "Vietnamese"
+msgstr "Tieng Viet"
 
-#~ msgid "Are you sure want to quit?"
-#~ msgstr "Ban co chac chan muon thoat?"
+#: src/pages/prefs.py:33
+msgid "Language"
+msgstr "Ngon ngu"
+
+#: src/pages/prefs.py:37 src/pages/prefs.py:45
+#, fuzzy
+msgid "Select it here"
+msgstr "Chon mot cai o day"
+
+#: src/pages/prefs.py:42
+msgid "Font"
+msgstr "Phong chu"
+
+#: src/pages/prefs.py:48
+msgid "Color"
+msgstr "Mau"
+
+#~ msgid "Untitled "
+#~ msgstr "Chua co tieu de "

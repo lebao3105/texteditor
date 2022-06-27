@@ -18,7 +18,7 @@ elif [[ $1 == "--new-template" || $1 == "-tep" ]]; then
     echo "Done!"
 
 elif [[ $1 == "--help" || $1 == "-h" ]]; then
-    echo "./upd_trans.sh [options]"
+    echo "$0 [options]"
     echo "--updated-strings | -upd : Re-generate .mo files"
     echo "--help | -h : Show this help"
     echo "--new-template | -tep : Re-generate .pot (translation template file)"
