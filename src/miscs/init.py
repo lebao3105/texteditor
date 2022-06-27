@@ -40,16 +40,7 @@ def initialize(self, part):
                 #print(icon[k])
                 break
             else:
-                if self._ == gettext.gettext:
-                    print(self._("Could not find the icon!"))
-                    messagebox.showinfo(self._("Warning"), self._("No icon file detected. The application will show files it has checked."))
-                    messagebox.showinfo(self._("Info"), icon[k])
-                    break
-                else:
-                    print("Could not find the icon!")
-                    messagebox.showinfo("Warning", "No icon file detected. The application will show files it has checked.")
-                    messagebox.showinfo("Info", icon[k])
-                    break
+                break # Ignore it
     elif part == 2:
         # Initialize the configures
         get_config.set_windows_color(self)
