@@ -1,7 +1,8 @@
 texteditor (1.0) stable; urgency=medium
   * First offical release of texteditor.
   * Added support to opening command-line box (initial), right-click menu..
-  
+ -- Le Bao Nguyen <bao12345yocoo@gmail.com>  Tue, 28 June 2022 22:27:36 +0700
+
 texteditor (1.0-dev) unstable; urgency=medium
 
   * Initial release.
