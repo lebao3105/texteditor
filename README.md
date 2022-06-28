@@ -12,8 +12,7 @@ A graphical text editor.
 * Lightweight
 * [Initial] Dark mode + Text colors support
 * [Initial] Configuration file support
-* [Initial] Installation on Linux (deb-based distros - not completed yet) + Windows .exe file making (completed)
-* [Almost done!] Normal features for a text editor
+* [Initial] Installation on Linux (deb-based distros) + Windows .exe file making (completed)
 
 ## Running
 Install all requirements (configparser + pillow) before continue.

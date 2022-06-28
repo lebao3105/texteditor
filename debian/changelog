@@ -1,3 +1,7 @@
+texteditor (1.0) stable; urgency=medium
+  * First offical release of texteditor.
+  * Added support to opening command-line box (initial), right-click menu..
+  
 texteditor (1.0-dev) unstable; urgency=medium
 
   * Initial release.

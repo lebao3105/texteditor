@@ -55,7 +55,7 @@ def save_file(self):
     global is_safe_to_do
     global is_saved
     find_text_editor(self)
-    filefind = self.title().split(" - ")[-2]
+    filefind = self.title().split(" - ")[0]
     if (self.text_editor.get(1.0, END) == "\n") or (filefind in constants.FILES_ARR):
         if is_safe_to_do:
             save_as(self)
@@ -63,7 +63,7 @@ def save_file(self):
             pass
     else:
         print(filefind)
-        if filefind == self._("Text editor"):
+        if filefind == self._("Text editor "):
             save_as(self)
         else:
             with open(filefind, "w") as f:
