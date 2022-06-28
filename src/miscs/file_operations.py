@@ -48,20 +48,21 @@ def open_file(self):
         
         with open(file_name, "r") as f:
             self.text_editor.insert(1.0, f.read())
-            self.title(self._("Text editor") + " - " + file_name)
+            #self.title(self._("Text editor") + " - " + file_name)
             constants.FILES_ARR += file_name
 
 def save_file(self):
     global is_safe_to_do
     global is_saved
     find_text_editor(self)
-    filefind = self.title().split(" - ")[0]
+    filefind = self.title().split(" - ")[-2]
     if (self.text_editor.get(1.0, END) == "\n") or (filefind in constants.FILES_ARR):
         if is_safe_to_do:
             save_as(self)
         else:
             pass
     else:
+        print(filefind)
         if filefind == self._("Text editor"):
             save_as(self)
         else:

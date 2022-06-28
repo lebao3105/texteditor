@@ -31,7 +31,7 @@ def add_tab(self):
         # place the textbox
         place_textbox(firsttab, self)
         self.notebook.select(firsttab)
-        self.title(tabname + self._(i.UNTITLED))
+        #self.title(tabname + self._(i.UNTITLED))
     else:
         if checker(self):
             tab_name = self._(i.UNTITLED) + str(self.notebook.index("end") + 1)
@@ -41,7 +41,7 @@ def add_tab(self):
         self.notebook.add(new_tab, text=tab_name)
         place_textbox(new_tab, self)
         self.notebook.select(new_tab)
-        self.title(tabname + tab_name)
+        #self.title(tabname + tab_name)
 
 def place_textbox(self, root):
     # Text box
