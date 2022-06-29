@@ -75,7 +75,7 @@ class MainWindow(Tk):
     def add_event(self):
         editcfg = self.edit_menu.entryconfigure
         filecfg = self.file_menu.entryconfigure
-        editcfg("Open System Shell", command=self.runcmd)
+        editcfg("Open System Shell", command=lambda: cmd.CommandPrompt(self))
         editcfg("Undo", command=lambda: self.event_generate("<Control-z>"))
         editcfg("Redo", command=lambda: self.event_generate("<Control-y>"))
         editcfg("Cut", command=lambda: self.event_generate("<Control-x>"))

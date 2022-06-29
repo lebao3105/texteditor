@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-06-27 17:35+0700\n"
+"POT-Creation-Date: 2022-06-29 13:49+0700\n"
 "PO-Revision-Date: 2022-05-02 15:31+007\n"
 "Last-Translator: Le Bao Nguyen <bao12345yocoo@gmail.com>\n"
 "Language-Team: Main <bao12345yocoo@gmail.com>\n"
@@ -15,75 +15,79 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: pygettext.py 1.5\n"
 
-#: src/main.py:20 src/pages/about.py:23
+#: src/main.py:19 src/pages/about.py:23
 msgid "Text editor"
 msgstr "Trinh chinh sua van ban"
 
-#: src/main.py:32
+#: src/main.py:31
 msgid "New"
 msgstr "Tao moi"
 
-#: src/main.py:33
+#: src/main.py:32
 msgid "Open"
 msgstr "Mo"
 
-#: src/main.py:34 src/tabs.py:77
+#: src/main.py:33 src/tabs.py:77
 msgid "Save"
 msgstr "Luu"
 
-#: src/main.py:35 src/tabs.py:78
+#: src/main.py:34 src/tabs.py:78
 msgid "Save as"
 msgstr "Luu nhu..."
 
-#: src/main.py:37
+#: src/main.py:36
 msgid "Exit"
 msgstr "Thoat"
 
-#: src/main.py:38
+#: src/main.py:37
 msgid "File"
 msgstr "Tep"
 
-#: src/main.py:43 src/tabs.py:80
+#: src/main.py:42 src/tabs.py:80
 msgid "Undo"
 msgstr "Hoan tac"
 
-#: src/main.py:44 src/tabs.py:81
+#: src/main.py:43 src/tabs.py:81
 msgid "Redo"
 msgstr "Thuc hien lai hanh dong"
 
-#: src/main.py:46 src/tabs.py:75
+#: src/main.py:45 src/tabs.py:75
 msgid "Cut"
 msgstr "Cat"
 
-#: src/main.py:47 src/tabs.py:73
+#: src/main.py:46 src/tabs.py:73
 msgid "Copy"
 msgstr "Sao chep"
 
-#: src/main.py:48 src/tabs.py:74
+#: src/main.py:47 src/tabs.py:74
 msgid "Paste"
 msgstr "Dan"
 
-#: src/main.py:50
+#: src/main.py:49
 msgid "Select all"
 msgstr "Chon tat ca"
 
 #: src/main.py:51
+msgid "Open System Shell"
+msgstr ""
+
+#: src/main.py:52
 msgid "Edit"
 msgstr "Sua"
 
-#: src/main.py:56 src/main.py:58 src/pages/helpme.py:10 src/pages/helpme.py:19
+#: src/main.py:57 src/main.py:59 src/pages/helpme.py:10 src/pages/helpme.py:19
 msgid "Help"
 msgstr "Tro giup"
 
-#: src/main.py:57 src/pages/about.py:10
+#: src/main.py:58 src/pages/about.py:10
 msgid "About"
 msgstr "Ve ung dung nay"
 
-#: src/main.py:69
+#: src/main.py:70
 msgid "New tab"
 msgstr "Tab moi"
 
-#: src/main.py:70
+#: src/main.py:71
 msgid "Close the current opening tab"
 msgstr "Dong tab dang mo"
 
@@ -113,6 +117,32 @@ msgstr "Nha xuat ban: "
 #: src/pages/about.py:26
 msgid "License: "
 msgstr "Giay phep: "
+
+#: src/pages/cmd.py:30
+msgid "Available commands:"
+msgstr ""
+
+#: src/pages/cmd.py:31
+msgid "exit: Close this box"
+msgstr ""
+
+#: src/pages/cmd.py:32
+msgid "help: Show this message"
+msgstr ""
+
+#: src/pages/cmd.py:33
+msgid "clear: Clear this box"
+msgstr ""
+
+#: src/pages/cmd.py:34
+msgid "Running pre installed shells (Bash, Cmd, Zsh...) is blocked."
+msgstr ""
+
+#: src/pages/cmd.py:35
+msgid ""
+"You can change defshell variable to force this window run commands under "
+"that."
+msgstr ""
 
 #: src/pages/helpme.py:20
 msgid "How to use this application?"
