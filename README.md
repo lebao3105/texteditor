@@ -32,9 +32,8 @@ Always generate .mo files first:
 > **On Windows,** use:
 ```
 REM Generate .pot + .po files
-xgettext.py -d base -o po/base.pot src/main.py src/tabs.py src/pages/about.py src/pages/helpme.py
-msgmerge -U po/vi/LC_MESSAGES/base.po po/base.pot
-msgmerge -U po/en/LC_MESSAGES/base.po po/base.pot
+pygettext.py -d base -o po/base.pot src/main.py src/tabs.py src/pages/about.py src/pages/helpme.py
+REM Copy .pot file to your_language_code/LC_MESSAGES/ then rename it to base.po
 REM edit your .po files, then generate .mo files. This use 
 REM for all available languages here.
 msgfmt.py po/vi/LC_MESSAGES/base -o po/vi/LC_MESSAGES/base.mo
@@ -65,3 +64,4 @@ python setup.py py2exe
 * Text editor's UI works best on... Windows, not Linux! I see there are problems that I can't use Pillow on Linux - this will prevent us from seeing the icon in About.
 * Basic things (copy, paste, cut) are not implemented yet.
 * Code in this project may be too complex.
+* Some part of the project is based on dh7qc's [text editor](https://github.com/dh7qc/Python-Text-Editor/).
