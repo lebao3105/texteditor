@@ -18,7 +18,7 @@ def checker(self):
     # if this is the first tab yet
     elif find_tab == self._(i.UNTITLED):
         return True
-    # what I mentioned before
+    # what I have mentioned before
     elif str(self.notebook.index("end") + 1) in find_tab:
         return False
 
@@ -31,7 +31,7 @@ def add_tab(self):
         # place the textbox
         place_textbox(firsttab, self)
         self.notebook.select(firsttab)
-        #self.title(tabname + self._(i.UNTITLED))
+        self.title(tabname + self._(i.UNTITLED))
     else:
         if checker(self):
             tab_name = self._(i.UNTITLED) + str(self.notebook.index("end") + 1)
@@ -41,7 +41,7 @@ def add_tab(self):
         self.notebook.add(new_tab, text=tab_name)
         place_textbox(new_tab, self)
         self.notebook.select(new_tab)
-        #self.title(tabname + tab_name)
+        self.title(tabname + tab_name)
 
 def place_textbox(self, root):
     # Text box
@@ -50,11 +50,11 @@ def place_textbox(self, root):
     self.text_editor.pack(expand=True, fill="both")
     # Scrollbar
     root.text_editor = self.text_editor
-    self.scroll = ttk.Scrollbar(self.text_editor, orient="vertical", command=self.text_editor.yview)
-    self.scroll2 = ttk.Scrollbar(self.text_editor, orient="horizontal", command=self.text_editor.xview)
+    self.scroll = ttk.Scrollbar(self.text_editor, orient="vertical")
+    self.scroll2 = ttk.Scrollbar(self.text_editor, orient="horizontal")
     self.scroll.pack(side="right", fill="y")
     self.scroll2.pack(side="bottom", fill="x")
-    self.text_editor.configure(yscrollcommand=self.scroll.set, xscrollcommand=self.scroll2.set, undo=True, autoseparators=True)
+    self.text_editor.configure(yscrollcommand=self.scroll.set, xscrollcommand=self.scroll2.set, undo=True)
     miscs.init.initialize(self.text_editor, 2)
 
 def tabs_close(self):
@@ -74,8 +74,8 @@ def place_right_click_menu(self, event, root):
         m.add_command(label=root._("Paste"), accelerator="Ctrl+V", command=lambda: root.event_generate("<Control-v>"))
         m.add_command(label=root._("Cut"), accelerator="Ctrl+X", command=lambda: root.event_generate("<Control-x>"))
         m.add_separator()
-        m.add_command(label=root._("Save"), accelerator="Ctrl+S", command=lambda: root.event_generate("<Control-s>"))
-        m.add_command(label=root._("Save as"), accelerator="Ctrl+Shift+S", command=lambda: root.event_generate("<Control-Shift-s>"))
+        m.add_command(label=root._("Save"), accelerator="Ctrl+S", command=lambda: file_operations.save_file(root))
+        m.add_command(label=root._("Save as"), accelerator="Ctrl+Shift+S", command=lambda: file_operations.save_as(root))
         m.add_separator()
         m.add_command(label=root._("Undo"), accelerator="Ctrl+Z", command=lambda: root.event_generate("<Control-z>"))
         m.add_command(label=root._("Redo"), accelerator="Ctrl+Y", command=lambda: root.event_generate("<Control-y>"))
@@ -83,3 +83,15 @@ def place_right_click_menu(self, event, root):
     finally:
         m.grab_release()
 
+def on_tab_changed(root, event):
+    tab = event.widget.tab('current')['text']
+    root.title(root._("Text Editor") + " - " + tab)
+
+# Originally taken from dhq7c's Text editor
+def move_tab(self, event):
+    if self.notebook.index("end") > 1:
+        y = self.notebook._nametowidget( self.notebook.select() ).winfo_y() -5
+        try:
+            self.notebook.insert(event.widget.index('@%d,%d' % (event.x,y)), self.notebook.select())
+        except tk.TckError:
+            return

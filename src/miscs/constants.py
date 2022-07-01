@@ -13,7 +13,7 @@ RED_TEXT = "#ff0000"
 DEFAULT_OTHERS_WIGHT = 250
 
 # Opened files
-FILES_ARR = []
+FILES_ARR = [ ]
 
 # Untitled tab 
 UNTITLED = "Untitled "

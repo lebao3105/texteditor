@@ -4,7 +4,6 @@ from email import message
 import gettext
 from tkinter import PhotoImage
 from tkinter import *
-from tkinter import messagebox
 from PIL import Image, ImageTk
 from tkinter.messagebox import askyesno
 from . import get_config, file_operations

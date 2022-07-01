@@ -1,9 +1,7 @@
 import subprocess
 from tkinter import *
-from os import path
-import sys
-sys.path.append(path.dirname(path.dirname(path.abspath(__file__))))
-from miscs import init
+from sys import platform
+from tkinter.messagebox import showinfo
 
 class CommandPrompt(Text):
 
@@ -13,30 +11,32 @@ class CommandPrompt(Text):
         self.bind('<Return>', self.runcommand)
         self.pack(expand=True, fill="both")
         master.commandprompt = self
-    
+
     """
     Run a command.
-    We might can change some variables (e.g default shell...)
+    All output will be redirected to the widget.
+    TODO: auto detect arguments + allow to use xterm (maybe in v1.1?)
     """
     def runcommand(self, *args):
         command = self.get(1.0, END).split('\n')[-2]
         append = self.insert
+
         if command == 'exit':
             self.destroy()
         elif command== 'clear':
             self.delete(1.0, END)
-            self.mark_set("insert", "0.0")
+            self.mark_set("insert", "-1.-1")
         elif command == 'help':
-            append('end', self._("Available commands:"))
-            append('end', self._("exit: Close this box"))
-            append('end', self._("help: Show this message"))
-            append('end', self._("clear: Clear this box"))
-            append('end', self._("Running pre installed shells (Bash, Cmd, Zsh...) is blocked."))
-            append('end', self._("You can change defshell variable to force this window run commands under that."))
+            append('end', self._("Available commands:\n"))
+            append('end', self._("exit: Close this box\n"))
+            append('end', self._("help: Show this message\n"))
+            append('end', self._("clear: Clear this box\n"))
+            append('end', self._("Running pre installed shells (Bash, Cmd, Zsh...) is blocked. But you can use xterm instead.\n"))
         else:
-            append('end', f'\n{subprocess.getoutput(command)}')
-            
+            p = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE)
+            out = p.communicate()
+            append('end', '\n')
+            append('end', out)
 
 
-        
 
