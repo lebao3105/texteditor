@@ -156,6 +156,32 @@ msgid ""
 "Running pre installed shells (Bash, Cmd, Zsh...) is blocked. But you can use xterm instead.\n"
 msgstr ""
 
+#: src/pages/cmd.py:30
+msgid "Available commands:"
+msgstr ""
+
+#: src/pages/cmd.py:31
+msgid "exit: Close this box"
+msgstr ""
+
+#: src/pages/cmd.py:32
+msgid "help: Show this message"
+msgstr ""
+
+#: src/pages/cmd.py:33
+msgid "clear: Clear this box"
+msgstr ""
+
+#: src/pages/cmd.py:34
+msgid "Running pre installed shells (Bash, Cmd, Zsh...) is blocked."
+msgstr ""
+
+#: src/pages/cmd.py:35
+msgid ""
+"You can change defshell variable to force this window run commands under "
+"that."
+msgstr ""
+
 #: src/pages/helpme.py:20
 msgid "How to use this application?"
 msgstr ""
