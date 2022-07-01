@@ -22,12 +22,12 @@ def initialize(self, part):
             if os.path.isdir(language[i]):
                 gettext.bindtextdomain('base', 'po')
                 gettext.textdomain('base')
-                self._ = gettext.gettext
                 gettext.install(language[i])
                 break
             else:
                 print("Directory " + language[i] + " not found!")
                 break
+        self._ = gettext.gettext
     elif part == 1:
         # Initialize the icon
         # Note: This may not working on Linux - Why?
