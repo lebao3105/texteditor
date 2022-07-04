@@ -1,7 +1,10 @@
-import subprocess
+import os
+import sys
 from tkinter import *
-from sys import platform
-from tkinter.messagebox import showinfo
+import subprocess
+from tkinter.messagebox import showinfo, showwarning
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+from miscs import get_config
 
 class CommandPrompt(Text):
 
@@ -10,6 +13,7 @@ class CommandPrompt(Text):
         self._ = master._
         self.bind('<Return>', self.runcommand)
         self.pack(expand=True, fill="both")
+        self.warning()
         master.commandprompt = self
 
     """
@@ -31,12 +35,22 @@ class CommandPrompt(Text):
             append('end', self._("exit: Close this box\n"))
             append('end', self._("help: Show this message\n"))
             append('end', self._("clear: Clear this box\n"))
-            append('end', self._("Running pre installed shells (Bash, Cmd, Zsh...) is blocked. But you can use xterm instead.\n"))
+            append('end', self._("term: Open terminal (not this one) - don't run this if you are running this application from console!"))
+            append('end', self._("Running application which requires user input is not recommended yet.\n"))
+        elif command == 'term':
+            append('end', self._("This will open console defined by defconsole value in configuration file. The application will be temporarity unusable!"))
+            os.system(get_config.getvalue('cmd', 'defconsole'))
         else:
             p = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE)
-            out = p.communicate()
+            out = p.stdout.read()
             append('end', '\n')
             append('end', out)
 
-
+    def warning(self):
+        showwarning(
+            title='Warning',
+            message="""
+            This is a working feature - use some commands will make the application unusable. Run help to get more notes and available commands!
+            """
+        )
 
