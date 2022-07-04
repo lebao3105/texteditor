@@ -3,10 +3,12 @@ import os
 import configparser
 import platform
 
-if platform.system() == "Linux":
-    dir = os.environ['HOME'] + "/.config/"
-elif platform.system() == "Windows":
+if platform.system() == "Windows":
     dir = os.environ['USERPROFILE'] + "\\.config\\"
+    defconsole = 'cmd'
+else:
+    dir = os.environ['HOME'] + "/.config/"
+    defconsole = 'xterm'
 
 def check_exists():
     if os.path.isdir(dir):
@@ -20,7 +22,9 @@ def check_exists():
                 configfile.write("font = default\n\n")
                 configfile.write("[other_windows]\n")
                 configfile.write("width = "+str(constants.DEFAULT_OTHERS_WIGHT)+"\n")
-                configfile.write("height = "+str(constants.DEFAULT_OTHERS_WIGHT)+"\n")
+                configfile.write("height = "+str(constants.DEFAULT_OTHERS_WIGHT)+"\n\n")
+                configfile.write("[cmd]\n")
+                configfile.write("defconsole = "+defconsole)
     else:
         test = os.mkdir(dir)
         if not test:
@@ -109,11 +113,14 @@ def change_color(self, color):
     if check_if_its_a_window(self) == "Text":
         self.configure(bg=item, fg=sub_item)
 
-# Change the configures
-def change_config(self):
+# Get a value...
+def getvalue(section, name):
     check_exists()
-    with open(dir + "config.ini", "r") as configfile:
+    with open(dir + "config.ini") as f:
         config = configparser.ConfigParser()
-        config.read_file(configfile)
-        config.set("other_windows", "sub_color", self)
+        config.read(f)
+        try:
+            return config[section][name]
+        except:
+            return defconsole
         
