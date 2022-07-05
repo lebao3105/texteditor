@@ -1,139 +1,236 @@
 # SOME DESCRIPTIVE TITLE.
-# Copyright (C) 2022 Le Bao Nguyen
-# Le Bao Nguyen <bao12345yocoo@gmail.com>, 2022.
+# Copyright (C) YEAR ORGANIZATION
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
 msgid ""
 msgstr ""
-"Project-Id-Version: 1.0\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-05-26 14:38+0700\n"
-"PO-Revision-Date: 2022-05-02 15:31+007\n"
-"Last-Translator: Le Bao Nguyen <bao12345yocoo@gmail.com>\n"
-"Language-Team: Main <bao12345yocoo@gmail.com>\n"
-"Language: Vietnamese\n"
+"Project-Id-Version: PACKAGE VERSION\n"
+"POT-Creation-Date: 2022-07-01 10:29+0700\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=cp1252\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: pygettext.py 1.5\n"
 
-#: src/main.py:18 src/pages/about.py:21
+
+#: src/mainwindow.py:20 src/miscs/file_operations.py:55 src/miscs/init.py:52
+#: src/miscs/init.py:62 src/pages/about.py:23
 msgid "Text editor"
-msgstr "Trinh chinh sua van ban"
+msgstr ""
 
-#: src/main.py:32
+#: src/mainwindow.py:31
 msgid "New"
-msgstr "Tao moi"
+msgstr ""
 
-#: src/main.py:35
+#: src/mainwindow.py:32
 msgid "Open"
-msgstr "Mo"
+msgstr ""
 
-#: src/main.py:38
+#: src/mainwindow.py:33 src/tabs.py:77
 msgid "Save"
-msgstr "Luu"
+msgstr ""
 
-#: src/main.py:41
+#: src/mainwindow.py:34 src/miscs/file_operations.py:81 src/tabs.py:78
 msgid "Save as"
-msgstr "Luu nhu..."
+msgstr ""
 
-#: src/main.py:45
+#: src/mainwindow.py:36
 msgid "Exit"
-msgstr "Thoat"
+msgstr ""
 
-#: src/main.py:48
+#: src/mainwindow.py:37
 msgid "File"
-msgstr "Tep"
+msgstr ""
 
-#: src/main.py:51
+#: src/mainwindow.py:42 src/tabs.py:80
 msgid "Undo"
-msgstr "Hoan tac"
+msgstr ""
 
-#: src/main.py:54
+#: src/mainwindow.py:43 src/tabs.py:81
 msgid "Redo"
-msgstr "Thuc hien lai hanh dong"
+msgstr ""
 
-#: src/main.py:58
+#: src/mainwindow.py:45 src/tabs.py:75
 msgid "Cut"
-msgstr "Cat"
+msgstr ""
 
-#: src/main.py:61
+#: src/mainwindow.py:46 src/tabs.py:73
 msgid "Copy"
-msgstr "Sao chep"
+msgstr ""
 
-#: src/main.py:64
+#: src/mainwindow.py:47 src/tabs.py:74
 msgid "Paste"
-msgstr "Dan"
+msgstr ""
 
-#: src/main.py:68
+#: src/mainwindow.py:49
 msgid "Select all"
-msgstr "Chon tat ca"
+msgstr ""
 
-#: src/main.py:71
+#: src/mainwindow.py:51
+msgid "Open System Shell"
+msgstr ""
+
+#: src/mainwindow.py:52
 msgid "Edit"
-msgstr "Sua"
+msgstr ""
 
-#: src/main.py:74 src/main.py:80 src/pages/helpme.py:11 src/pages/helpme.py:20
+#: src/mainwindow.py:57 src/mainwindow.py:59 src/pages/helpme.py:10
+#: src/pages/helpme.py:19
 msgid "Help"
-msgstr "Tro giup"
+msgstr ""
 
-#: src/main.py:77 src/pages/about.py:11
+#: src/mainwindow.py:58 src/pages/about.py:10
 msgid "About"
-msgstr "Ve ung dung nay"
+msgstr ""
 
-#: src/main.py:89 src/tabs.py:19 src/tabs.py:31
-msgid "Untitled "
-msgstr "Chua co tieu de "
-
-#: src/main.py:93
+#: src/mainwindow.py:70
 msgid "New tab"
-msgstr "Tab moi"
+msgstr ""
 
-#: src/main.py:96
+#: src/mainwindow.py:71
 msgid "Close the current opening tab"
-msgstr "Dong tab dang mo"
+msgstr ""
 
-#: src/tabs.py:51
-#, fuzzy
-msgid "No other tabs left, asking for close the window..."
-msgstr "Khong con tab nao nua, bat dau dong cua so..."
+#: src/miscs/file_operations.py:36
+msgid "Select a file to open"
+msgstr ""
 
-#: src/pages/about.py:20
-#, fuzzy
-msgid "About this application"
-msgstr "Lam the nao de su dung ung dung nay?"
+#: src/miscs/file_operations.py:95
+msgid "Infomation"
+msgstr ""
+
+#: src/miscs/file_operations.py:96
+msgid ""
+"This file is opened in another tab. By default we will load the contents to a new tab.\n"
+"Load it to a new tab?"
+msgstr ""
+
+#: src/miscs/init.py:52
+msgid "Do you want to save the file?"
+msgstr ""
+
+#: src/miscs/init.py:62
+msgid "Do you want to quit?"
+msgstr ""
 
 #: src/pages/about.py:22
-msgid "Version 1.0."
-msgstr "Phien ban 1.0"
-
-#: src/pages/about.py:23
-msgid "Author: "
-msgstr "Nha xuat ban: "
+msgid "About this application"
+msgstr ""
 
 #: src/pages/about.py:24
+msgid "Version 1.0."
+msgstr ""
+
+#: src/pages/about.py:25
+msgid "Author: "
+msgstr ""
+
+#: src/pages/about.py:26
 msgid "License: "
-msgstr "Giay phep: "
+msgstr ""
+
+#: src/pages/cmd.py:30
+msgid ""
+"Available commands:\n"
+msgstr ""
+
+#: src/pages/cmd.py:31
+msgid ""
+"exit: Close this box\n"
+msgstr ""
+
+#: src/pages/cmd.py:32
+msgid ""
+"help: Show this message\n"
+msgstr ""
+
+#: src/pages/cmd.py:33
+msgid ""
+"clear: Clear this box\n"
+msgstr ""
+
+#: src/pages/cmd.py:34
+msgid ""
+"Running pre installed shells (Bash, Cmd, Zsh...) is blocked. But you can use xterm instead.\n"
+msgstr ""
+
+#: src/pages/cmd.py:30
+msgid "Available commands:"
+msgstr ""
+
+#: src/pages/cmd.py:31
+msgid "exit: Close this box"
+msgstr ""
+
+#: src/pages/cmd.py:32
+msgid "help: Show this message"
+msgstr ""
+
+#: src/pages/cmd.py:33
+msgid "clear: Clear this box"
+msgstr ""
+
+#: src/pages/cmd.py:34
+msgid "Running pre installed shells (Bash, Cmd, Zsh...) is blocked."
+msgstr ""
+
+#: src/pages/cmd.py:35
+msgid ""
+"You can change defshell variable to force this window run commands under "
+"that."
+msgstr ""
+
+#: src/pages/helpme.py:20
+msgid "How to use this application?"
+msgstr ""
 
 #: src/pages/helpme.py:21
-msgid "How to use this application?"
-msgstr "Lam the nao de su dung ung dung nay?"
+msgid "Just do what you need like any other text editor,"
+msgstr ""
 
 #: src/pages/helpme.py:22
-msgid "Just do what you need like any other text editor,"
-msgstr "Hay lam nhung gi ban can nhu bao trinh chinh sua van ban khac,"
-
-#: src/pages/helpme.py:23
 msgid "with tabs support."
-msgstr "voi kieu tab duoc ho tro."
+msgstr ""
 
-#~ msgid "No other tabs left, cannot move the tab to the right."
-#~ msgstr ""
-#~ "Khong con tab nao nua nen khong the di chuyen tab nay sang ben phai duoc."
+#: src/pages/prefs.py:16 src/pages/prefs.py:27
+msgid "Preferences"
+msgstr ""
 
-#~ msgid "Select a file to open"
-#~ msgstr "Chon mot tep de mo ra"
+#: src/pages/prefs.py:30
+msgid "English"
+msgstr ""
 
-#~ msgid "Quit"
-#~ msgstr "Thoat"
+#: src/pages/prefs.py:30
+msgid "Vietnamese"
+msgstr ""
 
-#~ msgid "Are you sure want to quit?"
-#~ msgstr "Ban co chac chan muon thoat?"
+#: src/pages/prefs.py:33
+msgid "Language"
+msgstr ""
+
+#: src/pages/prefs.py:37 src/pages/prefs.py:45
+msgid "Select it here"
+msgstr ""
+
+#: src/pages/prefs.py:42
+msgid "Font"
+msgstr ""
+
+#: src/pages/prefs.py:48
+msgid "Color"
+msgstr ""
+
+#: src/tabs.py:26
+msgid "Text Editor "
+msgstr ""
+
+#: src/tabs.py:63
+msgid "No other tabs left, asking for close the window..."
+msgstr ""
+
+#: src/tabs.py:88
+msgid "Text Editor"
+msgstr ""
+
