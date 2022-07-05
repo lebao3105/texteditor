@@ -3,7 +3,7 @@
 # __pycache__
 src/*/__pycache__
 src/__pycache__
-# Translation files end with ~ (backup files)
+# Translation files that end with ~ (backup files)
 po/*/*/*.po~
 # msgfmt outputs
 po/*/*/*.mo
@@ -14,6 +14,8 @@ src/dist/
 # debuild build directory
 ## note that .deb file will be placed in ../
 build/
-# another directory
+# another directories
 src/texteditor.egg*/
 texteditor.egg-info/
+debian/files
+.github
