@@ -49,8 +49,8 @@ Now just run [src/main.py](src/main.py).
 > **On Windows:** To make .exe file, do:
 ```
 pip install py2exe
-cd src
-python setup.py py2exe
+cd src\makerelease
+python setupwin.py py2exe
 .\dist\main.exe
 ```
 
@@ -60,8 +60,7 @@ python setup.py py2exe
     <img id="image" src="https://user-images.githubusercontent.com/77564176/169689858-a131cd42-1d6d-4d2a-976d-7daef4fab5ac.png">
 </div>
 
-## Note
-* Text editor's UI works best on... Windows, not Linux! I see there are problems that I can't use Pillow on Linux - this will prevent us from seeing the icon in About.
-* Basic things (copy, paste, cut) are not implemented yet.
+## Notes
+* Text editor's UI works best on... Windows, not Linux! Tkinter GUI on Linux is ugly - and tabs dragging may not work.
 * Code in this project may be too complex.
 * Some part of the project is based on dh7qc's [text editor](https://github.com/dh7qc/Python-Text-Editor/).
