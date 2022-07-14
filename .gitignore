@@ -18,6 +18,10 @@ build/
 texteditor/texteditor.egg*/
 texteditor.egg-info/
 debian/files
-#
+# Building appimages
 texteditor/po
-texteditor/icon.png
+texteditor/*.png
+texteditor/*.desktop
+texteditor/*DirIcon
+texteditor/AppRun
+texteditor/*.AppImage
