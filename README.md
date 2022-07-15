@@ -46,13 +46,7 @@ If you see error ```/bin/bash^M: bad interpreter: No such file or directory``` (
 
 Now just run [src/main.py](src/main.py).
 
-> **On Windows:** To make .exe file, do:
-```
-pip install py2exe
-cd src\makerelease
-python setupwin.py py2exe
-.\dist\main.exe
-```
+To make executable files, read instructions in [makerelease](makerelease/).
 
 ## Screenshots
 <div align="center">
@@ -64,3 +58,4 @@ python setupwin.py py2exe
 * Text editor's UI works best on... Windows, not Linux! Tkinter GUI on Linux is ugly - and tabs dragging may not work.
 * Code in this project may be too complex.
 * Some part of the project is based on dh7qc's [text editor](https://github.com/dh7qc/Python-Text-Editor/).
+* Don't use Open System Shell if you want to use commands that require you input - the program will be broken with that!
