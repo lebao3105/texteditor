@@ -25,3 +25,6 @@ texteditor/*.desktop
 texteditor/*DirIcon
 texteditor/AppRun
 texteditor/*.AppImage
+texteditor/files.py
+texteditor/setupwin.py
+texteditor/*.zip

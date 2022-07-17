@@ -1,15 +1,16 @@
 import py2exe
-from setuptools import setup # test
+from distutils.core import setup
 import files
 
 setup(
 	windows = [{
-		"script": "src/main.py",
+		"script": "main.py",
 		"icon_resource": [(1, files.icon)]
 	}],
     options = {
 		  'py2exe': {
-			  'optimize': 2
+			  'optimize': 2,
+			  'includes': ['os.path', 'configparser']
 			}
 	}
 )

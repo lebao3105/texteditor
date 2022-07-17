@@ -1,3 +1,5 @@
 build/
 dist/
 *.AppImage
+# I forgot this
+__pycache__/
