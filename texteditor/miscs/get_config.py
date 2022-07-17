@@ -76,7 +76,7 @@ def check_dark_mode(self, color):
     else:
         return False
 
-def set_windows_color(self):
+def set_window_color(self):
     check_exists()
 
     with open(dir + "config.ini", "r") as configfile:

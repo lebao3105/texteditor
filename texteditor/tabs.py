@@ -1,7 +1,7 @@
 from tkinter import *
 from tkinter import ttk
-import tkinter as tk
-from miscs import init, file_operations
+import miscs.init
+import miscs.file_operations as file_operations
 import miscs.constants as i
 
 # For example:
@@ -55,13 +55,13 @@ def place_textbox(self, root):
     self.scroll.pack(side="right", fill="y")
     self.scroll2.pack(side="bottom", fill="x")
     self.text_editor.configure(yscrollcommand=self.scroll.set, xscrollcommand=self.scroll2.set, undo=True)
-    init.initialize(self.text_editor, 2)
+    miscs.init.initialize(self.text_editor, 2)
 
 def tabs_close(self):
     # Automatically close the window if there's only one tab
     if self.notebook.index("end") == 1:
         print(self._("No other tabs left, asking for close the window..."))
-        init.ask_quit(self)
+        miscs.init.ask_quit(self)
     # If not, just close the selected tab and keep
     # the main window open
     else:
@@ -87,11 +87,8 @@ def on_tab_changed(root, event):
     tab = event.widget.tab('current')['text']
     root.title(root._("Text Editor") + " - " + tab)
 
-# Originally taken from dh7qc's Text editor
+# Originally taken from dhq7c's Text editor
 def move_tab(self, event):
     if self.notebook.index("end") > 1:
         y = self.notebook._nametowidget( self.notebook.select() ).winfo_y() -5
-        try:
-            self.notebook.insert(event.widget.index('@%d,%d' % (event.x,y)), self.notebook.select())
-        except tk.TckError:
-            return
+        self.notebook.insert(event.widget.index('@%d,%d' % (event.x,y)), self.notebook.select())
