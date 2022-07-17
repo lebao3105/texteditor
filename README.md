@@ -15,7 +15,9 @@ A graphical text editor.
 * [Initial] Installation on Linux (deb-based distros) + Windows .exe file making (completed)
 
 ## Running
-Install all requirements (configparser + pillow) before continue.
+Install configparser package before continue.
+
+This project needs python3 + Tcl/Tkinter and pip installed.
 
 Always generate .mo files first:
 > **On Windows:** To do this, find for msgfmt, msgmerge and xgettext from the Python installation folder.
@@ -58,4 +60,4 @@ To make executable files, read instructions in [makerelease](makerelease/).
 * Text editor's UI works best on... Windows, not Linux! Tkinter GUI on Linux is ugly - and tabs dragging may not work.
 * Code in this project may be too complex.
 * Some part of the project is based on dh7qc's [text editor](https://github.com/dh7qc/Python-Text-Editor/).
-* Don't use Open System Shell if you want to use commands that require you input - the program will be broken with that!
+* Don't use Open System Shell if you want to use commands that require your input - the program will be broken with that!
