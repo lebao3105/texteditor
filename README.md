@@ -15,7 +15,9 @@ A graphical text editor.
 * [Initial] Installation on Linux (deb-based distros) + Windows .exe file making (completed)
 
 ## Running
-Install all requirements (configparser + pillow) before continue.
+Install configparser package before continue.
+
+This project needs python3 + Tcl/Tkinter and pip installed.
 
 Always generate .mo files first:
 > **On Windows:** To do this, find for msgfmt, msgmerge and xgettext from the Python installation folder.
@@ -46,13 +48,7 @@ If you see error ```/bin/bash^M: bad interpreter: No such file or directory``` (
 
 Now just run [src/main.py](src/main.py).
 
-> **On Windows:** To make .exe file, do:
-```
-pip install py2exe
-cd src
-python setup.py py2exe
-.\dist\main.exe
-```
+To make executable files, read instructions in [makerelease](makerelease/).
 
 ## Screenshots
 <div align="center">
@@ -60,8 +56,8 @@ python setup.py py2exe
     <img id="image" src="https://user-images.githubusercontent.com/77564176/169689858-a131cd42-1d6d-4d2a-976d-7daef4fab5ac.png">
 </div>
 
-## Note
-* Text editor's UI works best on... Windows, not Linux! I see there are problems that I can't use Pillow on Linux - this will prevent us from seeing the icon in About.
-* Basic things (copy, paste, cut) are not implemented yet.
+## Notes
+* Text editor's UI works best on... Windows, not Linux! Tkinter GUI on Linux is ugly - and tabs dragging may not work.
 * Code in this project may be too complex.
 * Some part of the project is based on dh7qc's [text editor](https://github.com/dh7qc/Python-Text-Editor/).
+* Don't use Open System Shell if you want to use commands that require your input - the program will be broken with that!

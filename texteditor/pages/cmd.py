@@ -2,7 +2,7 @@ import os
 import sys
 from tkinter import *
 import subprocess
-from tkinter.messagebox import showinfo, showwarning
+from tkinter.messagebox import showwarning
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from miscs import get_config
 
@@ -42,15 +42,17 @@ class CommandPrompt(Text):
             os.system(get_config.getvalue('cmd', 'defconsole'))
         else:
             p = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE)
+            p.wait()
             out = p.stdout.read()
-            append('end', '\n')
-            append('end', out)
+            try:
+                append('end', '\n')
+                append('end', out)
+            except:
+                return
 
     def warning(self):
         showwarning(
             title='Warning',
-            message="""
-            This is a working feature - use some commands will make the application unusable. Run help to get more notes and available commands!
-            """
+            message="""This is a working feature - use some commands will make the application unusable. Run help to get more notes and available commands!"""
         )
 

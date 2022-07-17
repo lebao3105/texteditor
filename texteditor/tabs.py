@@ -1,7 +1,7 @@
 from tkinter import *
 from tkinter import ttk
 import miscs.init
-import miscs.file_operations
+import miscs.file_operations as file_operations
 import miscs.constants as i
 
 # For example:
@@ -91,7 +91,4 @@ def on_tab_changed(root, event):
 def move_tab(self, event):
     if self.notebook.index("end") > 1:
         y = self.notebook._nametowidget( self.notebook.select() ).winfo_y() -5
-        try:
-            self.notebook.insert(event.widget.index('@%d,%d' % (event.x,y)), self.notebook.select())
-        except tk.TckError:
-            return
+        self.notebook.insert(event.widget.index('@%d,%d' % (event.x,y)), self.notebook.select())
