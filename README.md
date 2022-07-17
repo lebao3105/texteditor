@@ -61,3 +61,4 @@ To make executable files, read instructions in [makerelease](makerelease/).
 * Code in this project may be too complex.
 * Some part of the project is based on dh7qc's [text editor](https://github.com/dh7qc/Python-Text-Editor/).
 * Don't use Open System Shell if you want to use commands that require your input - the program will be broken with that!
+* The project is also available on GitLab under the same user & repository name.
