@@ -3,25 +3,29 @@
 from tkinter import *
 from tkinter import ttk
 ## Pages
-from pages import about, helpme, cmd
+from pages import cmd
 ## Some needed functions
 import miscs.init
 import miscs.file_operations
 import tabs
+import gettext
+
+gettext.bindtextdomain('base', 'po')
+gettext.textdomain('base')
 
 class MainWindow(Tk):
 
     def __init__(self):
         super().__init__()
-        self._ = ""
-        miscs.init.initialize(self, 0)
+        self._ = gettext.gettext
         miscs.init.initialize(self, 1)
+        miscs.init.initialize(self, 2)
         self.geometry("810x610")
         self.title(self._("Text editor"))
         self.place_widgets()
         self.place_menu()
         self.add_event()
-
+        
     def place_menu(self):
         # Menu bar
         self.menu_bar = Menu(self)
@@ -51,12 +55,7 @@ class MainWindow(Tk):
         addeditcmd(label=self._("Open System Shell"), command=lambda: cmd.CommandPrompt(self))
         self.menu_bar.add_cascade(label=self._("Edit"), menu=self.edit_menu)
 
-        ## Help & About
-        self.help_menu = Menu(self.menu_bar, tearoff=0)
-        addhelpcmd = self.help_menu.add_command
-        addhelpcmd(label=self._("Help"), command=lambda: helpme.Help(self))
-        addhelpcmd(label=self._("About"), command=lambda: about.About(self))
-        self.menu_bar.add_cascade(label=self._("Help"), menu=self.help_menu)
+        # Add menu to the application
         self.config(menu=self.menu_bar)
 
 
