@@ -10,7 +10,7 @@ setup(
     options = {
 		  'py2exe': {
 			  'optimize': 2,
-			  'includes': ['os.path', 'configparser']
+			  'includes': ['os', 'configparser']
 			}
 	}
 )
