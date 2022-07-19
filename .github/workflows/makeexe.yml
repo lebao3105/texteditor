@@ -25,8 +25,11 @@ jobs:
       - name: Install dependencies
         run: pip install configparser py2exe
       
-      - name: Start building
+      - name: Copy files
         run: |
           xcopy makerelease\setupwin.py texteditor\
           xcopy makerelease\files.py texteditor\
-          cd texteditor & py setupwin.py py2exe
+      
+      - name: Start building
+        run: python setupwin.py py2exe
+        working-directory: texteditor
