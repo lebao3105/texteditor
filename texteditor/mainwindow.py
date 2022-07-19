@@ -1,12 +1,8 @@
 # Import modules
-## Tkinter
-from tkinter import *
-from tkinter import ttk
-## Pages
+from tkinter import Menu, Tk, ttk
 from pages import cmd
-## Some needed functions
-import miscs.init
-import miscs.file_operations
+from miscs import init, file_operations
+from extensions import finding
 import tabs
 import gettext
 
@@ -14,12 +10,13 @@ gettext.bindtextdomain('base', 'po')
 gettext.textdomain('base')
 
 class MainWindow(Tk):
-
+    """Main application class.
+    Todo: Bind keyboard accelerator for File + Find menu items
+    """
     def __init__(self):
         super().__init__()
         self._ = gettext.gettext
-        miscs.init.initialize(self, 1)
-        miscs.init.initialize(self, 2)
+        init.initialize(self)
         self.geometry("810x610")
         self.title(self._("Text editor"))
         self.place_widgets()
@@ -33,11 +30,11 @@ class MainWindow(Tk):
         self.file_menu = Menu(self.menu_bar, tearoff=0)
         addfilecmd = self.file_menu.add_command
         addfilecmd(label=self._("New"), command=lambda: tabs.add_tab(self))
-        addfilecmd(label=self._("Open"), command=lambda: miscs.file_operations.open_file(self))
-        addfilecmd(label=self._("Save"), command=lambda: miscs.file_operations.save_file(self))
-        addfilecmd(label=self._("Save as"), command=lambda: miscs.file_operations.save_as(self))
+        addfilecmd(label=self._("Open"), command=lambda: file_operations.open_file(self))
+        addfilecmd(label=self._("Save"), command=lambda: file_operations.save_file(self))
+        addfilecmd(label=self._("Save as"), command=lambda: file_operations.save_as(self))
         self.file_menu.add_separator()
-        addfilecmd(label=self._("Exit"), accelerator="Alt+F4", command=lambda: miscs.init.ask_quit(self))
+        addfilecmd(label=self._("Exit"), accelerator="Alt+F4", command=lambda: init.ask_quit(self))
         self.menu_bar.add_cascade(label=self._("File"), menu=self.file_menu)
 
         ## Edit
@@ -53,8 +50,14 @@ class MainWindow(Tk):
         addeditcmd(label=self._("Select all"), accelerator="Ctrl+A")
         self.edit_menu.add_separator()
         addeditcmd(label=self._("Open System Shell"), command=lambda: cmd.CommandPrompt(self))
-        self.menu_bar.add_cascade(label=self._("Edit"), menu=self.edit_menu)
+        self.menu_bar.add_cascade(label=self._("Editing"), menu=self.edit_menu)
 
+        ## Find & Replace
+        self.find_menu = Menu(self.menu_bar, tearoff=0)
+        addfindcmd = self.find_menu.add_command
+        addfindcmd(label=self._("Find"), command=lambda: finding.Finder(self, "find"))
+        addfindcmd(label=self._("Replace"), command=lambda: finding.Finder(self, ""))
+        self.menu_bar.add_cascade(label=self._("Find"), menu=self.find_menu)
         # Add menu to the application
         self.config(menu=self.menu_bar)
 
@@ -83,10 +86,10 @@ class MainWindow(Tk):
         editcfg("Copy", command=lambda: self.event_generate("<Control-c>"))
         editcfg("Paste", command=lambda: self.event_generate("<Control-v>"))
         editcfg("Select all", command=lambda: self.event_generate("<Control-a>"))
-        filecfg("Open", command=lambda: miscs.file_operations.open_file(self))
-        filecfg("Save", command=lambda: miscs.file_operations.save_file(self))
-        filecfg("Save as", command=lambda: miscs.file_operations.save_as(self))
-        filecfg("Exit", command=lambda: miscs.init.ask_quit(self))
+        filecfg("Open", command=lambda: file_operations.open_file(self))
+        filecfg("Save", command=lambda: file_operations.save_file(self))
+        filecfg("Save as", command=lambda: file_operations.save_as(self))
+        filecfg("Exit", command=lambda: init.ask_quit(self))
 
 if __name__ == "__main__":
     app = MainWindow()

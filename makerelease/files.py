@@ -1,7 +1,7 @@
 import sys
 from os.path import isfile, dirname, abspath
 sys.path.append(dirname(dirname(abspath(__file__))))
-from texteditor.miscs import constants
+from texteditor.miscs import constant
 
 # These are __init__.py files in the source code.
 # Without they we can't import any file(s)
@@ -16,7 +16,7 @@ for i in range(len(initfiles)):
         raise Exception("File not found: "+initfiles[i])
 
 # Icon
-if constants.STATE == "DEV":
+if constant.STATE == "DEV":
 	icon = "../data/org.lebao3105.texteditor.Devel.png"
 else:
 	icon = "../data/org.lebao3105.texteditor.png"
