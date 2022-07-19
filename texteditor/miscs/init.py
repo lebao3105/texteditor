@@ -1,8 +1,6 @@
 # Initialize for this application
-# Including language, and configures.
-import gettext
-from tkinter import PhotoImage
-from tkinter import *
+# Including language, and configurations.
+from tkinter import PhotoImage, END
 from tkinter.messagebox import askyesno
 from . import get_config, file_operations
 import os
@@ -12,10 +10,9 @@ icon = ["data/org.lebao3105.texteditor.Devel.png",
         "../data/org.lebao3105.texteditor.Devel.png", 
         "icon.png", "src/icon.png"]
 
-def initialize(self, part):
-    if part == 1:
+def initialize(self, config=None):
+    if config == None:
         # Initialize the icon
-        # Note: This may not working on Linux - Why?
         for k in range(len(icon)):
             if os.path.isfile(icon[k]):
                 p1 = PhotoImage(file=icon[k])
@@ -24,12 +21,14 @@ def initialize(self, part):
                 break
             else:
                 break # Ignore it
-    elif part == 2:
-        # Initialize the configures
+    else:
+        # Initialize the configurations.
+        # (Why did I used "configures"??? Crazy)
         get_config.set_window_color(self)
 
 def check_is_saved(self):
     if self.text_editor.get(1.0, END) != "\n":
+        # TODO: Fix is_saved value
         if file_operations.is_saved == True:
             return True
         else:
@@ -43,7 +42,8 @@ def check_is_saved(self):
 
 def ask_quit(self):
     if check_is_saved(self):
-        if askyesno(self._("Text editor"), self._("Do you want to quit?")):
+        if askyesno(self._("Text editor"), 
+                self._("Are you sure want to quit the application?")):
             self.destroy()
             #exit()
         else:

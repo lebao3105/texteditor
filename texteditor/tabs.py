@@ -2,7 +2,7 @@ from tkinter import *
 from tkinter import ttk
 import miscs.init
 import miscs.file_operations as file_operations
-import miscs.constants as i
+import miscs.constant as i
 
 # For example:
 # We have 2 tabs: Untitled and Untitled 2. You close Untitled
@@ -16,7 +16,8 @@ def checker(self):
     if str(self.notebook.index("end")) in find_tab:
         return True
     # if this is the first tab yet
-    elif find_tab == self._(i.UNTITLED):
+    # or we just opened some files with main.py
+    elif find_tab == self._(i.UNTITLED) or self._(i.UNTITLED) not in find_tab:
         return True
     # what I have mentioned before
     elif str(self.notebook.index("end") + 1) in find_tab:
