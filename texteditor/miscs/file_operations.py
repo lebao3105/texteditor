@@ -19,10 +19,10 @@ is_saved = False
 saved_files = [ ]
 
 if platform == "win32":
-    searchdir = os.getenv("USERPROFILE")+"\Documents"
+    searchdir = os.environ["USERPROFILE"]+"\Documents"
     script_type = ("Windows Shell Script", "*.bat, *.cmd")
 elif platform == "linux":
-    searchdir = os.getenv("HOME")+"/Documents"
+    searchdir = os.environ["HOME"]+"/Documents"
     script_type = ("UNIX Shell Script", "*.sh")
 
 def find_text_editor(self):
@@ -31,22 +31,23 @@ def find_text_editor(self):
     else:
         raise Exception("Text editor not found!")
 
-def open_file(self):
+def open_file(self, event=None):
     file_name = askopenfilename(initialdir=searchdir,
                                 title=self._("Select a file to open"), 
-                                filetypes=(("Text files", "*.txt"),
-                                script_type, ("All files", "*.*")))
+                                filetypes=(("All files", "*.*"),
+                                script_type, ("Text files", "*.txt")))
     if file_name:
         find_text_editor(self)
 
         if not self.text_editor.compare("end-1c", "==", 1.0):
             tabs.add_tab(self)
-            openfilename(file_name)
         
         for x in constant.FILES_ARR:
             if file_name in x:
                 if asktoopen(self):
-                    openfilename(self, file_name)
+                    pass
+        
+        openfilename(self, file_name)
                 
 def openfilename(tkwin, filename):
         with open(filename, "r") as f:
@@ -59,7 +60,7 @@ def openfilename(tkwin, filename):
             
         #print(constants.FILES_ARR)
 
-def save_file(self):
+def save_file(self, event=None):
     find_text_editor(self)
     filefind = self.notebook.tab(self.notebook.select(), "text")
     #print(filefind)
@@ -75,12 +76,12 @@ def save_file(self):
         finally:
             saved_files.append(filefind)
 
-def save_as(self):
+def save_as(self, event=None):
     find_text_editor(self)
     file_name = asksaveasfilename(initialdir=searchdir, 
                                     title=self._("Save as"),
-                                    filetypes=(("Text files", "*.txt"),
-                                    script_type, ("All files", "*.*")))
+                                    filetypes=(("All files", "*.*"),
+                                    script_type, ("Text files", "*.txt")))
     if file_name:
         try:
             with open(file_name, "w") as f:
@@ -93,7 +94,7 @@ def save_as(self):
 def asktoopen(self):
     _ = self._
     ask = askyesno(_("Infomation"),
-                _("This file is opened in another tab. By default we will load the contents to a new tab.\nLoad it to a new tab?"))
+                _("This file is opened in another tab. By default we will load the contents to a new tab.\nDo it?"))
     if ask:
         tabs.add_tab(self)
         return True
