@@ -1,17 +1,16 @@
 # Import modules
-from tkinter import Menu, Tk, ttk
-from pages import cmd
-from miscs import init, file_operations
-from extensions import finding
-import tabs
 import gettext
+from tkinter import Menu, Tk, ttk
+import tabs
+from extensions import finding
+from miscs import file_operations, init
+from pages import cmd
 
 gettext.bindtextdomain('base', 'po')
 gettext.textdomain('base')
 
 class MainWindow(Tk):
     """Main application class.
-    Todo: Bind keyboard accelerator for File + Find menu items
     """
     def __init__(self):
         super().__init__()
@@ -29,10 +28,10 @@ class MainWindow(Tk):
         ## File
         self.file_menu = Menu(self.menu_bar, tearoff=0)
         addfilecmd = self.file_menu.add_command
-        addfilecmd(label=self._("New"), command=lambda: tabs.add_tab(self))
-        addfilecmd(label=self._("Open"), command=lambda: file_operations.open_file(self))
-        addfilecmd(label=self._("Save"), command=lambda: file_operations.save_file(self))
-        addfilecmd(label=self._("Save as"), command=lambda: file_operations.save_as(self))
+        addfilecmd(label=self._("New"), command=lambda: tabs.add_tab(self), accelerator="Ctrl+N")
+        addfilecmd(label=self._("Open"), command=lambda: file_operations.open_file(self), accelerator="Ctrl+O")
+        addfilecmd(label=self._("Save"), command=lambda: file_operations.save_file(self), accelerator="Ctrl+S")
+        addfilecmd(label=self._("Save as"), command=lambda: file_operations.save_as(self), accelerator="Ctrl+Shift+S")
         self.file_menu.add_separator()
         addfilecmd(label=self._("Exit"), accelerator="Alt+F4", command=lambda: init.ask_quit(self))
         self.menu_bar.add_cascade(label=self._("File"), menu=self.file_menu)
@@ -49,14 +48,14 @@ class MainWindow(Tk):
         self.edit_menu.add_separator()
         addeditcmd(label=self._("Select all"), accelerator="Ctrl+A")
         self.edit_menu.add_separator()
-        addeditcmd(label=self._("Open System Shell"), command=lambda: cmd.CommandPrompt(self))
+        addeditcmd(label=self._("Open System Shell"), command=lambda: cmd.CommandPrompt(self), accelerator="Ctrl+T")
         self.menu_bar.add_cascade(label=self._("Editing"), menu=self.edit_menu)
 
         ## Find & Replace
         self.find_menu = Menu(self.menu_bar, tearoff=0)
         addfindcmd = self.find_menu.add_command
-        addfindcmd(label=self._("Find"), command=lambda: finding.Finder(self, "find"))
-        addfindcmd(label=self._("Replace"), command=lambda: finding.Finder(self, ""))
+        addfindcmd(label=self._("Find"), command=lambda: finding.Finder(self, "find"), accelerator="Ctrl+F")
+        addfindcmd(label=self._("Replace"), command=lambda: finding.Finder(self, ""), accelerator="Ctrl+R")
         self.menu_bar.add_cascade(label=self._("Find"), menu=self.find_menu)
         # Add menu to the application
         self.config(menu=self.menu_bar)
@@ -75,21 +74,16 @@ class MainWindow(Tk):
         self.notebook.bind("<B1-Motion>", lambda event: tabs.move_tab)
         self.notebook.bind("<<NotebookTabChanged>>", lambda event: tabs.on_tab_changed(self, event))
 
-    # Add commands to the menu
+    # Binding commands to the application
     def add_event(self):
-        editcfg = self.edit_menu.entryconfigure
-        filecfg = self.file_menu.entryconfigure
-        editcfg("Open System Shell", command=lambda: cmd.CommandPrompt(self))
-        editcfg("Undo", command=lambda: self.event_generate("<Control-z>"))
-        editcfg("Redo", command=lambda: self.event_generate("<Control-y>"))
-        editcfg("Cut", command=lambda: self.event_generate("<Control-x>"))
-        editcfg("Copy", command=lambda: self.event_generate("<Control-c>"))
-        editcfg("Paste", command=lambda: self.event_generate("<Control-v>"))
-        editcfg("Select all", command=lambda: self.event_generate("<Control-a>"))
-        filecfg("Open", command=lambda: file_operations.open_file(self))
-        filecfg("Save", command=lambda: file_operations.save_file(self))
-        filecfg("Save as", command=lambda: file_operations.save_as(self))
-        filecfg("Exit", command=lambda: init.ask_quit(self))
+        bindcfg = self.bind
+        bindcfg("<Control-n>", lambda evnet: tabs.add_tab(self))
+        bindcfg("<Control-t>", lambda event: cmd.CommandPrompt(self))
+        bindcfg("<Control-f>", lambda event: finding.Finder(self, "find"))
+        bindcfg("<Control-r>", lambda event: finding.Finder(self, ""))
+        bindcfg("<Control-Shift-S>", lambda event: file_operations.save_as(self))
+        bindcfg("<Control-s>", lambda event: file_operations.save_file(self))
+        bindcfg("<Control-o>", lambda event: file_operations.open_file(self))
 
 if __name__ == "__main__":
     app = MainWindow()
