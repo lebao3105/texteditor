@@ -3,7 +3,7 @@ from tkinter import END, StringVar
 from tkinter.ttk import Frame, Entry, Button, Label
 
 class Finder(Frame):
-    def __init__(self, parent, option):
+    def __init__(self, parent, option, event=None):
         if hasattr(parent, 'findbox'):
             parent.findbox.destroy()
             parent.text_editor.tag_remove('found', 1.0, END)

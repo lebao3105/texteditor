@@ -8,7 +8,7 @@ from miscs import get_config
 
 class CommandPrompt(Text):
 
-    def __init__(self, master):
+    def __init__(self, master, event=None):
         super().__init__(master)
         self._ = master._
         self.bind('<Return>', self.runcommand)
@@ -55,4 +55,3 @@ class CommandPrompt(Text):
             title='Warning',
             message="""This is a working feature - use some commands will make the application unusable. Run help to get more notes and available commands!"""
         )
-
