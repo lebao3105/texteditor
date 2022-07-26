@@ -1,13 +1,17 @@
 """This module adds tab to the tkinter.Notebook widget.
 It also handles what's happening in the child widget of the tab (tkinter.Text)...
 """
-from tkinter import END, ttk, Frame, Text
+from tkinter import END, ttk, Frame, Text, Menu
 import miscs.get_config
 import miscs.file_operations as file_operations
 import miscs.constant as i
 import gettext
 
 _ = gettext.gettext
+
+window_title = _("Text Editor") + " - "
+
+# TODO: Add this module to a class
 
 # For example:
 # We have 2 tabs: Untitled and Untitled 2. You close Untitled
@@ -22,14 +26,13 @@ def checker(self):
         return True
     # if this is the first tab yet
     # or we just opened some files with main.py
-    elif (find_tab == _(i.UNTITLED) or _(i.UNTITLED)) not in find_tab:
+    elif find_tab == _(i.UNTITLED) or (_(i.UNTITLED) not in find_tab):
         return True
     # what I have mentioned before
     elif str(self.notebook.index("end") + 1) in find_tab:
         return False
 
 def add_tab(self, event=None):
-    tabname = self._("Text Editor ") + " - "
     # check if there are no tabs yet
     if self.notebook.index("end") == 0:
         firsttab = Frame(self.notebook)
@@ -37,7 +40,7 @@ def add_tab(self, event=None):
         # place the textbox
         place_textbox(firsttab, self)
         self.notebook.select(firsttab)
-        self.titletext = tabname + _(i.UNTITLED)
+        self.titletext = window_title + _(i.UNTITLED)
     else:
         if checker(self):
             tab_name = _(i.UNTITLED) + str(self.notebook.index("end") + 1)
@@ -47,14 +50,13 @@ def add_tab(self, event=None):
         self.notebook.add(new_tab, text=tab_name)
         place_textbox(new_tab, self)
         self.notebook.select(new_tab)
-        self.titletext = tabname + tab_name
+        self.titletext = window_title + tab_name
     self.title(self.titletext)
 
 def place_textbox(self, root):
     # Text box
     self.text_editor = Text(self, wrap="word", undo=True, font=("Arial", 12))
     self.text_editor.bind("<Button-3><ButtonRelease-3>", lambda event:place_right_click_menu(self, event, root))
-    self.text_editor.bind("<KeyRelease>", lambda event: unsavedfile(self))
     self.text_editor.pack(expand=True, fill="both")
     # Scrollbar
     root.text_editor = self.text_editor
@@ -65,17 +67,6 @@ def place_textbox(self, root):
     self.text_editor.configure(yscrollcommand=self.scroll.set, xscrollcommand=self.scroll2.set, undo=True)
     # Sync the widget with the theme
     miscs.get_config.set_window_color(self.text_editor)
-
-def unsavedfile(self, event=None):
-    # Top level
-    root = self.winfo_toplevel()
-    # Tab name and index
-    idx = root.notebook.index(root.notebook.select())
-    name = root.notebook.tab(root.notebook.select(), "text")
-    # Do stuff
-    i.UNSAVED.append(name)
-    root.notebook.tab(root.notebook.index(root.notebook.select()), text=name + _(" (Unsaved)"))
-    root.title(root.titletext + _(" (Unsaved)"))
 
 def tabs_close(self):
     # Automatically close the window if there's only one tab

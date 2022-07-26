@@ -1,6 +1,7 @@
 # Initialize for this application
 # Including language, and configurations.
-from tkinter import PhotoImage, END
+from tkinter import END
+from PIL import ImageTk, Image
 from tkinter.messagebox import askyesno
 from . import file_operations, constant
 import os
@@ -14,8 +15,9 @@ def initialize(self):
     """Initialize the icon."""
     for k in range(len(icon)):
         if os.path.isfile(icon[k]):
-            p1 = PhotoImage(file=icon[k])
-            self.iconphoto(True, p1)
+            ico = Image.open(icon[k])
+            p1 = ImageTk.PhotoImage(ico)
+            self.wm_iconphoto(False, p1)
             #print(icon[k])
             break
         else:

@@ -35,13 +35,13 @@ class Finder(Frame):
             replace_text = Label(self, text=self._('Replace'))
             replace_text.grid(row=2, column=0)
             self.entry_replace = Entry(self)
+            self.entry_replace.grid(row=2, column=1)
             btn_replace = Button(self, text=self._('Replace'))
             btn_replace.config(command=self.replace)
-            self.entry_replace.grid(row=2, column=0)
             btn_replace.grid(row=3, column=1)
         
         # Close widget
-        quit = Button(self, text='Quit')
+        quit = Button(self, text='Close')
         quit.grid(row=3, column=0)
         quit.config(command=self.destroy)
     
@@ -62,7 +62,9 @@ class Finder(Frame):
                 pos = self.text.search(find, pos, nocase=1,
                                 stopindex=END)
                 
-                if not pos: break
+                if not pos: 
+                    self.searchfailed()
+                    break
 
                 lastidx = '%s+%dc' % (pos, len(find))
                 self.text.tag_add('found', pos, lastidx)

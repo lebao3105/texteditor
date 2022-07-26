@@ -10,7 +10,7 @@ if __name__ == '__main__':
     
     n = len(sys.argv)
     if (n-1 > 0):
-        if isfile(path)(sys.argv[1]):
+        if isfile(sys.argv[1]):
             file_operations.openfilename(root, sys.argv[1])
         for i in range(2,n):
             if isfile(sys.argv[i]):
