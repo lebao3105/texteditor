@@ -1,210 +1,128 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR ORGANIZATION
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2022-07-01 10:29+0700\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2022-07-27 15:50+0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=cp1252\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: pygettext.py 1.5\n"
 
-
-#: src/mainwindow.py:20 src/miscs/file_operations.py:55 src/miscs/init.py:52
-#: src/miscs/init.py:62 src/pages/about.py:23
-msgid "Text editor"
-msgstr ""
-
-#: src/mainwindow.py:31
-msgid "New"
-msgstr ""
-
-#: src/mainwindow.py:32
-msgid "Open"
-msgstr ""
-
-#: src/mainwindow.py:33 src/tabs.py:77
-msgid "Save"
-msgstr ""
-
-#: src/mainwindow.py:34 src/miscs/file_operations.py:81 src/tabs.py:78
-msgid "Save as"
-msgstr ""
-
-#: src/mainwindow.py:36
-msgid "Exit"
-msgstr ""
-
-#: src/mainwindow.py:37
-msgid "File"
-msgstr ""
-
-#: src/mainwindow.py:42 src/tabs.py:80
-msgid "Undo"
-msgstr ""
-
-#: src/mainwindow.py:43 src/tabs.py:81
-msgid "Redo"
-msgstr ""
-
-#: src/mainwindow.py:45 src/tabs.py:75
-msgid "Cut"
-msgstr ""
-
-#: src/mainwindow.py:46 src/tabs.py:73
-msgid "Copy"
-msgstr ""
-
-#: src/mainwindow.py:47 src/tabs.py:74
-msgid "Paste"
-msgstr ""
-
-#: src/mainwindow.py:49
-msgid "Select all"
-msgstr ""
-
-#: src/mainwindow.py:51
-msgid "Open System Shell"
-msgstr ""
-
-#: src/mainwindow.py:52
-msgid "Edit"
-msgstr ""
-
-#: src/mainwindow.py:57 src/mainwindow.py:59 src/pages/helpme.py:10
-#: src/pages/helpme.py:19
-msgid "Help"
-msgstr ""
-
-#: src/mainwindow.py:58 src/pages/about.py:10
-msgid "About"
-msgstr ""
-
-#: src/mainwindow.py:70
-msgid "New tab"
-msgstr ""
-
-#: src/mainwindow.py:71
-msgid "Close the current opening tab"
-msgstr ""
-
-#: src/miscs/file_operations.py:36
-msgid "Select a file to open"
-msgstr ""
-
-#: src/miscs/file_operations.py:95
-msgid "Infomation"
-msgstr ""
-
-#: src/miscs/file_operations.py:96
-msgid ""
-"This file is opened in another tab. By default we will load the contents to a new tab.\n"
-"Load it to a new tab?"
-msgstr ""
-
-#: src/miscs/init.py:52
-msgid "Do you want to save the file?"
-msgstr ""
-
-#: src/miscs/init.py:62
-msgid "Do you want to quit?"
-msgstr ""
-
-#: src/pages/about.py:22
-msgid "About this application"
-msgstr ""
-
-#: src/pages/about.py:24
-msgid "Version 1.0."
-msgstr ""
-
-#: src/pages/about.py:25
-msgid "Author: "
-msgstr ""
-
-#: src/pages/about.py:26
-msgid "License: "
-msgstr ""
-
-#: src/pages/cmd.py:30
-msgid ""
-"Available commands:\n"
-msgstr ""
-
-#: src/pages/cmd.py:31
-msgid ""
-"exit: Close this box\n"
-msgstr ""
-
-#: src/pages/cmd.py:32
-msgid ""
-"help: Show this message\n"
-msgstr ""
-
-#: src/pages/cmd.py:33
-msgid ""
-"clear: Clear this box\n"
-msgstr ""
-
-#: src/pages/cmd.py:34
-msgid ""
-"Running pre installed shells (Bash, Cmd, Zsh...) is blocked. But you can use xterm instead.\n"
-msgstr ""
-
-#: src/pages/helpme.py:20
-msgid "How to use this application?"
-msgstr ""
-
-#: src/pages/helpme.py:21
-msgid "Just do what you need like any other text editor,"
-msgstr ""
-
-#: src/pages/helpme.py:22
-msgid "with tabs support."
-msgstr ""
-
-#: src/pages/prefs.py:16 src/pages/prefs.py:27
-msgid "Preferences"
-msgstr ""
-
-#: src/pages/prefs.py:30
-msgid "English"
-msgstr ""
-
-#: src/pages/prefs.py:30
-msgid "Vietnamese"
-msgstr ""
-
-#: src/pages/prefs.py:33
-msgid "Language"
-msgstr ""
-
-#: src/pages/prefs.py:37 src/pages/prefs.py:45
-msgid "Select it here"
-msgstr ""
-
-#: src/pages/prefs.py:42
-msgid "Font"
-msgstr ""
-
-#: src/pages/prefs.py:48
-msgid "Color"
-msgstr ""
-
-#: src/tabs.py:26
-msgid "Text Editor "
-msgstr ""
-
-#: src/tabs.py:63
-msgid "No other tabs left, asking for close the window..."
-msgstr ""
-
-#: src/tabs.py:88
+#: texteditor/tabs.py:12 texteditor/tabs.py:99
 msgid "Text Editor"
 msgstr ""
 
+#: texteditor/tabs.py:74
+msgid "No other tabs left, asking for close the window..."
+msgstr ""
+
+#: texteditor/tabs.py:84
+msgid "Copy"
+msgstr ""
+
+#: texteditor/tabs.py:85
+msgid "Paste"
+msgstr ""
+
+#: texteditor/tabs.py:86
+msgid "Cut"
+msgstr ""
+
+#: texteditor/tabs.py:88
+msgid "Save"
+msgstr ""
+
+#: texteditor/tabs.py:89 texteditor/miscs/file_operations.py:82
+msgid "Save as"
+msgstr ""
+
+#: texteditor/tabs.py:91
+msgid "Undo"
+msgstr ""
+
+#: texteditor/tabs.py:92
+msgid "Redo"
+msgstr ""
+
+#: texteditor/extensions/finding.py:21
+msgid "Find something here..."
+msgstr ""
+
+#: texteditor/extensions/finding.py:24
+msgid "Find"
+msgstr ""
+
+#: texteditor/extensions/finding.py:35 texteditor/extensions/finding.py:39
+msgid "Replace"
+msgstr ""
+
+#: texteditor/miscs/file_operations.py:36
+msgid "Select a file to open"
+msgstr ""
+
+#: texteditor/miscs/file_operations.py:56 texteditor/miscs/init.py:42
+msgid "Text editor"
+msgstr ""
+
+#: texteditor/miscs/file_operations.py:96
+msgid "Infomation"
+msgstr ""
+
+#: texteditor/miscs/file_operations.py:97
+msgid ""
+"This file is opened in another tab. By default we will load the contents to "
+"a new tab.\n"
+"Do it?"
+msgstr ""
+
+#: texteditor/miscs/init.py:32
+msgid "Notification"
+msgstr ""
+
+#: texteditor/miscs/init.py:33
+msgid "There are unsaved files. Are you want to save them?"
+msgstr ""
+
+#: texteditor/miscs/init.py:43
+msgid "Are you sure want to quit the application?"
+msgstr ""
+
+#: texteditor/pages/cmd.py:34
+msgid "Available commands:\n"
+msgstr ""
+
+#: texteditor/pages/cmd.py:35
+msgid "exit: Close this box\n"
+msgstr ""
+
+#: texteditor/pages/cmd.py:36
+msgid "help: Show this message\n"
+msgstr ""
+
+#: texteditor/pages/cmd.py:37
+msgid "clear: Clear this box\n"
+msgstr ""
+
+#: texteditor/pages/cmd.py:38
+msgid ""
+"term: Open terminal (not this one) - don't run this if you are running this "
+"application from console!"
+msgstr ""
+
+#: texteditor/pages/cmd.py:39
+msgid "Running application which requires user input is not recommended yet.\n"
+msgstr ""
+
+#: texteditor/pages/cmd.py:41
+msgid ""
+"This will open console defined by defconsole value in configuration file. "
+"The application will be temporarity unusable!"
+msgstr ""
