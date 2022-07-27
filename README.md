@@ -42,9 +42,7 @@ msgfmt.py po/vi/LC_MESSAGES/base -o po/vi/LC_MESSAGES/base.mo
 msgfmt.py po/en/LC_MESSAGES/base -o po/en/LC_MESSAGES/base.mo
 ```
 
-If you see error ```/bin/bash^M: bad interpreter: No such file or directory``` (sometimes in bash), just run all commands created in if..elif block:
-* $1 == "-tep": Create new .pot file
-* $1 == "-upd": Generate .mo files (after you run use -tep & edited needed things)
+If you see error ```/bin/bash^M: bad interpreter: No such file or directory```, simply run ```sed -i 's/\r//' upd_trans.sh```.
 
 Now just run [src/main.py](src/main.py).
 
