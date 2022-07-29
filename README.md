@@ -12,12 +12,12 @@ A graphical text editor.
 * Lightweight
 * [Initial] Dark mode + Text colors support
 * [Initial] Configuration file support
-* [Initial] Installation on Linux (deb-based distros) + Windows .exe file making (completed)
+* Able to make Windows executable file (.exe)
 
 ## Running
 Install configparser package before continue.
 
-This project needs python3 + Tcl/Tkinter and pip installed. Also install PIL package with pip.
+This project needs python3 + Tkinter and pip installed. Also install PIL package with pip.
 
 Always generate .mo files first:
 > **On Windows:** To do this, find for msgfmt, msgmerge and xgettext from the Python installation folder.
@@ -54,9 +54,24 @@ To make executable files, read instructions in [makerelease](makerelease/).
     <img id="image" src="https://user-images.githubusercontent.com/77564176/169689858-a131cd42-1d6d-4d2a-976d-7daef4fab5ac.png">
 </div>
 
+## UI on Linux
+It's ugly here... If you don't like this, try to find some ttk theme on the internet, download it to somewhere safe.
+
+Then add the following code (just an example) to texteditor/mainwindow.py:
+
+> Add codes before ```self.place_widgets()``` line!
+```
+style = ttk.Style(self)
+self.tk.call('source', '{a tcl file here}')
+style.set_theme('{theme name}')
+```
+
+Or use the instructions from the theme's author.
+
+Tabs dragging is not working at this time.
+
 ## Notes
-* Text editor's UI works best on... Windows, not Linux! Tkinter GUI on Linux is ugly - and tabs dragging may not work.
-* Code in this project may be too complex.
-* Only a simple part of the project is based on dh7qc's [text editor](https://github.com/dh7qc/Python-Text-Editor/).
-* Don't use Open System Shell if you want to use commands that require your input - the program will be broken with that!
-* The project is also available on GitLab under the same user & repository name.
+* Some part of the source code may be too complex.
+* Tabs dragging is taken from dh7qc's [text editor](https://github.com/dh7qc/Python-Text-Editor)
+* Currently using Open System Shell (I will rename it later) is disabled using a configuration under cmd key (but it doesn't working now:( ). Change it to "true" to use it. Warning: using this can break the application!
+* There are many things I need to do now..

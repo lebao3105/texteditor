@@ -24,7 +24,8 @@ def check_exists():
                 configfile.write("width = "+str(constant.DEFAULT_OTHERS_WIGHT)+"\n")
                 configfile.write("height = "+str(constant.DEFAULT_OTHERS_WIGHT)+"\n\n")
                 configfile.write("[cmd]\n")
-                configfile.write("defconsole = "+defconsole)
+                configfile.write("defconsole = "+defconsole+"\n")
+                configfile.write("isenabled = no")
     else:
         test = os.mkdir(dir)
         if not test:
@@ -114,13 +115,10 @@ def change_color(self, color):
         self.configure(bg=item, fg=sub_item)
 
 # Get a value...
-def getvalue(section, name):
+def getvalue(section:str, name:str):
     check_exists()
     with open(dir + "config.ini") as f:
         config = configparser.ConfigParser()
         config.read(f)
-        try:
-            return config[section][name]
-        except:
-            return defconsole
+        return config[section][name]
         

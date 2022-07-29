@@ -1,17 +1,18 @@
 # Import modules
 import gettext
 from tkinter import Menu, Tk, ttk
+
+from matplotlib.pyplot import get
 import tabs
 from extensions import finding
-from miscs import file_operations, init
+from miscs import file_operations, init, get_config
 from pages import cmd
 
 gettext.bindtextdomain('base', 'po')
 gettext.textdomain('base')
 
 class MainWindow(Tk):
-    """Main application class.
-    """
+    """The main application class."""
     def __init__(self):
         super().__init__()
         self._ = gettext.gettext
@@ -47,8 +48,11 @@ class MainWindow(Tk):
         addeditcmd(label=self._("Paste"), accelerator="Ctrl+V")
         self.edit_menu.add_separator()
         addeditcmd(label=self._("Select all"), accelerator="Ctrl+A")
+
+        #if get_config.getvalue("cmd", "isenabled") == "yes":
         self.edit_menu.add_separator()
         addeditcmd(label=self._("Open System Shell"), command=lambda: cmd.CommandPrompt(self), accelerator="Ctrl+T")
+        
         self.menu_bar.add_cascade(label=self._("Editing"), menu=self.edit_menu)
 
         ## Find & Replace
@@ -78,6 +82,7 @@ class MainWindow(Tk):
     def add_event(self):
         bindcfg = self.bind
         bindcfg("<Control-n>", lambda evnet: tabs.add_tab(self))
+        #if get_config.getvalue("cmd", "isenabled") == "yes":
         bindcfg("<Control-t>", lambda event: cmd.CommandPrompt(self))
         bindcfg("<Control-f>", lambda event: finding.Finder(self, "find"))
         bindcfg("<Control-r>", lambda event: finding.Finder(self, ""))
