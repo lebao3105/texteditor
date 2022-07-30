@@ -19,9 +19,7 @@ Install configparser package before continue.
 
 This project needs python3 + Tkinter and pip installed. Also install PIL package with pip.
 
-Always generate .mo files first:
-> **On Windows:** To do this, find for msgfmt, msgmerge and xgettext from the Python installation folder.
-
+If you don't like to use English, generate translation for your region. On Linux, use ```[upd_trans.sh](upd_trans.sh)``` should work:
 ```
 ./upd_trans.sh -upd
 # If you see wrong text, do:
@@ -31,10 +29,12 @@ Always generate .mo files first:
 ./upd_trans.sh -upd
 ```
 
-> **On Windows,** use:
+> Tip: If you see error ```/bin/bash^M: bad interpreter: No such file or directory```, run ```sed -i 's/\r//' upd_trans.sh```.
+
+On Windows, find pygettext & msgfmt from your Python installation folder. Then use them:
 ```
 REM Generate .pot + .po files
-pygettext.py -d base -o po/base.pot src/main.py src/tabs.py src/pages/about.py src/pages/helpme.py
+pygettext.py -d base -o po/base.pot texteditor/mainwindow.py texteditor/tabs.py texteditor/miscs/file_operations.py texteditor/extensions/finding.py texteditor/extensions/cmd.py
 REM Copy .pot file to your_language_code/LC_MESSAGES/ then rename it to base.po
 REM edit your .po files, then generate .mo files. This use 
 REM for all available languages here.
@@ -42,9 +42,7 @@ msgfmt.py po/vi/LC_MESSAGES/base -o po/vi/LC_MESSAGES/base.mo
 msgfmt.py po/en/LC_MESSAGES/base -o po/en/LC_MESSAGES/base.mo
 ```
 
-If you see error ```/bin/bash^M: bad interpreter: No such file or directory```, simply run ```sed -i 's/\r//' upd_trans.sh```.
-
-Now just run [src/main.py](src/main.py).
+Once done, start ```texteditor/main.py```.
 
 To make executable files, read instructions in [makerelease](makerelease/).
 

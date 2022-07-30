@@ -1,12 +1,9 @@
 # Import modules
 import gettext
 from tkinter import Menu, Tk, ttk
-
-from matplotlib.pyplot import get
 import tabs
-from extensions import finding
+from extensions import finding, cmd
 from miscs import file_operations, init, get_config
-from pages import cmd
 
 gettext.bindtextdomain('base', 'po')
 gettext.textdomain('base')
