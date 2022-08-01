@@ -6,7 +6,7 @@ from texteditor.miscs import constant
 # These are __init__.py files in the source code.
 # Without they we can't import any file(s)
 initfiles = [
-    "pages/__init__.py",
+    "extensions/__init__.py",
     "miscs/__init__.py",
     "__init__.py"
 ]
