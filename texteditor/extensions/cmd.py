@@ -40,7 +40,7 @@ class CommandPrompt(Text):
             append('end', self._("This will open console defined by defconsole value in configuration file. The application will be temporarity unusable!"))
             os.system(get_config.getvalue('cmd', 'defconsole'))
         else:
-            p = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE)
+            p = subprocess.Popen(command, stdout=subprocess.PIPE)
             p.wait()
             out = p.stdout.read()
             try:
