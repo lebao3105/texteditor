@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-07-27 15:50+0700\n"
+"POT-Creation-Date: 2022-08-01 10:45+0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -53,6 +53,48 @@ msgstr ""
 msgid "Redo"
 msgstr ""
 
+#: texteditor/extensions/cmd.py:35
+msgid "Available commands:\n"
+msgstr ""
+
+#: texteditor/extensions/cmd.py:36
+msgid "exit: Close this box\n"
+msgstr ""
+
+#: texteditor/extensions/cmd.py:37
+msgid "help: Show this message\n"
+msgstr ""
+
+#: texteditor/extensions/cmd.py:38
+msgid "clear: Clear this box\n"
+msgstr ""
+
+#: texteditor/extensions/cmd.py:39
+msgid ""
+"term: Open terminal (not this one) - don't run this if you are running this "
+"application from console!\n"
+msgstr ""
+
+#: texteditor/extensions/cmd.py:40
+msgid "Running application which requires user input is not recommended yet.\n"
+msgstr ""
+
+#: texteditor/extensions/cmd.py:42
+msgid ""
+"This will open console defined by defconsole value in configuration file. "
+"The application will be temporarity unusable!"
+msgstr ""
+
+#: texteditor/extensions/cmd.py:54
+msgid "Warning"
+msgstr ""
+
+#: texteditor/extensions/cmd.py:55
+msgid ""
+"This is a working feature - use some commands will make the application "
+"unusable. Run help to get more notes and available commands!"
+msgstr ""
+
 #: texteditor/extensions/finding.py:21
 msgid "Find something here..."
 msgstr ""
@@ -94,36 +136,4 @@ msgstr ""
 
 #: texteditor/miscs/init.py:43
 msgid "Are you sure want to quit the application?"
-msgstr ""
-
-#: texteditor/pages/cmd.py:34
-msgid "Available commands:\n"
-msgstr ""
-
-#: texteditor/pages/cmd.py:35
-msgid "exit: Close this box\n"
-msgstr ""
-
-#: texteditor/pages/cmd.py:36
-msgid "help: Show this message\n"
-msgstr ""
-
-#: texteditor/pages/cmd.py:37
-msgid "clear: Clear this box\n"
-msgstr ""
-
-#: texteditor/pages/cmd.py:38
-msgid ""
-"term: Open terminal (not this one) - don't run this if you are running this "
-"application from console!"
-msgstr ""
-
-#: texteditor/pages/cmd.py:39
-msgid "Running application which requires user input is not recommended yet.\n"
-msgstr ""
-
-#: texteditor/pages/cmd.py:41
-msgid ""
-"This will open console defined by defconsole value in configuration file. "
-"The application will be temporarity unusable!"
 msgstr ""
