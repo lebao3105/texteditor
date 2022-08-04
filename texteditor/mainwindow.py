@@ -46,9 +46,9 @@ class MainWindow(Tk):
         self.edit_menu.add_separator()
         addeditcmd(label=self._("Select all"), accelerator="Ctrl+A")
 
-        #if get_config.getvalue("cmd", "isenabled") == "yes":
-        self.edit_menu.add_separator()
-        addeditcmd(label=self._("Open System Shell"), command=lambda: cmd.CommandPrompt(self), accelerator="Ctrl+T")
+        if get_config.getvalue("cmd", "isenabled") == "yes":
+            self.edit_menu.add_separator()
+            addeditcmd(label=self._("Open System Shell"), command=lambda: cmd.CommandPrompt(self), accelerator="Ctrl+T")
         
         self.menu_bar.add_cascade(label=self._("Editing"), menu=self.edit_menu)
 
@@ -79,8 +79,8 @@ class MainWindow(Tk):
     def add_event(self):
         bindcfg = self.bind
         bindcfg("<Control-n>", lambda evnet: tabs.add_tab(self))
-        #if get_config.getvalue("cmd", "isenabled") == "yes":
-        bindcfg("<Control-t>", lambda event: cmd.CommandPrompt(self))
+        if get_config.getvalue("cmd", "isenabled") == "yes":
+            bindcfg("<Control-t>", lambda event: cmd.CommandPrompt(self))
         bindcfg("<Control-f>", lambda event: finding.Finder(self, "find"))
         bindcfg("<Control-r>", lambda event: finding.Finder(self, ""))
         bindcfg("<Control-Shift-S>", lambda event: file_operations.save_as(self))
