@@ -4,14 +4,14 @@ import configparser
 import platform
 
 if platform.system() == "Windows":
-    dir = os.environ['USERPROFILE'] + "\\.config\\texteditor_config.ini"
+    dir = os.environ['USERPROFILE'] + "\\.config\\texteditor_configs.ini"
     defconsole = 'cmd'
 else:
-    dir = os.environ['HOME'] + "/.config/"
+    dir = os.environ['HOME'] + "/.config/texteditor_configs.ini"
     defconsole = 'xterm'
 
 cfg = configparser.ConfigParser()
-cfg.read(dir+"config.ini")
+cfg.read(dir)
 
 # Default variables.
 # We must use cfg.get() to get the current variable's value.
@@ -32,19 +32,10 @@ cfg['cmd'] = {
     'isenabled': 'yes'
 }
 
-def check_exists():
-    if os.path.isdir(dir):
-        if os.path.isfile(dir + "config.ini"):
-            return True
-        else:
-            with open(dir + "config.ini", "w") as configfile:
-                configfile.write(cfg)
-    else:
-        try:
-            os.mkdir(dir)
-        except:
-            raise "Could not create "+dir
-
+if not os.path.isfile(dir):
+    with open(dir, 'w') as f:
+        f.write('; Text editor configuration file\n')
+        f.write(cfg)
 
 def find_widget(self):
     arr = [
@@ -68,7 +59,6 @@ def change_text_color(self):
     Blue: blue color
     Red: red color
     If check_dark_mode return(s) False, any other color then default won't be applied."""
-    check_exists()
     if cfg.get("global", "color") == "dark":
         item = constant.DARK_BG
     else:
@@ -98,8 +88,6 @@ def check_dark_mode(self, color):
         return False
 
 def set_window_color(self):
-    check_exists()
-
     if cfg["global"]["color"] == "dark":
         change_color(self, 'dark')
     elif cfg["global"]["color"] == "light":
@@ -133,13 +121,7 @@ def change_color(self, color):
 
 # Get a value...
 def getvalue(section:str, name:str):
-    check_exists()
     if not section in cfg:
         raise "Section not found "+section
     else:
-        return cfg.get(section, name)
-
-def editvalue(section:str, name:str, value:str):
-    check_exists()
-        
-        
+        return cfg.get(section, name)        
