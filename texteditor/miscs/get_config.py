@@ -34,8 +34,7 @@ cfg['cmd'] = {
 
 if not os.path.isfile(dir):
     with open(dir, 'w') as f:
-        f.write('; Text editor configuration file\n')
-        f.write(cfg)
+        cfg.write(f)
 
 def find_widget(self):
     arr = [
