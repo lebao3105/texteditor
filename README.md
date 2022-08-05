@@ -4,7 +4,7 @@
     <img src="data/org.lebao3105.texteditor.Devel.svg">
 </div>
 
-A graphical text editor.
+A graphical user interface (GUI) text editor.
 ![image](https://user-images.githubusercontent.com/77564176/166142583-5fe685a1-21a4-44e1-8088-73ca27e0b04a.png)
 
 ## Features
@@ -14,6 +14,8 @@ A graphical text editor.
 * [Working] Configuration file support
 * Able to make Windows executable file (.exe)
 * Command window where you can run external commands (except Console apps which require you inputs)
+
+> Note: This project also available on GitLab with this [link](https://gitlab.com/lebao3105/texteditor_tk)
 
 ## Running
 Install configparser package before continue.
