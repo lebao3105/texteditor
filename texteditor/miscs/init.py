@@ -1,15 +1,9 @@
 # Initialize for this application
 # Including language, and configurations.
-<<<<<<< HEAD
-from tkinter import PhotoImage, END
-from tkinter.messagebox import askyesno
-from . import get_config, file_operations
-=======
 from tkinter import END
 from PIL import ImageTk, Image
 from tkinter.messagebox import askyesno
 from . import file_operations, constant
->>>>>>> b35a36977b88c3114d7f544fec4c57ce48b0658f
 import os
 
 # an array 
@@ -17,35 +11,6 @@ icon = ["data/org.lebao3105.texteditor.Devel.png",
         "../data/org.lebao3105.texteditor.Devel.png", 
         "icon.png", "src/icon.png"]
 
-<<<<<<< HEAD
-def initialize(self, config=None):
-    if config == None:
-        # Initialize the icon
-        for k in range(len(icon)):
-            if os.path.isfile(icon[k]):
-                p1 = PhotoImage(file=icon[k])
-                self.iconphoto(True, p1)
-                #print(icon[k])
-                break
-            else:
-                break # Ignore it
-    else:
-        # Initialize the configurations.
-        # (Why did I used "configures"??? Crazy)
-        get_config.set_window_color(self)
-
-def check_is_saved(self):
-    if self.text_editor.get(1.0, END) != "\n":
-        # TODO: Fix is_saved value
-        if file_operations.is_saved == True:
-            return True
-        else:
-            if askyesno(self._("Text editor"), self._("Do you want to save the file?")):
-                file_operations.save_file(self)
-                return True
-            else:
-                return False # exit without saving
-=======
 def initialize(self):
     """Initialize the icon."""
     for k in range(len(icon)):
@@ -69,7 +34,6 @@ def check_is_saved(self):
                     file_operations.save_file(self)
                     return True
                 else: return False
->>>>>>> b35a36977b88c3114d7f544fec4c57ce48b0658f
     else:
         return True
 

@@ -8,21 +8,6 @@ A graphical text editor.
 ![image](https://user-images.githubusercontent.com/77564176/166142583-5fe685a1-21a4-44e1-8088-73ca27e0b04a.png)
 
 ## Features
-<<<<<<< HEAD
-* Tabs support
-* Lightweight
-* [Initial] Dark mode + Text colors support
-* [Initial] Configuration file support
-* [Initial] Installation on Linux (deb-based distros) + Windows .exe file making (completed)
-
-## Running
-Install configparser package before continue.
-
-This project needs python3 + Tcl/Tkinter and pip installed.
-
-Always generate .mo files first:
-> **On Windows:** To do this, find for msgfmt, msgmerge and xgettext from the Python installation folder.
-=======
 * Tabs support (tabs dragging taken from dh7qc's [text editor](https://github.com/dh7qc/Python-Text-Editor))
 * Fast
 * [Working] Dark mode + Text colors support
@@ -32,7 +17,6 @@ Always generate .mo files first:
 
 ## Running
 Install configparser package before continue.
->>>>>>> b35a36977b88c3114d7f544fec4c57ce48b0658f
 
 This project needs python3 + Tkinter and pip installed. Also install PIL package with pip.
 
@@ -50,11 +34,7 @@ If needed, let this app speak your language. On Linux, use ```[upd_trans.sh](upd
 On Windows, find pygettext & msgfmt from your Python installation folder. Then use them:
 ```
 REM Generate .pot + .po files
-<<<<<<< HEAD
-pygettext.py -d base -o po/base.pot src/main.py src/tabs.py src/pages/about.py src/pages/helpme.py
-=======
 pygettext.py -d base -o po/base.pot texteditor/mainwindow.py texteditor/tabs.py texteditor/miscs/file_operations.py texteditor/extensions/finding.py texteditor/extensions/cmd.py
->>>>>>> b35a36977b88c3114d7f544fec4c57ce48b0658f
 REM Copy .pot file to your_language_code/LC_MESSAGES/ then rename it to base.po
 REM edit your .po files, then generate .mo files. This use 
 REM for all available languages here.
@@ -62,17 +42,8 @@ msgfmt.py po/vi/LC_MESSAGES/base -o po/vi/LC_MESSAGES/base.mo
 msgfmt.py po/en/LC_MESSAGES/base -o po/en/LC_MESSAGES/base.mo
 ```
 
-<<<<<<< HEAD
-If you see error ```/bin/bash^M: bad interpreter: No such file or directory``` (sometimes in bash), just run all commands created in if..elif block:
-* $1 == "-tep": Create new .pot file
-* $1 == "-upd": Generate .mo files (after you run use -tep & edited needed things)
-
-Now just run [src/main.py](src/main.py).
-
-=======
 Once done, start ```texteditor/main.py```.
 
->>>>>>> b35a36977b88c3114d7f544fec4c57ce48b0658f
 To make executable files, read instructions in [makerelease](makerelease/).
 
 ## Screenshots
@@ -81,13 +52,6 @@ To make executable files, read instructions in [makerelease](makerelease/).
     <img id="image" src="https://user-images.githubusercontent.com/77564176/169689858-a131cd42-1d6d-4d2a-976d-7daef4fab5ac.png">
 </div>
 
-<<<<<<< HEAD
-## Notes
-* Text editor's UI works best on... Windows, not Linux! Tkinter GUI on Linux is ugly - and tabs dragging may not work.
-* Code in this project may be too complex.
-* Some part of the project is based on dh7qc's [text editor](https://github.com/dh7qc/Python-Text-Editor/).
-* Don't use Open System Shell if you want to use commands that require your input - the program will be broken with that!
-=======
 ## UI on Linux
 It's ugly here... If you don't like this, try to find some ttk theme on the internet, download it to somewhere safe.
 
@@ -103,4 +67,3 @@ style.set_theme('{theme name}')
 Or use the instructions from the theme's author.
 
 Tabs dragging is not working at this time.
->>>>>>> b35a36977b88c3114d7f544fec4c57ce48b0658f
