@@ -8,24 +8,24 @@ A graphical text editor.
 ![image](https://user-images.githubusercontent.com/77564176/166142583-5fe685a1-21a4-44e1-8088-73ca27e0b04a.png)
 
 ## Features
-* Tabs support
-* Lightweight
-* [Initial] Dark mode + Text colors support
-* [Initial] Configuration file support
+* Tabs support (tabs dragging taken from dh7qc's [text editor](https://github.com/dh7qc/Python-Text-Editor))
+* Fast
+* [Working] Dark mode + Text colors support
+* [Working] Configuration file support
 * Able to make Windows executable file (.exe)
+* Command window where you can run external commands (except Console apps which require you inputs)
 
 ## Running
 Install configparser package before continue.
 
 This project needs python3 + Tkinter and pip installed. Also install PIL package with pip.
 
-If you don't like to use English, generate translation for your region. On Linux, use ```[upd_trans.sh](upd_trans.sh)``` should work:
+If needed, let this app speak your language. On Linux, use ```[upd_trans.sh](upd_trans.sh)``` should work:
 ```
 ./upd_trans.sh -upd
 # If you see wrong text, do:
 ./upd_trans.sh -tep # Generate new .pot file
-# Translate the application by opening <language code>/LC_MESSAGES
-# /base.po, save it then:
+# Translate the application by opening <language code>/LC_MESSAGES/base.po, then save it:
 ./upd_trans.sh -upd
 ```
 
@@ -60,16 +60,10 @@ Then add the following code (just an example) to texteditor/mainwindow.py:
 > Add codes before ```self.place_widgets()``` line!
 ```
 style = ttk.Style(self)
-self.tk.call('source', '{a tcl file here}')
+self.tk.call('source', '{tcl file location}')
 style.set_theme('{theme name}')
 ```
 
 Or use the instructions from the theme's author.
 
 Tabs dragging is not working at this time.
-
-## Notes
-* Some part of the source code may be too complex.
-* Tabs dragging is taken from dh7qc's [text editor](https://github.com/dh7qc/Python-Text-Editor)
-* Currently using Open System Shell (I will rename it later) is disabled using a configuration under cmd key (but it doesn't working now:( ). Change it to "true" to use it. Warning: using this can break the application!
-* There are many things I need to do now..
