@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Shell script to update the translations
 # *.sh
 # __pycache__
@@ -27,4 +28,29 @@ texteditor/AppRun
 texteditor/*.AppImage
 texteditor/files.py
 texteditor/setupwin.py
+=======
+# Translation files that end with ~ (backup files)
+po/*/*/*.po~
+# msgfmt outputs
+po/*/*/*.mo
+# Py2exe outputs
+texteditor/dist/
+# No vscode configurations
+.vscode/
+# Some directories
+texteditor/texteditor.egg*/
+texteditor.egg-info/
+texteditor/*/__pycache__
+texteditor/__pycache__
+# Building appimages
+texteditor/po
+texteditor/*.png
+texteditor/*.svg
+texteditor/*.desktop
+texteditor/*DirIcon
+texteditor/AppRun
+texteditor/*.AppImage
+texteditor/files.py
+texteditor/setupwin.py
+>>>>>>> b35a36977b88c3114d7f544fec4c57ce48b0658f
 texteditor/*.zip

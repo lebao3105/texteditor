@@ -1,5 +1,12 @@
+<<<<<<< HEAD
 build/
 dist/
 *.AppImage
 # I forgot this
+=======
+build/
+dist/
+*.AppImage
+# I forgot this
+>>>>>>> b35a36977b88c3114d7f544fec4c57ce48b0658f
 __pycache__/

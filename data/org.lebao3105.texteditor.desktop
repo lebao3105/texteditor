@@ -1,10 +1,13 @@
 [Desktop Entry]
 Name=texteditor
 Type=Application
-Encoding=UTF-8
 Comment=A text editor written on Python using Tkinter
 Icon=org.lebao3105.texteditor.Devel
 Categories=Utility;
 Keywords=TextEditor;Python;
+<<<<<<< HEAD
 Terminal=true
+=======
+Terminal=false
+>>>>>>> b35a36977b88c3114d7f544fec4c57ce48b0658f
 X-AppImage-Version=0.1.09

@@ -1,8 +1,25 @@
+<<<<<<< HEAD
 from tkinter import *
 from tkinter import ttk
 import miscs.init
 import miscs.file_operations as file_operations
 import miscs.constant as i
+=======
+"""This module adds tab to the tkinter.Notebook widget.
+It also handles what's happening in the child widget of the tab (tkinter.Text)...
+"""
+from tkinter import END, ttk, Frame, Text, Menu
+import miscs.get_config
+import miscs.file_operations as file_operations
+import miscs.constant as i
+import gettext
+
+_ = gettext.gettext
+
+window_title = _("Text Editor") + " - "
+
+# TODO: Add this module to a class
+>>>>>>> b35a36977b88c3114d7f544fec4c57ce48b0658f
 
 # For example:
 # We have 2 tabs: Untitled and Untitled 2. You close Untitled
@@ -17,12 +34,17 @@ def checker(self):
         return True
     # if this is the first tab yet
     # or we just opened some files with main.py
+<<<<<<< HEAD
     elif find_tab == self._(i.UNTITLED) or self._(i.UNTITLED) not in find_tab:
+=======
+    elif find_tab == _(i.UNTITLED) or (_(i.UNTITLED) not in find_tab):
+>>>>>>> b35a36977b88c3114d7f544fec4c57ce48b0658f
         return True
     # what I have mentioned before
     elif str(self.notebook.index("end") + 1) in find_tab:
         return False
 
+<<<<<<< HEAD
 def add_tab(self):
     tabname = self._("Text Editor ") + " - "
     # check if there are no tabs yet
@@ -38,11 +60,32 @@ def add_tab(self):
             tab_name = self._(i.UNTITLED) + str(self.notebook.index("end") + 1)
         else:
             tab_name = self._(i.UNTITLED) + str(self.notebook.index("end") + 2)
+=======
+def add_tab(self, event=None):
+    # check if there are no tabs yet
+    if self.notebook.index("end") == 0:
+        firsttab = Frame(self.notebook)
+        self.notebook.add(firsttab, text=_(i.UNTITLED))
+        # place the textbox
+        place_textbox(firsttab, self)
+        self.notebook.select(firsttab)
+        self.titletext = window_title + _(i.UNTITLED)
+    else:
+        if checker(self):
+            tab_name = _(i.UNTITLED) + str(self.notebook.index("end") + 1)
+        else:
+            tab_name = _(i.UNTITLED) + str(self.notebook.index("end") + 2)
+>>>>>>> b35a36977b88c3114d7f544fec4c57ce48b0658f
         new_tab = Frame(self.notebook)
         self.notebook.add(new_tab, text=tab_name)
         place_textbox(new_tab, self)
         self.notebook.select(new_tab)
+<<<<<<< HEAD
         self.title(tabname + tab_name)
+=======
+        self.titletext = window_title + tab_name
+    self.title(self.titletext)
+>>>>>>> b35a36977b88c3114d7f544fec4c57ce48b0658f
 
 def place_textbox(self, root):
     # Text box
@@ -56,12 +99,21 @@ def place_textbox(self, root):
     self.scroll.pack(side="right", fill="y")
     self.scroll2.pack(side="bottom", fill="x")
     self.text_editor.configure(yscrollcommand=self.scroll.set, xscrollcommand=self.scroll2.set, undo=True)
+<<<<<<< HEAD
     miscs.init.initialize(self.text_editor, 2)
+=======
+    # Sync the widget with the theme
+    miscs.get_config.set_window_color(self.text_editor)
+>>>>>>> b35a36977b88c3114d7f544fec4c57ce48b0658f
 
 def tabs_close(self):
     # Automatically close the window if there's only one tab
     if self.notebook.index("end") == 1:
+<<<<<<< HEAD
         print(self._("No other tabs left, asking for close the window..."))
+=======
+        print(_("No other tabs left, asking for close the window..."))
+>>>>>>> b35a36977b88c3114d7f544fec4c57ce48b0658f
         miscs.init.ask_quit(self)
     # If not, just close the selected tab and keep
     # the main window open
@@ -71,6 +123,7 @@ def tabs_close(self):
 def place_right_click_menu(self, event, root):
     try:
         m = Menu(self.text_editor, tearoff=0)
+<<<<<<< HEAD
         m.add_command(label=root._("Copy"), accelerator="Ctrl+C", command=lambda: root.event_generate("<Control-c>"))
         m.add_command(label=root._("Paste"), accelerator="Ctrl+V", command=lambda: root.event_generate("<Control-v>"))
         m.add_command(label=root._("Cut"), accelerator="Ctrl+X", command=lambda: root.event_generate("<Control-x>"))
@@ -80,13 +133,28 @@ def place_right_click_menu(self, event, root):
         m.add_separator()
         m.add_command(label=root._("Undo"), accelerator="Ctrl+Z", command=lambda: root.event_generate("<Control-z>"))
         m.add_command(label=root._("Redo"), accelerator="Ctrl+Y", command=lambda: root.event_generate("<Control-y>"))
+=======
+        m.add_command(label=_("Copy"), accelerator="Ctrl+C", command=lambda: root.event_generate("<Control-c>"))
+        m.add_command(label=_("Paste"), accelerator="Ctrl+V", command=lambda: root.event_generate("<Control-v>"))
+        m.add_command(label=_("Cut"), accelerator="Ctrl+X", command=lambda: root.event_generate("<Control-x>"))
+        m.add_separator()
+        m.add_command(label=_("Save"), accelerator="Ctrl+S", command=lambda: file_operations.save_file(root))
+        m.add_command(label=_("Save as"), accelerator="Ctrl+Shift+S", command=lambda: file_operations.save_as(root))
+        m.add_separator()
+        m.add_command(label=_("Undo"), accelerator="Ctrl+Z", command=lambda: root.event_generate("<Control-z>"))
+        m.add_command(label=_("Redo"), accelerator="Ctrl+Y", command=lambda: root.event_generate("<Control-y>"))
+>>>>>>> b35a36977b88c3114d7f544fec4c57ce48b0658f
         m.tk_popup(event.x_root, event.y_root)
     finally:
         m.grab_release()
 
 def on_tab_changed(root, event):
     tab = event.widget.tab('current')['text']
+<<<<<<< HEAD
     root.title(root._("Text Editor") + " - " + tab)
+=======
+    root.title(_("Text Editor") + " - " + tab)
+>>>>>>> b35a36977b88c3114d7f544fec4c57ce48b0658f
 
 # Originally taken from dhq7c's Text editor
 def move_tab(self, event):

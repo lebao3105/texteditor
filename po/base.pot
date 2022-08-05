@@ -9,8 +9,12 @@ msgstr ""
 "POT-Creation-Date: 2022-07-01 10:29+0700\n"
 =======
 "Report-Msgid-Bugs-To: \n"
+<<<<<<< HEAD
 "POT-Creation-Date: 2022-06-29 13:49+0700\n"
 >>>>>>> 6f08a2850b0d4be6d5317d33d8ef3995644e3bdb
+=======
+"POT-Creation-Date: 2022-08-01 10:45+0700\n"
+>>>>>>> b35a36977b88c3114d7f544fec4c57ce48b0658f
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -19,6 +23,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: pygettext.py 1.5\n"
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 
 #: src/mainwindow.py:20 src/miscs/file_operations.py:55 src/miscs/init.py:52
@@ -273,6 +278,127 @@ msgstr ""
 
 #: src/pages/helpme.py:22
 msgid "with tabs support."
+=======
+#: texteditor/tabs.py:12 texteditor/tabs.py:99
+msgid "Text Editor"
+msgstr ""
+
+#: texteditor/tabs.py:74
+msgid "No other tabs left, asking for close the window..."
+msgstr ""
+
+#: texteditor/tabs.py:84
+msgid "Copy"
+msgstr ""
+
+#: texteditor/tabs.py:85
+msgid "Paste"
+msgstr ""
+
+#: texteditor/tabs.py:86
+msgid "Cut"
+msgstr ""
+
+#: texteditor/tabs.py:88
+msgid "Save"
+msgstr ""
+
+#: texteditor/tabs.py:89 texteditor/miscs/file_operations.py:82
+msgid "Save as"
+msgstr ""
+
+#: texteditor/tabs.py:91
+msgid "Undo"
+msgstr ""
+
+#: texteditor/tabs.py:92
+msgid "Redo"
+msgstr ""
+
+#: texteditor/extensions/cmd.py:35
+msgid "Available commands:\n"
+msgstr ""
+
+#: texteditor/extensions/cmd.py:36
+msgid "exit: Close this box\n"
+msgstr ""
+
+#: texteditor/extensions/cmd.py:37
+msgid "help: Show this message\n"
+msgstr ""
+
+#: texteditor/extensions/cmd.py:38
+msgid "clear: Clear this box\n"
+msgstr ""
+
+#: texteditor/extensions/cmd.py:39
+msgid ""
+"term: Open terminal (not this one) - don't run this if you are running this "
+"application from console!\n"
+msgstr ""
+
+#: texteditor/extensions/cmd.py:40
+msgid "Running application which requires user input is not recommended yet.\n"
+msgstr ""
+
+#: texteditor/extensions/cmd.py:42
+msgid ""
+"This will open console defined by defconsole value in configuration file. "
+"The application will be temporarity unusable!"
+msgstr ""
+
+#: texteditor/extensions/cmd.py:54
+msgid "Warning"
+msgstr ""
+
+#: texteditor/extensions/cmd.py:55
+msgid ""
+"This is a working feature - use some commands will make the application "
+"unusable. Run help to get more notes and available commands!"
+msgstr ""
+
+#: texteditor/extensions/finding.py:21
+msgid "Find something here..."
+msgstr ""
+
+#: texteditor/extensions/finding.py:24
+msgid "Find"
+msgstr ""
+
+#: texteditor/extensions/finding.py:35 texteditor/extensions/finding.py:39
+msgid "Replace"
+msgstr ""
+
+#: texteditor/miscs/file_operations.py:36
+msgid "Select a file to open"
+msgstr ""
+
+#: texteditor/miscs/file_operations.py:56 texteditor/miscs/init.py:42
+msgid "Text editor"
+msgstr ""
+
+#: texteditor/miscs/file_operations.py:96
+msgid "Infomation"
+msgstr ""
+
+#: texteditor/miscs/file_operations.py:97
+msgid ""
+"This file is opened in another tab. By default we will load the contents to "
+"a new tab.\n"
+"Do it?"
+msgstr ""
+
+#: texteditor/miscs/init.py:32
+msgid "Notification"
+msgstr ""
+
+#: texteditor/miscs/init.py:33
+msgid "There are unsaved files. Are you want to save them?"
+msgstr ""
+
+#: texteditor/miscs/init.py:43
+msgid "Are you sure want to quit the application?"
+>>>>>>> b35a36977b88c3114d7f544fec4c57ce48b0658f
 msgstr ""
 
 #: src/pages/prefs.py:16 src/pages/prefs.py:27
