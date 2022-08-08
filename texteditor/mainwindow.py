@@ -1,20 +1,34 @@
 # Import modules
-import gettext
-from tkinter import Menu, Tk, ttk
-import tabs
+import gettext, tabs, os
+from ttkthemes import ThemedTk
+from tkinter import Menu, Tk, ttk, PhotoImage
 from extensions import finding, cmd
-from miscs import file_operations, init, get_config
+from miscs import file_operations, init, get_config, constants
 
 gettext.bindtextdomain('base', 'po')
 gettext.textdomain('base')
 
-class MainWindow(Tk):
+if constants.STATE == "DEV":
+    icon = 'icons/texteditor.Devel.png'
+elif constants.STATE == "STABLE":
+    icon = 'icons/texteditor.png'
+else:
+    print('Warning: Wrong application version (STABLE/DEV) in miscs.constants module')
+    icon = None
+
+class MainWindow(ThemedTk):
     """The main application class."""
     def __init__(self):
-        super().__init__()
+        # Load theme from ttkthemes.
+        # See all themes from here: https://ttkthemes.readthedocs.io/en/latest/themes.html
+        # Tkinter.Menu is not themed yet.
+        super().__init__(theme="adapta")
         self._ = gettext.gettext
-        init.initialize(self)
         self.geometry("810x610")
+        if os.path.isfile(icon):
+            self.iconphoto(False, PhotoImage(file=icon))
+        else:
+            print('Warning: Application icon ', icon, ' not found!')
         self.title(self._("Text editor"))
         self.place_widgets()
         self.place_menu()
