@@ -1,7 +1,7 @@
-## Text-editor
+## Texteditor
 <div align="center">
-    <img src="data/org.lebao3105.texteditor.svg">
-    <img src="data/org.lebao3105.texteditor.Devel.svg">
+    <img src="texteditor/icons/texteditor.png">
+    <img src="texteditor/icons/texteditor.Devel.png">
 </div>
 
 A graphical user interface (GUI) text editor.
@@ -67,5 +67,7 @@ style.set_theme('{theme name}')
 ```
 
 Or use the instructions from the theme's author.
+
+**Update**: At this time I will use ttkthemes, which can be installed with pip (yep). Remember to remove theme parameter in line 22 (MainWindow's __init__ function) if you use other themes. Also remove ttkthemes call!
 
 Tabs dragging is not working at this time.
