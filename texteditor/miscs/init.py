@@ -1,27 +1,8 @@
 # Initialize for this application
 # Including language, and configurations.
 from tkinter import END
-from PIL import ImageTk, Image
 from tkinter.messagebox import askyesno
 from . import file_operations, constant
-import os
-
-# an array 
-icon = ["data/org.lebao3105.texteditor.Devel.png", 
-        "../data/org.lebao3105.texteditor.Devel.png", 
-        "icon.png", "src/icon.png"]
-
-def initialize(self):
-    """Initialize the icon."""
-    for k in range(len(icon)):
-        if os.path.isfile(icon[k]):
-            ico = Image.open(icon[k])
-            p1 = ImageTk.PhotoImage(ico)
-            self.wm_iconphoto(False, p1)
-            #print(icon[k])
-            break
-        else:
-            break # Ignore it
 
 def check_is_saved(self):
     """Checks if the document is saved.
