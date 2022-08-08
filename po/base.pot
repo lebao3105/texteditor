@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-08-01 10:45+0700\n"
+"POT-Creation-Date: 2022-08-08 14:17+0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -25,15 +25,15 @@ msgstr ""
 msgid "No other tabs left, asking for close the window..."
 msgstr ""
 
-#: texteditor/tabs.py:84
+#: texteditor/tabs.py:84 texteditor/extensions/cmd.py:84
 msgid "Copy"
 msgstr ""
 
-#: texteditor/tabs.py:85
+#: texteditor/tabs.py:85 texteditor/extensions/cmd.py:85
 msgid "Paste"
 msgstr ""
 
-#: texteditor/tabs.py:86
+#: texteditor/tabs.py:86 texteditor/extensions/cmd.py:86
 msgid "Cut"
 msgstr ""
 
@@ -53,46 +53,46 @@ msgstr ""
 msgid "Redo"
 msgstr ""
 
-#: texteditor/extensions/cmd.py:35
+#: texteditor/extensions/cmd.py:49
 msgid "Available commands:\n"
 msgstr ""
 
-#: texteditor/extensions/cmd.py:36
+#: texteditor/extensions/cmd.py:50
 msgid "exit: Close this box\n"
 msgstr ""
 
-#: texteditor/extensions/cmd.py:37
+#: texteditor/extensions/cmd.py:51
 msgid "help: Show this message\n"
 msgstr ""
 
-#: texteditor/extensions/cmd.py:38
+#: texteditor/extensions/cmd.py:52
 msgid "clear: Clear this box\n"
 msgstr ""
 
-#: texteditor/extensions/cmd.py:39
+#: texteditor/extensions/cmd.py:53
 msgid ""
 "term: Open terminal (not this one) - don't run this if you are running this "
 "application from console!\n"
 msgstr ""
 
-#: texteditor/extensions/cmd.py:40
-msgid "Running application which requires user input is not recommended yet.\n"
+#: texteditor/extensions/cmd.py:54
+msgid ""
+"Running CONSOLE application which requires user input is not recommended "
+"yet.\n"
 msgstr ""
 
-#: texteditor/extensions/cmd.py:42
+#: texteditor/extensions/cmd.py:55
+msgid "You won't get anything.\n"
+msgstr ""
+
+#: texteditor/extensions/cmd.py:59
 msgid ""
 "This will open console defined by defconsole value in configuration file. "
 "The application will be temporarity unusable!"
 msgstr ""
 
-#: texteditor/extensions/cmd.py:54
-msgid "Warning"
-msgstr ""
-
-#: texteditor/extensions/cmd.py:55
-msgid ""
-"This is a working feature - use some commands will make the application "
-"unusable. Run help to get more notes and available commands!"
+#: texteditor/extensions/cmd.py:87
+msgid "Read only"
 msgstr ""
 
 #: texteditor/extensions/finding.py:21
@@ -111,7 +111,7 @@ msgstr ""
 msgid "Select a file to open"
 msgstr ""
 
-#: texteditor/miscs/file_operations.py:56 texteditor/miscs/init.py:42
+#: texteditor/miscs/file_operations.py:56 texteditor/miscs/init.py:23
 msgid "Text editor"
 msgstr ""
 
@@ -126,14 +126,14 @@ msgid ""
 "Do it?"
 msgstr ""
 
-#: texteditor/miscs/init.py:32
+#: texteditor/miscs/init.py:13
 msgid "Notification"
 msgstr ""
 
-#: texteditor/miscs/init.py:33
+#: texteditor/miscs/init.py:14
 msgid "There are unsaved files. Are you want to save them?"
 msgstr ""
 
-#: texteditor/miscs/init.py:43
+#: texteditor/miscs/init.py:24
 msgid "Are you sure want to quit the application?"
 msgstr ""

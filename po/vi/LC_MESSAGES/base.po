@@ -1,12 +1,12 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR ORGANIZATION
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-08-01 10:45+0700\n"
+"POT-Creation-Date: 2022-08-08 14:17+0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -24,15 +24,15 @@ msgstr "Trinh chinh sua van ban"
 msgid "No other tabs left, asking for close the window..."
 msgstr "Khong con mot tab nao o day, chuan bi dong cua so..."
 
-#: texteditor/tabs.py:84
+#: texteditor/tabs.py:84 texteditor/extensions/cmd.py:84
 msgid "Copy"
 msgstr "Sao chep"
 
-#: texteditor/tabs.py:85
+#: texteditor/tabs.py:85 texteditor/extensions/cmd.py:85
 msgid "Paste"
 msgstr "Dan"
 
-#: texteditor/tabs.py:86
+#: texteditor/tabs.py:86 texteditor/extensions/cmd.py:86
 msgid "Cut"
 msgstr "Cat"
 
@@ -52,51 +52,51 @@ msgstr "Hoan tac"
 msgid "Redo"
 msgstr "Thuc hien lai"
 
-#: texteditor/extensions/cmd.py:35
+#: texteditor/extensions/cmd.py:49
 msgid "Available commands:\n"
 msgstr "Cac lenh co san:\n"
 
-#: texteditor/extensions/cmd.py:36
+#: texteditor/extensions/cmd.py:50
 msgid "exit: Close this box\n"
 msgstr "exit: Dong hop nay\n"
 
-#: texteditor/extensions/cmd.py:37
+#: texteditor/extensions/cmd.py:51
 msgid "help: Show this message\n"
 msgstr "help: Hien hop thoai nay\n"
 
-# Khong biet noi the nao nhi?
-#: texteditor/extensions/cmd.py:38
+#: texteditor/extensions/cmd.py:52
 msgid "clear: Clear this box\n"
-msgstr ""
+msgstr "clear: Lam trong cua so nay"
 
-#: texteditor/extensions/cmd.py:39
-#, fuzzy
+## Can duoc update
+#: texteditor/extensions/cmd.py:53
 msgid ""
 "term: Open terminal (not this one) - don't run this if you are running this "
 "application from console!\n"
-msgstr "term: Mo terminal ben ngoai - dung chay no!"
+msgstr ""
 
-#: texteditor/extensions/cmd.py:40
-msgid "Running application which requires user input is not recommended yet.\n"
+#: texteditor/extensions/cmd.py:54
+#, fuzzy
+msgid ""
+"Running CONSOLE application which requires user input is not recommended "
+"yet.\n"
 msgstr "Chay chuong trinh yeu cau nhap o day la khong nen cho lam.\n"
 
-#: texteditor/extensions/cmd.py:42
+#: texteditor/extensions/cmd.py:55
+msgid "You won't get anything.\n"
+msgstr "Ban se khong nhan duoc bat cu gi ca (tru khi ban chay tu command prompt)"
+
+#: texteditor/extensions/cmd.py:59
 msgid ""
 "This will open console defined by defconsole value in configuration file. "
 "The application will be temporarity unusable!"
 msgstr ""
-"No se mo trinh gia lap dong lenh duoc chon boi gia tri defconsole trong file cai dat. "
-"Ung dung se tam thoi khong su dung duoc!"
+"No se mo trinh gia lap dong lenh duoc chon boi gia tri defconsole trong file "
+"cai dat. Ung dung se tam thoi khong su dung duoc!"
 
-#: texteditor/extensions/cmd.py:54
-msgid "Warning"
-msgstr "Canh bao"
-
-#: texteditor/extensions/cmd.py:55
-msgid ""
-"This is a working feature - use some commands will make the application "
-"unusable. Run help to get more notes and available commands!"
-msgstr ""
+#: texteditor/extensions/cmd.py:87
+msgid "Read only"
+msgstr "Chi doc"
 
 #: texteditor/extensions/finding.py:21
 msgid "Find something here..."
@@ -115,7 +115,7 @@ msgid "Select a file to open"
 msgstr "Chon mot tep de mo"
 
 # Co chu cai chua viet hoa kia
-#: texteditor/miscs/file_operations.py:56 texteditor/miscs/init.py:42
+#: texteditor/miscs/file_operations.py:56 texteditor/miscs/init.py:23
 msgid "Text editor"
 msgstr "Trinh chinh sua van ban"
 
@@ -123,6 +123,7 @@ msgstr "Trinh chinh sua van ban"
 msgid "Infomation"
 msgstr "Thong tin"
 
+## ?
 #: texteditor/miscs/file_operations.py:97
 msgid ""
 "This file is opened in another tab. By default we will load the contents to "
@@ -130,20 +131,14 @@ msgid ""
 "Do it?"
 msgstr ""
 
-# Noi dung co ve sai sai...
-# msgid ""
-# "This file is opened in another tab. By default we will load the contents to "
-# "a new tab.\n"
-# "Do it?"
-# msgstr "File nay duoc mo o mot tab khac. Theo mac dinh chung ta se "
-#: texteditor/miscs/init.py:32
+#: texteditor/miscs/init.py:13
 msgid "Notification"
 msgstr "Thong bao"
 
-#: texteditor/miscs/init.py:33
+#: texteditor/miscs/init.py:14
 msgid "There are unsaved files. Are you want to save them?"
 msgstr "O day co mot so tep chua luu. Ban co muon luu chung?"
 
-#: texteditor/miscs/init.py:43
+#: texteditor/miscs/init.py:24
 msgid "Are you sure want to quit the application?"
 msgstr "Ban co chac muon thoat chuong trinh nay?"
