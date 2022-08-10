@@ -4,7 +4,14 @@
     <img src="texteditor/icons/texteditor.Devel.png">
 </div>
 
+<style>
+    img {
+        border-radius: 8px;
+    }
+</style>
+
 A graphical user interface (GUI) text editor.
+
 ![image](https://user-images.githubusercontent.com/77564176/166142583-5fe685a1-21a4-44e1-8088-73ca27e0b04a.png)
 
 ## Features
@@ -18,9 +25,7 @@ A graphical user interface (GUI) text editor.
 > Note: This project also available on GitLab with this [link](https://gitlab.com/lebao3105/texteditor_tk)
 
 ## Running
-Install configparser package before continue.
-
-This project needs python3 + Tkinter and pip installed. Also install PIL package with pip.
+This project needs Python 3 with Tkinter and pip installed. Use pip to install configparser.
 
 If needed, let this app speak your language. On Linux, use ```[upd_trans.sh](upd_trans.sh)``` should work:
 ```
