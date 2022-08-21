@@ -1,39 +1,44 @@
 # Import modules
 import gettext, tabs, os
-from ttkthemes import ThemedTk
-from tkinter import Menu, Tk, ttk, PhotoImage
-from extensions import finding, cmd
-from miscs import file_operations, init, get_config, constants
+from tkinter import Menu, ttk, PhotoImage, Tk, BooleanVar
+from texteditor.extensions import finding, cmd
+from texteditor.miscs import file_operations, get_config, constants, textwidget
 
 gettext.bindtextdomain('base', 'po')
 gettext.textdomain('base')
 
+# Note that icon variable assume that we are in texteditor/texteditor (where is this file in the repository).
+# Please change it manually if needed.
 if constants.STATE == "DEV":
     icon = 'icons/texteditor.Devel.png'
 elif constants.STATE == "STABLE":
     icon = 'icons/texteditor.png'
 else:
-    print('Warning: Wrong application version (STABLE/DEV) in miscs.constants module')
+    print('Warning: Wrong application branch (STABLE/DEV) in miscs.constants module')
     icon = None
 
-class MainWindow(ThemedTk):
-    """The main application class."""
-    def __init__(self):
-        # Load theme from ttkthemes.
-        # See all themes from here: https://ttkthemes.readthedocs.io/en/latest/themes.html
-        # Tkinter.Menu is not themed yet.
-        super().__init__(theme="adapta")
+class MainWindow(Tk):
+    """The main application class.
+    Usage of ttkthemes now is temporary closed."""
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
         self._ = gettext.gettext
-        self.geometry("810x610")
+
         if os.path.isfile(icon):
             self.iconphoto(False, PhotoImage(file=icon))
         else:
-            print('Warning: Application icon ', icon, ' not found!')
+            print('Warning: Application icon', icon, 'not found!')
+
+        # Whetever we still need a booleanvar
+        self.wrapbtn = BooleanVar()
+        self.wrapbtn.set(True)
+
         self.title(self._("Text editor"))
-        self.place_widgets()
+        self.geometry("810x610")
         self.place_menu()
+        self.place_widgets()
         self.add_event()
-        
+
     def place_menu(self):
         # Menu bar
         self.menu_bar = Menu(self)
@@ -45,7 +50,7 @@ class MainWindow(ThemedTk):
         addfilecmd(label=self._("Save"), command=lambda: file_operations.save_file(self), accelerator="Ctrl+S")
         addfilecmd(label=self._("Save as"), command=lambda: file_operations.save_as(self), accelerator="Ctrl+Shift+S")
         self.file_menu.add_separator()
-        addfilecmd(label=self._("Exit"), accelerator="Alt+F4", command=lambda: init.ask_quit(self))
+        addfilecmd(label=self._("Exit"), accelerator="Alt+F4")
         self.menu_bar.add_cascade(label=self._("File"), menu=self.file_menu)
 
         ## Edit
@@ -59,6 +64,10 @@ class MainWindow(ThemedTk):
         addeditcmd(label=self._("Paste"), accelerator="Ctrl+V")
         self.edit_menu.add_separator()
         addeditcmd(label=self._("Select all"), accelerator="Ctrl+A")
+        # This should be added to View menu in the future
+        self.edit_menu.add_checkbutton(label=self._("Wrap (by word)"),
+                command=lambda: textwidget.TextWidget.wrapmode(self),
+                accelerator="Ctrl+W", variable=self.wrapbtn)
 
         if get_config.getvalue("cmd", "isenabled") == "yes":
             self.edit_menu.add_separator()
@@ -75,7 +84,6 @@ class MainWindow(ThemedTk):
         # Add menu to the application
         self.config(menu=self.menu_bar)
 
-
     def place_widgets(self):
         # Create a notebook
         self.notebook = ttk.Notebook(self)
@@ -85,7 +93,7 @@ class MainWindow(ThemedTk):
         self.tab_right_click = Menu(self.notebook, tearoff=0)
         self.tab_right_click.add_command(label=self._("New tab"), command=lambda: tabs.add_tab(self))
         self.tab_right_click.add_command(label=self._("Close the current opening tab"), accelerator="Ctrl+W", command=lambda: tabs.tabs_close(self))
-        self.notebook.bind("<Button-3>", lambda event: self.tab_right_click.post(event.x_root, event.y_root))
+        self.notebook.bind("<Button-3><ButtonRelease-3>", lambda event: self.tab_right_click.post(event.x_root, event.y_root))
         self.notebook.bind("<B1-Motion>", lambda event: tabs.move_tab)
         self.notebook.bind("<<NotebookTabChanged>>", lambda event: tabs.on_tab_changed(self, event))
 
@@ -100,6 +108,7 @@ class MainWindow(ThemedTk):
         bindcfg("<Control-Shift-S>", lambda event: file_operations.save_as(self))
         bindcfg("<Control-s>", lambda event: file_operations.save_file(self))
         bindcfg("<Control-o>", lambda event: file_operations.open_file(self))
+        #bindcfg("<Control-w>", lambda event: textwidget.TextWidget.wrapmode(self))
 
 if __name__ == "__main__":
     app = MainWindow()

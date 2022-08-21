@@ -1,4 +1,4 @@
-from . import constant
+from . import constants
 import os
 import configparser
 import platform
@@ -23,13 +23,14 @@ cfg['global'] = {
 
 cfg['popups'] = {
     # TODO: They should be different
-    'width': str(constant.DEFAULT_OTHERS_WIGHT),
-    'height': str(constant.DEFAULT_OTHERS_WIGHT)
+    'width': str(constants.DEFAULT_OTHERS_WIGHT),
+    'height': str(constants.DEFAULT_OTHERS_WIGHT)
 }
 
 cfg['cmd'] = {
     'defconsole': defconsole,
-    'isenabled': 'yes'
+    'isenabled': 'yes',
+    'writelog': 'no'
 }
 
 if not os.path.isfile(dir):
@@ -59,29 +60,29 @@ def change_text_color(self):
     Red: red color
     If check_dark_mode return(s) False, any other color then default won't be applied."""
     if cfg.get("global", "color") == "dark":
-        item = constant.DARK_BG
+        item = constants.DARK_BG
     else:
-        item = constant.LIGHT_BG
+        item = constants.LIGHT_BG
 
     if cfg.get("global", "sub_color") == "default":
         return True
     elif cfg.get("global", "sub_color") == "Green":
         if check_dark_mode(self, item):
-            self.configure(fg=constant.GREEN_TEXT, bg=item)
+            self.configure(fg=constants.GREEN_TEXT, bg=item)
     elif cfg.get("global", "sub_color") == "Blue":
         if check_dark_mode(self, item):
-            self.configure(fg=constant.BLUE_TEXT, bg=item)
+            self.configure(fg=constants.BLUE_TEXT, bg=item)
     elif cfg.get("global", "sub_color") == "Red":
         if check_dark_mode(self, item):
-            self.configure(fg=constant.RED_TEXT, bg=item)
+            self.configure(fg=constants.RED_TEXT, bg=item)
     else:
         return False
 
 # Check if we are in dark mode which allows us 
 # to change the text color
 def check_dark_mode(self, color):
-    if color == constant.DARK_BG:
-        self.configure(fg=constant.LIGHT_TEXT)
+    if color == constants.DARK_BG:
+        self.configure(fg=constants.LIGHT_TEXT)
         return True
     else:
         return False
@@ -103,11 +104,11 @@ def change_color(self, color):
 
     # Check for the selected theme
     if color == "dark":
-        item = constant.DARK_BG
-        sub_item = constant.LIGHT_BG
+        item = constants.DARK_BG
+        sub_item = constants.LIGHT_BG
     else:
-        item = constant.LIGHT_BG
-        sub_item = constant.DARK_BG
+        item = constants.LIGHT_BG
+        sub_item = constants.DARK_BG
 
     # Then set it
     if hasattr(self, "configure"):

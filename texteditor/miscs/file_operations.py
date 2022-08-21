@@ -3,7 +3,7 @@ from tkinter.filedialog import *
 from tkinter.messagebox import askyesno
 from sys import platform
 import os, sys
-from . import constant
+from . import constants
 
 sys.path.append(os.path.dirname(
                     os.path.dirname(
@@ -42,7 +42,7 @@ def open_file(self, event=None):
         if not self.text_editor.compare("end-1c", "==", 1.0):
             tabs.add_tab(self)
         
-        for x in constant.FILES_ARR:
+        for x in constants.FILES_ARR:
             if file_name in x:
                 if asktoopen(self):
                     pass
@@ -56,7 +56,7 @@ def openfilename(tkwin, filename):
             tkwin.title(tkwin._("Text editor") + " - " + filename)
             tkwin.notebook.tab("current", text=filename)
         
-        constant.FILES_ARR.append(filename)
+        constants.FILES_ARR.append(filename)
             
         #print(constants.FILES_ARR)
 
@@ -66,7 +66,7 @@ def save_file(self, event=None):
     #print(filefind)
     if self.text_editor.compare("end-1c", "==", 1.0):
         save_as(self)
-    elif not (filefind in constant.FILES_ARR):
+    elif not (filefind in constants.FILES_ARR):
         save_as(self)
     else:
         try:
@@ -88,7 +88,7 @@ def save_as(self, event=None):
                 print('Saving new file: ', file_name)
                 f.write(self.text_editor.get(1.0, END))
         finally:
-            constant.FILES_ARR.append(file_name)
+            constants.FILES_ARR.append(file_name)
             saved_files.append(file_name)
 
 def asktoopen(self):

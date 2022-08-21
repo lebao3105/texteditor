@@ -1,20 +1,19 @@
 import sys
-import tabs
-import mainwindow
-from miscs import file_operations
+import texteditor.tabs
+import texteditor.mainwindow
+from texteditor.miscs import file_operations
 from os.path import isfile
 
 if __name__ == '__main__':
     
-    root = mainwindow.MainWindow()
-    
+    root = texteditor.mainwindow.MainWindow()
     n = len(sys.argv)
     if (n-1 > 0):
         if isfile(sys.argv[1]):
             file_operations.openfilename(root, sys.argv[1])
         for i in range(2,n):
             if isfile(sys.argv[i]):
-                tabs.add_tab(root)
+                texteditor.tabs.add_tab(root)
                 file_operations.openfilename(root, sys.argv[i])
     else:
         pass
