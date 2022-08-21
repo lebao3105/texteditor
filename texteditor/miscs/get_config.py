@@ -96,8 +96,8 @@ def set_window_color(self):
     # For TopLevel windows
     if find_widget(self) == "Toplevel":
         self.geometry(cfg["other_windows"]["width"] + "x" + cfg["other_windows"]["height"])
-        self.resizable(False, False)
-        self.grab_set()
+        #self.resizable(False, False)
+        #self.grab_set()
 
 # Don't make functions too complicated
 def change_color(self, color):
@@ -111,13 +111,7 @@ def change_color(self, color):
         sub_item = constants.DARK_BG
 
     # Then set it
-    if hasattr(self, "configure"):
-        self.configure(bg=item)
-    else:
-        self.config(bg=item)
-    
-    if find_widget(self) == "Text":
-        self.configure(bg=item, fg=sub_item)
+    self.configure(bg=sub_item, fg=item)
 
 # Get a value...
 def getvalue(section:str, name:str):

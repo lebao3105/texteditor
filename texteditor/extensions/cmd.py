@@ -90,5 +90,6 @@ class CommandPrompt(Toplevel):
         super().__init__(master)
         self.geometry("600x400")
         self.title(_("Command Window"))
-        console = cmd(self, fg='white', bg='black', insertbackground='white', undo=False)
+        console = cmd(self, foreground='white', background='black',
+                        insertbackground='white', undo=False)
         console.pack(expand=True, fill="both")

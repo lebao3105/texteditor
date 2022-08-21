@@ -3,7 +3,7 @@ import gettext, tabs, os
 from tkinter import Menu, ttk, PhotoImage, Tk, BooleanVar
 from texteditor.extensions import finding, cmd
 from texteditor.miscs import file_operations, get_config, constants, textwidget
-
+                         
 gettext.bindtextdomain('base', 'po')
 gettext.textdomain('base')
 
@@ -19,7 +19,7 @@ else:
 
 class MainWindow(Tk):
     """The main application class.
-    Usage of ttkthemes now is temporary closed."""
+    TODO: Change icon path"""
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self._ = gettext.gettext
@@ -32,7 +32,6 @@ class MainWindow(Tk):
         # Whetever we still need a booleanvar
         self.wrapbtn = BooleanVar()
         self.wrapbtn.set(True)
-
         self.title(self._("Text editor"))
         self.geometry("810x610")
         self.place_menu()

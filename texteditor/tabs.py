@@ -48,7 +48,6 @@ def add_tab(self, event=None):
     textd.addMenucmd(label=_("Save"), acc="Ctrl+S", fn=lambda: file_operations.save_file(self))
     textd.addMenucmd(label=_("Save as"), acc="Ctrl+Shift+S", fn=lambda: file_operations.save_as(self))
     self.text_editor = textd
-    get_config.set_window_color(textd)
     textd.pack(expand=True, fill="both")
 
     self.notebook.select(textframe)

@@ -7,5 +7,7 @@ setup (
     install_requires=[
         'configparser'
     ],
+    package_data={'': ['icons/texteditor.Devel.png']},
+    include_package_data=True,
     packages=find_packages()
 )

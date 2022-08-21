@@ -25,9 +25,20 @@ A graphical user interface (GUI) text editor.
 > Note: This project also available on GitLab with this [link](https://gitlab.com/lebao3105/texteditor_tk)
 
 ## Running
+Use python3's pip module:
+```
+pip install -i https://test.pypi.org/simple/ texteditor
+```
+
+Then run:
+```
+python3 -m texteditor
+```
+
+## Running from source
 This project needs Python 3 with Tkinter and pip installed. Use pip to install configparser.
 
-If needed, let this app speak your language. On Linux, use ```[upd_trans.sh](upd_trans.sh)``` should work:
+If needed, let this app speak your language. On Linux, use [```upd_trans.sh```](upd_trans.sh) should work:
 ```
 ./upd_trans.sh -upd
 # If you see wrong text, do:

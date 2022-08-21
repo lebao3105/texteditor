@@ -1,7 +1,7 @@
 from tkinter import BooleanVar, Menu, Text
 import tkinter.ttk as ttk
 import gettext
-import texteditor.miscs.file_operations as file_operations
+from texteditor.miscs import file_operations, get_config
 _ = gettext.gettext
 
 class TextWidget(Text):
@@ -37,7 +37,7 @@ class TextWidget(Text):
         
         # Whetever we still need to use wrap
         self.configure(wrap='word')
-        self.share()
+        get_config.set_window_color(self)
 
     # Place scrollbars
     def __place_scrollbar(self):
@@ -45,9 +45,6 @@ class TextWidget(Text):
         ybar = ttk.Scrollbar(self, orient='vertical', command=self.yview)
         xbar.pack(side="bottom", fill="x")
         ybar.pack(side="right", fill="y")
-    
-    def share(self):
-        return self.wrapbtn
 
     ## Right click menu
     # Initialize the rightclick menu.
