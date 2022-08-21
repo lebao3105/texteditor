@@ -1,10 +1,10 @@
 import py2exe
-from distutils.core import setup
+from setuptools import setup, find_packages
 import files
 
 setup(
 	windows = [{
-		"script": "main.py",
+		"script": "__main__.py",
 		"icon_resource": [(1, files.icon)]
 	}],
     options = {
@@ -12,5 +12,6 @@ setup(
 			  'optimize': 2,
 			  'includes': ['os', 'configparser']
 			}
-	}
+	},
+	packages=find_packages()
 )

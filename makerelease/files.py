@@ -1,7 +1,7 @@
 import sys
 from os.path import isfile, dirname, abspath
 sys.path.append(dirname(dirname(abspath(__file__))))
-from texteditor.miscs import constant
+from texteditor.miscs import constants
 
 # These are __init__.py files in the source code.
 # Without they we can't import any file(s)
@@ -16,7 +16,10 @@ for i in range(len(initfiles)):
         raise Exception("File not found: "+initfiles[i])
 
 # Icon
-if constant.STATE == "DEV":
-	icon = "../data/org.lebao3105.texteditor.Devel.png"
+if constants.STATE == "DEV":
+    icon = 'icons/texteditor.Devel.png'
+elif constants.STATE == "STABLE":
+    icon = 'icons/texteditor.png'
 else:
-	icon = "../data/org.lebao3105.texteditor.png"
+    print('Warning: Wrong application branch (STABLE/DEV) in miscs.constants module')
+    icon = None
