@@ -2,10 +2,11 @@
 po/*/*/*.po~
 # msgfmt outputs
 po/*/*/*.mo
-# Py2exe outputs
-texteditor/dist/
 # No vscode configurations
 .vscode/
+# Test
+test.py
+test.*
 # Some directories
 texteditor/texteditor.egg*/
 texteditor.egg-info/
@@ -22,3 +23,8 @@ texteditor/*.AppImage
 texteditor/files.py
 texteditor/setupwin.py
 texteditor/*.zip
+# Py2exe/Pypi build outputs
+texteditor/dist
+texteditor/build
+dist
+build

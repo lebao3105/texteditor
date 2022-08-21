@@ -32,11 +32,9 @@ If needed, let this app speak your language. On Linux, use ```[upd_trans.sh](upd
 ./upd_trans.sh -upd
 # If you see wrong text, do:
 ./upd_trans.sh -tep # Generate new .pot file
-# Translate the application by opening <language code>/LC_MESSAGES/base.po, then save it:
+# Translate the application by editing <language code>/LC_MESSAGES/base.po, then save it:
 ./upd_trans.sh -upd
 ```
-
-> Tip: If you see error ```/bin/bash^M: bad interpreter: No such file or directory```, run ```sed -i 's/\r//' upd_trans.sh```.
 
 On Windows, find pygettext & msgfmt from your Python installation folder. Then use them:
 ```
@@ -49,7 +47,7 @@ msgfmt.py po/vi/LC_MESSAGES/base -o po/vi/LC_MESSAGES/base.mo
 msgfmt.py po/en/LC_MESSAGES/base -o po/en/LC_MESSAGES/base.mo
 ```
 
-Once done, start ```texteditor/main.py```.
+Once done, run ```python3 -m texteditor```.
 
 To make executable files, read instructions in [makerelease](makerelease/).
 
@@ -69,11 +67,9 @@ Then add the following code (just an example) to texteditor/mainwindow.py:
 ```
 style = ttk.Style(self)
 self.tk.call('source', '{tcl file location}')
-style.set_theme('{theme name}')
+style.theme_use('{theme name}')
 ```
 
 Or use the instructions from the theme's author.
-
-**Update**: At this time I will use ttkthemes, which can be installed with pip (yep). Remember to remove theme parameter in line 22 (MainWindow's __init__ function) if you use other themes. Also remove ttkthemes call!
 
 Tabs dragging is not working at this time.
