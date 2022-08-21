@@ -1,0 +1,3 @@
+include texteditor/icons/*.png
+include po/base.pot
+include po/*/LC_MESSAGES/*.mo
