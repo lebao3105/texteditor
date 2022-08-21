@@ -1,0 +1,20 @@
+# These are features that I really want to use it.
+# They should be implemented in newer releases.
+; 1.3
+* Use po/ in Python package
+* Custom title bar!
+* Fix icon path defined on texteditor.mainwindow
+
+; 1.4
+* Better usage of Gettext
+* Open, save file in UTF-8 format or something else like that
+* Maybe a status bar?
+
+; 1.5
+* Make themeing easier by make a Preferences window
+* Implement a new notebook - why not?!
+* Zoom in/out?
+
+Other things:
+* Implement a debian package?
+* Be able to launch this project from terminal without using ```py -m``` after installed using pip
