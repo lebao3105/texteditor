@@ -11,12 +11,13 @@ _ = gettext.gettext
 arr = []
 
 class cmd(textwidget.TextWidget):
+    useUnRedo = True
+    useWrap = True
 
     def __init__(self, master, **kw):
-        super().__init__(master, useUnRedo=False, addWrap=True, **kw)
+        super().__init__(master, **kw)
         self.parent = master
         self.bind('<Return>', self.checkcmds)
-        #self.bind('<Button-3><ButtonRelease-3>', lambda event: self.rightclickmenu(event))
 
         self.readonlybtn = BooleanVar()
         self.readonlybtn.set(False)
@@ -35,8 +36,6 @@ class cmd(textwidget.TextWidget):
                         os.killpg(pids, SIGTERM)
             except ProcessLookupError:
                 pass
-            else:
-                print('Killed task id', arr)
             print('Closed Console Window.')
             self.parent.destroy() # Destroy the Toplevel widget
 

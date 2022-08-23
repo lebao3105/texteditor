@@ -15,7 +15,7 @@ A graphical user interface (GUI) text editor.
 ![image](https://user-images.githubusercontent.com/77564176/166142583-5fe685a1-21a4-44e1-8088-73ca27e0b04a.png)
 
 ## Features
-* Tabs support (tabs dragging taken from dh7qc's [text editor](https://github.com/dh7qc/Python-Text-Editor))
+* Tabs support
 * Fast
 * [Working] Dark mode + Text colors support
 * [Working] Configuration file support

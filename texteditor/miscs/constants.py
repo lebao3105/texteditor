@@ -2,8 +2,8 @@
 # It's useful for parsing configurations in config.ini file. 
 
 # Colors
-DARK_BG = "#2b2b2b"
-LIGHT_BG = "#f2f2f2"
+DARK_BG = "#0c0c0c"
+LIGHT_BG = "#ffffff"
 GREEN_TEXT = "#00ff00"
 BLUE_TEXT = "#0000ff"
 RED_TEXT = "#ff0000"

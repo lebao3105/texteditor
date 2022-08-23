@@ -66,9 +66,3 @@ def tabs_close(self):
 def on_tab_changed(root, event):
     tab = event.widget.tab('current')['text']
     root.title(_("Text Editor") + " - " + tab)
-
-# Originally taken from dhq7c's Text editor
-def move_tab(self, event):
-    if self.notebook.index("end") > 1:
-        y = self.notebook._nametowidget( self.notebook.select() ).winfo_y() -5
-        self.notebook.insert(event.widget.index('@%d,%d' % (event.x,y)), self.notebook.select())

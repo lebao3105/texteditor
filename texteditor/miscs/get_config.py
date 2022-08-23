@@ -22,7 +22,7 @@ cfg['global'] = {
 }
 
 cfg['popups'] = {
-    # TODO: They should be different
+    # TODO/NOTE: They should be different
     'width': str(constants.DEFAULT_OTHERS_WIGHT),
     'height': str(constants.DEFAULT_OTHERS_WIGHT)
 }
@@ -38,9 +38,7 @@ if not os.path.isfile(dir):
         cfg.write(f)
 
 def find_widget(self):
-    arr = [
-        'Tk', 'Frame', 'TopLevel'
-    ]
+    arr = ['Tk', 'Frame', 'TopLevel']
 
     if self.winfo_class() == "Label" or self.winfo_class() == "Button" or self.winfo_class() == "Text":
         return "Text"
@@ -88,20 +86,19 @@ def check_dark_mode(self, color):
         return False
 
 def set_window_color(self):
-    if cfg["global"]["color"] == "dark":
+    if cfg.get("global","color") == "dark":
         change_color(self, 'dark')
-    elif cfg["global"]["color"] == "light":
+    elif cfg.get("global","color") == "light":
         change_color(self, 'light')
     
     # For TopLevel windows
     if find_widget(self) == "Toplevel":
-        self.geometry(cfg["other_windows"]["width"] + "x" + cfg["other_windows"]["height"])
+        self.geometry(cfg.get("other_windows","width") + "x" + cfg.get("other_windows","height"))
         #self.resizable(False, False)
         #self.grab_set()
 
 # Don't make functions too complicated
 def change_color(self, color):
-
     # Check for the selected theme
     if color == "dark":
         item = constants.DARK_BG

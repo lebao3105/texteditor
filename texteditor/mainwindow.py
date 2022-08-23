@@ -9,17 +9,17 @@ gettext.textdomain('base')
 
 # Note that icon variable assume that we are in texteditor/texteditor (where is this file in the repository).
 # Please change it manually if needed.
+currdir = os.path.dirname(os.path.abspath(__file__))
+
 if constants.STATE == "DEV":
-    icon = 'icons/texteditor.Devel.png'
+    icon = currdir + '/icons/texteditor.Devel.png'
 elif constants.STATE == "STABLE":
-    icon = 'icons/texteditor.png'
+    icon = currdir + '/icons/texteditor.png'
 else:
     print('Warning: Wrong application branch (STABLE/DEV) in miscs.constants module')
     icon = None
 
 class MainWindow(Tk):
-    """The main application class.
-    TODO: Change icon path"""
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self._ = gettext.gettext
@@ -93,7 +93,6 @@ class MainWindow(Tk):
         self.tab_right_click.add_command(label=self._("New tab"), command=lambda: tabs.add_tab(self))
         self.tab_right_click.add_command(label=self._("Close the current opening tab"), accelerator="Ctrl+W", command=lambda: tabs.tabs_close(self))
         self.notebook.bind("<Button-3><ButtonRelease-3>", lambda event: self.tab_right_click.post(event.x_root, event.y_root))
-        self.notebook.bind("<B1-Motion>", lambda event: tabs.move_tab)
         self.notebook.bind("<<NotebookTabChanged>>", lambda event: tabs.on_tab_changed(self, event))
 
     # Binding commands to the application

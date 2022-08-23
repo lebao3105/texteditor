@@ -1,3 +1,4 @@
+from glob import glob
 import py2exe
 from setuptools import setup, find_packages
 import files
@@ -10,8 +11,10 @@ setup(
     options = {
 		  'py2exe': {
 			  'optimize': 2,
-			  'includes': ['os', 'configparser']
+			  'includes': ['os', 'configparser'],
+			  'skip_archive': True
 			}
 	},
+	data_files=[('icons', glob(r'icons/texteditor.Devel.png'))],
 	packages=find_packages()
 )
