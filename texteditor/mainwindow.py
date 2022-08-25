@@ -1,8 +1,10 @@
 # Import modules
 import gettext, tabs, os
-from tkinter import Menu, ttk, PhotoImage, Tk, BooleanVar
+from tkinter import *
+import tkinter.ttk as ttk
 from texteditor.extensions import finding, cmd
-from texteditor.miscs import file_operations, get_config, constants, textwidget
+from texteditor.miscs import file_operations, get_config, \
+    constants, textwidget, autosave
                          
 gettext.bindtextdomain('base', 'po')
 gettext.textdomain('base')
@@ -20,6 +22,7 @@ else:
     icon = None
 
 class MainWindow(Tk):
+
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self._ = gettext.gettext
@@ -63,10 +66,6 @@ class MainWindow(Tk):
         addeditcmd(label=self._("Paste"), accelerator="Ctrl+V")
         self.edit_menu.add_separator()
         addeditcmd(label=self._("Select all"), accelerator="Ctrl+A")
-        # This should be added to View menu in the future
-        self.edit_menu.add_checkbutton(label=self._("Wrap (by word)"),
-                command=lambda: textwidget.TextWidget.wrapmode(self),
-                accelerator="Ctrl+W", variable=self.wrapbtn)
 
         if get_config.getvalue("cmd", "isenabled") == "yes":
             self.edit_menu.add_separator()
@@ -80,6 +79,17 @@ class MainWindow(Tk):
         addfindcmd(label=self._("Find"), command=lambda: finding.Finder(self, "find"), accelerator="Ctrl+F")
         addfindcmd(label=self._("Replace"), command=lambda: finding.Finder(self, ""), accelerator="Ctrl+R")
         self.menu_bar.add_cascade(label=self._("Find"), menu=self.find_menu)
+
+        ## Config
+        self.config_menu = Menu(self.menu_bar, tearoff=0)
+        addcfgcmd = self.config_menu.add_command
+        addcfgcmd(label=self._("Reset configurations"), command=lambda: self.resetcfg(self))
+        addcfgcmd(label=self._("Autosave"), command=lambda: autosave.AutoSave(self).openpopup())
+        # This should be added to View menu in the future
+        self.config_menu.add_checkbutton(label=self._("Wrap (by word)"),
+                command=lambda: textwidget.TextWidget.wrapmode(self),
+                accelerator="Ctrl+W", variable=self.wrapbtn)
+        self.menu_bar.add_cascade(label=self._("Config"), menu=self.config_menu)
         # Add menu to the application
         self.config(menu=self.menu_bar)
 
@@ -105,9 +115,18 @@ class MainWindow(Tk):
         bindcfg("<Control-r>", lambda event: finding.Finder(self, ""))
         bindcfg("<Control-Shift-S>", lambda event: file_operations.save_as(self))
         bindcfg("<Control-s>", lambda event: file_operations.save_file(self))
-        bindcfg("<Control-o>", lambda event: file_operations.open_file(self))
+        bindcfg("<Controla-o>", lambda event: file_operations.open_file(self))
         #bindcfg("<Control-w>", lambda event: textwidget.TextWidget.wrapmode(self))
+    
+    def resetcfg(self, event=None):
+        import tkinter.messagebox as msgbox
+        message = msgbox.askyesno("Warning", "This will reset ALL configurations you have ever made. Continue?")
+        if message:
+            get_config._file()
+            msgbox.showinfo("Completed", "Completed resetting texteditor configurations.\nRestart the application to take effect.")
+
 
 if __name__ == "__main__":
+    print('Warning: You are running texteditor.mainwindow directly. You can open file with that.')
     app = MainWindow()
     app.mainloop()

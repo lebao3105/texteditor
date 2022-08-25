@@ -40,9 +40,8 @@ cfg['filemgr'] = {
 }
 
 def _file():
-    if not os.path.isfile(dir):
-        with open(dir, 'w') as f:
-            cfg.write(f)
+    with open(dir, 'w') as f:
+        cfg.write(f)
 
 _file()
 
@@ -58,6 +57,7 @@ def find_widget(self):
             return False
 
 # At least we made this independent from set_window_color(self).
+# TODO: Use fg/foreground and bg/background parameter
 def change_text_color(self):
     """Get text color defined in global->sub_color.
     Supported colors:
@@ -71,9 +71,11 @@ def change_text_color(self):
     else:
         item = constants.LIGHT_BG
 
-    if cfg.get("global", "sub_color") == "default":
+    color = cfg.get("global", "sub_color")
+
+    if color == "default":
         return True
-    elif cfg.get("global", "sub_color") == "Green":
+        """elif cfg.get("global", "sub_color") == "Green":
         if check_dark_mode(self, item):
             self.configure(fg=constants.GREEN_TEXT, bg=item)
     elif cfg.get("global", "sub_color") == "Blue":
@@ -81,9 +83,17 @@ def change_text_color(self):
             self.configure(fg=constants.BLUE_TEXT, bg=item)
     elif cfg.get("global", "sub_color") == "Red":
         if check_dark_mode(self, item):
-            self.configure(fg=constants.RED_TEXT, bg=item)
+            self.configure(fg=constants.RED_TEXT, bg=item)"""
+    elif color == "Green":
+        fg = constants.GREEN_TEXT
+    elif color == "Blue":
+        fg = constants.BLUE_TEXT
+    elif color == "Red":
+        fg = constants.RED_TEXT
     else:
         return False
+    if check_dark_mode(self, item):
+        self.configure(bg=item, fg=fg)
 
 # Check if we are in dark mode which allows us 
 # to change the text color
@@ -99,7 +109,8 @@ def set_window_color(self):
         change_color(self, 'dark')
     elif cfg.get("global","color") == "light":
         change_color(self, 'light')
-    
+
+def change_window_geometry(self):
     # For TopLevel windows
     if find_widget(self) == "Toplevel":
         self.geometry(cfg.get("other_windows","width") + "x" + cfg.get("other_windows","height"))
@@ -117,7 +128,7 @@ def change_color(self, color):
         sub_item = constants.DARK_BG
 
     # Then set it
-    self.configure(bg=sub_item, fg=item)
+    self.configure(background=sub_item, fg=item)
 
 # Get a value...
 def getvalue(section:str, name:str):

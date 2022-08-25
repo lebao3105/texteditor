@@ -4,28 +4,25 @@
     <img src="texteditor/icons/texteditor.Devel.png">
 </div>
 
-<style>
-    img {
-        border-radius: 8px;
-    }
-</style>
-
-A graphical user interface (GUI) text editor.
+Texteditor is a text editor written in Python using Tkinter interface.
 
 ![image](https://user-images.githubusercontent.com/77564176/166142583-5fe685a1-21a4-44e1-8088-73ca27e0b04a.png)
 
 ## Features
 * Tabs support
 * Fast
-* [Working] Dark mode + Text colors support
+* Dark mode + Text colors support
 * [Working] Configuration file support
+* [New] Autosave
 * Able to make Windows executable file (.exe)
 * Command window where you can run external commands (except Console apps which require you inputs)
 
 > Note: This project also available on GitLab with this [link](https://gitlab.com/lebao3105/texteditor_tk)
 
 ## Running
-Use python3's pip module:
+You need Python 3.8+ with Tkinter & pip installed.
+
+Install texteditor from Pypi Test repo first:
 ```
 pip install -i https://test.pypi.org/simple/ texteditor
 ```
@@ -36,8 +33,6 @@ python3 -m texteditor
 ```
 
 ## Running from source
-This project needs Python 3 with Tkinter and pip installed. Use pip to install configparser.
-
 If needed, let this app speak your language. On Linux, use [```upd_trans.sh```](upd_trans.sh) should work:
 ```
 ./upd_trans.sh -upd
