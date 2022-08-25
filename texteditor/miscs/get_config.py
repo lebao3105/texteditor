@@ -33,9 +33,18 @@ cfg['cmd'] = {
     'writelog': 'no'
 }
 
-if not os.path.isfile(dir):
-    with open(dir, 'w') as f:
-        cfg.write(f)
+# New: Auto-save files
+cfg['filemgr'] = {
+    'autosave': 'yes',
+    'autosave-time' : '5' # in minutes
+}
+
+def _file():
+    if not os.path.isfile(dir):
+        with open(dir, 'w') as f:
+            cfg.write(f)
+
+_file()
 
 def find_widget(self):
     arr = ['Tk', 'Frame', 'TopLevel']
