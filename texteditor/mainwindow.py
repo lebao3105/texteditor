@@ -115,7 +115,7 @@ class MainWindow(Tk):
         bindcfg("<Control-r>", lambda event: finding.Finder(self, ""))
         bindcfg("<Control-Shift-S>", lambda event: file_operations.save_as(self))
         bindcfg("<Control-s>", lambda event: file_operations.save_file(self))
-        bindcfg("<Controla-o>", lambda event: file_operations.open_file(self))
+        bindcfg("<Control-o>", lambda event: file_operations.open_file(self))
         #bindcfg("<Control-w>", lambda event: textwidget.TextWidget.wrapmode(self))
     
     def resetcfg(self, event=None):
