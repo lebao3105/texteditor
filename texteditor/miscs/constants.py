@@ -1,5 +1,5 @@
-# This file contains the constants used in the program.
-# It's useful for parsing configurations in config.ini file. 
+# This file contains many variables used in the program.
+# It's useful for parsing configurations in our configuration file. 
 
 # Colors
 DARK_BG = "#0c0c0c"
@@ -7,6 +7,8 @@ LIGHT_BG = "#ffffff"
 GREEN_TEXT = "#00ff00"
 BLUE_TEXT = "#0000ff"
 RED_TEXT = "#ff0000"
+PINK_TEXT = "pink"
+YELLOW_TEXT = "yellow"
 
 # About & Help window size
 # Wight = width + height
@@ -19,7 +21,7 @@ FILES_ARR = [ ]
 UNTITLED = "Untitled "
 
 # Version
-VERSION = "1.1-dev"
+VERSION = "1.3-dev"
 
 # Is this package in a stable version?
 STATE = "DEV"

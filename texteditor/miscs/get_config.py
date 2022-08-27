@@ -1,17 +1,18 @@
+from re import I
+from tkinter import ttk
 from . import constants
 import os
 import configparser
 import platform
 
 if platform.system() == "Windows":
-    dir = os.environ['USERPROFILE'] + "\\.config\\texteditor_configs.ini"
+    file = os.environ['USERPROFILE'] + "\\.config\\texteditor_configs.ini"
     defconsole = 'cmd'
 else:
-    dir = os.environ['HOME'] + "/.config/texteditor_configs.ini"
+    file = os.environ['HOME'] + "/.config/texteditor_configs.ini"
     defconsole = 'xterm'
 
 cfg = configparser.ConfigParser()
-cfg.read(dir)
 
 # Default variables.
 # We must use cfg.get() to get the current variable's value.
@@ -39,100 +40,88 @@ cfg['filemgr'] = {
     'autosave-time' : '5' # in minutes
 }
 
-def _file():
-    with open(dir, 'w') as f:
-        cfg.write(f)
+if not os.path.isfile(file):
+    try:
+        with open(file, 'w') as f:
+            cfg.write(f)
+    finally:
+        pass
 
-_file()
+cfg.read(file)
 
-def find_widget(self):
-    arr = ['Tk', 'Frame', 'TopLevel']
+bg = cfg.get('global', 'color')
+fg = cfg.get('global', 'sub_color')
 
-    if self.winfo_class() == "Label" or self.winfo_class() == "Button" or self.winfo_class() == "Text":
-        return "Text"
-    for item in arr:
-        if self.winfo_class() == item:
-            return item
+class GetConfig:
+    """Changes a Tkinter/TTK widget configuration."""
+    def __init__(self, parent, action:str=None):
+        """parent: Widget to use\n
+        action:str=None: |\n
+        --> config : Configure the widget\n
+        --> reset : Reset the configuration file"""
+        super().__init__()
+        while action != None or "":
+            if action == "config":
+                self.configure(parent)
+            elif action == "reset":
+                self.reset()
+    
+    @staticmethod
+    def reset():
+        try:
+            os.remove(file)
+            with open(file, 'w') as f:
+                cfg.write(f)
+        finally:
+            print("Completed resetting texteditor configuration file.")
+
+    @staticmethod
+    def checkclass(widget):
+        wind = ['Tk', 'Frame']
+        text = ['Label', 'Text']
+        ttk_widgets = ['TCombobox']
+        
+        # Combine 3 arrays together
+        for it in text:
+            wind.append(it)
+        for it2 in ttk_widgets:
+            wind.append(it2)
+
+        class_name = widget.winfo_class()
+        if class_name in wind and cfg.sections():
+            return class_name
         else:
             return False
-
-# At least we made this independent from set_window_color(self).
-# TODO: Use fg/foreground and bg/background parameter
-def change_text_color(self):
-    """Get text color defined in global->sub_color.
-    Supported colors:
-    default: default color
-    Green: green color
-    Blue: blue color
-    Red: red color
-    If check_dark_mode return(s) False, any other color then default won't be applied."""
-    if cfg.get("global", "color") == "dark":
-        item = constants.DARK_BG
-    else:
-        item = constants.LIGHT_BG
-
-    color = cfg.get("global", "sub_color")
-
-    if color == "default":
-        return True
-        """elif cfg.get("global", "sub_color") == "Green":
-        if check_dark_mode(self, item):
-            self.configure(fg=constants.GREEN_TEXT, bg=item)
-    elif cfg.get("global", "sub_color") == "Blue":
-        if check_dark_mode(self, item):
-            self.configure(fg=constants.BLUE_TEXT, bg=item)
-    elif cfg.get("global", "sub_color") == "Red":
-        if check_dark_mode(self, item):
-            self.configure(fg=constants.RED_TEXT, bg=item)"""
-    elif color == "Green":
-        fg = constants.GREEN_TEXT
-    elif color == "Blue":
-        fg = constants.BLUE_TEXT
-    elif color == "Red":
-        fg = constants.RED_TEXT
-    else:
-        return False
-    if check_dark_mode(self, item):
-        self.configure(bg=item, fg=fg)
-
-# Check if we are in dark mode which allows us 
-# to change the text color
-def check_dark_mode(self, color):
-    if color == constants.DARK_BG:
-        self.configure(fg=constants.LIGHT_TEXT)
-        return True
-    else:
-        return False
-
-def set_window_color(self):
-    if cfg.get("global","color") == "dark":
-        change_color(self, 'dark')
-    elif cfg.get("global","color") == "light":
-        change_color(self, 'light')
-
-def change_window_geometry(self):
-    # For TopLevel windows
-    if find_widget(self) == "Toplevel":
-        self.geometry(cfg.get("other_windows","width") + "x" + cfg.get("other_windows","height"))
-        #self.resizable(False, False)
-        #self.grab_set()
-
-# Don't make functions too complicated
-def change_color(self, color):
-    # Check for the selected theme
-    if color == "dark":
-        item = constants.DARK_BG
-        sub_item = constants.LIGHT_BG
-    else:
-        item = constants.LIGHT_BG
-        sub_item = constants.DARK_BG
-
-    # Then set it
-    self.configure(background=sub_item, fg=item)
-
-# Get a value...
-def getvalue(section:str, name:str):
-    if not section in cfg:
-        raise "Section not found "+section
-    else:
-        return cfg.get(section, name)        
+    
+    @staticmethod
+    def configure(widget):
+        class_name = GetConfig.checkclass(widget)
+        if class_name:
+            fg2 = GetConfig._checkcolor(GetConfig, widget)
+            if fg2 != "":
+                return widget.configure(fg=fg2, bg=constants.DARK_BG)
+    
+    def _checkcolor(self, widget):
+        if bg == "dark":
+            if fg == "default":
+                fg2 = constants.LIGHT_BG
+            elif fg == "Green":
+                fg2 = constants.GREEN_TEXT
+            elif fg == "Red":
+                fg2 = constants.RED_TEXT
+            elif fg == "Pink":
+                fg2 = constants.PINK_TEXT
+            elif fg == "Yellow":
+                fg2 = constants.YELLOW_TEXT
+            else:
+                fg2 = constants.LIGHT_BG
+        else:
+            fg2 = constants.LIGHT_BG
+        return fg2
+    
+    @staticmethod
+    def getvalue(section:str, name:str):
+        if not section in cfg.sections():
+            raise Exception ("Section not found "+section)
+        else:
+            return cfg.get(section, name)
