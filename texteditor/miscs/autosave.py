@@ -1,5 +1,5 @@
 from . import get_config
-from tkinter.ttk import Combobox
+from tkinter.ttk import Combobox, Button
 from tkinter import Label, Toplevel, StringVar
 import tkinter.messagebox
 
@@ -13,13 +13,13 @@ class AutoSave:
     It will change the useTime!\n
     """
     forceEnable : bool = False
-    useTime : int = int(get_config.getvalue("filemgr", "autosave-time"))
+    useTime : int = int(get_config.GetConfig.getvalue("filemgr", "autosave-time"))
 
     def __init__(self, master):
         super().__init__()
         
-        self.autosave = get_config.getvalue("filemgr", "autosave")
-        self.savetime = get_config.getvalue("filemgr", "autosave-time")
+        self.autosave = get_config.GetConfig.getvalue("filemgr", "autosave")
+        self.savetime = get_config.GetConfig.getvalue("filemgr", "autosave-time")
         self._do_check()
         self.parent = master
 
@@ -44,15 +44,28 @@ class AutoSave:
         askwin = Toplevel(self.parent)
         askwin.geometry("350x200")
         askwin.resizable(False, False)
+        
         selected_time = StringVar()
         label = Label(askwin, text="Select autosave time (minutes)\nAutosave function will be launched after a time.")
         cb = Combobox(askwin, textvariable=selected_time)
+        okbtn = Button(askwin, text="OK", command=lambda event: self.config(selected_time.get()))
+        cancelbtn = Button(askwin, text="Cancel", command=lambda: askwin.destroy())
+
         cb['values'] = [0.5, 1, 2, 5, 10, 15, 20, 30]
         cb['state'] = 'readonly'
+        
         label.pack(fill='x')
         cb.pack(fill='x', padx=15, pady=15)
-        cb.bind('<<ComboboxSelected>>', lambda event: self.config(selected_time.get()))
-        #get_config.set_window_color(askwin)
+        okbtn.pack(padx=30)
+        cancelbtn.pack(padx=25)
+        
+        # The new get_config isn't available for TopLevel now
+        #get_config.GetConfig.configure(askwin)
+
+        for i in [label, cb]:
+            print(i.winfo_class())
+            get_config.GetConfig.configure(i)
+
     
     def config(self, useTime, event=None):
         print(useTime)

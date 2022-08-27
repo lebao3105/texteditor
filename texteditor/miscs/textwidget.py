@@ -37,7 +37,7 @@ class TextWidget(Text):
         
         # Whetever we still need to use wrap
         self.configure(wrap='word')
-        get_config.set_window_color(self)
+        get_config.GetConfig.configure(self)
 
     # Place scrollbars
     def __place_scrollbar(self):

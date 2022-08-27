@@ -67,7 +67,7 @@ class MainWindow(Tk):
         self.edit_menu.add_separator()
         addeditcmd(label=self._("Select all"), accelerator="Ctrl+A")
 
-        if get_config.getvalue("cmd", "isenabled") == "yes":
+        if get_config.GetConfig.getvalue("cmd", "isenabled") == "yes":
             self.edit_menu.add_separator()
             addeditcmd(label=self._("Open System Shell"), command=lambda: cmd.CommandPrompt(self), accelerator="Ctrl+T")
         
@@ -109,20 +109,20 @@ class MainWindow(Tk):
     def add_event(self):
         bindcfg = self.bind
         bindcfg("<Control-n>", lambda evnet: tabs.add_tab(self))
-        if get_config.getvalue("cmd", "isenabled") == "yes":
+        if get_config.GetConfig.getvalue("cmd", "isenabled") == "yes":
             bindcfg("<Control-t>", lambda event: cmd.CommandPrompt(self))
         bindcfg("<Control-f>", lambda event: finding.Finder(self, "find"))
         bindcfg("<Control-r>", lambda event: finding.Finder(self, ""))
         bindcfg("<Control-Shift-S>", lambda event: file_operations.save_as(self))
         bindcfg("<Control-s>", lambda event: file_operations.save_file(self))
-        bindcfg("<Controla-o>", lambda event: file_operations.open_file(self))
+        bindcfg("<Control-o>", lambda event: file_operations.open_file(self))
         #bindcfg("<Control-w>", lambda event: textwidget.TextWidget.wrapmode(self))
     
     def resetcfg(self, event=None):
         import tkinter.messagebox as msgbox
         message = msgbox.askyesno("Warning", "This will reset ALL configurations you have ever made. Continue?")
         if message:
-            get_config._file()
+            get_config.GetConfig.reset()
             msgbox.showinfo("Completed", "Completed resetting texteditor configurations.\nRestart the application to take effect.")
 
 

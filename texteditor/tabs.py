@@ -2,7 +2,7 @@
 It also handles what's happening in the child widget of the tab (tkinter.Text)...
 """
 from tkinter import Frame
-from texteditor.miscs import constants, file_operations, get_config, textwidget
+from texteditor.miscs import constants, file_operations, textwidget
 import gettext
 
 _ = gettext.gettext
