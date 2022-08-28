@@ -7,7 +7,7 @@ long_des = (currdir / "README.md").read_text()
 setup (
     name='texteditor',
     author='Le Bao Nguyen',
-    version='1.2',
+    version='1.3-dev',
     description='A Tkinter text editor',
     long_description=long_des,
     long_description_content_type='text/markdown',
