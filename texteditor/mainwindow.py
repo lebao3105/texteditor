@@ -88,13 +88,14 @@ class MainWindow(Tk):
         # This should be added to View menu in the future
         self.config_menu.add_checkbutton(label=self._("Wrap (by word)"),
                 command=lambda: textwidget.TextWidget.wrapmode(self),
-                accelerator="Ctrl+W", variable=self.wrapbtn)
+                variable=self.wrapbtn)
+        addcfgcmd(label=self._("Open configuration file"), command=lambda: self.opencfg(self))
         self.menu_bar.add_cascade(label=self._("Config"), menu=self.config_menu)
         # Add menu to the application
         self.config(menu=self.menu_bar)
 
     def place_widgets(self):
-        # Create a notebook
+        # Create a notebook and add a tab on it
         self.notebook = ttk.Notebook(self)
         tabs.add_tab(self)
         self.notebook.pack(expand=True, fill="both")
@@ -108,7 +109,7 @@ class MainWindow(Tk):
     # Binding commands to the application
     def add_event(self):
         bindcfg = self.bind
-        bindcfg("<Control-n>", lambda evnet: tabs.add_tab(self))
+        bindcfg("<Control-n>", lambda event: tabs.add_tab(self))
         if get_config.GetConfig.getvalue("cmd", "isenabled") == "yes":
             bindcfg("<Control-t>", lambda event: cmd.CommandPrompt(self))
         bindcfg("<Control-f>", lambda event: finding.Finder(self, "find"))
@@ -122,11 +123,18 @@ class MainWindow(Tk):
         import tkinter.messagebox as msgbox
         message = msgbox.askyesno("Warning", "This will reset ALL configurations you have ever made. Continue?")
         if message:
-            get_config.GetConfig.reset()
-            msgbox.showinfo("Completed", "Completed resetting texteditor configurations.\nRestart the application to take effect.")
+            check = get_config.GetConfig.reset()
+            if not check:
+                msgbox.showerror("Error occured!", "Unable to reset configuration file: Backed up default variables not found")
+            else:
+                msgbox.showinfo("Completed", "Completed resetting texteditor configurations.\nRestart the application to take effect.")
+    
+    def opencfg(self, event=None):
+        tabs.add_tab(self)
+        file_operations.openfilename(self, get_config.file)
 
 
 if __name__ == "__main__":
-    print('Warning: You are running texteditor.mainwindow directly. You can open file with that.')
+    print('Warning: You are running texteditor.mainwindow directly. You cannot open file with that.')
     app = MainWindow()
     app.mainloop()

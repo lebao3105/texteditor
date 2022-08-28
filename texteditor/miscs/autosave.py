@@ -62,9 +62,8 @@ class AutoSave:
         # The new get_config isn't available for TopLevel now
         #get_config.GetConfig.configure(askwin)
 
-        for i in [label, cb]:
-            print(i.winfo_class())
-            get_config.GetConfig.configure(i)
+        get_config.GetConfig(label, "config")
+        get_config.GetConfig(cb, "config")
 
     
     def config(self, useTime, event=None):

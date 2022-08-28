@@ -1,5 +1,3 @@
-from re import I
-from tkinter import ttk
 from . import constants
 import os
 import configparser
@@ -45,6 +43,8 @@ if not os.path.isfile(file):
         with open(file, 'w') as f:
             cfg.write(f)
     finally:
+        with open(file, 'r') as f: # Open the file again
+            backup = f.read()
         pass
 
 cfg.read(file)
@@ -54,13 +54,19 @@ fg = cfg.get('global', 'sub_color')
 
 class GetConfig:
     """Changes a Tkinter/TTK widget configuration."""
-    def __init__(self, parent, action:str=None):
+
+    def __init__(self, parent=None, action:str=None):
         """parent: Widget to use\n
         action:str=None: |\n
         --> config : Configure the widget\n
-        --> reset : Reset the configuration file"""
+        --> reset : Reset the configuration file\n
+        If you use config, you must include parent also."""
         super().__init__()
-        while action != None or "":
+        if parent == None or "":
+            if action == "reset":
+                self.reset()
+
+        if action != None or "":
             if action == "config":
                 self.configure(parent)
             elif action == "reset":
@@ -68,12 +74,16 @@ class GetConfig:
     
     @staticmethod
     def reset():
+        if not backup:
+            print("Error: Unable to reset configuration file: Backed up default variables not found")
+            return False
         try:
             os.remove(file)
             with open(file, 'w') as f:
-                cfg.write(f)
+                f.write(backup)
         finally:
             print("Completed resetting texteditor configuration file.")
+            return True
 
     @staticmethod
     def checkclass(widget):
@@ -98,8 +108,11 @@ class GetConfig:
         class_name = GetConfig.checkclass(widget)
         if class_name:
             fg2 = GetConfig._checkcolor(GetConfig, widget)
-            if fg2 != "":
-                return widget.configure(fg=fg2, bg=constants.DARK_BG)
+            if fg2 != constants.LIGHT_BG:
+                try:
+                    return widget.configure(fg=fg2, bg=constants.DARK_BG)
+                except:
+                    return widget.configure(foreground=fg2, background=constants.DARK_BG)
     
     def _checkcolor(self, widget):
         if bg == "dark":
@@ -109,6 +122,7 @@ class GetConfig:
                 fg2 = constants.GREEN_TEXT
             elif fg == "Red":
                 fg2 = constants.RED_TEXT
+            # Test
             elif fg == "Pink":
                 fg2 = constants.PINK_TEXT
             elif fg == "Yellow":

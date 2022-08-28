@@ -23,6 +23,8 @@ class TextWidget(Text):
         self.wrapbtn = BooleanVar(self)
         self.wrapbtn.set(True)
 
+        self.configure(font=('Lucida Console', 12))
+
         if useMenu != None:
             self.enableMenu = useMenu
         if useUnRedo != None:
