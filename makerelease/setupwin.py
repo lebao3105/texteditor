@@ -12,7 +12,7 @@ setup(
 		  'py2exe': {
 			  'optimize': 2,
 			  'includes': ['os', 'configparser'],
-			  'skip_archive': True
+			  'bundle_files': 1
 			}
 	},
 	data_files=[('icons', glob(r'icons/texteditor.Devel.png'))],
