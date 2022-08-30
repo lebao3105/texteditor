@@ -32,6 +32,8 @@ Then run:
 python3 -m texteditor
 ```
 
+Start from version 1.3-dev1, you can use ```texteditor``` directly.
+
 ## Running from source
 If needed, let this app speak your language. On Linux, use [```upd_trans.sh```](upd_trans.sh) should work:
 ```
@@ -45,12 +47,11 @@ If needed, let this app speak your language. On Linux, use [```upd_trans.sh```](
 On Windows, find pygettext & msgfmt from your Python installation folder. Then use them:
 ```
 REM Generate .pot + .po files
-pygettext.py -d base -o po/base.pot texteditor/mainwindow.py texteditor/tabs.py texteditor/miscs/file_operations.py texteditor/extensions/finding.py texteditor/extensions/cmd.py
+pygettext.py -d base -o po/base.pot <every file on texteditor/>
 REM Copy .pot file to your_language_code/LC_MESSAGES/ then rename it to base.po
 REM edit your .po files, then generate .mo files. This use 
 REM for all available languages here.
-msgfmt.py po/vi/LC_MESSAGES/base -o po/vi/LC_MESSAGES/base.mo
-msgfmt.py po/en/LC_MESSAGES/base -o po/en/LC_MESSAGES/base.mo
+msgfmt.py po/<language code>/LC_MESSAGES/base -o po/<language code>/LC_MESSAGES/base.mo
 ```
 
 Once done, run ```python3 -m texteditor```.
@@ -77,5 +78,3 @@ style.theme_use('{theme name}')
 ```
 
 Or use the instructions from the theme's author.
-
-Tabs dragging is not working at this time.
