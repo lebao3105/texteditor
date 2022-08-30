@@ -18,5 +18,5 @@
 
 Other things:
 * Implement a debian package?
-* Be able to launch this project from terminal without using ```py -m``` after installed using pip
+* Be able to launch this project from terminal without using ```py -m``` after installed using pip (Done!)
 * Change configurations
