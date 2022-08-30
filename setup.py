@@ -14,6 +14,11 @@ setup (
     install_requires=[
         'configparser'
     ],
+    entry_points = {
+        'gui_scripts': [
+            'texteditor = texteditor:start'
+        ]
+    },
     include_package_data=True,
     packages=find_packages()
 )
