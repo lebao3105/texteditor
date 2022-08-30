@@ -30,8 +30,9 @@ def checker(self):
     elif str(self.notebook.index("end") + 1) in find_tab:
         return False
 
+
 def add_tab(self, event=None):
-    if self.notebook.index('end') == 0:
+    if self.notebook.index("end") == 0:
         tabname = _(constants.UNTITLED)
     else:
         if checker(self):
@@ -43,16 +44,20 @@ def add_tab(self, event=None):
     self.notebook.add(textframe, text=tabname)
 
     # Create text widget
-    textd = textwidget.TextWidget(textframe, useMenu=True, useUnRedo=True)
-    textd.addMenusepr()
-    textd.addMenucmd(label=_("Save"), acc="Ctrl+S", fn=lambda: file_operations.save_file(self))
-    textd.addMenucmd(label=_("Save as"), acc="Ctrl+Shift+S", fn=lambda: file_operations.save_as(self))
-    self.text_editor = textd
-    textd.pack(expand=True, fill="both")
+    self.text_editor = textwidget.TextWidget(textframe, useMenu=True, useUnRedo=True)
+    self.text_editor.addMenusepr()
+    self.text_editor.addMenucmd(
+        label=_("Save"), acc="Ctrl+S", fn=lambda: file_operations.save_file(self)
+    )
+    self.text_editor.addMenucmd(
+        label=_("Save as"), acc="Ctrl+Shift+S", fn=lambda: file_operations.save_as(self)
+    )
+    self.text_editor.pack(expand=True, fill="both")
 
     self.notebook.select(textframe)
     self.titletext = window_title + tabname
     self.title(self.titletext)
+
 
 def tabs_close(self):
     # Automatically close the window if there's only one tab
@@ -63,6 +68,7 @@ def tabs_close(self):
     else:
         self.notebook.forget(self.notebook.select())
 
+
 def on_tab_changed(root, event):
-    tab = event.widget.tab('current')['text']
+    tab = event.widget.tab("current")["text"]
     root.title(_("Text Editor") + " - " + tab)

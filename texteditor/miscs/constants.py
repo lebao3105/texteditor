@@ -1,5 +1,5 @@
 # This file contains many variables used in the program.
-# It's useful for parsing configurations in our configuration file. 
+# It's useful for parsing configurations in our configuration file.
 
 # Colors
 DARK_BG = "#0c0c0c"
@@ -15,9 +15,9 @@ YELLOW_TEXT = "yellow"
 DEFAULT_OTHERS_WIGHT = 250
 
 # Opened files
-FILES_ARR = [ ]
+FILES_ARR = []
 
-# Untitled tab 
+# Untitled tab
 UNTITLED = "Untitled "
 
 # Version

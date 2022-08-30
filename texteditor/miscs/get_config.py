@@ -4,58 +4,48 @@ import configparser
 import platform
 
 if platform.system() == "Windows":
-    file = os.environ['USERPROFILE'] + "\\.config\\texteditor_configs.ini"
-    defconsole = 'cmd'
+    file = os.environ["USERPROFILE"] + "\\.config\\texteditor_configs.ini"
+    defconsole = "cmd"
 else:
-    file = os.environ['HOME'] + "/.config/texteditor_configs.ini"
-    defconsole = 'xterm'
+    file = os.environ["HOME"] + "/.config/texteditor_configs.ini"
+    defconsole = "xterm"
 
 cfg = configparser.ConfigParser()
 
 # Default variables.
 # We must use cfg.get() to get the current variable's value.
-cfg['global'] = {
-    'color': 'light',
-    'sub_color': 'default',
-    'font': 'default'
-}
+cfg["global"] = {"color": "light", "sub_color": "default", "font": "default"}
 
-cfg['popups'] = {
+cfg["popups"] = {
     # TODO/NOTE: They should be different
-    'width': str(constants.DEFAULT_OTHERS_WIGHT),
-    'height': str(constants.DEFAULT_OTHERS_WIGHT)
+    "width": str(constants.DEFAULT_OTHERS_WIGHT),
+    "height": str(constants.DEFAULT_OTHERS_WIGHT),
 }
 
-cfg['cmd'] = {
-    'defconsole': defconsole,
-    'isenabled': 'yes',
-    'writelog': 'no'
-}
+cfg["cmd"] = {"defconsole": defconsole, "isenabled": "yes", "writelog": "no"}
 
 # New: Auto-save files
-cfg['filemgr'] = {
-    'autosave': 'yes',
-    'autosave-time' : '5' # in minutes
-}
+cfg["filemgr"] = {"autosave": "yes", "autosave-time": "5"}  # in minutes
 
 if not os.path.isfile(file):
     try:
-        with open(file, 'w') as f:
+        with open(file, "w") as f:
             cfg.write(f)
     finally:
-        with open(file, 'r') as f: # Open the file again
+        with open(file, "r") as f:  # Open the file again
             backup = f.read()
         pass
 
 cfg.read(file)
 
-bg = cfg.get('global', 'color')
-fg = cfg.get('global', 'sub_color')
+bg = cfg.get("global", "color")
+fg = cfg.get("global", "sub_color")
+
 
 class GetConfig:
     """Changes a Tkinter/TTK widget configuration."""
 
-    def __init__(self, parent=None, action:str=None):
+    def __init__(self, parent=None, action: str = None):
         """parent: Widget to use\n
         action:str=None: |\n
         --> config : Configure the widget\n
@@ -71,15 +61,17 @@ class GetConfig:
                 self.configure(parent)
             elif action == "reset":
                 self.reset()
-    
+
     @staticmethod
     def reset():
         if not backup:
-            print("Error: Unable to reset configuration file: Backed up default variables not found")
+            print(
+                "Error: Unable to reset configuration file: Backed up default variables not found"
+            )
             return False
         try:
             os.remove(file)
-            with open(file, 'w') as f:
+            with open(file, "w") as f:
                 f.write(backup)
         finally:
             print("Completed resetting texteditor configuration file.")
@@ -87,10 +79,10 @@ class GetConfig:
 
     @staticmethod
     def checkclass(widget):
-        wind = ['Tk', 'Frame']
-        text = ['Label', 'Text']
-        ttk_widgets = ['TCombobox']
-        
+        wind = ["Tk", "Frame"]
+        text = ["Label", "Text"]
+        ttk_widgets = ["TCombobox"]
+
         # Combine 3 arrays together
         for it in text:
             wind.append(it)
@@ -98,11 +90,11 @@ class GetConfig:
             wind.append(it2)
 
         class_name = widget.winfo_class()
-        if class_name in wind and cfg.sections():
+        if class_name in wind or cfg.sections():
             return class_name
         else:
             return False
-    
+
     @staticmethod
     def configure(widget):
         class_name = GetConfig.checkclass(widget)
@@ -112,8 +104,27 @@ class GetConfig:
                 try:
                     return widget.configure(fg=fg2, bg=constants.DARK_BG)
                 except:
-                    return widget.configure(foreground=fg2, background=constants.DARK_BG)
-    
+                    return widget.configure(
+                        foreground=fg2, background=constants.DARK_BG
+                    )
+
+    @staticmethod
+    def change_config(section: str, option: str, value: str | int, event=None):
+        cfg.set(section, option, str(value))
+        try:
+            with open(file, "w") as filed:
+                cfg.write(filed)
+        except:
+            print("Unable to write new configuration!")
+            print(
+                "Detail: make section %s->option %s to use value %s"
+                % (section, option, value)
+            )
+            return False
+        finally:
+            print("Changed texteditor configuration.")
+            return True
+
     def _checkcolor(self, widget):
         if bg == "dark":
             if fg == "default":
@@ -132,10 +143,10 @@ class GetConfig:
         else:
             fg2 = constants.LIGHT_BG
         return fg2
-    
+
     @staticmethod
-    def getvalue(section:str, name:str):
+    def getvalue(section: str, name: str):
         if not section in cfg.sections():
-            raise Exception ("Section not found "+section)
+            raise Exception("Section not found " + section)
         else:
             return cfg.get(section, name)
