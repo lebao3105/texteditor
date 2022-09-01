@@ -53,7 +53,7 @@ class MainWindow(Tk):
         self.place_menu()
         self.place_widgets()
         self.add_event()
-        self.autosv.start()
+        #self.autosv.start() # Test
 
     def place_menu(self):
         # Menu bar
