@@ -71,7 +71,7 @@ class AutoSave:
         cb["state"] = "readonly"
 
         okbtn = Button(
-            askwin, text="OK", command=lambda: okbtn_clicked()
+            askwin, text="OK", command=lambda: self.okbtn_clicked(self, selected_time)
         )
         cancelbtn = Button(askwin, text="Cancel", command=lambda: askwin.destroy())
 
@@ -87,26 +87,27 @@ class AutoSave:
         get_config.GetConfig(label, "config")
         get_config.GetConfig(cb, "config")
 
-        def okbtn_clicked(self, *args):
-            tm = selected_time.get()
-            if tm == 0.5:
-                return self.config(MIN_05)
-            elif tm == 1:
-                return self.config(MIN_1)
-            elif tm == 2:
-                return self.config(MIN_1 * 2)
-            elif tm == 5:
-                return self.config(MIN_1 * 5)
-            elif tm == 10:
-                return self.config(MIN_1 * 10)
-            elif tm == 15:
-                return self.config(MIN_15)
-            elif tm == 20:
-                return self.config(MIN_20)
-            elif tm == 30:
-                return self.config(MIN_30)
-            else:
-                return
+    def okbtn_clicked(self, selected_time):
+        tm = selected_time.get()
+        if tm == 0.5:
+            self.config(MIN_05)
+        elif tm == 1:
+            self.config(MIN_1)
+        elif tm == 2:
+            self.config(MIN_1 * 2)
+        elif tm == 5:
+            self.config(MIN_1 * 5)
+        elif tm == 10:
+            self.config(MIN_1 * 10)
+        elif tm == 15:
+            self.config(MIN_15)
+        elif tm == 20:
+            self.config(MIN_20)
+        elif tm == 30:
+            self.config(MIN_30)
+        else:
+            return
+        self.start()
 
     def config(self, useTime, event=None):
         print("Trying to use autosave time: ", useTime)
