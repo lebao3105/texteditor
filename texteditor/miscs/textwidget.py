@@ -1,6 +1,6 @@
-from tkinter import BooleanVar, Menu, Text
 import tkinter.ttk as ttk
 import gettext
+from tkinter import BooleanVar, Menu, Text
 from texteditor.miscs import file_operations, get_config
 
 _ = gettext.gettext

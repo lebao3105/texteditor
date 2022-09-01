@@ -31,6 +31,7 @@ class cmd(textwidget.TextWidget):
 
         if command == "exit":
             try:
+                # TODO: Manage processes
                 if sys.platform == "win32":
                     self.result.kill()
                 else:

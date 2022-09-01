@@ -59,6 +59,17 @@ def openfilename(tkwin, filename):
 
     # print(constants.FILES_ARR)
 
+def savefilename(tkwin, filename):
+    with open(filename, 'w') as f:
+        try:
+            print("Saving file: ", filename)
+            f.write(tkwin.text_editor.get(1.0, END))
+        except OSError:
+            print("Error: Unable to save file ", filename)
+            return False
+        else:
+            saved_files.append(filename)
+            return True
 
 def save_file(self, event=None):
     find_text_editor(self)
@@ -69,12 +80,7 @@ def save_file(self, event=None):
     elif not (filefind in constants.FILES_ARR):
         save_as(self)
     else:
-        try:
-            with open(filefind, "w") as f:
-                print("Saving file: ", filefind)
-                f.write(self.text_editor.get(1.0, END))
-        finally:
-            saved_files.append(filefind)
+        savefilename(self, filefind)
 
 
 def save_as(self, event=None):
@@ -85,13 +91,8 @@ def save_as(self, event=None):
         filetypes=(("All files", "*.*"), script_type, ("Text files", "*.txt")),
     )
     if file_name:
-        try:
-            with open(file_name, "w") as f:
-                print("Saving new file: ", file_name)
-                f.write(self.text_editor.get(1.0, END))
-        finally:
+        if savefilename(self, file_name):
             constants.FILES_ARR.append(file_name)
-            saved_files.append(file_name)
 
 
 def asktoopen(self):

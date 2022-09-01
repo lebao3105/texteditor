@@ -45,11 +45,15 @@ class MainWindow(Tk):
         # Whetever we still need a booleanvar
         self.wrapbtn = BooleanVar()
         self.wrapbtn.set(True)
+        self.autosv = autosave.AutoSave(self)
+
         self.title(self._("Text editor"))
         self.geometry("810x610")
+
         self.place_menu()
         self.place_widgets()
         self.add_event()
+        self.autosv.start()
 
     def place_menu(self):
         # Menu bar
@@ -132,7 +136,7 @@ class MainWindow(Tk):
         )
         addcfgcmd(
             label=self._("Autosave"),
-            command=lambda: autosave.AutoSave(self).openpopup(),
+            command=lambda: self.autosv.openpopup(),
         )
         # This should be added to View menu in the future
         self.config_menu.add_checkbutton(

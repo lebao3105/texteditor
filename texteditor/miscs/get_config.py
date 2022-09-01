@@ -1,3 +1,4 @@
+from tkinter import Text
 from . import constants
 import os
 import configparser
@@ -25,7 +26,7 @@ cfg["popups"] = {
 cfg["cmd"] = {"defconsole": defconsole, "isenabled": "yes", "writelog": "no"}
 
 # New: Auto-save files
-cfg["filemgr"] = {"autosave": "yes", "autosave-time": "5"}  # in minutes
+cfg["filemgr"] = {"autosave": "yes", "autosave-time": "30"}  # in minutes
 
 if not os.path.isfile(file):
     try:
@@ -125,7 +126,7 @@ class GetConfig:
             print("Changed texteditor configuration.")
             return True
 
-    def _checkcolor(self, widget):
+    def _checkcolor(self, widget:Text):
         if bg == "dark":
             if fg == "default":
                 fg2 = constants.LIGHT_BG
@@ -140,8 +141,12 @@ class GetConfig:
                 fg2 = constants.YELLOW_TEXT
             else:
                 fg2 = constants.LIGHT_BG
+            if GetConfig.checkclass(widget) == "Text":
+                widget.configure(insertbackground=constants.LIGHT_BG)
         else:
             fg2 = constants.LIGHT_BG
+            if GetConfig.checkclass(widget) == "Text":
+                widget.configure(insertbackground=constants.DARK_BG)
         return fg2
 
     @staticmethod
