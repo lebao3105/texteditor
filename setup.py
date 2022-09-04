@@ -18,7 +18,7 @@ setup (
     ],
     entry_points = {
         'gui_scripts': [
-            'texteditor = texteditor:start'
+            'texteditor = texteditor:start_app'
         ]
     },
     include_package_data=True,
