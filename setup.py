@@ -7,7 +7,8 @@ long_des = (currdir / "README.md").read_text(encoding="utf8")
 setup (
     name='texteditor',
     author='Le Bao Nguyen',
-    version='1.3-dev2',
+    version='1.3.beta',
+    url='https://github.com/lebao3105/texteditor',
     description='A Tkinter text editor',
     license="GPL v3",
     long_description=long_des,
@@ -20,6 +21,7 @@ setup (
             'texteditor = texteditor:start'
         ]
     },
+    include_package_data=True,
     packages=find_packages(),
     package_data={
         "texteditor": ["icons/*.png"]

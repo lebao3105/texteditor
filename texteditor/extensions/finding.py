@@ -63,18 +63,25 @@ class Finder(Frame):
             while 1:
                 pos = self.text.search(find, pos, nocase=1, stopindex=END)
 
-                if not pos:
-                    self.searchfailed()
-                    break
+                # Disabled because I saw "Not found" label even I found text highlighted
+                #if not pos:
+                #    self.searchfailed('create')
+                #    break
 
                 lastidx = "%s+%dc" % (pos, len(find))
                 self.text.tag_add("found", pos, lastidx)
                 pos = lastidx
             self.text.tag_config("found", background="yellow")
 
-    def searchfailed(self):
-        i = Label(self, text="Not found", foreground="red")
-        i.grid(row=1, column=3)
+    def searchfailed(self, command:str):
+        if command == 'create':
+            self.i = Label(self, text="Not found", foreground="red")
+            self.i.grid(row=1, column=3)
+        elif command == 'destroy':
+            if not hasattr(self.i, "Label"):
+                return
+            else:
+                self.i.destroy()
 
     def check_options(self, option):
         self.i = []

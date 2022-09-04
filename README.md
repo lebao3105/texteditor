@@ -13,11 +13,11 @@ Texteditor is a text editor written in Python using Tkinter interface.
 * Fast
 * Dark mode + Text colors support
 * [Working] Configuration file support
-* [New] Autosave
+* [Working] Autosave
 * Able to make Windows executable file (.exe)
 * Command window where you can run external commands (except Console apps which require you inputs)
 
-> Note: This project also available on GitLab with this [link](https://gitlab.com/lebao3105/texteditor_tk)
+> Note: This project also available on GitLab [here.](https://gitlab.com/lebao3105/texteditor_tk)
 
 ## Running
 You need Python 3.8+ with Tkinter & pip installed.

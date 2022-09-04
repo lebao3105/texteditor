@@ -8,11 +8,11 @@ from texteditor.miscs import file_operations
 
 gettext.bindtextdomain("base", "po")
 gettext.textdomain("base")
-_ = gettext.gettext
+texteditor._ = gettext.gettext
 
 
 def start_app(argv: sys.argv):
-    root = texteditor.mainwindow.MainWindow(_)
+    root = texteditor.mainwindow.MainWindow(texteditor._)
     n = len(argv)
     if n - 1 > 0:
         if isfile(argv[1]):

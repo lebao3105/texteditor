@@ -38,7 +38,7 @@ class AutoSave:
             if self.autosave == "yes":
                 pass
             else:
-                raise Exception("Autosave is disabled on user configuration file")
+                print("Error: Autosave is disabled on user configuration file")
 
         if self.useTime == float(self.savetime):
             print(
@@ -47,10 +47,10 @@ class AutoSave:
             pass
 
         if (self.useTime or float(self.savetime)) > MIN_30:  # 30 minutes
-            raise Exception("Auto save time is higher than 30 minutes")
+            print("Error: Auto save time is higher than 30 minutes")
 
         if (self.useTime or float(self.savetime)) < MIN_05:  # 30 secs
-            raise Exception("Auto save time is smaller than 30 seconds!")
+            print("Error: Auto save time is smaller than 30 seconds!")
 
     def openpopup(self):
         # Note: I want to use auto save to all tabs (aka files open in texteditor)
@@ -65,13 +65,16 @@ class AutoSave:
             askwin,
             text="Select autosave time (minutes)\nAutosave function will be launched after a time.",
         )
-
+        label2 = Label(
+            askwin,
+            text="Please note that this feature only affect the current opening tab."
+        )
         cb = Combobox(askwin, textvariable=selected_time)
         cb["values"] = [0.5, 1, 2, 5, 10, 15, 20, 30]
         cb["state"] = "readonly"
 
         okbtn = Button(
-            askwin, text="OK", command=lambda: self.okbtn_clicked(self, selected_time)
+            askwin, text="OK", command=lambda: self.okbtn_clicked(selected_time)
         )
         cancelbtn = Button(askwin, text="Cancel", command=lambda: askwin.destroy())
 
@@ -80,14 +83,16 @@ class AutoSave:
         cb.pack(fill="x", padx=15, pady=15)
         okbtn.pack(padx=30)
         cancelbtn.pack(padx=25)
+        label2.pack(fill="x")
 
         # The new get_config isn't available for TopLevel now
-        # get_config.GetConfig.configure(askwin)
+        get_config.GetConfig.configure(askwin)
 
         get_config.GetConfig(label, "config")
+        get_config.GetConfig(label2, "config")
         get_config.GetConfig(cb, "config")
 
-    def okbtn_clicked(self, selected_time):
+    def okbtn_clicked(self, selected_time, event=None):
         tm = selected_time.get()
         if tm == 0.5:
             self.config(MIN_05)

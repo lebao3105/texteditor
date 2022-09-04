@@ -6,9 +6,11 @@ import platform
 
 if platform.system() == "Windows":
     file = os.environ["USERPROFILE"] + "\\.config\\texteditor_configs.ini"
+    backup = os.environ["USERPROFILE"] + "\\.config\\texteditor_bck.ini"
     defconsole = "cmd"
 else:
     file = os.environ["HOME"] + "/.config/texteditor_configs.ini"
+    backup = os.environ["HOME"] + "/.config/texteditor_bck.ini"
     defconsole = "xterm"
 
 cfg = configparser.ConfigParser()
@@ -28,14 +30,18 @@ cfg["cmd"] = {"defconsole": defconsole, "isenabled": "yes", "writelog": "no"}
 # New: Auto-save files
 cfg["filemgr"] = {"autosave": "yes", "autosave-time": "30"}  # in minutes
 
+# File write/backup
+with open(backup, "w") as f2:
+    cfg.write(f2)
+with open(backup, "r") as f:
+    bck = f.read()
+
 if not os.path.isfile(file):
     try:
         with open(file, "w") as f:
             cfg.write(f)
-    finally:
-        with open(file, "r") as f:  # Open the file again
-            backup = f.read()
-        pass
+    except:
+        raise Exception("Unable to write configuration file!")
 
 cfg.read(file)
 
@@ -44,7 +50,7 @@ fg = cfg.get("global", "sub_color")
 
 
 class GetConfig:
-    """Changes a Tkinter/TTK widget configuration."""
+    """Changes Tkinter/TTK widget configuration from the configuration file."""
 
     def __init__(self, parent=None, action: str = None):
         """parent: Widget to use\n
@@ -65,7 +71,7 @@ class GetConfig:
 
     @staticmethod
     def reset():
-        if not backup:
+        if not bck:
             print(
                 "Error: Unable to reset configuration file: Backed up default variables not found"
             )
@@ -73,14 +79,14 @@ class GetConfig:
         try:
             os.remove(file)
             with open(file, "w") as f:
-                f.write(backup)
+                f.write(bck)
         finally:
             print("Completed resetting texteditor configuration file.")
             return True
 
     @staticmethod
     def checkclass(widget):
-        wind = ["Tk", "Frame"]
+        wind = ["Tk", "Frame", "TopLevel"]
         text = ["Label", "Text"]
         ttk_widgets = ["TCombobox"]
 
@@ -134,11 +140,6 @@ class GetConfig:
                 fg2 = constants.GREEN_TEXT
             elif fg == "Red":
                 fg2 = constants.RED_TEXT
-            # Test
-            elif fg == "Pink":
-                fg2 = constants.PINK_TEXT
-            elif fg == "Yellow":
-                fg2 = constants.YELLOW_TEXT
             else:
                 fg2 = constants.LIGHT_BG
             if GetConfig.checkclass(widget) == "Text":
