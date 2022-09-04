@@ -24,6 +24,6 @@ setup (
     include_package_data=True,
     packages=find_packages(),
     package_data={
-        "texteditor": ["icons/*.png"]
+        "texteditor": ["icons/*.png", "../po/*/LC_MESSAGES/*.mo"]
     }
 )

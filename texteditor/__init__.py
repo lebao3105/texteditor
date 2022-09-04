@@ -11,8 +11,10 @@ gettext.textdomain("base")
 texteditor._ = gettext.gettext
 
 
-def start_app(argv: sys.argv):
-    root = texteditor.mainwindow.MainWindow(texteditor._)
+def start_app(argv: sys.argv=None):
+    if not argv: # For __main__
+        argv = sys.argv
+    root = texteditor.mainwindow.MainWindow()
     n = len(argv)
     if n - 1 > 0:
         if isfile(argv[1]):

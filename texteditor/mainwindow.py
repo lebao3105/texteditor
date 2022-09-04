@@ -3,6 +3,7 @@ import gettext, os
 from tkinter import *
 import tkinter.ttk as ttk
 from texteditor import tabs
+import texteditor
 from texteditor.extensions import finding, cmd
 from texteditor.miscs import (
     file_operations,
@@ -26,9 +27,11 @@ else:
 
 
 class MainWindow(Tk):
-    def __init__(self, gtt: gettext.gettext, **kwargs):
+    """The main application class.
+    gettext.gettext parameter is for running texteditor as a module (py -m texteditor)"""
+    def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self._ = gtt
+        self._ = texteditor._
 
         # Set icon
         if os.path.isfile(icon):

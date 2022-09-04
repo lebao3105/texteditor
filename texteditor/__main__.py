@@ -1,5 +1,4 @@
-import sys
 from texteditor import start_app
 
 if __name__ == "__main__":
-    start_app(sys.argv)
+    start_app()
