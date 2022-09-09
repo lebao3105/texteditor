@@ -4,13 +4,12 @@ from tkinter import *
 import tkinter.ttk as ttk
 from texteditor import tabs
 import texteditor
-from texteditor.extensions import finding, cmd
+from texteditor.extensions import autosave, finding, cmd
 from texteditor.miscs import (
     file_operations,
     get_config,
     constants,
     textwidget,
-    autosave,
 )
 
 # Note that icon variable assume that we are in texteditor/texteditor (where is this file in the repository).
@@ -27,8 +26,8 @@ else:
 
 
 class MainWindow(Tk):
-    """The main application class.
-    gettext.gettext parameter is for running texteditor as a module (py -m texteditor)"""
+    """The main application class."""
+
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self._ = texteditor._
@@ -40,7 +39,7 @@ class MainWindow(Tk):
             print("Warning: Application icon", icon, "not found!")
 
         # Get color mode
-        if get_config.GetConfig.getvalue('global', 'color') == "dark":
+        if get_config.GetConfig.getvalue("global", "color") == "dark":
             self.lb = "light"
         else:
             self.lb = "dark"
@@ -56,7 +55,7 @@ class MainWindow(Tk):
         self.place_menu()
         self.place_widgets()
         self.add_event()
-        #self.autosv.start() # Test
+        # self.autosv.start() # Test
 
     def place_menu(self):
         # Menu bar
@@ -99,6 +98,11 @@ class MainWindow(Tk):
         addeditcmd(label=self._("Paste"), accelerator="Ctrl+V")
         self.edit_menu.add_separator()
         addeditcmd(label=self._("Select all"), accelerator="Ctrl+A")
+        if get_config.GetConfig.getvalue("filemgr", "autosave") == "yes":
+            addeditcmd(
+                label=self._("Autosave"),
+                command=lambda: self.autosv.openpopup(),
+            )
 
         if get_config.GetConfig.getvalue("cmd", "isenabled") == "yes":
             self.edit_menu.add_separator()
@@ -135,11 +139,8 @@ class MainWindow(Tk):
             label=self._("Reset configurations"), command=lambda: self.resetcfg(self)
         )
         addcfgcmd(
-            label=self._("Toggle %s mode") % self.lb, command=lambda: self.change_color(self)
-        )
-        addcfgcmd(
-            label=self._("Autosave"),
-            command=lambda: self.autosv.openpopup(),
+            label=self._("Toggle %s mode") % self.lb,
+            command=lambda: self.change_color(self),
         )
         # This should be added to View menu in the future
         self.config_menu.add_checkbutton(
@@ -211,7 +212,7 @@ class MainWindow(Tk):
     def opencfg(self, event=None):
         tabs.add_tab(self)
         file_operations.openfilename(self, get_config.file)
-    
+
     def change_color(self, event=None):
         """Change theme color of the application. Restart the entrie application is needed."""
         try:

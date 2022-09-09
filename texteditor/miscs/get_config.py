@@ -132,7 +132,7 @@ class GetConfig:
             print("Changed texteditor configuration.")
             return True
 
-    def _checkcolor(self, widget:Text):
+    def _checkcolor(self, widget: Text):
         if bg == "dark":
             if fg == "default":
                 fg2 = constants.LIGHT_BG

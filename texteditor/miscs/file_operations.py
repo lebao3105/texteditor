@@ -59,8 +59,9 @@ def openfilename(tkwin, filename):
 
     # print(constants.FILES_ARR)
 
+
 def savefilename(tkwin, filename):
-    with open(filename, 'w') as f:
+    with open(filename, "w") as f:
         try:
             print("Saving file: ", filename)
             f.write(tkwin.text_editor.get(1.0, END))
@@ -70,6 +71,7 @@ def savefilename(tkwin, filename):
         else:
             saved_files.append(filename)
             return True
+
 
 def save_file(self, event=None):
     find_text_editor(self)

@@ -11,8 +11,8 @@ gettext.textdomain("base")
 texteditor._ = gettext.gettext
 
 
-def start_app(argv: sys.argv=None):
-    if not argv: # For __main__
+def start_app(argv: sys.argv = None):
+    if not argv:  # For __main__
         argv = sys.argv
     root = texteditor.mainwindow.MainWindow()
     n = len(argv)
