@@ -1,4 +1,4 @@
-from tkinter import Text
+from tkinter import messagebox
 from . import constants
 import os
 import configparser
@@ -17,15 +17,16 @@ cfg = configparser.ConfigParser()
 
 # Default variables.
 # We must use cfg.get() to get the current variable's value.
-cfg["global"] = {"color": "light", "sub_color": "default", "font": "default"}
+cfg["global"] = {"color": "light", "sub_color": "default", "font": "Arial"}
 
+# An old configuration
 cfg["popups"] = {
     # TODO/NOTE: They should be different
     "width": str(constants.DEFAULT_OTHERS_WIGHT),
     "height": str(constants.DEFAULT_OTHERS_WIGHT),
 }
 
-cfg["cmd"] = {"defconsole": defconsole, "isenabled": "yes", "writelog": "no"}
+cfg["cmd"] = {"defconsole": defconsole, "isenabled": "yes"}
 
 # New: Auto-save files
 cfg["filemgr"] = {"autosave": "yes", "autosave-time": "30"}  # in minutes
@@ -49,6 +50,7 @@ bg = cfg.get("global", "color")
 fg = cfg.get("global", "sub_color")
 
 
+# OK, so this class only able to change some configuration? Can we use more?
 class GetConfig:
     """Changes Tkinter/TTK widget configuration from the configuration file."""
 
@@ -80,6 +82,8 @@ class GetConfig:
             os.remove(file)
             with open(file, "w") as f:
                 f.write(bck)
+        except OSError as e:
+            raise messagebox.showerror("Error occured while writing contents to the file", str(e))
         finally:
             print("Completed resetting texteditor configuration file.")
             return True
@@ -106,8 +110,8 @@ class GetConfig:
     def configure(widget):
         class_name = GetConfig.checkclass(widget)
         if class_name:
-            fg2 = GetConfig._checkcolor(GetConfig, widget)
-            if fg2 != constants.LIGHT_BG:
+            fg2, colormode = GetConfig._checkcolor(GetConfig, widget)
+            if colormode == "dark":
                 try:
                     return widget.configure(fg=fg2, bg=constants.DARK_BG)
                 except:
@@ -132,27 +136,32 @@ class GetConfig:
             print("Changed texteditor configuration.")
             return True
 
-    def _checkcolor(self, widget: Text):
+    def _checkcolor(self, widget):
         if bg == "dark":
             if fg == "default":
                 fg2 = constants.LIGHT_BG
             elif fg == "Green":
                 fg2 = constants.GREEN_TEXT
+            elif fg == "Blue":
+                fg2 = constants.BLUE_TEXT
             elif fg == "Red":
                 fg2 = constants.RED_TEXT
             else:
                 fg2 = constants.LIGHT_BG
             if GetConfig.checkclass(widget) == "Text":
                 widget.configure(insertbackground=constants.LIGHT_BG)
+            return fg2, "dark"
         else:
             fg2 = constants.LIGHT_BG
             if GetConfig.checkclass(widget) == "Text":
                 widget.configure(insertbackground=constants.DARK_BG)
-        return fg2
+            return fg2, "light"
 
     @staticmethod
     def getvalue(section: str, name: str):
         if not section in cfg.sections():
             raise Exception("Section not found " + section)
+        elif not cfg[section][name]:
+            raise Exception("%s->%s not found" % section, name)
         else:
             return cfg.get(section, name)
