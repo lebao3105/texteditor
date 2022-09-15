@@ -160,7 +160,7 @@ class GetConfig:
     @staticmethod
     def getvalue(section: str, name: str):
         if not section in cfg.sections():
-            raise Exception("Section not found " + section)
+            raise Exception("Section %s not found" % section)
         elif not cfg[section][name]:
             raise Exception("%s->%s not found" % section, name)
         else:
