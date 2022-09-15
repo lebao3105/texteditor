@@ -6,6 +6,8 @@
 
 Texteditor is a text editor written in Python using Tkinter interface.
 
+Documents are available on https://lebao3105.gitbook.io/texteditor_doc.
+
 ![image](https://user-images.githubusercontent.com/77564176/166142583-5fe685a1-21a4-44e1-8088-73ca27e0b04a.png)
 
 ## Features

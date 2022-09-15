@@ -18,8 +18,5 @@ FILES_ARR = []
 # Untitled tab
 UNTITLED = "Untitled "
 
-# Version
-VERSION = "1.3-dev"
-
 # Is this package in a stable version?
 STATE = "DEV"

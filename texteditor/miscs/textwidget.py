@@ -12,7 +12,7 @@ class TextWidget(Text):
     |-> Right click menu:\n
         |-> enableMenu: bool : Enable (default) Menu or not\n
         |-> useUnRedo: bool : Use Undo/Redo in the menu, also make this class able to use them\n
-    |-> useWrap : Add wrap button into the menu"""
+        |-> useWrap : Add wrap button to the menu"""
 
     enableMenu: bool = True
     useUnRedo: bool = False
@@ -33,7 +33,7 @@ class TextWidget(Text):
         self.wrapbtn = BooleanVar(self)
         self.wrapbtn.set(True)
 
-        self.configure(font=("Lucida Console", 12))
+        self.configure(font=(get_config.GetConfig.getvalue("global", "font"), 12))
 
         if useMenu != None:
             self.enableMenu = useMenu

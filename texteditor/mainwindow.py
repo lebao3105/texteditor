@@ -1,5 +1,5 @@
 # Import modules
-import gettext, os
+import os
 from tkinter import *
 import tkinter.ttk as ttk
 from texteditor import tabs
@@ -8,22 +8,8 @@ from texteditor.extensions import autosave, finding, cmd
 from texteditor.miscs import (
     file_operations,
     get_config,
-    constants,
     textwidget,
 )
-
-# Note that icon variable assume that we are in texteditor/texteditor (where is this file in the repository).
-# Please change it manually if needed.
-currdir = os.path.dirname(os.path.abspath(__file__))
-
-if constants.STATE == "DEV":
-    icon = currdir + "/icons/texteditor.Devel.png"
-elif constants.STATE == "STABLE":
-    icon = currdir + "/icons/texteditor.png"
-else:
-    print("Warning: Wrong application branch (STABLE/DEV) in miscs.constants module")
-    icon = None
-
 
 class MainWindow(Tk):
     """The main application class."""
@@ -33,10 +19,10 @@ class MainWindow(Tk):
         self._ = texteditor._
 
         # Set icon
-        if os.path.isfile(icon):
-            self.iconphoto(False, PhotoImage(file=icon))
+        if os.path.isfile(texteditor.icon):
+            self.iconphoto(False, PhotoImage(file=texteditor.icon))
         else:
-            print("Warning: Application icon", icon, "not found!")
+            print("Warning: Application icon", texteditor.icon, "not found!")
 
         # Get color mode
         if get_config.GetConfig.getvalue("global", "color") == "dark":
@@ -208,6 +194,8 @@ class MainWindow(Tk):
                     "Completed",
                     "Completed resetting texteditor configurations.\nRestart the application to take effect.",
                 )
+                self.lb == "dark"
+                self.config_menu.entryconfig(2, "Toggle %c mode" % self.lb)
 
     def opencfg(self, event=None):
         tabs.add_tab(self)
@@ -220,10 +208,3 @@ class MainWindow(Tk):
         finally:
             self.config_menu.delete(2)
 
-
-if __name__ == "__main__":
-    print(
-        "Warning: You are running texteditor.mainwindow directly. You cannot open file with that."
-    )
-    app = MainWindow()
-    app.mainloop()
