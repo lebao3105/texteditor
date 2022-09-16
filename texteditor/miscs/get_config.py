@@ -17,7 +17,12 @@ cfg = configparser.ConfigParser()
 
 # Default variables.
 # We must use cfg.get() to get the current variable's value.
-cfg["global"] = {"color": "light", "sub_color": "default", "font": "Arial"}
+cfg["global"] = {
+    "color": "light",
+    "sub_color": "default",
+    "font": "default",
+    "font_size": "12",
+}
 
 # An old configuration
 cfg["popups"] = {
@@ -83,7 +88,9 @@ class GetConfig:
             with open(file, "w") as f:
                 f.write(bck)
         except OSError as e:
-            raise messagebox.showerror("Error occured while writing contents to the file", str(e))
+            raise messagebox.showerror(
+                "Error occured while writing contents to the file", str(e)
+            )
         finally:
             print("Completed resetting texteditor configuration file.")
             return True
@@ -142,8 +149,6 @@ class GetConfig:
                 fg2 = constants.LIGHT_BG
             elif fg == "Green":
                 fg2 = constants.GREEN_TEXT
-            elif fg == "Blue":
-                fg2 = constants.BLUE_TEXT
             elif fg == "Red":
                 fg2 = constants.RED_TEXT
             else:

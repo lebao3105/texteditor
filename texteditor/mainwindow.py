@@ -11,6 +11,7 @@ from texteditor.miscs import (
     textwidget,
 )
 
+
 class MainWindow(Tk):
     """The main application class."""
 
@@ -172,7 +173,7 @@ class MainWindow(Tk):
         bindcfg("<Control-Shift-S>", lambda event: file_operations.save_as(self))
         bindcfg("<Control-s>", lambda event: file_operations.save_file(self))
         bindcfg("<Control-o>", lambda event: file_operations.open_file(self))
-        # bindcfg("<Control-w>", lambda event: textwidget.TextWidget.wrapmode(self))
+        bindcfg("<Control-w>", lambda event: self.set_wrap(self))
 
     # Functions for the Menu bar
     def resetcfg(self, event=None):
@@ -208,3 +209,14 @@ class MainWindow(Tk):
         finally:
             self.config_menu.delete(2)
 
+    # Set wrap mode (keyboard shortcut)
+    # It is different from the textwidget's default function. A lot.
+    def set_wrap(self, event=None):
+        if self.wrapbtn.get() == True:
+            self.text_editor.configure(wrap="none")
+            self.wrapbtn.set(False)
+            print("Disabled wrapping on the text widget.")
+        else:
+            self.text_editor.configure(wrap="word")
+            self.wrapbtn.set(True)
+            print("Enabled wrapping on the text widget.")

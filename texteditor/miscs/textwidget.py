@@ -1,6 +1,6 @@
 import tkinter.ttk as ttk
 import gettext
-from tkinter import BooleanVar, Menu, Text
+from tkinter import BooleanVar, Menu, Text, messagebox, font
 from texteditor.miscs import file_operations, get_config
 
 _ = gettext.gettext
@@ -9,10 +9,9 @@ _ = gettext.gettext
 class TextWidget(Text):
     """Tkinter Text widget with scrollbars & right-click menu placed by default.\n
     Configurations for the menu:\n
-    |-> Right click menu:\n
-        |-> enableMenu: bool : Enable (default) Menu or not\n
-        |-> useUnRedo: bool : Use Undo/Redo in the menu, also make this class able to use them\n
-        |-> useWrap : Add wrap button to the menu"""
+    |-> enableMenu: bool : Enable (default) Menu or not\n
+    |-> useUnRedo: bool : Use Undo/Redo in the menu, also make this class able to use them\n
+    |-> useWrap : Add wrap button to the menu"""
 
     enableMenu: bool = True
     useUnRedo: bool = False
@@ -33,8 +32,6 @@ class TextWidget(Text):
         self.wrapbtn = BooleanVar(self)
         self.wrapbtn.set(True)
 
-        self.configure(font=(get_config.GetConfig.getvalue("global", "font"), 12))
-
         if useMenu != None:
             self.enableMenu = useMenu
         if useUnRedo != None:
@@ -49,9 +46,43 @@ class TextWidget(Text):
                 "<Button-3><ButtonRelease-3>", lambda event: self.__open_menu(event)
             )
 
-        # Whetever we still need to use wrap
+        # Do some customization
+        self.set_font()
         self.configure(wrap="word")
         get_config.GetConfig.configure(self)
+
+    # TODO: Move this to get_config
+    def set_font(self):
+        # Get values
+        font_type = get_config.GetConfig.getvalue("global", "font")
+        font_size = get_config.GetConfig.getvalue("global", "font_size")
+
+        if not int(font_size):
+            messagebox.showwarning(
+                "Warning",
+                "Wrong font size defined on the configuration file - the program will use font size 14.",
+            )
+            font_size = "14"
+        elif int(font_size) <= 11:
+            messagebox.showwarning(
+                "Warning", "The defined font size is smaller (or equal) than 10."
+            )
+
+        font_families = font.families()
+        if font_type == "default":
+            font_type = "Consolas"
+        else:
+            if font_type not in font_families:
+                if (
+                    not isshown
+                ):  # To prevent the application from showing the message box after open a new tab
+                    messagebox.showwarning(
+                        message="Wrong font type in the configuration file."
+                    )
+                    isshown = True
+                font_type = "Consolas"
+
+        self.configure(font=(font_type, int(font_size)))
 
     # Place scrollbars
     def __place_scrollbar(self):
@@ -139,8 +170,6 @@ class TextWidget(Text):
         # Find the button first:)
         if not hasattr(self, "wrapbtn"):
             print("Couldn't find Wrap mode button!")
-        else:
-            pass
         if self.wrapbtn.get() == True:
             self.text_editor.configure(wrap="word")
             print("Enabled wrapping on the text widget")

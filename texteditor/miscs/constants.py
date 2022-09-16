@@ -5,7 +5,6 @@
 DARK_BG = "#0c0c0c"
 LIGHT_BG = "#ffffff"
 GREEN_TEXT = "#00ff00"
-BLUE_TEXT = "#0000ff"
 RED_TEXT = "#ff0000"
 
 # About & Help window size

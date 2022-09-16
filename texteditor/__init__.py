@@ -20,6 +20,7 @@ else:
     print("Warning: Wrong application branch (STABLE/DEV) in miscs.constants module")
     texteditor.icon = None
 
+
 def start_app(argv: sys.argv = None):
     if not argv:  # For __main__
         argv = sys.argv
