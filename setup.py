@@ -10,7 +10,7 @@ setup(
     version="1.3",
     url="https://github.com/lebao3105/texteditor",
     description="A Tkinter text editor",
-    license="GPL V3",
+    license="GPL v3",
     long_description=long_des,
     long_description_content_type="text/markdown",
     install_requires=["configparser"],

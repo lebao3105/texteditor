@@ -1,14 +1,13 @@
 # Import modules
 import os
 from tkinter import *
-import tkinter.ttk as ttk
 from texteditor import tabs
 import texteditor
-from texteditor.extensions import autosave, finding, cmd
+from texteditor.extensions import autosave, cmd, finding
 from texteditor.miscs import (
     file_operations,
     get_config,
-    textwidget,
+    textwidget
 )
 
 
@@ -40,7 +39,7 @@ class MainWindow(Tk):
         self.geometry("810x610")
 
         self.place_menu()
-        self.place_widgets()
+        self.notebook = tabs.TabsViewer(self)
         self.add_event()
         # self.autosv.start() # Test
 
@@ -134,33 +133,11 @@ class MainWindow(Tk):
             label=self._("Wrap (by word)"),
             command=lambda: textwidget.TextWidget.wrapmode(self),
             variable=self.wrapbtn,
+            accelerator="Ctrl+W"
         )
         self.menu_bar.add_cascade(label=self._("Config"), menu=self.config_menu)
         # Add menu to the application
         self.config(menu=self.menu_bar)
-
-    def place_widgets(self):
-        # Create a notebook and add a tab on it
-        self.notebook = ttk.Notebook(self)
-        tabs.add_tab(self)
-        self.notebook.pack(expand=True, fill="both")
-        # Close & New tab right-click menu for tabs
-        self.tab_right_click = Menu(self.notebook, tearoff=0)
-        self.tab_right_click.add_command(
-            label=self._("New tab"), command=lambda: tabs.add_tab(self)
-        )
-        self.tab_right_click.add_command(
-            label=self._("Close the current opening tab"),
-            accelerator="Ctrl+W",
-            command=lambda: tabs.tabs_close(self),
-        )
-        self.notebook.bind(
-            "<Button-3><ButtonRelease-3>",
-            lambda event: self.tab_right_click.post(event.x_root, event.y_root),
-        )
-        self.notebook.bind(
-            "<<NotebookTabChanged>>", lambda event: tabs.on_tab_changed(self, event)
-        )
 
     # Binding commands to the application
     def add_event(self):
@@ -200,7 +177,7 @@ class MainWindow(Tk):
 
     def opencfg(self, event=None):
         tabs.add_tab(self)
-        file_operations.openfilename(self, get_config.file)
+        file_operations.openfilename(self, texteditor.functions.file)
 
     def change_color(self, event=None):
         """Change theme color of the application. Restart the entrie application is needed."""
@@ -220,3 +197,6 @@ class MainWindow(Tk):
             self.text_editor.configure(wrap="word")
             self.wrapbtn.set(True)
             print("Enabled wrapping on the text widget.")
+    
+    def add_tab(self, event=None):
+        return self.notebook.add_tab()
