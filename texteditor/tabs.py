@@ -1,7 +1,9 @@
 """This module adds tab to the tkinter.Notebook widget.
 It also handles what's happening in the child widget of the tab (tkinter.Text)...
 """
+from genericpath import isfile
 import gettext
+from hashlib import md5
 from tkinter import Frame, Tk, Menu
 from tkinter.ttk import Notebook
 from texteditor.miscs import constants, file_operations, textwidget
@@ -33,7 +35,7 @@ class TabsViewer(Notebook):
         right_click_menu.add_command(
             label=_("Close the current opening tab"),
             accelerator="Ctrl+I",
-            command=lambda: self.close_tab(self)
+            command=lambda: self.close_tab()
         )
         self.bind(
             "<Button-3><ButtonRelease-3>",
@@ -66,11 +68,12 @@ class TabsViewer(Notebook):
         self.parent.title(self.titletext)
     
     def close_tab(self):
+        # TODO: Check for the file content (also for mainwindow close event)
         tabnum = self.index("end")
         if tabnum == 1:
             # Close the window if there are no other tabs
-            # TODO: Handle what's next
             print(_("No other tab(s) here, trying to close the window..."))
+            self.parent.destroy()
         else:
             self.forget(self.select())
     

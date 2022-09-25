@@ -30,18 +30,16 @@ class MainWindow(Tk):
         else:
             self.lb = "dark"
 
-        # Whetever we still need a booleanvar
         self.wrapbtn = BooleanVar()
         self.wrapbtn.set(True)
         self.autosv = autosave.AutoSave(self)
+        tabs.TabsViewer(self)
 
         self.title(self._("Text editor"))
         self.geometry("810x610")
 
         self.place_menu()
-        self.notebook = tabs.TabsViewer(self)
         self.add_event()
-        # self.autosv.start() # Test
 
     def place_menu(self):
         # Menu bar
@@ -164,13 +162,13 @@ class MainWindow(Tk):
             check = get_config.GetConfig.reset()
             if not check:
                 msgbox.showerror(
-                    "Error occured!",
-                    "Unable to reset configuration file: Backed up default variables not found",
+                    self._("Error occured!"),
+                    self._("Unable to reset configuration file: Backed up default variables not found"),
                 )
             else:
                 msgbox.showinfo(
-                    "Completed",
-                    "Completed resetting texteditor configurations.\nRestart the application to take effect.",
+                    self._("Completed"),
+                    self._("Completed resetting texteditor configurations.\nRestart the application to take effect."),
                 )
                 self.lb == "dark"
                 self.config_menu.entryconfig(2, "Toggle %c mode" % self.lb)
