@@ -2,11 +2,10 @@
 po/*/*/*.po~
 # msgfmt outputs
 po/*/*/*.mo
-# No vscode configurations
-.vscode/
 # Test
 test.py
 test.*
+*.log
 # Some directories
 texteditor/texteditor.egg*/
 texteditor.egg-info/

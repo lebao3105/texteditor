@@ -4,11 +4,7 @@ from tkinter import *
 from texteditor import tabs
 import texteditor
 from texteditor.extensions import autosave, cmd, finding
-from texteditor.miscs import (
-    file_operations,
-    get_config,
-    textwidget
-)
+from texteditor.miscs import file_operations, get_config, textwidget
 
 
 class MainWindow(Tk):
@@ -131,7 +127,7 @@ class MainWindow(Tk):
             label=self._("Wrap (by word)"),
             command=lambda: textwidget.TextWidget.wrapmode(self),
             variable=self.wrapbtn,
-            accelerator="Ctrl+W"
+            accelerator="Ctrl+W",
         )
         self.menu_bar.add_cascade(label=self._("Config"), menu=self.config_menu)
         # Add menu to the application
@@ -163,12 +159,16 @@ class MainWindow(Tk):
             if not check:
                 msgbox.showerror(
                     self._("Error occured!"),
-                    self._("Unable to reset configuration file: Backed up default variables not found"),
+                    self._(
+                        "Unable to reset configuration file: Backed up default variables not found"
+                    ),
                 )
             else:
                 msgbox.showinfo(
                     self._("Completed"),
-                    self._("Completed resetting texteditor configurations.\nRestart the application to take effect."),
+                    self._(
+                        "Completed resetting texteditor configurations.\nRestart the application to take effect."
+                    ),
                 )
                 self.lb == "dark"
                 self.config_menu.entryconfig(2, "Toggle %c mode" % self.lb)
@@ -195,6 +195,6 @@ class MainWindow(Tk):
             self.text_editor.configure(wrap="word")
             self.wrapbtn.set(True)
             print("Enabled wrapping on the text widget.")
-    
+
     def add_tab(self, event=None):
         return self.notebook.add_tab()
