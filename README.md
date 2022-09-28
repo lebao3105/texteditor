@@ -1,4 +1,6 @@
 ## Texteditor
+[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)]
+(https://github.com/psf/black)
 <div align="center">
     <img src="texteditor/icons/texteditor.png">
     <img src="texteditor/icons/texteditor.Devel.png">

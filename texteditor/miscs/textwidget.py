@@ -47,7 +47,9 @@ class TextWidget(Text):
             )
 
         # Do some customization
-        self.configure(wrap="word") # This is enabled by the default in this application
+        self.configure(
+            wrap="word"
+        )  # This is enabled by the default in this application
         get_config.GetConfig.configure(self)
 
     # Place scrollbars

@@ -123,9 +123,7 @@ class GetConfig:
                 try:
                     widget.configure(fg=fg2, bg=constants.DARK_BG)
                 except:
-                    widget.configure(
-                        foreground=fg2, background=constants.DARK_BG
-                    )
+                    widget.configure(foreground=fg2, background=constants.DARK_BG)
             if font_type and font_size is not None:
                 widget.configure(font=(font_type, int(font_size)))
 
@@ -194,7 +192,7 @@ class GetConfig:
                     )
                     isshown = True
                 font_type = "Consolas"
-        
+
         return font_type, font_size
 
     @staticmethod
