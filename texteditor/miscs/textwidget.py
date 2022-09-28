@@ -1,6 +1,6 @@
 import tkinter.ttk as ttk
 import gettext
-from tkinter import BooleanVar, Menu, Text, messagebox, font
+from tkinter import BooleanVar, Menu, Text
 from texteditor.miscs import file_operations, get_config
 
 _ = gettext.gettext
@@ -47,42 +47,8 @@ class TextWidget(Text):
             )
 
         # Do some customization
-        self.set_font()
-        self.configure(wrap="word")
+        self.configure(wrap="word") # This is enabled by the default in this application
         get_config.GetConfig.configure(self)
-
-    # TODO: Move this to get_config
-    def set_font(self):
-        # Get values
-        font_type = get_config.GetConfig.getvalue("global", "font")
-        font_size = get_config.GetConfig.getvalue("global", "font_size")
-
-        if not int(font_size):
-            messagebox.showwarning(
-                "Warning",
-                "Wrong font size defined on the configuration file - the program will use font size 14.",
-            )
-            font_size = "14"
-        elif int(font_size) <= 11:
-            messagebox.showwarning(
-                "Warning", "The defined font size is smaller (or equal) than 10."
-            )
-
-        font_families = font.families()
-        if font_type == "default":
-            font_type = "Consolas"
-        else:
-            if font_type not in font_families:
-                if (
-                    not isshown
-                ):  # To prevent the application from showing the message box after open a new tab
-                    messagebox.showwarning(
-                        message="Wrong font type in the configuration file."
-                    )
-                    isshown = True
-                font_type = "Consolas"
-
-        self.configure(font=(font_type, int(font_size)))
 
     # Place scrollbars
     def __place_scrollbar(self):
@@ -176,3 +142,7 @@ class TextWidget(Text):
         else:
             self.text_editor.configure(wrap="none")
             print("Disabled wrapping on the text widget.")
+
+class CustomStatusBar:
+    def __init__(self, parent:TextWidget|Text):
+        pass
