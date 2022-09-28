@@ -1,4 +1,4 @@
-from tkinter import messagebox
+from tkinter import font, messagebox
 from . import constants
 import os
 import configparser
@@ -118,13 +118,16 @@ class GetConfig:
         class_name = GetConfig.checkclass(widget)
         if class_name:
             fg2, colormode = GetConfig._checkcolor(GetConfig, widget)
+            font_type, font_size = GetConfig._checkfont(GetConfig)
             if colormode == "dark":
                 try:
-                    return widget.configure(fg=fg2, bg=constants.DARK_BG)
+                    widget.configure(fg=fg2, bg=constants.DARK_BG)
                 except:
-                    return widget.configure(
+                    widget.configure(
                         foreground=fg2, background=constants.DARK_BG
                     )
+            if font_type and font_size is not None:
+                widget.configure(font=(font_type, int(font_size)))
 
     @staticmethod
     def change_config(section: str, option: str, value: str | int, event=None):
@@ -161,6 +164,38 @@ class GetConfig:
             if GetConfig.checkclass(widget) == "Text":
                 widget.configure(insertbackground=constants.DARK_BG)
             return fg2, "light"
+
+    def _checkfont(self):
+        # Get values
+        font_type = self.getvalue("global", "font")
+        font_size = self.getvalue("global", "font_size")
+
+        if not int(font_size):
+            messagebox.showwarning(
+                "Warning",
+                "Wrong font size defined on the configuration file - the program will use font size 14.",
+            )
+            font_size = "14"
+        elif int(font_size) <= 11:
+            messagebox.showwarning(
+                "Warning", "The defined font size is smaller (or equal) than 10."
+            )
+
+        font_families = font.families()
+        if font_type == "default":
+            font_type = "Consolas"
+        else:
+            if font_type not in font_families:
+                if (
+                    not isshown
+                ):  # To prevent the application from showing the message box after open a new tab
+                    messagebox.showwarning(
+                        message="Wrong font type in the configuration file."
+                    )
+                    isshown = True
+                font_type = "Consolas"
+        
+        return font_type, font_size
 
     @staticmethod
     def getvalue(section: str, name: str):
