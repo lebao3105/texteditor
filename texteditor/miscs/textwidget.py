@@ -142,7 +142,3 @@ class TextWidget(Text):
         else:
             self.text_editor.configure(wrap="none")
             print("Disabled wrapping on the text widget.")
-
-class CustomStatusBar:
-    def __init__(self, parent:TextWidget|Text):
-        pass
