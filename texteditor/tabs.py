@@ -1,7 +1,6 @@
 """This module adds tab to the tkinter.Notebook widget.
 It also handles what's happening in the child widget of the tab (tkinter.Text)...
 """
-from genericpath import isfile
 import gettext
 from hashlib import md5
 from tkinter import Frame, Tk, Menu
@@ -22,8 +21,8 @@ class TabsViewer(Notebook):
         self.parent = master
         master.notebook = self
 
-        # We must create a new tab first
-        self.add_tab()
+        dummy = Frame()
+        self.add(dummy, text="+")
 
         # Tab name
         self.tabname = self.tab(self.select(), "text")
@@ -43,14 +42,18 @@ class TabsViewer(Notebook):
             "<Button-3><ButtonRelease-3>",
             lambda event: right_click_menu.post(event.x_root, event.y_root),
         )
-        self.bind("<<NotebookTabChanged>>", lambda event: self.tab_changed(event))
+        self.bind("<<NotebookTabChanged>>", self.tab_changed)
         # Place the notebook
         self.pack(expand=True, fill="both")
 
-    def add_tab(self, event=None):
+    def add_tab(self, event=None, idx=None):
+
         # Add a new tab
         textframe = Frame(self)
-        self.add(textframe, text=newtab_name)
+        if idx is not None:
+            self.insert(idx, textframe, text=newtab_name)
+        else:
+            self.add(textframe, text=newtab_name)
 
         # Add contents
         self.parent.text_editor = textwidget.TextWidget(
@@ -81,6 +84,8 @@ class TabsViewer(Notebook):
         else:
             self.forget(self.select())
 
-    def tab_changed(self, event):
+    def tab_changed(self, event=None):
+        if self.select() == self.tabs()[-1]:
+            self.add_tab(idx=(len(self.tabs())-1))
         tabname = event.widget.tab("current")["text"]
         self.parent.title(_("Text Editor") + " - " + tabname)
