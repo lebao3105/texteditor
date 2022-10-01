@@ -13,7 +13,7 @@ setup(
     license="GPL v3",
     long_description=long_des,
     long_description_content_type="text/markdown",
-    install_requires=["configparser"],
+    install_requires=["configparser", "darkdetect"],
     entry_points={"gui_scripts": ["texteditor = texteditor:start_app"]},
     include_package_data=True,
     packages=find_packages(),

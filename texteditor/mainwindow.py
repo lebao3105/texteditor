@@ -26,14 +26,21 @@ class MainWindow(Tk):
         else:
             self.lb = "dark"
 
+        # Wrap button
         self.wrapbtn = BooleanVar()
         self.wrapbtn.set(True)
-        self.autosv = autosave.AutoSave(self)
-        tabs.TabsViewer(self)
 
+        # Auto change color
+        self.autocolor = BooleanVar()
+        self.autocolor.set(False)
+
+        # Window title and size
         self.title(self._("Text editor"))
         self.geometry("810x610")
 
+        # Place widgets then handle events
+        self.autosv = autosave.AutoSave(self)
+        tabs.TabsViewer(self)
         self.place_menu()
         self.add_event()
 
@@ -122,6 +129,11 @@ class MainWindow(Tk):
             label=self._("Toggle %s mode") % self.lb,
             command=lambda: self.change_color(self),
         )
+        self.config_menu.add_checkbutton(
+            label=self._("Auto change the color"),
+            command=lambda: self.autocolor_mode(self),
+            variable=self.autocolor,
+        )
         # This should be added to View menu in the future
         self.config_menu.add_checkbutton(
             label=self._("Wrap (by word)"),
@@ -198,3 +210,13 @@ class MainWindow(Tk):
 
     def add_tab(self, event=None):
         return self.notebook.add_tab()
+
+    def autocolor_mode(self, event=None):
+        if self.autocolor.get() is False:
+            get_config.autocolormode = False
+            self.config_menu.entryconfig(2, state="normal")
+            get_config.GetConfig.configure(self.text_editor)
+        else:
+            get_config.autocolormode = True
+            self.config_menu.entryconfig(2, state="disabled")
+            get_config.GetConfig.configure(self.text_editor)

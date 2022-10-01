@@ -3,6 +3,7 @@ from . import constants
 import os
 import configparser
 import platform
+import darkdetect
 
 if platform.system() == "Windows":
     file = os.environ["USERPROFILE"] + "\\.config\\texteditor_configs.ini"
@@ -54,6 +55,7 @@ cfg.read(file)
 bg = cfg.get("global", "color")
 fg = cfg.get("global", "sub_color")
 
+autocolormode = False
 
 # OK, so this class only able to change some configuration? Can we use more?
 class GetConfig:
@@ -115,15 +117,26 @@ class GetConfig:
 
     @staticmethod
     def configure(widget):
-        class_name = GetConfig.checkclass(widget)
-        if class_name:
+        # A separate function to set the color
+        # with the help of darkdetect!
+        def set_color(color=None):
             fg2, colormode = GetConfig._checkcolor(GetConfig, widget)
-            font_type, font_size = GetConfig._checkfont(GetConfig)
+            if color is not None and autocolormode is True:
+                colormode = color
             if colormode == "dark":
                 try:
                     widget.configure(fg=fg2, bg=constants.DARK_BG)
                 except:
                     widget.configure(foreground=fg2, background=constants.DARK_BG)
+
+        class_name = GetConfig.checkclass(widget)
+        if class_name:
+            if autocolormode is False:
+                set_color()
+            else:
+                set_color(str(darkdetect.theme()).lower())
+
+            font_type, font_size = GetConfig._checkfont(GetConfig)
             if font_type and font_size is not None:
                 widget.configure(font=(font_type, int(font_size)))
 
