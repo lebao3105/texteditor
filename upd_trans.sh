@@ -11,7 +11,7 @@ if [[ $1 == "--updated-strings" || $1 == "-upd" ]]; then
 
 elif [[ $1 == "--new-template" || $1 == "-tep" ]]; then
     echo "Generating new .pot file..."
-    xgettext -d base -o po/base.pot texteditor/{main,tabs}.py texteditor/*/*.py
+    xgettext -d base -o po/base.pot texteditor/{mainwindow,tabs}.py texteditor/*/*.py
     for i in $(ls -d po/*/); do
         msgmerge -U ${i%%/}/LC*/base.po po/base.pot
     done
