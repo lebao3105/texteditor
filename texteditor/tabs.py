@@ -1,8 +1,4 @@
-"""This module adds tab to the tkinter.Notebook widget.
-It also handles what's happening in the child widget of the tab (tkinter.Text)...
-"""
 import gettext
-from hashlib import md5
 from tkinter import Frame, Tk, Menu
 from tkinter.ttk import Notebook
 from texteditor.miscs import constants, file_operations, textwidget
@@ -21,6 +17,8 @@ class TabsViewer(Notebook):
         self.parent = master
         master.notebook = self
 
+        # A tab but it's used to add a new tab
+        # Idea from StackOverflow.. I don't know there was something like this
         dummy = Frame()
         self.add(dummy, text="+")
 
@@ -31,7 +29,8 @@ class TabsViewer(Notebook):
         # TODO: Make some function which will add more items to the menu
         right_click_menu = Menu(self, tearoff=0)
         right_click_menu.add_command(
-            label=_("New tab"), command=lambda: self.add_tab(self)
+            label=_("New tab"), command=lambda: self.add_tab(self),
+            accelerator="Ctrl+N"
         )
         right_click_menu.add_command(
             label=_("Close the current opening tab"),
@@ -43,6 +42,7 @@ class TabsViewer(Notebook):
             lambda event: right_click_menu.post(event.x_root, event.y_root),
         )
         self.bind("<<NotebookTabChanged>>", self.tab_changed)
+
         # Place the notebook
         self.pack(expand=True, fill="both")
 
@@ -76,7 +76,7 @@ class TabsViewer(Notebook):
 
     def close_tab(self):
         # TODO: Check for the file content (also for mainwindow close event)
-        tabnum = self.index("end")
+        tabnum = self.index("end") - 1
         if tabnum == 1:
             # Close the window if there are no other tabs
             print(_("No other tab(s) here, trying to close the window..."))
@@ -86,6 +86,6 @@ class TabsViewer(Notebook):
 
     def tab_changed(self, event=None):
         if self.select() == self.tabs()[-1]:
-            self.add_tab(idx=(len(self.tabs())-1))
+            self.add_tab(idx=(len(self.tabs()) - 1))
         tabname = event.widget.tab("current")["text"]
         self.parent.title(_("Text Editor") + " - " + tabname)
