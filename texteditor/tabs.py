@@ -29,8 +29,7 @@ class TabsViewer(Notebook):
         # TODO: Make some function which will add more items to the menu
         right_click_menu = Menu(self, tearoff=0)
         right_click_menu.add_command(
-            label=_("New tab"), command=lambda: self.add_tab(self),
-            accelerator="Ctrl+N"
+            label=_("New tab"), command=lambda: self.add_tab(self), accelerator="Ctrl+N"
         )
         right_click_menu.add_command(
             label=_("Close the current opening tab"),
@@ -61,12 +60,14 @@ class TabsViewer(Notebook):
         )
         self.parent.text_editor.addMenusepr()
         self.parent.text_editor.addMenucmd(
-            label=_("Save"), acc="Ctrl+S", fn=lambda: file_operations.save_file(self)
+            label=_("Save"),
+            acc="Ctrl+S",
+            fn=lambda: file_operations.save_file(self.parent),
         )
         self.parent.text_editor.addMenucmd(
             label=_("Save as"),
             acc="Ctrl+Shift+S",
-            fn=lambda: file_operations.save_as(self),
+            fn=lambda: file_operations.save_as(self.parent),
         )
         self.parent.text_editor.pack(expand=True, fill="both")
 

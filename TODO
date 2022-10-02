@@ -13,7 +13,7 @@
 
 ; 1.5
 * Make themeing easier by make a Preferences window
-* Implement a new notebook - why not?! (= move all texteditor.tabs defs to a class)
+* Implement a new notebook - why not?! (= move all texteditor.tabs defs to a class) (Done-still working more)
 * Zoom in/out?
 
 Other things:

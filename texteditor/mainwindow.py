@@ -186,8 +186,8 @@ class MainWindow(Tk):
                 self.config_menu.entryconfig(2, "Toggle %c mode" % self.lb)
 
     def opencfg(self, event=None):
-        tabs.add_tab(self)
-        file_operations.openfilename(self, texteditor.functions.file)
+        self.notebook.add_tab()
+        file_operations.openfilename(self, get_config.file)
 
     def change_color(self, event=None):
         """Change theme color of the application. Restart the entrie application is needed."""
