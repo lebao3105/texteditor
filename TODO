@@ -10,6 +10,8 @@
 * Better usage of Gettext (Working on?)
 * Open, save file in UTF-8 format or something else like that
 * Maybe a status bar?
+*Autocolor*: Sync the color with the system (working on)
+* Remake get_config configure function to change any configs 
 
 ; 1.5
 * Make themeing easier by make a Preferences window

@@ -40,7 +40,7 @@ class MainWindow(Tk):
 
         # Place widgets then handle events
         self.autosv = autosave.AutoSave(self)
-        tabs.TabsViewer(self)
+        self.notebook = tabs.TabsViewer(self, do_place=True)
         self.place_menu()
         self.add_event()
 
@@ -52,7 +52,7 @@ class MainWindow(Tk):
         addfilecmd = self.file_menu.add_command
         addfilecmd(
             label=self._("New"),
-            command=lambda: tabs.add_tab(self),
+            command=lambda: self.add_tab(self),
             accelerator="Ctrl+N",
         )
         addfilecmd(
@@ -148,7 +148,7 @@ class MainWindow(Tk):
     # Binding commands to the application
     def add_event(self):
         bindcfg = self.bind
-        bindcfg("<Control-n>", lambda event: tabs.add_tab(self))
+        bindcfg("<Control-n>", lambda event: self.add_tab(self))
         if get_config.GetConfig.getvalue("cmd", "isenabled") == "yes":
             bindcfg("<Control-t>", lambda event: cmd.CommandPrompt(self))
         bindcfg("<Control-f>", lambda event: finding.Finder(self, "find"))
@@ -183,10 +183,10 @@ class MainWindow(Tk):
                     ),
                 )
                 self.lb == "dark"
-                self.config_menu.entryconfig(2, "Toggle %c mode" % self.lb)
+                self.config_menu.entryconfig(2, "Toggle %s mode" % self.lb)
 
     def opencfg(self, event=None):
-        self.notebook.add_tab()
+        self.add_tab()
         file_operations.openfilename(self, get_config.file)
 
     def change_color(self, event=None):
@@ -209,7 +209,7 @@ class MainWindow(Tk):
             print("Enabled wrapping on the text widget.")
 
     def add_tab(self, event=None):
-        return self.notebook.add_tab()
+        return self.notebook.add_tab(idx="default")
 
     def autocolor_mode(self, event=None):
         if self.autocolor.get() is False:

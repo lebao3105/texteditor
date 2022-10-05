@@ -1,3 +1,4 @@
+import threading
 from tkinter import font, messagebox
 from . import constants
 import os
@@ -119,10 +120,10 @@ class GetConfig:
     def configure(widget):
         # A separate function to set the color
         # with the help of darkdetect!
-        def set_color(color=None):
+        def set_color(color:str=None):
             fg2, colormode = GetConfig._checkcolor(GetConfig, widget)
             if color is not None and autocolormode is True:
-                colormode = color
+                colormode = color.lower()
             if colormode == "dark":
                 try:
                     widget.configure(fg=fg2, bg=constants.DARK_BG)
@@ -134,7 +135,11 @@ class GetConfig:
             if autocolormode is False:
                 set_color()
             else:
-                set_color(str(darkdetect.theme()).lower())
+                # Automatically changes the theme if  
+                # the system theme is CHANGED
+                t = threading.Thread(target=darkdetect.listener, args=(set_color,))
+                t.daemon = True
+                t.start()
 
             font_type, font_size = GetConfig._checkfont(GetConfig)
             if font_type and font_size is not None:

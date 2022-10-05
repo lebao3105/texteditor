@@ -10,12 +10,13 @@ newtab_name = _(constants.UNTITLED)
 
 
 class TabsViewer(Notebook):
-    """A configured Tkinter Notebook with a simple right-click menu."""
+    """A configured Tkinter Notebook with a simple right-click menu.
+    It is used with TextWidget (in add_tab), so you should modify
+    that function, if needed."""
 
-    def __init__(self, master: Frame | Tk, **kw):
+    def __init__(self, master: Frame | Tk, do_place: bool, **kw):
         super().__init__(master, **kw)
         self.parent = master
-        master.notebook = self
 
         # A tab but it's used to add a new tab
         # Idea from StackOverflow.. I don't know there was something like this
@@ -42,15 +43,18 @@ class TabsViewer(Notebook):
         )
         self.bind("<<NotebookTabChanged>>", self.tab_changed)
 
-        # Place the notebook
-        self.pack(expand=True, fill="both")
+        # Place the notebook, if you want
+        if do_place is True:
+            self.pack(expand=True, fill="both")
 
     def add_tab(self, event=None, idx=None):
 
         # Add a new tab
         textframe = Frame(self)
-        if idx is not None:
+        if isinstance(idx, int):
             self.insert(idx, textframe, text=newtab_name)
+        elif idx == "default":
+            self.insert(len(self.tabs()) - 1, textframe, text=newtab_name)
         else:
             self.add(textframe, text=newtab_name)
 
