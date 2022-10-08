@@ -1,10 +1,11 @@
 import threading
-from tkinter import font, messagebox
+from tkinter import BooleanVar, TclError, font, messagebox
 from . import constants
 import os
 import configparser
-import platform
 import darkdetect
+import sv_ttk
+import platform
 
 if platform.system() == "Windows":
     file = os.environ["USERPROFILE"] + "\\.config\\texteditor_configs.ini"
@@ -36,7 +37,7 @@ cfg["popups"] = {
 cfg["cmd"] = {"defconsole": defconsole, "isenabled": "yes"}
 
 # New: Auto-save files
-cfg["filemgr"] = {"autosave": "yes", "autosave-time": "30"}  # in minutes
+cfg["filemgr"] = {"autosave": "yes", "autosave-time": "5"}  # in minutes
 
 # File write/backup
 with open(backup, "w") as f2:
@@ -75,9 +76,9 @@ class GetConfig:
 
         if action != None or "":
             if action == "config":
-                self.configure(parent)
+                GetConfig.configure(parent)
             elif action == "reset":
-                self.reset()
+                GetConfig.reset()
 
     @staticmethod
     def reset():
@@ -120,26 +121,37 @@ class GetConfig:
     def configure(widget):
         # A separate function to set the color
         # with the help of darkdetect!
-        def set_color(color:str=None):
+        def set_color(color: str = None):
             fg2, colormode = GetConfig._checkcolor(GetConfig, widget)
-            if color is not None and autocolormode is True:
-                colormode = color.lower()
-            if colormode == "dark":
+            if autocolormode is True:
+                if color is not None:
+                    colormode = color.lower()
+                else:
+                    colormode = darkdetect.theme()
+            if colormode is not None:
+                sv_ttk.set_theme(colormode)
                 try:
-                    widget.configure(fg=fg2, bg=constants.DARK_BG)
-                except:
-                    widget.configure(foreground=fg2, background=constants.DARK_BG)
+                    widget.configure(bg=constants.DARK_BG)
+                except TclError:
+                    widget.config(background=constants.DARK_BG)
+            try:
+                widget.configure(fg=fg2)
+            except TclError:
+                widget.configure(foreground=fg2)
+            except TclError:
+                return
 
         class_name = GetConfig.checkclass(widget)
         if class_name:
             if autocolormode is False:
                 set_color()
             else:
-                # Automatically changes the theme if  
+                # Automatically changes the theme if
                 # the system theme is CHANGED
                 t = threading.Thread(target=darkdetect.listener, args=(set_color,))
                 t.daemon = True
                 t.start()
+                set_color(str(darkdetect.theme()))
 
             font_type, font_size = GetConfig._checkfont(GetConfig)
             if font_type and font_size is not None:
@@ -221,3 +233,35 @@ class GetConfig:
             raise Exception("%s->%s not found" % section, name)
         else:
             return cfg.get(section, name)
+
+
+class AutoColor:
+    """Changes the foreground and background
+    of Tkinter objects automatically"""
+
+    def __init__(self, widget, variable: bool | BooleanVar):
+        if isinstance(variable, bool):
+            self.isenabled = variable
+        elif isinstance(variable, BooleanVar):
+            self.isenabled = variable.get()
+
+        self.variable = variable
+
+    def switch(self, state=bool):
+        """Turn on or off the AutoColor module."""
+        self.isenabled = state
+        if isinstance(self.variable, bool):
+            self.variable = state
+        elif isinstance(self.variable, BooleanVar):
+            self.variable.set(state)
+
+        if self.isenabled is True:
+            print("Turned on AutoColor Module.")
+        else:
+            print("Turned off AutoColor Module.")
+
+    def switchcolor(self):
+        if sv_ttk.use_dark_theme:
+            sv_ttk.set_theme("light")
+        else:
+            sv_ttk.set_theme("dark")
