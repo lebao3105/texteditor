@@ -3,5 +3,6 @@ py_inst.install_sources(
     'autosave.py',
     'cmd.py',
     'finding.py',
+    pure:false,
     subdir: 'texteditor/extensions'
 )

@@ -3,6 +3,7 @@ py_inst.install_sources(
     '__main__.py',
     'mainwindow.py',
     'tabs.py',
+    pure: false,
     subdir: 'texteditor/'
 )
 
