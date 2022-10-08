@@ -1,6 +1,7 @@
+from turtle import update
 from ..miscs import get_config, file_operations
-from tkinter.ttk import Combobox, Button
-from tkinter import Label, Toplevel, StringVar
+from tkinter.ttk import Checkbutton, Combobox, Button
+from tkinter import BooleanVar, Label, Toplevel, StringVar
 import tkinter.messagebox as msb
 
 # Minutes to seconds
@@ -41,12 +42,6 @@ class AutoSave:
             else:
                 print("Error: Autosave is disabled on user configuration file")
 
-        if self.useTime == float(self.savetime):
-            print(
-                "Note: Autosave time used in AutoSave class = autosave-time in user configuration file"
-            )
-            pass
-
         if (self.useTime or float(self.savetime)) > MIN_30:  # 30 minutes
             print("Error: Auto save time is higher than 30 minutes")
 
@@ -57,11 +52,14 @@ class AutoSave:
         # Note: I want to use auto save to all tabs (aka files open in texteditor)
         # but now I only can do this to opening tab only.
         askwin = Toplevel(self.parent)
-        askwin.geometry("350x200")
+        self.askwin = askwin
+        askwin.geometry("400x230")
         askwin.title("Autosave configuration")
         askwin.resizable(False, False)
 
         selected_time = StringVar()
+        updatest = BooleanVar()
+
         label = Label(
             askwin,
             text="Select autosave time (minutes)\nAutosave function will be launched after a time.",
@@ -74,15 +72,25 @@ class AutoSave:
         cb["values"] = [0.5, 1, 2, 5, 10, 15, 20, 30]
         cb["state"] = "readonly"
 
+        checkbtn = Checkbutton(
+            askwin,
+            text="Save this value",
+            variable=updatest,
+            onvalue=True,
+            offvalue=False,
+        )
         okbtn = Button(
-            askwin, text="OK", command=lambda: self.okbtn_clicked(selected_time)
+            askwin,
+            text="OK",
+            command=lambda: self.okbtn_clicked(selected_time, updatest),
         )
         cancelbtn = Button(askwin, text="Cancel", command=lambda: askwin.destroy())
 
         label.pack(fill="x")
         cb.pack(fill="x", padx=15, pady=15)
+        checkbtn.pack(fill="x")
         okbtn.pack(padx=30)
-        cancelbtn.pack(padx=25)
+        cancelbtn.pack(padx=40)
         label2.pack(fill="x")
 
         # The new get_config isn't available for TopLevel now
@@ -92,8 +100,9 @@ class AutoSave:
         get_config.GetConfig(label2, "config")
         get_config.GetConfig(cb, "config")
 
-    def okbtn_clicked(self, selected_time, event=None):
+    def okbtn_clicked(self, selected_time, up_st, event=None):
         tm = selected_time.get()
+        st = up_st.get()
         if tm == 0.5:
             self.config(MIN_05)
         elif tm == 1:
@@ -112,6 +121,11 @@ class AutoSave:
             self.config(MIN_30)
         else:
             return
+        if st is True:
+            get_config.GetConfig.change_config(
+                "filemgr", "autosave-time", str(self.useTime)
+            )
+        self.askwin.destroy()
         self.start()
 
     def config(self, useTime, event=None):
