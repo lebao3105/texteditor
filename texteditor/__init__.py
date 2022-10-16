@@ -34,7 +34,7 @@ def start_app(argv: sys.argv = None):
             showinfo(message="File not found : %s" % str(argv[1]))
         for i in range(2, n):
             if isfile(argv[i]):
-                texteditor.tabs.add_tab(root)
+                root.add_tab()
                 file_operations.openfilename(root, argv[i])
             else:
                 showinfo(message="File not found : %s" % str(argv[i]))
