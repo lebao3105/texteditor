@@ -23,6 +23,7 @@ cfg = configparser.ConfigParser()
 cfg["global"] = {
     "color": "light",
     "sub_color": "default",
+    "autocolor": "yes",
     "font": "default",
     "font_size": "12",
 }
@@ -38,6 +39,8 @@ cfg["cmd"] = {"defconsole": defconsole, "isenabled": "yes"}
 
 # New: Auto-save files
 cfg["filemgr"] = {"autosave": "yes", "autosave-time": "5"}  # in minutes
+
+cfg["versioning"] = {"version": "1.4", "branch": "dev"}
 
 # File write/backup
 with open(backup, "w") as f2:
@@ -119,43 +122,14 @@ class GetConfig:
 
     @staticmethod
     def configure(widget):
-        # A separate function to set the color
-        # with the help of darkdetect!
-        def set_color(color: str = None):
-            fg2, colormode = GetConfig._checkcolor(GetConfig, widget)
-            if autocolormode is True:
-                if color is not None:
-                    colormode = color.lower()
-                else:
-                    colormode = darkdetect.theme()
-            if colormode is not None:
-                sv_ttk.set_theme(colormode)
-                try:
-                    widget.configure(bg=constants.DARK_BG)
-                except TclError:
-                    widget.config(background=constants.DARK_BG)
-            try:
-                widget.configure(fg=fg2)
-            except TclError:
-                widget.configure(foreground=fg2)
-            except TclError:
-                return
-
-        class_name = GetConfig.checkclass(widget)
-        if class_name:
-            if autocolormode is False:
-                set_color()
-            else:
-                # Automatically changes the theme if
-                # the system theme is CHANGED
-                t = threading.Thread(target=darkdetect.listener, args=(set_color,))
-                t.daemon = True
-                t.start()
-                set_color(str(darkdetect.theme()))
-
-            font_type, font_size = GetConfig._checkfont(GetConfig)
-            if font_type and font_size is not None:
-                widget.configure(font=(font_type, int(font_size)))
+        classname = GetConfig.checkclass(widget)
+        colormger = AutoColor(widget)
+        if classname is not False:
+            if classname not in ["Tk", "Frame", "TopLevel"]:
+                font_type, font_size = GetConfig._checkfont(GetConfig)
+                if font_type and font_size is not None:
+                    widget.configure(font=(font_type, int(font_size)))
+            colormger.changecolor()
 
     @staticmethod
     def change_config(section: str, option: str, value: str | int, event=None):
@@ -173,25 +147,6 @@ class GetConfig:
         finally:
             print("Changed texteditor configuration.")
             return True
-
-    def _checkcolor(self, widget):
-        if bg == "dark":
-            if fg == "default":
-                fg2 = constants.LIGHT_BG
-            elif fg == "Green":
-                fg2 = constants.GREEN_TEXT
-            elif fg == "Red":
-                fg2 = constants.RED_TEXT
-            else:
-                fg2 = constants.LIGHT_BG
-            if GetConfig.checkclass(widget) == "Text":
-                widget.configure(insertbackground=constants.LIGHT_BG)
-            return fg2, "dark"
-        else:
-            fg2 = constants.LIGHT_BG
-            if GetConfig.checkclass(widget) == "Text":
-                widget.configure(insertbackground=constants.DARK_BG)
-            return fg2, "light"
 
     def _checkfont(self):
         # Get values
@@ -236,32 +191,70 @@ class GetConfig:
 
 
 class AutoColor:
-    """Changes the foreground and background
-    of Tkinter objects automatically"""
+    """The color manager for texteditor."""
 
-    def __init__(self, widget, variable: bool | BooleanVar):
-        if isinstance(variable, bool):
-            self.isenabled = variable
-        elif isinstance(variable, BooleanVar):
-            self.isenabled = variable.get()
+    def __init__(self, parent):
+        super().__init__()
+        self.parent = parent
+        self.autocolor = GetConfig.getvalue("global", "autocolor")
+        self.start = autocolormode
+        self.bg = GetConfig.getvalue("global", "color")
+        self.fg = GetConfig.getvalue("global", "sub_color")
+        self.colors = {"dark": constants.DARK_BG, "light": constants.LIGHT_BG}
+        if self.bg == "default":
+            self.bg = "light"
+        if self.fg == "default":
+            self.fg = constants.LIGHT_BG
 
-        self.variable = variable
-
-    def switch(self, state=bool):
-        """Turn on or off the AutoColor module."""
-        self.isenabled = state
-        if isinstance(self.variable, bool):
-            self.variable = state
-        elif isinstance(self.variable, BooleanVar):
-            self.variable.set(state)
-
-        if self.isenabled is True:
-            print("Turned on AutoColor Module.")
+    def startasync(self):
+        if self.start is True:
+            return
         else:
-            print("Turned off AutoColor Module.")
+            self.start = True
 
-    def switchcolor(self):
-        if sv_ttk.use_dark_theme:
-            sv_ttk.set_theme("light")
+    def changecolor(self):
+        if self.start is True:
+            self.startasync()
+            # Automatically changes the theme if
+            # the system theme is CHANGED
+            t = threading.Thread(target=darkdetect.listener, args=(setcolor,))
+            t.daemon = True
+            t.start()
+            self.setcolor(darkdetect.theme())
+            # return
         else:
-            sv_ttk.set_theme("dark")
+            self.setcolor()
+
+    def setcolor(self, color: str = None):
+        fg = self.__checkcolor(str(darkdetect.theme()).lower())
+        if color is not None:
+            sv_ttk.set_theme(color)
+        else:
+            if self.autocolor == "yes":
+                sv_ttk.set_theme(str(darkdetect.theme()).lower())
+            else:
+                theme = self.bg
+                fg = self.fg
+                sv_ttk.set_theme(theme)
+
+        # Set the foreground
+        try:
+            self.parent.configure(fg=fg)
+        except TclError:
+            self.parent.configure(foreground=fg)
+        except TclError:
+            return
+
+    def __checkcolor(self, bg):
+        if bg == "dark":
+            if fg == "default":
+                fg2 = constants.LIGHT_BG
+            elif fg == "Green":
+                fg2 = constants.GREEN_TEXT
+            elif fg == "Red":
+                fg2 = constants.RED_TEXT
+            else:
+                fg2 = constants.LIGHT_BG
+        else:
+            fg2 = constants.LIGHT_BG
+        return fg2
