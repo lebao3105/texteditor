@@ -85,7 +85,8 @@ class cmd(textwidget.TextWidget):
                 threading.Thread(target=lambda: self.runcommand("start " + cmd)).start()
             else:
                 threading.Thread(target=lambda: self.runcommand(cmd)).start()
-
+        elif command.startswith("cd "):
+            append("end", _("You cannot use cd in this environment."))
         else:
             rec_thread = threading.Thread(target=lambda: self.runcommand(command))
             rec_thread.start()
