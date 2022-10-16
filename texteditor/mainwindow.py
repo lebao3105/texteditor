@@ -1,7 +1,6 @@
 # Import modules
 import os
 from tkinter import *
-from tkinter import messagebox
 from texteditor import tabs
 import texteditor
 from texteditor.extensions import autosave, cmd, finding
@@ -196,10 +195,7 @@ class MainWindow(Tk):
             get_config.GetConfig.change_config("global", "color", self.lb)
         finally:
             self.config_menu.delete(2)
-            messagebox.showinfo(
-                "Restart required",
-                "The application theme is changed. Please restart this app to take effect.",
-            )
+            get_config.GetConfig.configure(self.text_editor)
 
     # Set wrap mode (keyboard shortcut)
     # It is different from the textwidget's default function. A lot.
