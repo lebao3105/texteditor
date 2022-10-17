@@ -5,6 +5,7 @@ from texteditor import tabs
 import texteditor
 from texteditor.extensions import autosave, cmd, finding
 from texteditor.miscs import file_operations, get_config, textwidget
+from texteditor.views import about
 
 
 class MainWindow(Tk):
@@ -142,6 +143,10 @@ class MainWindow(Tk):
             accelerator="Ctrl+W",
         )
         self.menu_bar.add_cascade(label=self._("Config"), menu=self.config_menu)
+        ## Help
+        self.help_menu = Menu(self.menu_bar, tearoff=0)
+        self.help_menu.add_command(label=self._("About"), command=self.aboutdlg)
+        self.menu_bar.add_cascade(label=self._("Help"), menu=self.help_menu)
         # Add menu to the application
         self.config(menu=self.menu_bar)
 
@@ -163,8 +168,8 @@ class MainWindow(Tk):
         import tkinter.messagebox as msgbox
 
         message = msgbox.askyesno(
-            "Warning",
-            "This will reset ALL configurations you have ever made. Continue?",
+            self._("Warning"),
+            self._("This will reset ALL configurations you have ever made. Continue?"),
         )
         if message:
             check = get_config.GetConfig.reset()
@@ -175,6 +180,7 @@ class MainWindow(Tk):
                         "Unable to reset configuration file: Backed up default variables not found"
                     ),
                 )
+                return
             else:
                 msgbox.showinfo(
                     self._("Completed"),
@@ -182,20 +188,21 @@ class MainWindow(Tk):
                         "Completed resetting texteditor configurations.\nRestart the application to take effect."
                     ),
                 )
-                self.lb == "dark"
-                self.config_menu.entryconfig(2, "Toggle %s mode" % self.lb)
+                self.setcolorvar()
 
     def opencfg(self, event=None):
         self.add_tab()
         file_operations.openfilename(self, get_config.file)
 
+    def aboutdlg(self, event=None):
+        about.AboutDialog(self).run()
+
     def change_color(self, event=None):
-        """Change theme color of the application. Restart the entrie application is needed."""
         try:
             get_config.GetConfig.change_config("global", "color", self.lb)
         finally:
-            self.config_menu.delete(2)
             get_config.GetConfig.configure(self.text_editor)
+            self.setcolorvar()
 
     # Set wrap mode (keyboard shortcut)
     # It is different from the textwidget's default function. A lot.
@@ -215,9 +222,22 @@ class MainWindow(Tk):
     def autocolor_mode(self, event=None):
         if self.autocolor.get() is False:
             get_config.autocolormode = False
-            self.config_menu.entryconfig(2, state="normal")
             get_config.GetConfig.configure(self.text_editor)
+            tel = False
         else:
             get_config.autocolormode = True
-            self.config_menu.entryconfig(2, state="disabled")
             get_config.GetConfig.configure(self.text_editor)
+            tel = True
+        self.setcolorvar()
+        if tel is True:
+            self.config_menu.entryconfig(2, state="disabled")
+        else:
+            self.config_menu.entryconfig(2, state="normal")
+
+    def setcolorvar(self):
+        theme = get_config.sv_ttk.get_theme()
+        if theme == "dark":
+            self.lb = "light"
+        else:
+            self.lb = "dark"
+        self.config_menu.entryconfig(2, label="Toggle %s mode" % self.lb)

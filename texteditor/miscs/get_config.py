@@ -106,7 +106,7 @@ class GetConfig:
     def checkclass(widget):
         wind = ["Tk", "Frame", "TopLevel"]
         text = ["Label", "Text"]
-        ttk_widgets = ["TCombobox"]
+        ttk_widgets = ["TCombobox", "Button"]
 
         # Combine 3 arrays together
         for it in text:
@@ -115,17 +115,19 @@ class GetConfig:
             wind.append(it2)
 
         class_name = widget.winfo_class()
-        if class_name in wind or cfg.sections():
+        if class_name in (wind or cfg.sections()):
             return class_name
         else:
             return False
 
     @staticmethod
     def configure(widget):
+        """Configures the selected widget.
+        This function is used for texteditor with _checkfont, please make your own function."""
         classname = GetConfig.checkclass(widget)
         colormger = AutoColor(widget)
         if classname is not False:
-            if classname not in ["Tk", "Frame", "TopLevel"]:
+            if classname not in ["Tk", "Frame", "TopLevel", "Button"]:
                 font_type, font_size = GetConfig._checkfont(GetConfig)
                 if font_type and font_size is not None:
                     widget.configure(font=(font_type, int(font_size)))
@@ -217,7 +219,7 @@ class AutoColor:
             self.startasync()
             # Automatically changes the theme if
             # the system theme is CHANGED
-            t = threading.Thread(target=darkdetect.listener, args=(setcolor,))
+            t = threading.Thread(target=darkdetect.listener, args=(self.setcolor,))
             t.daemon = True
             t.start()
             self.setcolor(darkdetect.theme())
@@ -228,7 +230,7 @@ class AutoColor:
     def setcolor(self, color: str = None):
         fg = self.__checkcolor(str(darkdetect.theme()).lower())
         if color is not None:
-            sv_ttk.set_theme(color)
+            sv_ttk.set_theme(color.lower())
         else:
             if self.autocolor == "yes":
                 sv_ttk.set_theme(str(darkdetect.theme()).lower())
