@@ -1,0 +1,42 @@
+<?xml version='1.0' encoding='utf-8'?>
+<interface version="1.3">
+  <object class="tk.Toplevel" id="aboutdlg" named="True">
+    <property name="resizable">none</property>
+    <property name="title" translatable="yes">About this app</property>
+    <child>
+      <object class="ttk.Label" id="label1">
+        <property name="text" translatable="yes">Text Editor</property>
+        <layout manager="pack">
+          <property name="side">top</property>
+        </layout>
+      </object>
+    </child>
+    <child>
+      <object class="ttk.Label" id="label2">
+        <property name="text" translatable="yes">Version 1.4-Dev</property>
+        <layout manager="pack">
+          <property name="side">top</property>
+        </layout>
+      </object>
+    </child>
+    <child>
+      <object class="ttk.Label" id="label3">
+        <property name="text" translatable="yes">A small, lightweight and customizable text editor.</property>
+        <layout manager="pack">
+          <property name="expand">false</property>
+          <property name="side">top</property>
+        </layout>
+      </object>
+    </child>
+    <child>
+      <object class="ttk.Button" id="btn_ok">
+        <property name="command" type="command" cbtype="simple">quit</property>
+        <property name="text" translatable="yes">OK</property>
+        <layout manager="pack">
+          <property name="expand">false</property>
+          <property name="side">bottom</property>
+        </layout>
+      </object>
+    </child>
+  </object>
+</interface>
