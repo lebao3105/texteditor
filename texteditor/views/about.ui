@@ -4,6 +4,22 @@
     <property name="resizable">none</property>
     <property name="title" translatable="yes">About this app</property>
     <child>
+      <object class="ttk.Label" id="img0">
+        <property name="image">texteditor.png</property>
+        <layout manager="pack">
+          <property name="side">top</property>
+        </layout>
+      </object>
+    </child>
+    <child>
+      <object class="ttk.Label" id="img1">
+        <property name="image">texteditor.Devel.png</property>
+        <layout manager="pack">
+          <property name="side">top</property>
+        </layout>
+      </object>
+    </child>
+    <child>
       <object class="ttk.Label" id="label1">
         <property name="text" translatable="yes">Text Editor</property>
         <layout manager="pack">

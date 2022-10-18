@@ -6,3 +6,4 @@ extensions/finding.py
 miscs/file_operations.py
 miscs/get_config.py
 miscs/textwidget.py
+views/about.ui
