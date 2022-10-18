@@ -195,7 +195,7 @@ class MainWindow(Tk):
         file_operations.openfilename(self, get_config.file)
 
     def aboutdlg(self, event=None):
-        about.AboutDialog(self).run()
+        about.AboutDialog().run()
 
     def change_color(self, event=None):
         try:

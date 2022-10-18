@@ -144,3 +144,16 @@ class TextWidget(Text):
         else:
             self.text_editor.configure(wrap="none")
             print("Disabled wrapping on the text widget.")
+
+
+def add_statusbar(textw, root):
+    def keypress(event=None):
+        row, col = textw.index("insert").split(".")
+        label.config(text="Line %s : Col %s" % (str(row), str(col)))
+
+    frame = ttk.Frame(root)
+    frame.pack(side="bottom", fill="x")
+    label = ttk.Label(frame)
+    label.pack(side="right")
+    textw.bind("<KeyRelease>", keypress)
+    keypress()

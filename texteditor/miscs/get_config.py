@@ -202,11 +202,11 @@ class AutoColor:
         self.start = autocolormode
         self.bg = GetConfig.getvalue("global", "color")
         self.fg = GetConfig.getvalue("global", "sub_color")
-        self.colors = {"dark": constants.DARK_BG, "light": constants.LIGHT_BG}
+        self.colors = {"dark": str(constants.DARK_BG), "light": str(constants.LIGHT_BG)}
         if self.bg == "default":
             self.bg = "light"
         if self.fg == "default":
-            self.fg = constants.LIGHT_BG
+            self.fg = "dark"
 
     def startasync(self):
         if self.start is True:
@@ -236,7 +236,7 @@ class AutoColor:
                 sv_ttk.set_theme(str(darkdetect.theme()).lower())
             else:
                 theme = self.bg
-                fg = self.fg
+                fg = self.colors[self.fg]
                 sv_ttk.set_theme(theme)
 
         # Set the foreground

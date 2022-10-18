@@ -10,10 +10,6 @@ newtab_name = _(constants.UNTITLED)
 
 
 class TabsViewer(Notebook):
-    """A configured Tkinter Notebook with a simple right-click menu.
-    It is used with TextWidget (in add_tab), so you should modify
-    that function, if needed."""
-
     def __init__(self, master: Frame | Tk, do_place: bool, **kw):
         super().__init__(master, **kw)
         self.parent = master
@@ -76,6 +72,8 @@ class TabsViewer(Notebook):
         self.parent.text_editor.pack(expand=True, fill="both")
 
         self.select(textframe)
+        self.parent.text_editor.focus()
+        textwidget.add_statusbar(self.parent.text_editor, self.parent)
         self.titletext = window_title + newtab_name
         self.parent.title(self.titletext)
 
@@ -93,4 +91,7 @@ class TabsViewer(Notebook):
         if self.select() == self.tabs()[-1]:
             self.add_tab(idx=(len(self.tabs()) - 1))
         tabname = event.widget.tab("current")["text"]
+        # Check if the tab name is + (new tab button)
+        if tabname == "+":
+            self.add_tab(idx=(len(self.tabs()) - 1))  # Will this work?
         self.parent.title(_("Text Editor") + " - " + tabname)
