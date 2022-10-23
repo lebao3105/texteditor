@@ -1,1 +1,1 @@
-i18n.gettext('base')
+i18n.gettext('me.lebao3105.texteditor')

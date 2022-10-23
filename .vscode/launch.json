@@ -4,20 +4,20 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "name": "Run texteditor with no other arguments",
+            "type": "python",
+            "request": "launch",
+            "module": "texteditor",
+            "console": "internalConsole",
+            "justMyCode": true
+        },
+        {
             "name": "Run texteditor to open README.md",
             "type": "python",
             "request": "launch",
             "module": "texteditor",
             "console": "internalConsole",
             "args": ["README.md"],
-            "justMyCode": true
-        },
-        {
-            "name": "Run texteditor with no other arguments",
-            "type": "python",
-            "request": "launch",
-            "module": "texteditor",
-            "console": "internalConsole",
             "justMyCode": true
         }
     ]

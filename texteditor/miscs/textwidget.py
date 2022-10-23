@@ -3,9 +3,6 @@ import gettext
 from tkinter import BooleanVar, Menu, Text
 from texteditor.miscs import file_operations, get_config
 
-_ = gettext.gettext
-
-
 class TextWidget(Text):
     """Tkinter Text widget with scrollbars & right-click menu placed by default.\n
     Configurations for the menu:\n
@@ -20,6 +17,7 @@ class TextWidget(Text):
     def __init__(
         self,
         parent,
+        _ = None,
         useMenu: bool = None,
         useUnRedo: bool = None,
         addWrap: bool = None,
@@ -38,6 +36,11 @@ class TextWidget(Text):
             self.useUnRedo = useUnRedo
         if addWrap != None:
             self.useWrap = addWrap
+
+        if _ is None:
+            self._ = gettext.gettext
+        else:
+            self._ = _
 
         if self.enableMenu == True:
             self.RMenu = Menu(self, tearoff=0)
@@ -66,24 +69,24 @@ class TextWidget(Text):
         addcmd = self.RMenu.add_command
         root = self.master
         addcmd(
-            label=_("Cut"),
+            label=self._("Cut"),
             accelerator="Ctrl+X",
             command=lambda: root.event_generate("<Control-x>"),
         )
         addcmd(
-            label=_("Copy"),
+            label=self._("Copy"),
             accelerator="Ctrl+C",
             command=lambda: root.event_generate("<Control-c>"),
         )
         addcmd(
-            label=_("Paste"),
+            label=self._("Paste"),
             accelerator="Ctrl+V",
             command=lambda: root.event_generate("<Control-v>"),
         )
         if self.useWrap == True:
             self.RMenu.add_separator()
             self.RMenu.add_checkbutton(
-                label=_("Wrap (by word)"),
+                label=self._("Wrap (by word)"),
                 accelerator="Ctrl+W",
                 command=lambda: self.wrapmode(self),
                 variable=self.wrapbtn,
@@ -91,12 +94,12 @@ class TextWidget(Text):
         if self.useUnRedo == True:
             self.RMenu.add_separator()
             addcmd(
-                label=_("Undo"),
+                label=self._("Undo"),
                 accelerator="Ctrl+Z",
                 command=lambda: root.event_generate("<Control-z>"),
             )
             addcmd(
-                label=_("Redo"),
+                label=self._("Redo"),
                 accelerator="Ctrl+Y",
                 command=lambda: root.event_generate("<Control-y>"),
             )
@@ -146,14 +149,16 @@ class TextWidget(Text):
             print("Disabled wrapping on the text widget.")
 
 
-def add_statusbar(textw, root):
+def add_statusbar(textw) -> bool:
     def keypress(event=None):
         row, col = textw.index("insert").split(".")
-        label.config(text="Line %s : Col %s" % (str(row), str(col)))
+        textw.label.config(text="Line %s : Col %s" % (str(row), str(col)))
 
-    frame = ttk.Frame(root)
+    frame = ttk.Frame(textw)
     frame.pack(side="bottom", fill="x")
-    label = ttk.Label(frame)
-    label.pack(side="right")
+    textw.label = ttk.Label(frame)
+    textw.label.pack(side="right")
     textw.bind("<KeyRelease>", keypress)
     keypress()
+
+    return True

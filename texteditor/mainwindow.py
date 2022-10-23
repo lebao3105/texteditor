@@ -1,23 +1,46 @@
 # Import modules
 import os
+import pygubu
 from tkinter import *
-from texteditor import tabs
+
 import texteditor
-from texteditor.extensions import autosave, cmd, finding
-from texteditor.miscs import file_operations, get_config, textwidget
-from texteditor.views import about
+from .tabs import TabsViewer
+from .extensions import autosave, cmd, finding
+from .miscs import file_operations, get_config, textwidget
+from .views import about
 
 
 class MainWindow(Tk):
     """The main application class."""
 
-    def __init__(self, **kwargs):
+    def __init__(self, _=None, **kwargs):
         super().__init__(**kwargs)
-        self._ = texteditor._
+
+        if _ == None:
+            self._ = texteditor._
+        else:
+            self._ = _
+        
+        # Configure ALL menu items callbacks
+        self.callbacks = {
+            'openfile': lambda: file_operations.open_file(self),
+            'add_tab': lambda: self.add_tab(),
+            'savefile': lambda: file_operations.save_file(self),
+            'savefileas': lambda: file_operations.save_as(self),
+            'gofind': lambda: finding.Finder(self, "find"),
+            'goreplace': lambda: finding.Finder(self, ""),
+            'destroy': lambda: self.destroy(),
+            'opencfg': lambda: self.opencfg(),
+            'resetcfg': lambda: self.resetcfg(),
+            'change_color': lambda: self.change_color(),
+            'autocolor_mode': lambda: self.autocolor_mode(),
+            'set_wrap': lambda: textwidget.TextWidget.wrapmode(self),
+            'aboutdlg': lambda: self.aboutdlg()
+        }
 
         # Set icon
         if os.path.isfile(texteditor.icon):
-            self.iconphoto(False, PhotoImage(file=texteditor.icon))
+            self.wm_iconphoto(False, PhotoImage(file=texteditor.icon))
         else:
             print("Warning: Application icon", texteditor.icon, "not found!")
 
@@ -30,62 +53,35 @@ class MainWindow(Tk):
         # Wrap button
         self.wrapbtn = BooleanVar()
         self.wrapbtn.set(True)
-
         # Auto change color
-        self.autocolor = BooleanVar()
-        self.autocolor.set(False)
+        self.autocolor = BooleanVar
+        self.wrapbtn.set(False)
 
         # Window title and size
         self.title(self._("Text editor"))
         self.geometry("810x610")
 
         # Place widgets then handle events
-        self.autosv = autosave.AutoSave(self)
-        self.notebook = tabs.TabsViewer(self, do_place=True)
-        self.place_menu()
+        self.autosv = autosave.AutoSave(self, self._)
+        self.load_ui()
         self.add_event()
 
-    def place_menu(self):
-        # Menu bar
-        self.menu_bar = Menu(self)
-        ## File
-        self.file_menu = Menu(self.menu_bar, tearoff=0)
-        addfilecmd = self.file_menu.add_command
-        addfilecmd(
-            label=self._("New"),
-            command=lambda: self.add_tab(self),
-            accelerator="Ctrl+N",
-        )
-        addfilecmd(
-            label=self._("Open"),
-            command=lambda: file_operations.open_file(self),
-            accelerator="Ctrl+O",
-        )
-        addfilecmd(
-            label=self._("Save"),
-            command=lambda: file_operations.save_file(self),
-            accelerator="Ctrl+S",
-        )
-        addfilecmd(
-            label=self._("Save as"),
-            command=lambda: file_operations.save_as(self),
-            accelerator="Ctrl+Shift+S",
-        )
-        self.file_menu.add_separator()
-        addfilecmd(label=self._("Exit"), accelerator="Alt+F4")
-        self.menu_bar.add_cascade(label=self._("File"), menu=self.file_menu)
-
-        ## Edit
-        self.edit_menu = Menu(self.menu_bar, tearoff=0)
-        addeditcmd = self.edit_menu.add_command
-        addeditcmd(label=self._("Undo"), accelerator="Ctrl+Z")
-        addeditcmd(label=self._("Redo"), accelerator="Ctrl+Y")
-        self.edit_menu.add_separator()
-        addeditcmd(label=self._("Cut"), accelerator="Ctrl+X")
-        addeditcmd(label=self._("Copy"), accelerator="Ctrl+C")
-        addeditcmd(label=self._("Paste"), accelerator="Ctrl+V")
-        self.edit_menu.add_separator()
-        addeditcmd(label=self._("Select all"), accelerator="Ctrl+A")
+    def load_ui(self):
+        """Loads the "menu bar" defined from a .ui file,
+        then place other widgets."""
+        viewsdir = texteditor.currdir / "views"
+        builder = pygubu.Builder(self._)
+        # Load the menu bar
+        builder.add_resource_path(texteditor.currdir)
+        builder.add_resource_path(viewsdir)
+        builder.add_from_file(viewsdir / "menubar.ui")
+        builder.import_variables(self, ["autocolor", "wrapbtn"])
+        # Get objects
+        self.fm = builder.get_object("fm", self)
+        self.menu2 = builder.get_object("menu2", self)
+        self.menu3 = builder.get_object("menu3", self)
+        # Add menu items
+        addeditcmd = self.menu2.add_command
         if get_config.GetConfig.getvalue("filemgr", "autosave") == "yes":
             addeditcmd(
                 label=self._("Autosave"),
@@ -93,62 +89,18 @@ class MainWindow(Tk):
             )
 
         if get_config.GetConfig.getvalue("cmd", "isenabled") == "yes":
-            self.edit_menu.add_separator()
+            self.menu2.add_separator()
             addeditcmd(
                 label=self._("Open System Shell"),
                 command=lambda: cmd.CommandPrompt(self),
                 accelerator="Ctrl+T",
             )
-
-        self.menu_bar.add_cascade(label=self._("Editing"), menu=self.edit_menu)
-
-        ## Find & Replace
-        self.find_menu = Menu(self.menu_bar, tearoff=0)
-        addfindcmd = self.find_menu.add_command
-        addfindcmd(
-            label=self._("Find"),
-            command=lambda: finding.Finder(self, "find"),
-            accelerator="Ctrl+F",
-        )
-        addfindcmd(
-            label=self._("Replace"),
-            command=lambda: finding.Finder(self, ""),
-            accelerator="Ctrl+R",
-        )
-        self.menu_bar.add_cascade(label=self._("Find"), menu=self.find_menu)
-
-        ## Config
-        self.config_menu = Menu(self.menu_bar, tearoff=0)
-        addcfgcmd = self.config_menu.add_command
-        addcfgcmd(
-            label=self._("Open configuration file"), command=lambda: self.opencfg(self)
-        )
-        addcfgcmd(
-            label=self._("Reset configurations"), command=lambda: self.resetcfg(self)
-        )
-        addcfgcmd(
-            label=self._("Toggle %s mode") % self.lb,
-            command=lambda: self.change_color(self),
-        )
-        self.config_menu.add_checkbutton(
-            label=self._("Auto change the color"),
-            command=lambda: self.autocolor_mode(self),
-            variable=self.autocolor,
-        )
-        # This should be added to View menu in the future
-        self.config_menu.add_checkbutton(
-            label=self._("Wrap (by word)"),
-            command=lambda: textwidget.TextWidget.wrapmode(self),
-            variable=self.wrapbtn,
-            accelerator="Ctrl+W",
-        )
-        self.menu_bar.add_cascade(label=self._("Config"), menu=self.config_menu)
-        ## Help
-        self.help_menu = Menu(self.menu_bar, tearoff=0)
-        self.help_menu.add_command(label=self._("About"), command=self.aboutdlg)
-        self.menu_bar.add_cascade(label=self._("Help"), menu=self.help_menu)
-        # Add menu to the application
-        self.config(menu=self.menu_bar)
+        self.menu3.entryconfig(2, label=self._("Toggle %s mode") % self.lb)
+        # Do stuff
+        self.fm.rowconfigure(0, weight=1)
+        self.fm.columnconfigure(0, weight=1)
+        self.notebook = TabsViewer(self, do_place=True)
+        builder.connect_callbacks(self.callbacks)
 
     # Binding commands to the application
     def add_event(self):
@@ -198,11 +150,9 @@ class MainWindow(Tk):
         about.AboutDialog().run()
 
     def change_color(self, event=None):
-        try:
-            get_config.GetConfig.change_config("global", "color", self.lb)
-        finally:
-            get_config.GetConfig.configure(self.text_editor)
-            self.setcolorvar()
+        get_config.GetConfig.change_config("global", "color", self.lb)
+        get_config.GetConfig.configure(self.text_editor)
+        self.setcolorvar()
 
     # Set wrap mode (keyboard shortcut)
     # It is different from the textwidget's default function. A lot.
@@ -222,6 +172,7 @@ class MainWindow(Tk):
     def autocolor_mode(self, event=None):
         if self.autocolor.get() is False:
             get_config.autocolormode = False
+            get_config.AutoColor.stopasync()
             get_config.GetConfig.configure(self.text_editor)
             tel = False
         else:
@@ -230,9 +181,9 @@ class MainWindow(Tk):
             tel = True
         self.setcolorvar()
         if tel is True:
-            self.config_menu.entryconfig(2, state="disabled")
+            self.menu3.entryconfig(2, state="disabled")
         else:
-            self.config_menu.entryconfig(2, state="normal")
+            self.menu3.entryconfig(2, state="normal")
 
     def setcolorvar(self):
         theme = get_config.sv_ttk.get_theme()
@@ -240,4 +191,4 @@ class MainWindow(Tk):
             self.lb = "light"
         else:
             self.lb = "dark"
-        self.config_menu.entryconfig(2, label="Toggle %s mode" % self.lb)
+        self.menu3.entryconfig(2, label="Toggle %s mode" % self.lb)

@@ -123,7 +123,8 @@ class GetConfig:
     @staticmethod
     def configure(widget):
         """Configures the selected widget.
-        This function is used for texteditor with _checkfont, please make your own function."""
+        This function is used for texteditor with
+        _checkfont, so please make your own function."""
         classname = GetConfig.checkclass(widget)
         colormger = AutoColor(widget)
         if classname is not False:
@@ -202,7 +203,7 @@ class AutoColor:
         self.start = autocolormode
         self.bg = GetConfig.getvalue("global", "color")
         self.fg = GetConfig.getvalue("global", "sub_color")
-        self.colors = {"dark": str(constants.DARK_BG), "light": str(constants.LIGHT_BG)}
+        self.colors = {"light": str(constants.DARK_BG), "dark": str(constants.LIGHT_BG)}
         if self.bg == "default":
             self.bg = "light"
         if self.fg == "default":
@@ -210,19 +211,24 @@ class AutoColor:
 
     def startasync(self):
         if self.start is True:
+            # Automatically changes the theme if
+            # the system theme is CHANGED
+            self.t = threading.Thread(target=darkdetect.listener, args=(self.setcolor,))
+            self.t.daemon = True
+            self.t.start()
+            self.setcolor(darkdetect.theme())
             return
         else:
             self.start = True
+    
+    @staticmethod
+    def stopasync():
+        if AutoColor.t:
+            del AutoColor.t
 
     def changecolor(self):
         if self.start is True:
             self.startasync()
-            # Automatically changes the theme if
-            # the system theme is CHANGED
-            t = threading.Thread(target=darkdetect.listener, args=(self.setcolor,))
-            t.daemon = True
-            t.start()
-            self.setcolor(darkdetect.theme())
             # return
         else:
             self.setcolor()

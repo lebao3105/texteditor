@@ -1,8 +1,8 @@
-from turtle import update
 from ..miscs import get_config, file_operations
 from tkinter.ttk import Checkbutton, Combobox, Button
 from tkinter import BooleanVar, Label, Toplevel, StringVar
 import tkinter.messagebox as msb
+import gettext
 
 # Minutes to seconds
 MIN_05 = 30  # 30 secs
@@ -27,9 +27,12 @@ class AutoSave:
     forceEnable: bool = False
     useTime: float = float(get_config.GetConfig.getvalue("filemgr", "autosave-time"))
 
-    def __init__(self, master):
+    def __init__(self, master, _=None):
         super().__init__()
-
+        if _ is None:
+            self._ = gettext.gettext
+        else:
+            self._ = _
         self.autosave = get_config.GetConfig.getvalue("filemgr", "autosave")
         self.savetime = get_config.GetConfig.getvalue("filemgr", "autosave-time")
         self._do_check()

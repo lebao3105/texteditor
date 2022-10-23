@@ -21,5 +21,9 @@ if not py_inst.language_version().version_compare('>= 3.7')
     error('Only Python 3.7 and higher is supported.')
 endif
 
+prefix = get_option('prefix')
+localedir = join_paths(prefix, get_option('localedir'))
+moduledir = py_inst.get_install_dir(subdir: 'texteditor')
+
 subdir('po')
 subdir('texteditor')

@@ -4,6 +4,5 @@ py_inst.install_sources(
     'file_operations.py',
     'get_config.py',
     'textwidget.py',
-    pure: false,
     subdir: 'texteditor/miscs'
 )

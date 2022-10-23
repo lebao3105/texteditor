@@ -7,7 +7,14 @@ import files
 setup(
     windows=[{"script": "__main__.py"}],
     options={
-        "py2exe": {"optimize": 2, "includes": ["os", "configparser"], "bundle_files": 1}
+        "py2exe": {
+            "optimize": 2,
+            "includes": [
+                "os", "configparser",
+                "pathlib", "sv_ttk", "darkdetect"
+            ],
+            "bundle_files": 1
+        }
     },
     data_files=[("icons", glob.glob(r"icons/*.png"))],
     packages=find_packages(),

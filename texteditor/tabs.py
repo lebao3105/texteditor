@@ -1,17 +1,16 @@
 import gettext
-from tkinter import Frame, Tk, Menu
+from tkinter import Frame, Menu
 from tkinter.ttk import Notebook
 from texteditor.miscs import constants, file_operations, textwidget
 
-_ = gettext.gettext
-
-window_title = _("Text Editor") + " - "
-newtab_name = _(constants.UNTITLED)
-
-
 class TabsViewer(Notebook):
-    def __init__(self, master: Frame | Tk, do_place: bool, **kw):
+    def __init__(self, master, do_place: bool, _ =None, **kw):
         super().__init__(master, **kw)
+        if _ is None:
+            self._ = gettext.gettext
+        else:
+            self._ = _
+            
         self.parent = master
 
         # A tab but it's used to add a new tab
@@ -26,11 +25,10 @@ class TabsViewer(Notebook):
         # TODO: Make some function which will add more items to the menu
         right_click_menu = Menu(self, tearoff=0)
         right_click_menu.add_command(
-            label=_("New tab"), command=lambda: self.add_tab(self), accelerator="Ctrl+N"
+            label=self._("New tab"), command=lambda: self.add_tab(self), accelerator="Ctrl+N"
         )
         right_click_menu.add_command(
-            label=_("Close the current opening tab"),
-            accelerator="Ctrl+I",
+            label=self._("Close the current opening tab"),
             command=lambda: self.close_tab(),
         )
         self.bind(
@@ -44,6 +42,8 @@ class TabsViewer(Notebook):
             self.pack(expand=True, fill="both")
 
     def add_tab(self, event=None, idx=None):
+        window_title = self._("Text Editor") + " - "
+        newtab_name = self._(constants.UNTITLED)
 
         # Add a new tab
         textframe = Frame(self)
@@ -60,29 +60,32 @@ class TabsViewer(Notebook):
         )
         self.parent.text_editor.addMenusepr()
         self.parent.text_editor.addMenucmd(
-            label=_("Save"),
+            label=self._("Save"),
             acc="Ctrl+S",
             fn=lambda: file_operations.save_file(self.parent),
         )
         self.parent.text_editor.addMenucmd(
-            label=_("Save as"),
+            label=self._("Save as"),
             acc="Ctrl+Shift+S",
             fn=lambda: file_operations.save_as(self.parent),
         )
         self.parent.text_editor.pack(expand=True, fill="both")
+        textwidget.add_statusbar(self.parent.text_editor)
 
+        # Post setup
         self.select(textframe)
         self.parent.text_editor.focus()
-        textwidget.add_statusbar(self.parent.text_editor, self.parent)
-        self.titletext = window_title + newtab_name
-        self.parent.title(self.titletext)
+
+        if self.parent.winfo_class() == "Tk":
+            self.titletext = window_title + newtab_name
+            self.parent.title(self.titletext)
 
     def close_tab(self):
         # TODO: Check for the file content (also for mainwindow close event)
         tabnum = self.index("end") - 1
         if tabnum == 1:
             # Close the window if there are no other tabs
-            print(_("No other tab(s) here, trying to close the window..."))
+            print(self._("No other tab(s) here, trying to close the window..."))
             self.parent.destroy()
         else:
             self.forget(self.select())
@@ -94,4 +97,5 @@ class TabsViewer(Notebook):
         # Check if the tab name is + (new tab button)
         if tabname == "+":
             self.add_tab(idx=(len(self.tabs()) - 1))  # Will this work?
-        self.parent.title(_("Text Editor") + " - " + tabname)
+        if self.parent.winfo_class() == "Tk":
+            self.parent.title(self._("Text Editor") + " - " + tabname)
