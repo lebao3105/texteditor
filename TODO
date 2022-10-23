@@ -1,17 +1,17 @@
 # These are features that I really want to use it.
 # They should be implemented in newer releases.
 ; 1.3
-* Autosave (Working on)
+* Autosave (Initially completed)
 * Use po/ in Python package (Completed)
-* Custom title bar?! (I think I shouldn't do it...so I cancelled it)
+* Custom title bar?! (I think I shouldn't do it...so I canceled it)
 * Fix icon path defined on texteditor.mainwindow (Done)
 
 ; 1.4
 * Better usage of Gettext (Working on?)
 * Open, save file in UTF-8 format or something else like that
-* Maybe a status bar?
-*Autocolor*: Sync the color with the system (working on)
-* Remake get_config configure function to change any configs 
+* Maybe a status bar? (Working on)
+* *Autocolor*: Sync the color with the system (working on)
+* Remake get_config configure function to change any configs (canceled)
 
 ; 1.5
 * Make themeing easier by make a Preferences window
