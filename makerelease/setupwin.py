@@ -9,11 +9,8 @@ setup(
     options={
         "py2exe": {
             "optimize": 2,
-            "includes": [
-                "os", "configparser",
-                "pathlib", "sv_ttk", "darkdetect"
-            ],
-            "bundle_files": 1
+            "includes": ["os", "configparser", "pathlib", "sv_ttk", "darkdetect"],
+            "bundle_files": 1,
         }
     },
     data_files=[("icons", glob.glob(r"icons/*.png"))],

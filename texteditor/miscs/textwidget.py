@@ -3,6 +3,7 @@ import gettext
 from tkinter import BooleanVar, Menu, Text
 from texteditor.miscs import file_operations, get_config
 
+
 class TextWidget(Text):
     """Tkinter Text widget with scrollbars & right-click menu placed by default.\n
     Configurations for the menu:\n
@@ -17,7 +18,7 @@ class TextWidget(Text):
     def __init__(
         self,
         parent,
-        _ = None,
+        _=None,
         useMenu: bool = None,
         useUnRedo: bool = None,
         addWrap: bool = None,

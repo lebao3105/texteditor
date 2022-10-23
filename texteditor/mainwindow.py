@@ -20,22 +20,22 @@ class MainWindow(Tk):
             self._ = texteditor._
         else:
             self._ = _
-        
+
         # Configure ALL menu items callbacks
         self.callbacks = {
-            'openfile': lambda: file_operations.open_file(self),
-            'add_tab': lambda: self.add_tab(),
-            'savefile': lambda: file_operations.save_file(self),
-            'savefileas': lambda: file_operations.save_as(self),
-            'gofind': lambda: finding.Finder(self, "find"),
-            'goreplace': lambda: finding.Finder(self, ""),
-            'destroy': lambda: self.destroy(),
-            'opencfg': lambda: self.opencfg(),
-            'resetcfg': lambda: self.resetcfg(),
-            'change_color': lambda: self.change_color(),
-            'autocolor_mode': lambda: self.autocolor_mode(),
-            'set_wrap': lambda: textwidget.TextWidget.wrapmode(self),
-            'aboutdlg': lambda: self.aboutdlg()
+            "openfile": lambda: file_operations.open_file(self),
+            "add_tab": lambda: self.add_tab(),
+            "savefile": lambda: file_operations.save_file(self),
+            "savefileas": lambda: file_operations.save_as(self),
+            "gofind": lambda: finding.Finder(self, "find"),
+            "goreplace": lambda: finding.Finder(self, ""),
+            "destroy": lambda: self.destroy(),
+            "opencfg": lambda: self.opencfg(),
+            "resetcfg": lambda: self.resetcfg(),
+            "change_color": lambda: self.change_color(),
+            "autocolor_mode": lambda: self.autocolor_mode(),
+            "set_wrap": lambda: textwidget.TextWidget.wrapmode(self),
+            "aboutdlg": lambda: self.aboutdlg(),
         }
 
         # Set icon

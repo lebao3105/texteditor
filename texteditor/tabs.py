@@ -3,14 +3,15 @@ from tkinter import Frame, Menu
 from tkinter.ttk import Notebook
 from texteditor.miscs import constants, file_operations, textwidget
 
+
 class TabsViewer(Notebook):
-    def __init__(self, master, do_place: bool, _ =None, **kw):
+    def __init__(self, master, do_place: bool, _=None, **kw):
         super().__init__(master, **kw)
         if _ is None:
             self._ = gettext.gettext
         else:
             self._ = _
-            
+
         self.parent = master
 
         # A tab but it's used to add a new tab
@@ -25,7 +26,9 @@ class TabsViewer(Notebook):
         # TODO: Make some function which will add more items to the menu
         right_click_menu = Menu(self, tearoff=0)
         right_click_menu.add_command(
-            label=self._("New tab"), command=lambda: self.add_tab(self), accelerator="Ctrl+N"
+            label=self._("New tab"),
+            command=lambda: self.add_tab(self),
+            accelerator="Ctrl+N",
         )
         right_click_menu.add_command(
             label=self._("Close the current opening tab"),

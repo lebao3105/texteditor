@@ -220,7 +220,7 @@ class AutoColor:
             return
         else:
             self.start = True
-    
+
     @staticmethod
     def stopasync():
         if AutoColor.t:
