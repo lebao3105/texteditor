@@ -8,8 +8,9 @@ PROJECT_PATH = pathlib.Path(__file__).parent
 PROJECT_UI = PROJECT_PATH / "about.ui"
 
 
-class AboutDialog:
-    def __init__(self, master=None, translator=None):
+class AboutDialog(Toplevel):
+    def __init__(self, master, translator=None):
+        super().__init__(master=master)
         builder = pygubu.Builder(translator)
 
         # Call both the project folder and
@@ -19,11 +20,10 @@ class AboutDialog:
         # Load the UI layout
         builder.add_from_file(PROJECT_UI)
 
-        self.mainwindow = builder.get_object("aboutdlg", master)
-        label1 = builder.get_object("label1", master)
-        label2 = builder.get_object("label2", master)
-        label3 = builder.get_object("label3", master)
-        btn_ok = builder.get_object("btn_ok", master)
+        label1 = builder.get_object("label1", self)
+        label2 = builder.get_object("label2", self)
+        label3 = builder.get_object("label3", self)
+        btn_ok = builder.get_object("btn_ok", self)
 
         get_config.GetConfig(label1, "config")
         get_config.GetConfig(label2, "config")
@@ -31,10 +31,10 @@ class AboutDialog:
         get_config.GetConfig(btn_ok, "config")
 
         label1.configure(font=(label1["font"], 17))
-        builder.connect_callbacks(master)
+        builder.connect_callbacks(self)
 
     def run(self):
-        self.mainwindow.mainloop()
+        self.mainloop()
 
     def quit(self, event=None):
-        self.mainwindow.destroy()
+        self.destroy()

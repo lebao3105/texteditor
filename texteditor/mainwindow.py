@@ -147,7 +147,7 @@ class MainWindow(Tk):
         file_operations.openfilename(self, get_config.file)
 
     def aboutdlg(self, event=None):
-        about.AboutDialog().run()
+        return about.AboutDialog(self).run()
 
     def change_color(self, event=None):
         get_config.GetConfig.change_config("global", "color", self.lb)

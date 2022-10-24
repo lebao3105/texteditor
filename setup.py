@@ -7,7 +7,7 @@ long_des = (currdir / "README.md").read_text(encoding="utf8")
 setup(
     name="texteditor",
     author="Le Bao Nguyen",
-    version="1.4-dev",
+    version="1.4a",
     url="https://github.com/lebao3105/texteditor",
     description="A Tkinter text editor",
     long_description=long_des,
@@ -16,7 +16,7 @@ setup(
     entry_points={"gui_scripts": ["texteditor = texteditor:start_app"]},
     include_package_data=True,
     packages=find_packages(),
-    package_data={"texteditor": ["icons/*.png", "../po/*/LC_MESSAGES/*.mo"]},
+    package_data={"texteditor": ["icons/*.png", "../po/*/LC_MESSAGES/*.mo", "views/*.ui"]},
     classifiers=[
         "Development Status :: 5 - Production/Stable",
         "Intended Audience :: End Users/Desktop",
