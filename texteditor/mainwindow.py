@@ -6,7 +6,7 @@ from tkinter import *
 import texteditor
 from .tabs import TabsViewer
 from .extensions import autosave, cmd, finding
-from .miscs import file_operations, get_config, textwidget
+from .backend import file_operations, get_config, textwidget
 from .views import about
 
 
@@ -54,7 +54,7 @@ class MainWindow(Tk):
         self.wrapbtn = BooleanVar()
         self.wrapbtn.set(True)
         # Auto change color
-        self.autocolor = BooleanVar
+        self.autocolor = BooleanVar()
         self.wrapbtn.set(False)
 
         # Window title and size
@@ -99,7 +99,7 @@ class MainWindow(Tk):
         # Do stuff
         self.fm.rowconfigure(0, weight=1)
         self.fm.columnconfigure(0, weight=1)
-        self.notebook = TabsViewer(self, do_place=True)
+        self.notebook = TabsViewer(self, _=self._, do_place=True)
         builder.connect_callbacks(self.callbacks)
 
     # Binding commands to the application

@@ -7,7 +7,7 @@ from tkinter.messagebox import showinfo
 
 import texteditor
 from . import mainwindow
-from .miscs import file_operations, constants
+from .backend import file_operations, constants
 
 currdir = pathlib.Path(__file__).parent
 

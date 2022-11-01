@@ -2,7 +2,7 @@ import pathlib
 import pygubu
 import texteditor
 from tkinter import *
-from texteditor.miscs import get_config
+from texteditor.backend import get_config
 
 PROJECT_PATH = pathlib.Path(__file__).parent
 PROJECT_UI = PROJECT_PATH / "about.ui"

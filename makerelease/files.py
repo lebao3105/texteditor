@@ -2,7 +2,7 @@ import sys
 from os.path import isfile, dirname, abspath
 
 sys.path.append(dirname(dirname(abspath(__file__))))
-from texteditor.miscs import constants
+from texteditor.backend import constants
 
 # These are __init__.py files in the source code.
 # Without they we can't import any file(s)

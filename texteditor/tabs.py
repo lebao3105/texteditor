@@ -1,7 +1,7 @@
 import gettext
 from tkinter import Frame, Menu
 from tkinter.ttk import Notebook
-from texteditor.miscs import constants, file_operations, textwidget
+from texteditor.backend import constants, file_operations, textwidget
 
 
 class TabsViewer(Notebook):
@@ -27,12 +27,12 @@ class TabsViewer(Notebook):
         right_click_menu = Menu(self, tearoff=0)
         right_click_menu.add_command(
             label=self._("New tab"),
-            command=lambda: self.add_tab(self),
+            command=lambda: self.add_tab(idx="default"),
             accelerator="Ctrl+N",
         )
         right_click_menu.add_command(
             label=self._("Close the current opening tab"),
-            command=lambda: self.close_tab(),
+            command=lambda: self.close_tab(self),
         )
         self.bind(
             "<Button-3><ButtonRelease-3>",
@@ -83,13 +83,14 @@ class TabsViewer(Notebook):
             self.titletext = window_title + newtab_name
             self.parent.title(self.titletext)
 
-    def close_tab(self):
+    def close_tab(self, event=None):
         # TODO: Check for the file content (also for mainwindow close event)
-        tabnum = self.index("end") - 1
+        # TODO-CRITICAL: This function won't work if the first tab is not selected
+        tabnum = int(self.index("end")) - 1
         if tabnum == 1:
-            # Close the window if there are no other tabs
-            print(self._("No other tab(s) here, trying to close the window..."))
-            self.parent.destroy()
+            print(self._("No other tabs left, exiting..."))
+            if self.parent.winfo_class() == "Tk":
+                self.parent.destroy()
         else:
             self.forget(self.select())
 

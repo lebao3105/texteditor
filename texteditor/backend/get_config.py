@@ -38,7 +38,7 @@ cfg["popups"] = {
 cfg["cmd"] = {"defconsole": defconsole, "isenabled": "yes"}
 
 # New: Auto-save files
-cfg["filemgr"] = {"autosave": "yes", "autosave-time": "5"}  # in minutes
+cfg["filemgr"] = {"autosave": "yes", "autosave-time": "150"}  # in seconds
 
 cfg["versioning"] = {"version": "1.4", "branch": "dev"}
 
@@ -95,9 +95,10 @@ class GetConfig:
             with open(file, "w") as f:
                 f.write(bck)
         except OSError as e:
-            raise messagebox.showerror(
+            messagebox.showerror(
                 "Error occured while writing contents to the file", str(e)
             )
+            return
         finally:
             print("Completed resetting texteditor configuration file.")
             return True

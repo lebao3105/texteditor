@@ -3,19 +3,19 @@
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
-#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
+"Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-09-04 18:06+0700\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: \n"
+"PO-Revision-Date: 2022-10-30 16:40+0700\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: vi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 3.1.1\n"
 
 #: texteditor/mainwindow.py:53 texteditor/miscs/file_operations.py:55
 msgid "Text editor"
@@ -111,7 +111,7 @@ msgstr ""
 
 #: texteditor/mainwindow.py:150
 msgid "Config"
-msgstr " Tuy chinh"
+msgstr "  Tuy chinh"
 
 #: texteditor/mainwindow.py:162
 msgid "New tab"
@@ -143,6 +143,9 @@ msgid ""
 "a new tab.\n"
 "Do it?"
 msgstr ""
+"File nay duoc mo trong mot tab khac. Nhu mac dinh thi texteditor se mo file "
+"nay (mot lan nua) vao 1 tab moi.\n"
+"Thuc hien?"
 
 #: texteditor/extensions/cmd.py:25
 msgid "Read only"
@@ -168,7 +171,7 @@ msgstr "clear: Lam trong box nay\n"
 msgid ""
 "term: Open terminal (not this one) - don't run this if you are running this "
 "application from console!\n"
-msgstr ""
+msgstr "term: Mo mot trinh dong lenh (khong phai cai nay)\n"
 
 #: texteditor/extensions/cmd.py:63
 msgid ""

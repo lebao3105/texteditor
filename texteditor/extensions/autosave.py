@@ -1,4 +1,4 @@
-from ..miscs import get_config, file_operations
+from ..backend import get_config, file_operations
 from tkinter.ttk import Checkbutton, Combobox, Button
 from tkinter import BooleanVar, Label, Toplevel, StringVar
 import tkinter.messagebox as msb

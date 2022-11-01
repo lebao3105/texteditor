@@ -4,7 +4,7 @@ import gettext
 
 from tkinter import BooleanVar, END, messagebox, Toplevel
 
-from texteditor.miscs import get_config, textwidget
+from texteditor.backend import get_config, textwidget
 
 _ = gettext.gettext
 arr = []
