@@ -1,5 +1,5 @@
-from setuptools import setup, find_packages
 from pathlib import Path
+from setuptools import find_packages, setup
 
 currdir = Path(__file__).parent
 long_des = (currdir / "README.md").read_text(encoding="utf8")

@@ -1,8 +1,9 @@
-from ..backend import get_config, file_operations
-from tkinter.ttk import Checkbutton, Combobox, Button
-from tkinter import BooleanVar, Label, Toplevel, StringVar
-import tkinter.messagebox as msb
 import gettext
+import tkinter.messagebox as msb
+from tkinter import BooleanVar, Label, StringVar, Toplevel
+from tkinter.ttk import Button, Checkbutton, Combobox
+
+from ..backend import file_operations, get_config
 
 # Minutes to seconds
 MIN_05 = 30  # 30 secs

@@ -1,11 +1,13 @@
-import threading
-from tkinter import BooleanVar, TclError, font, messagebox
-from . import constants
-import os
 import configparser
+import os
+import platform
+import threading
+from tkinter import TclError, font, messagebox
+
 import darkdetect
 import sv_ttk
-import platform
+
+from . import constants
 
 if platform.system() == "Windows":
     file = os.environ["USERPROFILE"] + "\\.config\\texteditor_configs.ini"
@@ -224,7 +226,7 @@ class AutoColor:
 
     @staticmethod
     def stopasync():
-        if AutoColor.t:
+        if hasattr(AutoColor, "t"):
             del AutoColor.t
 
     def changecolor(self):
@@ -251,8 +253,6 @@ class AutoColor:
             self.parent.configure(fg=fg)
         except TclError:
             self.parent.configure(foreground=fg)
-        except TclError:
-            return
 
     def __checkcolor(self, bg):
         if bg == "dark":

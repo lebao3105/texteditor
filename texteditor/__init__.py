@@ -30,7 +30,7 @@ gettext.textdomain("me.lebao3105.texteditor")
 texteditor._ = gettext.gettext
 
 
-def start_app(argv: sys.argv = None):
+def start_app(argv = None):
     if not argv:  # For __main__
         argv = sys.argv
     root = mainwindow.MainWindow()

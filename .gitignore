@@ -1,7 +1,6 @@
 # Translation files that end with ~ (backup files)
-po/*/*/*.po~
-# msgfmt outputs
-po/*/*/*.mo
+po/*~
+po/*.mo
 # Test
 test.py
 test.*

@@ -1,6 +1,6 @@
 import gettext
 from tkinter import END, StringVar
-from tkinter.ttk import Frame, Entry, Button, Label
+from tkinter.ttk import Button, Entry, Frame, Label
 
 
 class Finder(Frame):
@@ -63,7 +63,7 @@ class Finder(Frame):
             while 1:
                 pos = self.text.search(find, pos, nocase=1, stopindex=END)
 
-                # Disabled because I saw "Not found" label even I found text highlighted
+                # Disabled because I've seen "Not found" label even there were highlighted texts
                 # if not pos:
                 #    self.searchfailed('create')
                 #    break
@@ -75,13 +75,13 @@ class Finder(Frame):
 
     def searchfailed(self, command: str):
         if command == "create":
-            self.i = Label(self, text="Not found", foreground="red")
-            self.i.grid(row=1, column=3)
+            self.ia = Label(self, text="Not found", foreground="red")
+            self.ia.grid(row=1, column=3)
         elif command == "destroy":
             if not hasattr(self.i, "Label"):
                 return
             else:
-                self.i.destroy()
+                self.ia.destroy()
 
     def check_options(self, option):
         self.i = []

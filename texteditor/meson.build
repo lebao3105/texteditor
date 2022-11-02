@@ -17,7 +17,7 @@ py_inst.install_sources(
     subdir: 'texteditor/'
 )
 
+subdir('backend')
 subdir('extensions')
 subdir('icons')
-subdir('miscs')
 subdir('views')

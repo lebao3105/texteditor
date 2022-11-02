@@ -8,7 +8,6 @@
     </layout>
     <child>
       <object class="ttk.Menubutton" id="filemenu" named="True">
-        <property name="direction">flush</property>
         <property name="text" translatable="yes">File</property>
         <layout manager="pack">
           <property name="side">left</property>

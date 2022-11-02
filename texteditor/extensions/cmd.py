@@ -1,8 +1,10 @@
-import os, sys, subprocess, threading
-from signal import SIGTERM
 import gettext
-
-from tkinter import BooleanVar, END, messagebox, Toplevel
+import os
+import subprocess
+import sys
+import threading
+from signal import SIGTERM
+from tkinter import END, BooleanVar, Toplevel, messagebox
 
 from texteditor.backend import get_config, textwidget
 
@@ -73,7 +75,7 @@ class cmd(textwidget.TextWidget):
                     "This will open console defined by defconsole value in configuration file. Please don't run any shell!"
                 ),
             )
-            cmd = get_config.getvalue("cmd", "defconsole")
+            cmd = get_config.GetConfig.getvalue("cmd", "defconsole")
 
             if cmd == ("bash" or "xonsh" or "zsh" or "sh"):
                 messagebox.showerror(
