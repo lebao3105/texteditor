@@ -21,7 +21,7 @@ class AutoSave:
     useTime : float : Force auto save after a time\n
     Function:\n
     openpopup : Make a popup window which asks the user to change the auto save time.
-    It will change the useTime!\n
+    It will modify useTime!\n
     start : Start the timing loop
     """
 
@@ -149,16 +149,3 @@ class AutoSave:
                 )
             except:
                 return
-
-
-"""import tkinter
-root = tkinter.Tk()
-class test(AutoSave):
-    forceEnable = True
-    useTime = 10
-
-    def __init__(self, master):
-        super().__init__(master)
-        self.openpopup()
-test(root)
-root.mainloop()"""

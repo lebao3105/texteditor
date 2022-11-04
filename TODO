@@ -1,4 +1,4 @@
-# These are features that I really want to use it.
+# These are features that I really want to have them.
 # They should be implemented in newer releases.
 ; 1.3
 * Autosave (Initially completed)
@@ -10,11 +10,11 @@
 * Better usage of Gettext (Working on?)
 * Open, save file in UTF-8 format or something else like that
 * Maybe a status bar? (Working on)
-* *Autocolor*: Sync the color with the system (working on)
+* *Autocolor*: Sync the color with the system (working on-going to be fine now)
 * Remake get_config configure function to change any configs (canceled)
 
 ; 1.5
-* Make themeing easier by make a Preferences window
+* Make configuring.00 easier by make a Preferences window
 * Implement a new notebook - why not?! (= move all texteditor.tabs defs to a class) (Done-still working more)
 * Zoom in/out?
 

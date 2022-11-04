@@ -7,7 +7,7 @@ long_des = (currdir / "README.md").read_text(encoding="utf8")
 setup(
     name="texteditor",
     author="Le Bao Nguyen",
-    version="1.4a",
+    version="1.4a1",
     url="https://github.com/lebao3105/texteditor",
     description="A Tkinter text editor",
     long_description=long_des,

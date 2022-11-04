@@ -35,7 +35,7 @@ class TabsViewer(Notebook):
             command=lambda: self.close_tab(self),
         )
         self.bind(
-            "<Button-3><ButtonRelease-3>",
+            "<Button-3>",
             lambda event: right_click_menu.post(event.x_root, event.y_root),
         )
         self.bind("<<NotebookTabChanged>>", self.tab_changed)
