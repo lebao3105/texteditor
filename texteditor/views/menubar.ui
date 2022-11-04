@@ -1,192 +1,153 @@
 <?xml version='1.0' encoding='utf-8'?>
 <interface version="1.3">
-  <object class="ttk.Frame" id="fm" named="True">
-    <layout manager="pack">
-      <property name="expand">true</property>
-      <property name="fill">y</property>
-      <property name="side">top</property>
-    </layout>
+  <object class="tk.Menu" id="menu1">
+    <property name="tearoff">true</property>
     <child>
-      <object class="ttk.Menubutton" id="filemenu" named="True">
-        <property name="text" translatable="yes">File</property>
-        <layout manager="pack">
-          <property name="side">left</property>
-        </layout>
-        <child>
-          <object class="tk.Menu" id="menu1">
-            <property name="tearoff">false</property>
-            <child>
-              <object class="tk.Menuitem.Command" id="new" named="True">
-                <property name="accelerator">Ctrl+N</property>
-                <property name="command" type="command" cbtype="simple">add_tab</property>
-                <property name="label" translatable="yes">New</property>
-              </object>
-            </child>
-            <child>
-              <object class="tk.Menuitem.Command" id="open_file" named="True">
-                <property name="accelerator">Ctrl+O</property>
-                <property name="command" type="command" cbtype="simple">openfile</property>
-                <property name="label" translatable="yes">Open</property>
-              </object>
-            </child>
-            <child>
-              <object class="tk.Menuitem.Command" id="save_file" named="True">
-                <property name="accelerator">Ctrl+S</property>
-                <property name="command" type="command" cbtype="simple">savefile</property>
-                <property name="label" translatable="yes">Save</property>
-              </object>
-            </child>
-            <child>
-              <object class="tk.Menuitem.Command" id="save_file_as" named="True">
-                <property name="accelerator">Ctrl+Shift+S</property>
-                <property name="command" type="command" cbtype="simple">savefileas</property>
-                <property name="label" translatable="yes">Save as</property>
-              </object>
-            </child>
-            <child>
-              <object class="tk.Menuitem.Command" id="quit" named="True">
-                <property name="accelerator">Alt+F4</property>
-                <property name="command" type="command" cbtype="simple">destroy</property>
-                <property name="label" translatable="yes">Quit...</property>
-              </object>
-            </child>
-          </object>
-        </child>
+      <object class="tk.Menuitem.Command" id="command1">
+        <property name="accelerator">Ctrl+O</property>
+        <property name="command" type="command" cbtype="simple">openfile</property>
+        <property name="label" translatable="yes">Open</property>
       </object>
     </child>
     <child>
-      <object class="ttk.Menubutton" id="editmenu" named="True">
-        <property name="text" translatable="yes">Edit</property>
-        <layout manager="pack">
-          <property name="side">left</property>
-        </layout>
-        <child>
-          <object class="tk.Menu" id="menu2">
-            <property name="tearoff">false</property>
-            <child>
-              <object class="tk.Menuitem.Command" id="cut" named="True">
-                <property name="accelerator">Ctrl+X</property>
-                <property name="label" translatable="yes">Cut</property>
-              </object>
-            </child>
-            <child>
-              <object class="tk.Menuitem.Command" id="copy" named="True">
-                <property name="accelerator">Ctrl+C</property>
-                <property name="label" translatable="yes">Copy</property>
-              </object>
-            </child>
-            <child>
-              <object class="tk.Menuitem.Command" id="paste" named="True">
-                <property name="accelerator">Ctrl+V</property>
-                <property name="label" translatable="yes">Paste</property>
-              </object>
-            </child>
-            <child>
-              <object class="tk.Menuitem.Separator" id="separator1" />
-            </child>
-            <child>
-              <object class="tk.Menuitem.Command" id="undo" named="True">
-                <property name="accelerator">Ctrl+Z</property>
-                <property name="label" translatable="yes">Undo</property>
-              </object>
-            </child>
-            <child>
-              <object class="tk.Menuitem.Command" id="redo" named="True">
-                <property name="accelerator">Ctrl+Y</property>
-                <property name="label" translatable="yes">Redo</property>
-              </object>
-            </child>
-            <child>
-              <object class="tk.Menuitem.Separator" id="separator2" />
-            </child>
-            <child>
-              <object class="tk.Menuitem.Command" id="sel_all" named="True">
-                <property name="accelerator">Ctrl+A</property>
-                <property name="label" translatable="yes">Select all</property>
-              </object>
-            </child>
-            <child>
-              <object class="tk.Menuitem.Separator" id="separator3" />
-            </child>
-            <child>
-              <object class="tk.Menuitem.Command" id="find" named="True">
-                <property name="accelerator">Ctrl+F</property>
-                <property name="command" type="command" cbtype="simple">gofind</property>
-                <property name="label" translatable="yes">Find</property>
-              </object>
-            </child>
-            <child>
-              <object class="tk.Menuitem.Command" id="replace" named="True">
-                <property name="accelerator">Ctrl+R</property>
-                <property name="command" type="command" cbtype="simple">goreplace</property>
-                <property name="label" translatable="yes">Replace</property>
-              </object>
-            </child>
-          </object>
-        </child>
+      <object class="tk.Menuitem.Command" id="command2">
+        <property name="accelerator">Ctrl+N</property>
+        <property name="command" type="command" cbtype="simple">add_tab</property>
+        <property name="label" translatable="yes">New</property>
       </object>
     </child>
     <child>
-      <object class="ttk.Menubutton" id="configmenu" named="True">
-        <property name="text" translatable="yes">Config</property>
-        <layout manager="pack">
-          <property name="side">left</property>
-        </layout>
-        <child>
-          <object class="tk.Menu" id="menu3">
-            <property name="tearoff">false</property>
-            <child>
-              <object class="tk.Menuitem.Command" id="opencfg">
-                <property name="command" type="command" cbtype="simple">opencfg</property>
-                <property name="label" translatable="yes">Open the configuration file</property>
-              </object>
-            </child>
-            <child>
-              <object class="tk.Menuitem.Command" id="resetcfg">
-                <property name="command" type="command" cbtype="simple">resetcfg</property>
-                <property name="label" translatable="yes">Reset all configs</property>
-              </object>
-            </child>
-            <child>
-              <object class="tk.Menuitem.Command" id="changeclr">
-                <property name="command" type="command" cbtype="simple">change_color</property>
-              </object>
-            </child>
-            <child>
-              <object class="tk.Menuitem.Checkbutton" id="autocolor_toggle">
-                <property name="command" type="command" cbtype="simple">autocolor_mode</property>
-                <property name="label" translatable="yes">Auto change the color</property>
-                <property name="variable">boolean:autocolor</property>
-              </object>
-            </child>
-            <child>
-              <object class="tk.Menuitem.Checkbutton" id="toggle_wrap">
-                <property name="command" type="command" cbtype="simple">set_wrap</property>
-                <property name="label" translatable="yes">Wrap by word (Ctrl+W)</property>
-                <property name="variable">boolean:wrapbtn</property>
-              </object>
-            </child>
-          </object>
-        </child>
+      <object class="tk.Menuitem.Command" id="command3">
+        <property name="accelerator">Ctrl+S</property>
+        <property name="command" type="command" cbtype="simple">savefile</property>
+        <property name="label" translatable="yes">Save</property>
       </object>
     </child>
     <child>
-      <object class="ttk.Menubutton" id="helpmenu" named="True">
-        <property name="text" translatable="yes">?</property>
-        <layout manager="pack">
-          <property name="side">left</property>
-        </layout>
-        <child>
-          <object class="tk.Menu" id="menu4">
-            <property name="tearoff">false</property>
-            <child>
-              <object class="tk.Menuitem.Command" id="command10">
-                <property name="command" type="command" cbtype="simple">aboutdlg</property>
-                <property name="label" translatable="yes">About this app</property>
-              </object>
-            </child>
-          </object>
-        </child>
+      <object class="tk.Menuitem.Command" id="command4">
+        <property name="accelerator">Ctrl+Shift+S</property>
+        <property name="command" type="command" cbtype="simple">savefileas</property>
+        <property name="label" translatable="yes">Save as...</property>
+      </object>
+    </child>
+    <child>
+      <object class="tk.Menuitem.Separator" id="separator1" />
+    </child>
+    <child>
+      <object class="tk.Menuitem.Command" id="command5">
+        <property name="accelerator">Alt+F4</property>
+        <property name="command" type="command" cbtype="simple">destroy</property>
+        <property name="label" translatable="yes">Quit</property>
+      </object>
+    </child>
+  </object>
+  <object class="tk.Menu" id="menu2">
+    <property name="tearoff">true</property>
+    <child>
+      <object class="tk.Menuitem.Command" id="command8">
+        <property name="accelerator">Ctrl+Z</property>
+        <property name="label" translatable="yes">Undo</property>
+      </object>
+    </child>
+    <child>
+      <object class="tk.Menuitem.Command" id="command9">
+        <property name="accelerator">Ctrl+Y</property>
+        <property name="label" translatable="yes">Redo</property>
+      </object>
+    </child>
+    <child>
+      <object class="tk.Menuitem.Command" id="command10">
+        <property name="accelerator">Ctrl+A</property>
+        <property name="label" translatable="yes">Select all</property>
+      </object>
+    </child>
+    <child>
+      <object class="tk.Menuitem.Separator" id="separator2" />
+    </child>
+    <child>
+      <object class="tk.Menuitem.Command" id="command11">
+        <property name="accelerator">Ctrl+X</property>
+        <property name="label" translatable="yes">Cut</property>
+      </object>
+    </child>
+    <child>
+      <object class="tk.Menuitem.Command" id="command12">
+        <property name="accelerator">Ctrl+C</property>
+        <property name="label" translatable="yes">Copy</property>
+      </object>
+    </child>
+    <child>
+      <object class="tk.Menuitem.Command" id="command13">
+        <property name="accelerator">Ctrl+V</property>
+        <property name="label" translatable="yes">Paste</property>
+      </object>
+    </child>
+    <child>
+      <object class="tk.Menuitem.Separator" id="separator3" />
+    </child>
+    <child>
+      <object class="tk.Menuitem.Command" id="command19">
+        <property name="accelerator">Ctrl+F</property>
+        <property name="command" type="command" cbtype="simple">gofind</property>
+        <property name="label" translatable="yes">Find</property>
+      </object>
+    </child>
+    <child>
+      <object class="tk.Menuitem.Command" id="command20">
+        <property name="accelerator">Ctrl+R</property>
+        <property name="command" type="command" cbtype="simple">goreplace</property>
+        <property name="label" translatable="yes">Replace</property>
+      </object>
+    </child>
+  </object>
+  <object class="tk.Menu" id="menu3">
+    <property name="tearoff">true</property>
+    <child>
+      <object class="tk.Menuitem.Command" id="command14">
+        <property name="command" type="command" cbtype="simple">opencfg</property>
+        <property name="label" translatable="yes">Show configurations</property>
+      </object>
+    </child>
+    <child>
+      <object class="tk.Menuitem.Command" id="command15">
+        <property name="command" type="command" cbtype="simple">resetcfg</property>
+        <property name="label" translatable="yes">Reset all configurations</property>
+      </object>
+    </child>
+    <child>
+      <object class="tk.Menuitem.Command" id="command16">
+        <property name="command" type="command" cbtype="simple">change_color</property>
+      </object>
+    </child>
+    <child>
+      <object class="tk.Menuitem.Command" id="command17">
+        <property name="command" type="command" cbtype="simple">autocolor_mode</property>
+        <property name="label" translatable="yes">Auto-color mode</property>
+      </object>
+    </child>
+    <child>
+      <object class="tk.Menuitem.Checkbutton" id="checkbutton1">
+        <property name="accelerator">Ctrl+W</property>
+        <property name="command" type="command" cbtype="simple">set_wrap</property>
+        <property name="label" translatable="yes">Wrap (by word)</property>
+        <property name="offvalue">True</property>
+        <property name="onvalue">False</property>
+        <property name="variable">boolean:wrapbtn</property>
+      </object>
+    </child>
+  </object>
+  <object class="tk.Menu" id="menu4">
+    <property name="tearoff">true</property>
+    <child>
+      <object class="tk.Menuitem.Command" id="command6">
+        <property name="command" type="command" cbtype="simple">open_doc</property>
+        <property name="label" translatable="yes">Read documents...</property>
+      </object>
+    </child>
+    <child>
+      <object class="tk.Menuitem.Command" id="command7">
+        <property name="command" type="command" cbtype="simple">aboutdlg</property>
+        <property name="label" translatable="yes">About</property>
       </object>
     </child>
   </object>

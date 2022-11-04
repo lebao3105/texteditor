@@ -1,5 +1,6 @@
 # Import modules
 import os
+import webbrowser
 import pygubu
 from tkinter import *
 
@@ -34,7 +35,8 @@ class MainWindow(Tk):
             "resetcfg": lambda: self.resetcfg(),
             "change_color": lambda: self.change_color(),
             "autocolor_mode": lambda: self.autocolor_mode(),
-            "set_wrap": lambda: textwidget.TextWidget.wrapmode(self),
+            "set_wrap": lambda: textwidget.TextWidget.wrapmode(self), # TODO: Fix on/off v.alue
+            "open_doc": lambda: webbrowser.open("https://lebao3105.gitbook.io/texteditor_doc"),
             "aboutdlg": lambda: self.aboutdlg(),
         }
 
@@ -71,15 +73,19 @@ class MainWindow(Tk):
         then place other widgets."""
         viewsdir = texteditor.currdir / "views"
         builder = pygubu.Builder(self._)
-        # Load the menu bar
+        # Set the menu bar
+        menu = Menu(self)
+        self.config(menu=menu)
+        # Load all menus
         builder.add_resource_path(texteditor.currdir)
         builder.add_resource_path(viewsdir)
         builder.add_from_file(viewsdir / "menubar.ui")
         builder.import_variables(self, ["autocolor", "wrapbtn"])
         # Get objects
-        self.fm = builder.get_object("fm", self)
+        self.menu1 = builder.get_object("menu1", self)
         self.menu2 = builder.get_object("menu2", self)
         self.menu3 = builder.get_object("menu3", self)
+        self.menu4 = builder.get_object("menu4", self)
         # Add menu items
         addeditcmd = self.menu2.add_command
         if get_config.GetConfig.getvalue("filemgr", "autosave") == "yes":
@@ -89,16 +95,19 @@ class MainWindow(Tk):
             )
 
         if get_config.GetConfig.getvalue("cmd", "isenabled") == "yes":
-            self.menu2.add_separator()
+            #self.menu2.add_separator()
             addeditcmd(
                 label=self._("Open System Shell"),
                 command=lambda: cmd.CommandPrompt(self),
                 accelerator="Ctrl+T",
             )
         self.menu3.entryconfig(2, label=self._("Toggle %s mode") % self.lb)
+        # Add menus to the main one
+        menu.add_cascade(menu=self.menu1, label=self._("File"))
+        menu.add_cascade(menu=self.menu2, label=self._("Edit"))
+        menu.add_cascade(menu=self.menu3, label=self._("Config"))
+        menu.add_cascade(menu=self.menu4, label="?")
         # Do stuff
-        self.fm.rowconfigure(0, weight=1)
-        self.fm.columnconfigure(0, weight=1)
         self.notebook = TabsViewer(self, _=self._, do_place=True)
         builder.connect_callbacks(self.callbacks)
 
