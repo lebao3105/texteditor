@@ -10,8 +10,6 @@ Texteditor is a text editor written in Python using Tkinter interface.
 
 Documents are available on https://lebao3105.gitbook.io/texteditor_doc.
 
-
-
 ## Features
 * Tabs support
 * Fast
@@ -48,17 +46,17 @@ If needed, let this app speak your language. On Linux, use [```upd_trans.sh```](
 ./upd_trans.sh -upd
 ```
 
-On Windows, find pygettext & msgfmt from your Python installation folder. Then use them:
+Or, you can use meson and ninja - which are installable via pip:
 ```
-REM Generate .pot + .po files
-pygettext.py -d base -o po/base.pot <every file on texteditor/>
-REM Copy .pot file to your_language_code/LC_MESSAGES/ then rename it to base.po
-REM edit your .po files, then generate .mo files. This use 
-REM for all available languages here.
-msgfmt.py po/<language code>/LC_MESSAGES/base -o po/<language code>/LC_MESSAGES/base.mo
+# Modify translation(s) on po directory if needed first
+$ pip install meson ninja
+$ meson build
+$ ninja -C build me.lebao3105.texteditor-pot
+$ ninja -C build me.lebao3105.texteditor-update-po
+$ ninja -C build me.lebao3105.texteditor-gmo
+$ cp -r build/po/* po/
 ```
-
-Once done, run ```python3 -m texteditor```.
+Once completed, run ```python3 -m texteditor```.
 
 To make executable files, read instructions in [makerelease](makerelease/).
 
@@ -69,17 +67,3 @@ To make executable files, read instructions in [makerelease](makerelease/).
     <img id="image" src="https://user-images.githubusercontent.com/77564176/169689858-a131cd42-1d6d-4d2a-976d-7daef4fab5ac.png">
     <img id="image" src="image.png">
 </div>
-
-## UI on Linux
-It's ugly here... If you don't like this, try to find some ttk theme on the internet, download it to somewhere safe.
-
-Then add the following code (just an example) to texteditor/mainwindow.py:
-
-> Add codes before ```self.place_widgets()``` line!
-```
-style = ttk.Style(self)
-self.tk.call('source', '{tcl file location}')
-style.theme_use('{theme name}')
-```
-
-Or use the instructions from the theme's author.
