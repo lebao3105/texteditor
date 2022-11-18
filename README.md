@@ -19,7 +19,7 @@ Documents are available on https://lebao3105.gitbook.io/texteditor_doc.
 * Able to make Windows executable file (.exe)
 * Command window where you can run external commands (except Console apps which require your inputs)
 
-> Note: This project also available on GitLab ([link here.](https://gitlab.com/lebao3105/texteditor_tk)) Gitlab repo is less-often then the Github one.
+> Note: This project also available on GitLab ([link here.](https://gitlab.com/lebao3105/texteditor_tk)) Gitlab repo is less-often updated then the Github one.
 
 ## Running
 You need Python 3.8+ with Tkinter & pip installed.
