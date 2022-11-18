@@ -19,7 +19,7 @@ Documents are available on https://lebao3105.gitbook.io/texteditor_doc.
 * Able to make Windows executable file (.exe)
 * Command window where you can run external commands (except Console apps which require your inputs)
 
-> Note: This project also available on GitLab ([link here.](https://gitlab.com/lebao3105/texteditor_tk))
+> Note: This project also available on GitLab ([link here.](https://gitlab.com/lebao3105/texteditor_tk)) Gitlab repo is less-often then the Github one.
 
 ## Running
 You need Python 3.8+ with Tkinter & pip installed.
@@ -37,7 +37,7 @@ python3 -m texteditor
 Start from version 1.3-dev1, you can use ```texteditor``` directly.
 
 ## Running from source
-If needed, let this app speak your language. On Linux, use [```upd_trans.sh```](upd_trans.sh) should work:
+If needed, let this app speak your language. On your UNIX, use [```upd_trans.sh```](upd_trans.sh) should work:
 ```
 ./upd_trans.sh -upd
 # If you see wrong text, do:
@@ -56,14 +56,13 @@ $ ninja -C build me.lebao3105.texteditor-update-po
 $ ninja -C build me.lebao3105.texteditor-gmo
 $ cp -r build/po/* po/
 ```
-Once completed, run ```python3 -m texteditor```.
+Once done, run ```python3 -m texteditor```.
 
-To make executable files, read instructions in [makerelease](makerelease/).
+To make executable files (on Windows only), read the instruction from [makerelease](makerelease/).
 
 ## Screenshots
 <div align="center">
     <img id="image" src="https://user-images.githubusercontent.com/77564176/166142583-5fe685a1-21a4-44e1-8088-73ca27e0b04a.png">
     <img id="image" src="https://user-images.githubusercontent.com/77564176/166142604-791a81ca-4f4c-47db-b037-b5525c7cf313.png">
     <img id="image" src="https://user-images.githubusercontent.com/77564176/169689858-a131cd42-1d6d-4d2a-976d-7daef4fab5ac.png">
-    <img id="image" src="image.png">
 </div>
