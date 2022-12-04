@@ -22,7 +22,7 @@ class MainWindow(Tk):
         else:
             self._ = _
 
-        # Configure ALL menu items callbacks
+        # Configure all menu items callbacks
         self.callbacks = {
             "openfile": lambda: file_operations.open_file(self),
             "add_tab": lambda: self.add_tab(),
@@ -35,7 +35,7 @@ class MainWindow(Tk):
             "resetcfg": lambda: self.resetcfg(),
             "change_color": lambda: self.change_color(),
             "autocolor_mode": lambda: self.autocolor_mode(),
-            "set_wrap": lambda: textwidget.TextWidget.wrapmode(self), # TODO: Fix on/off v.alue
+            "set_wrap": lambda: textwidget.TextWidget.wrapmode(self), # TODO: Fix on/off value
             "open_doc": lambda: webbrowser.open("https://lebao3105.gitbook.io/texteditor_doc"),
             "aboutdlg": lambda: self.aboutdlg(),
         }
@@ -46,25 +46,20 @@ class MainWindow(Tk):
         else:
             print("Warning: Application icon", texteditor.icon, "not found!")
 
-        # Get color mode
-        if get_config.GetConfig.getvalue("global", "color") == "dark":
-            self.lb = "light"
-        else:
-            self.lb = "dark"
-
         # Wrap button
         self.wrapbtn = BooleanVar()
         self.wrapbtn.set(True)
+
         # Auto change color
         self.autocolor = BooleanVar()
         self.wrapbtn.set(False)
 
-        # Window title and size
-        self.title(self._("Text editor"))
+        # Window size
         self.geometry("810x610")
 
         # Place widgets then handle events
         self.autosv = autosave.AutoSave(self, self._)
+        self.get_color()
         self.load_ui()
         self.add_event()
 
@@ -101,7 +96,6 @@ class MainWindow(Tk):
                 command=lambda: cmd.CommandPrompt(self),
                 accelerator="Ctrl+T",
             )
-        self.menu3.entryconfig(2, label=self._("Toggle %s mode") % self.lb)
         # Add menus to the main one
         menu.add_cascade(menu=self.menu1, label=self._("File"))
         menu.add_cascade(menu=self.menu2, label=self._("Edit"))
@@ -124,7 +118,7 @@ class MainWindow(Tk):
         bindcfg("<Control-o>", lambda event: file_operations.open_file(self))
         bindcfg("<Control-w>", lambda event: self.set_wrap(self))
 
-    # Functions for the Menu bar
+    # Menu bar callbacks
     def resetcfg(self, event=None):
         import tkinter.messagebox as msgbox
 
@@ -141,14 +135,16 @@ class MainWindow(Tk):
                         "Unable to reset configuration file: Backed up default variables not found"
                     ),
                 )
+                self.text_editor.statusbar.writeleftmessage(self._("Error: Unable to reset all configurations!"))
                 return
             else:
                 msgbox.showinfo(
                     self._("Completed"),
                     self._(
-                        "Completed resetting texteditor configurations.\nRestart the application to take effect."
+                        "Resetted texteditor configurations.\nRestart the application to take the effect."
                     ),
                 )
+                self.text_editor.statusbar.writeleftmessage(self._("Resetted all configurations."))
                 self.setcolorvar()
 
     def opencfg(self, event=None):
@@ -158,10 +154,17 @@ class MainWindow(Tk):
     def aboutdlg(self, event=None):
         return about.AboutDialog(self).run()
 
+    def get_color(self):
+        # Get color mode
+        if get_config.GetConfig.getvalue("global", "color") == "dark":
+            self.lb = "light"
+        else:
+            self.lb = "dark"
+
     def change_color(self, event=None):
         get_config.GetConfig.change_config("global", "color", self.lb)
+        self.get_color()
         get_config.GetConfig.configure(self.text_editor)
-        self.setcolorvar()
 
     # Set wrap mode (keyboard shortcut)
     # It is different from the textwidget's default function. A lot.
@@ -183,21 +186,15 @@ class MainWindow(Tk):
             get_config.autocolormode = False
             get_config.AutoColor.stopasync()
             get_config.GetConfig.configure(self.text_editor)
+            self.text_editor.statusbar.writeleftmessage(self._("Stopped autocolor service."))
             tel = False
         else:
             get_config.autocolormode = True
             get_config.GetConfig.configure(self.text_editor)
+            self.text_editor.statusbar.writeleftmessage(self._("Started autocolor service."))
             tel = True
-        self.setcolorvar()
+        self.get_color()
         if tel is True:
             self.menu3.entryconfig(2, state="disabled")
         else:
             self.menu3.entryconfig(2, state="normal")
-
-    def setcolorvar(self):
-        theme = get_config.sv_ttk.get_theme()
-        if theme == "dark":
-            self.lb = "light"
-        else:
-            self.lb = "dark"
-        self.menu3.entryconfig(2, label="Toggle %s mode" % self.lb)

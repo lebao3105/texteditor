@@ -8,13 +8,13 @@
 
 ; 1.4
 * Better usage of Gettext (Working on?)
-* Open, save file in UTF-8 format or something else like that
-* Maybe a status bar? (Working on)
-* *Autocolor*: Sync the color with the system (working on-going to be fine now)
-* Remake get_config configure function to change any configs (canceled)
+* Improve backend.file_operations
+* A status bar (Working on)
+* *Autocolor*: Sync the color with the system (is it ok now?)
+* Remake get_config configure function so it can change any config (canceled)
 
 ; 1.5
-* Make configuring.00 easier by make a Preferences window
+* Make configuring easier with a Preferences window
 * Implement a new notebook - why not?! (= move all texteditor.tabs defs to a class) (Done-still working more)
 * Zoom in/out?
 

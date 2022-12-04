@@ -1,7 +1,7 @@
-py_inst.install_sources(
+exts_sources = [
     '__init__.py',
     'autosave.py',
     'cmd.py',
     'finding.py',
-    subdir: 'texteditor/extensions'
-)
+]
+install_data(exts_sources, install_dir: join_paths(moduledir, 'extensions'))

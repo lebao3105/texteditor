@@ -1,8 +1,8 @@
-py_inst.install_sources(
+backend_sources = [
     '__init__.py',
     'constants.py',
     'file_operations.py',
     'get_config.py',
     'textwidget.py',
-    subdir: 'texteditor/miscs'
-)
+]
+install_data(backend_sources, install_dir: join_paths(moduledir, 'backend'))

@@ -45,8 +45,7 @@ class TabsViewer(Notebook):
             self.pack(expand=True, fill="both")
 
     def add_tab(self, event=None, idx=None):
-        window_title = self._("Text Editor") + " - "
-        newtab_name = self._(constants.UNTITLED)
+        newtab_name = self._("Untitled")
 
         # Add a new tab
         textframe = Frame(self)
@@ -59,7 +58,7 @@ class TabsViewer(Notebook):
 
         # Add contents
         self.parent.text_editor = textwidget.TextWidget(
-            textframe, useMenu=True, useUnRedo=True
+            textframe, _=self._, useMenu=True, useUnRedo=True
         )
         self.parent.text_editor.addMenusepr()
         self.parent.text_editor.addMenucmd(
@@ -73,13 +72,13 @@ class TabsViewer(Notebook):
             fn=lambda: file_operations.save_as(self.parent),
         )
         self.parent.text_editor.pack(expand=True, fill="both")
-        textwidget.add_statusbar(self.parent.text_editor)
 
         # Post setup
         self.select(textframe)
         self.parent.text_editor.focus()
 
-        if self.parent.winfo_class() == "Tk":
+        if self.parent.winfo_class() == "Tk" or "TopLevel":
+            window_title = self._("Text Editor") + " - "
             self.titletext = window_title + newtab_name
             self.parent.title(self.titletext)
 

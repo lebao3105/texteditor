@@ -1,6 +1,5 @@
-py_inst.install_sources(
+icons = [
     'texteditor.Devel.png',
     'texteditor.png',
-    pure: false,
-    subdir: 'texteditor/icons'
-)
+]
+install_data(icons, install_dir: join_paths(moduledir, 'icons'))

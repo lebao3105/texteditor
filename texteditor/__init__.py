@@ -1,13 +1,13 @@
 import gettext
-import pathlib
 import locale
 import os.path
+import pathlib
 import sys
 from tkinter.messagebox import showinfo
 
 import texteditor
 from . import mainwindow
-from .backend import file_operations, constants
+from .backend import constants, file_operations
 
 currdir = pathlib.Path(__file__).parent
 
@@ -23,10 +23,12 @@ try:
     from texteditor.defs import LOCALE_DIR
 except ImportError:
     LOCALE_DIR = currdir / "po"
+	#LOCALE_DIR = "build/po/"
 
 locale.setlocale(locale.LC_ALL, None)
 gettext.bindtextdomain("me.lebao3105.texteditor", LOCALE_DIR)
 gettext.textdomain("me.lebao3105.texteditor")
+gettext.install("me.lebao3105.texteditor")
 texteditor._ = gettext.gettext
 
 

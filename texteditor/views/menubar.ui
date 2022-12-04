@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <interface version="1.3">
   <object class="tk.Menu" id="menu1">
-    <property name="tearoff">true</property>
+    <property name="tearoff">false</property>
     <child>
       <object class="tk.Menuitem.Command" id="command1">
         <property name="accelerator">Ctrl+O</property>
@@ -42,7 +42,7 @@
     </child>
   </object>
   <object class="tk.Menu" id="menu2">
-    <property name="tearoff">true</property>
+    <property name="tearoff">false</property>
     <child>
       <object class="tk.Menuitem.Command" id="command8">
         <property name="accelerator">Ctrl+Z</property>
@@ -101,7 +101,7 @@
     </child>
   </object>
   <object class="tk.Menu" id="menu3">
-    <property name="tearoff">true</property>
+    <property name="tearoff">false</property>
     <child>
       <object class="tk.Menuitem.Command" id="command14">
         <property name="command" type="command" cbtype="simple">opencfg</property>
@@ -117,6 +117,7 @@
     <child>
       <object class="tk.Menuitem.Command" id="command16">
         <property name="command" type="command" cbtype="simple">change_color</property>
+		  <property name="label" translatable="yes">Toggle color mode...</property>
       </object>
     </child>
     <child>
@@ -130,14 +131,12 @@
         <property name="accelerator">Ctrl+W</property>
         <property name="command" type="command" cbtype="simple">set_wrap</property>
         <property name="label" translatable="yes">Wrap (by word)</property>
-        <property name="offvalue">True</property>
-        <property name="onvalue">False</property>
         <property name="variable">boolean:wrapbtn</property>
       </object>
     </child>
   </object>
   <object class="tk.Menu" id="menu4">
-    <property name="tearoff">true</property>
+    <property name="tearoff">false</property>
     <child>
       <object class="tk.Menuitem.Command" id="command6">
         <property name="command" type="command" cbtype="simple">open_doc</property>

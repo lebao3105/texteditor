@@ -5,6 +5,7 @@ project('texteditor',
 )
 
 message('Note: Please make sure that you have Tkinter/Tk installed for your Python installation.')
+message('Note: Only Python3.7+ is supported here.')
 
 # Import modules
 i18n = import('i18n')
@@ -23,7 +24,7 @@ endif
 
 prefix = get_option('prefix')
 localedir = join_paths(prefix, get_option('localedir'))
-moduledir = py_inst.get_install_dir(subdir: 'texteditor')
+moduledir = join_paths(prefix, get_option('datadir'), meson.project_name())
 
 subdir('po')
 subdir('texteditor')

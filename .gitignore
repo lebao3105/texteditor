@@ -26,3 +26,5 @@ texteditor/dist
 texteditor/build
 dist
 build
+#
+.vs/

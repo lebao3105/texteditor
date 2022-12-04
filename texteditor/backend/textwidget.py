@@ -9,11 +9,13 @@ class TextWidget(Text):
     Configurations for the menu:\n
     |-> enableMenu: bool : Enable (default) Menu or not\n
     |-> useUnRedo: bool : Use Undo/Redo in the menu, also make this class able to use them\n
-    |-> useWrap : Add wrap button to the menu"""
+    |-> useWrap : bool : Add wrap button to the menu\n
+    |-> enableStatusBar : bool : Add a status bar"""
 
     enableMenu: bool = True
     useUnRedo: bool = False
     useWrap: bool = False
+    enableStatusBar: bool = True
 
     def __init__(
         self,
@@ -22,6 +24,7 @@ class TextWidget(Text):
         useMenu: bool = None,
         useUnRedo: bool = None,
         addWrap: bool = None,
+        enableStatusBar: bool = None,
         **kw
     ):
         super().__init__(parent, **kw)
@@ -37,18 +40,22 @@ class TextWidget(Text):
             self.useUnRedo = useUnRedo
         if addWrap != None:
             self.useWrap = addWrap
+        if enableStatusBar != None:
+            self.enableStatusBar = enableStatusBar
 
         if _ is None:
             self._ = gettext.gettext
         else:
             self._ = _
 
-        if self.enableMenu == True:
+        if self.enableMenu is True:
             self.RMenu = Menu(self, tearoff=0)
             self.__menu_init()
             self.bind(
-                "<Button-3><ButtonRelease-3>", lambda event: self.__open_menu(event)
+                "<Button-3>", lambda event: self.__open_menu(event)
             )
+        if self.enableStatusBar is True:
+            self.statusbar = StatusBar(self, self._)
 
         # Do some customization
         self.configure(
@@ -142,24 +149,44 @@ class TextWidget(Text):
         # Find the button first:)
         if not hasattr(self, "wrapbtn"):
             print("Couldn't find Wrap mode button!")
+            return
         if self.wrapbtn.get() == True:
             self.text_editor.configure(wrap="word")
-            print("Enabled wrapping on the text widget")
+            self.statusbar.writeleftmessage("Enabled wrapping on the text widget")
         else:
             self.text_editor.configure(wrap="none")
-            print("Disabled wrapping on the text widget.")
+            self.statusbar.writeleftmessage("Disabled wrapping on the text widget.")
 
 
-def add_statusbar(textw) -> bool:
-    def keypress(event=None):
-        row, col = textw.index("insert").split(".")
-        textw.label.config(text="Line %s : Col %s" % (str(row), str(col)))
+class StatusBar(ttk.Frame):
 
-    frame = ttk.Frame(textw)
-    frame.pack(side="bottom", fill="x")
-    textw.label = ttk.Label(frame)
-    textw.label.pack(side="right")
-    textw.bind("<KeyRelease>", keypress)
-    keypress()
+    def __init__(self, parent, _=None, **kwargs):
+        super().__init__(master=parent, **kwargs)
 
-    return True
+        if _ is None:
+            self._ = gettext.gettext
+        else:
+            self._ = _
+
+        self.lefttext = ttk.Label(self)
+        self.righttext = ttk.Label(self)
+        self.lefttext.pack(side="left")
+        self.righttext.pack(side="right")
+        self.righttext.bind("<KeyRelease>", self.keypress)
+
+        get_config.GetConfig.configure(self)
+        get_config.GetConfig.configure(self.lefttext)
+        get_config.GetConfig.configure(self.righttext)
+
+        self.textw = parent
+        self.keypress()
+        self.writeleftmessage(self._("No new message."))
+
+        self.pack(side="bottom", fill="x")
+
+    def keypress(self, event=None):
+        row, col = self.textw.index("insert").split(".")
+        self.righttext.config(text=self._("Line %s : Col %s") % (str(row), str(col)))
+
+    def writeleftmessage(self, message:str, event=None):
+        return self.lefttext.config(text=message) # TODO: Collect all messages then clear this box after a period
