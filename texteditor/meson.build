@@ -9,12 +9,16 @@ configure_file(
     install_dir: moduledir
 )
 
-py_inst.install_sources(
+toplv_sources = [
     '__init__.py',
     '__main__.py',
     'mainwindow.py',
-    'tabs.py',
-    subdir: 'texteditor/'
+    'tabs.py'
+]
+
+install_data(
+    toplv_sources,
+    install_dir: moduledir
 )
 
 subdir('backend')
