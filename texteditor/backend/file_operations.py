@@ -1,44 +1,48 @@
-from tkinter import END
+import tkinter
 from tkinter.filedialog import *
 from tkinter.messagebox import askyesno
-from sys import platform
-import os, sys
-from . import constants
+import os, sys, gettext
 
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-import tabs
+from . import constants
+from .. import tabs
 
 # Use this for closing the application
 is_saved = False
 # Saved files
 saved_files = []
 
-if platform == "win32":
+if sys.platform == "win32":
     searchdir = os.environ["USERPROFILE"] + "\Documents"
     script_type = ("Windows Shell Script", "*.bat, *.cmd")
-elif platform == "linux":
+elif sys.platform == "linux":
     searchdir = os.environ["HOME"] + "/Documents"
     script_type = ("UNIX Shell Script", "*.sh")
 
 
 def find_text_editor(self):
-    if hasattr(self, "text_editor"):
-        return
-    else:
+    if not hasattr(self, "text_editor"):
         raise Exception("Text editor not found!")
+    if hasattr(self, "_"):
+        _ = self._
+    else:
+        _ = gettext.gettext
 
 
 def open_file(self, event=None):
+    find_text_editor(self)
     file_name = askopenfilename(
         initialdir=searchdir,
-        title=self._("Select a file to open"),
-        filetypes=(("All files", "*.*"), script_type, ("Text files", "*.txt")),
+        title=_("Select a file to open"),
+        filetypes=(
+            (_("All files"), "*.*"),
+            script_type,
+            (_("Text files"), "*.txt")
+        ),
     )
     if file_name:
-        find_text_editor(self)
 
         if not self.text_editor.compare("end-1c", "==", 1.0):
-            tabs.add_tab(self)
+            tabs.TabsViewer(self, do_place=False).add_tab()
 
         for x in constants.FILES_ARR:
             if file_name in x:
@@ -49,14 +53,16 @@ def open_file(self, event=None):
 
 
 def openfilename(tkwin, filename):
+    find_text_editor(tkwin)
     with open(filename, "r") as f:
         print("Opening file: ", filename)
         tkwin.text_editor.insert(1.0, f.read())
-        tkwin.title(tkwin._("Text editor") + " - " + filename)
+        tkwin.title(_("Text editor") + " - " + filename)
         tkwin.notebook.tab("current", text=filename)
 
     constants.FILES_ARR.append(filename)
-
+    if hasattr(tkwin.text_editor, "statusbar"):
+        tkwin.text_editor.statusbar.writeleftmessage(_("Opened file %s") % filename)
     # print(constants.FILES_ARR)
 
 
@@ -64,9 +70,15 @@ def savefilename(tkwin, filename):
     with open(filename, "w") as f:
         try:
             print("Saving file: ", filename)
-            f.write(tkwin.text_editor.get(1.0, END))
-        except OSError:
+            if hasattr(tkwin.text_editor, "statusbar"):
+                tkwin.text_editor.statusbar.writeleftmessage(
+                        _("Saving file %s") % filename)
+            f.write(tkwin.text_editor.get(1.0, tkinter.END))
+        except OSError as e:
             print("Error: Unable to save file ", filename)
+            if hasattr(tkwin.text_editor, "statusbar"):
+                tkwin.text_editor.statusbar.writeleftmessage(
+                        _("Unable to save file %s - %s") % (filename, str(e)))
             return False
         else:
             saved_files.append(filename)
@@ -76,7 +88,9 @@ def savefilename(tkwin, filename):
 def save_file(self, event=None):
     find_text_editor(self)
     filefind = self.notebook.tab(self.notebook.select(), "text")
-    # print(filefind)
+    if filefind.endswith(" *"):
+        savefilename(self, filefind.removesuffix(" *"))
+        return
     if self.text_editor.compare("end-1c", "==", 1.0):
         save_as(self)
     elif not (filefind in constants.FILES_ARR):

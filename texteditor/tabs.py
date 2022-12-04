@@ -1,5 +1,5 @@
 import gettext
-from tkinter import Frame, Menu
+from tkinter import Frame, Menu, END
 from tkinter.ttk import Notebook
 from texteditor.backend import constants, file_operations, textwidget
 
@@ -7,6 +7,7 @@ from texteditor.backend import constants, file_operations, textwidget
 class TabsViewer(Notebook):
     def __init__(self, master, do_place: bool, _=None, **kw):
         super().__init__(master, **kw)
+
         if _ is None:
             self._ = gettext.gettext
         else:
@@ -23,26 +24,37 @@ class TabsViewer(Notebook):
         self.tabname = self.tab(self.select(), "text")
 
         # Now, make a right-click menu
-        # TODO: Make some function which will add more items to the menu
-        right_click_menu = Menu(self, tearoff=0)
-        right_click_menu.add_command(
+        self.right_click_menu = Menu(self, tearoff=0)
+        self.right_click_menu.add_command(
             label=self._("New tab"),
             command=lambda: self.add_tab(idx="default"),
             accelerator="Ctrl+N",
         )
-        right_click_menu.add_command(
+        self.right_click_menu.add_command(
             label=self._("Close the current opening tab"),
             command=lambda: self.close_tab(self),
         )
+        self.right_click_menu.add_command(
+            label=self._("Duplicate the current opening tab"),
+            command=lambda: self.duplicate_tab(self)
+        )
+        self.right_click_menu.add_command(
+            label=self._("Reopen the file"),
+            command=lambda: self.reopenfile(self)
+        )
         self.bind(
             "<Button-3>",
-            lambda event: right_click_menu.post(event.x_root, event.y_root),
+            lambda event: self.right_click_menu.post(
+                event.x_root, event.y_root),
         )
         self.bind("<<NotebookTabChanged>>", self.tab_changed)
 
         # Place the notebook, if you want
         if do_place is True:
             self.pack(expand=True, fill="both")
+
+    def add_right_click_command(self, label: str = None, fn: object = None, acc: str = None):
+        return self.right_click_menu.add_command(label, fn, acc)
 
     def add_tab(self, event=None, idx=None):
         newtab_name = self._("Untitled")
@@ -58,7 +70,8 @@ class TabsViewer(Notebook):
 
         # Add contents
         self.parent.text_editor = textwidget.TextWidget(
-            textframe, _=self._, useMenu=True, useUnRedo=True
+            textframe, _=self._, useMenu=True,
+            useUnRedo=True, enableStatusBar=False
         )
         self.parent.text_editor.addMenusepr()
         self.parent.text_editor.addMenucmd(
@@ -71,6 +84,9 @@ class TabsViewer(Notebook):
             acc="Ctrl+Shift+S",
             fn=lambda: file_operations.save_as(self.parent),
         )
+        self.parent.text_editor.statusbar = textwidget.StatusBar(
+            self.parent.text_editor, self._)
+        self.parent.text_editor.bind("<KeyRelease>", self.__bindkey)
         self.parent.text_editor.pack(expand=True, fill="both")
 
         # Post setup
@@ -81,6 +97,15 @@ class TabsViewer(Notebook):
             window_title = self._("Text Editor") + " - "
             self.titletext = window_title + newtab_name
             self.parent.title(self.titletext)
+
+    def __bindkey(self, event=None):
+        textw = self.parent.text_editor
+        textw.statusbar.keypress()
+        tabname = self.tab(self.select(), "text")
+        if not tabname.endswith(" *"):
+            self.tab("current", text=tabname + " *")
+            if self.parent.winfo_class() == "Tk" or "TopLevel":
+                self.parent.title(self._("Text Editor") + " - " + tabname + " *")
 
     def close_tab(self, event=None):
         # TODO: Check for the file content (also for mainwindow close event)
@@ -102,3 +127,25 @@ class TabsViewer(Notebook):
             self.add_tab(idx=(len(self.tabs()) - 1))  # Will this work?
         if self.parent.winfo_class() == "Tk":
             self.parent.title(self._("Text Editor") + " - " + tabname)
+
+    def duplicate_tab(self, event=None):
+        content = self.parent.text_editor.get(1.0, END)
+        tabname = self.tab(self.select(), "text")
+
+        self.add_tab(idx="default")
+        self.parent.text_editor.insert(1.0, content)
+        self.tab("current", text=tabname + self._(" (Duplicated)"))
+
+    def reopenfile(self, event=None):
+        filename = self.tab(self.select(), "text")
+        if filename not in constants.FILES_ARR:
+            self.parent.text_editor.statusbar.writeleftmessage(
+                self._("Cannot reopen this tab because it opens no file.")
+            )
+            return  # Whether we can reload the tab content
+        else:
+            with open(filename, "r") as f:
+                print("Opening file: ", filename)
+                self.parent.text_editor.insert(1.0, f.read())
+                self.parent.title(self._("Text editor") + " - " + filename)
+                self.tab("current", text=filename)

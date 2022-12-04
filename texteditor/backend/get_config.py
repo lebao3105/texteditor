@@ -1,13 +1,13 @@
 import configparser
+import darkdetect
+import gettext
 import os
 import platform
+import sv_ttk
 import threading
 from tkinter import TclError, font, messagebox
-
-import darkdetect
-import sv_ttk
-
 from . import constants
+
 
 if platform.system() == "Windows":
     file = os.environ["USERPROFILE"] + "\\.config\\texteditor_configs.ini"
@@ -40,7 +40,7 @@ cfg["popups"] = {
 cfg["cmd"] = {"defconsole": defconsole, "isenabled": "yes"}
 
 # New: Auto-save files
-cfg["filemgr"] = {"autosave": "yes", "autosave-time": "150"}  # in seconds
+cfg["filemgr"] = {"autosave": "yes", "autosave-time": "120"}  # in seconds
 
 cfg["versioning"] = {"version": "1.4", "branch": "dev"}
 
@@ -64,22 +64,28 @@ fg = cfg.get("global", "sub_color")
 
 autocolormode = False
 
-# OK, so this class only able to change some configuration? Can we use more?
 class GetConfig:
-    """Changes Tkinter/TTK widget configuration from the configuration file."""
+    """Changes Tkinter/TTK widget configurations from the configuration file."""
 
-    def __init__(self, parent=None, action: str = None):
+    def __init__(self, parent=None, action: str = None, _=None):
         """parent: Widget to use\n
         action:str=None: |\n
         --> config : Configure the widget\n
         --> reset : Reset the configuration file\n
-        If you use config, you must include parent also."""
+        If you use config, you must include parent also.\n
+        _=None: Gettext"""
         super().__init__()
-        if parent == None or "":
+
+        if _ is not None:
+            self._ = _
+        else:
+            self._ = gettext.gettext
+
+        if parent is None or "":
             if action == "reset":
                 self.reset()
 
-        if action != None or "":
+        if action is not None or "":
             if action == "config":
                 GetConfig.configure(parent)
             elif action == "reset":
@@ -98,7 +104,8 @@ class GetConfig:
                 f.write(bck)
         except OSError as e:
             messagebox.showerror(
-                "Error occured while writing contents to the file", str(e)
+                self._("Error occured while writing contents to the file"), 
+                self._("Details: %s") % str(e)
             )
             return
         finally:
@@ -161,13 +168,14 @@ class GetConfig:
 
         if not int(font_size):
             messagebox.showwarning(
-                "Warning",
-                "Wrong font size defined on the configuration file - the program will use font size 14.",
+                self._("Warning"),
+                self._("Wrong font size defined on the configuration file - the program will use font size 14."),
             )
             font_size = "14"
         elif int(font_size) <= 11:
             messagebox.showwarning(
-                "Warning", "The defined font size is smaller (or equal) than 10."
+                self._("Warning"),
+                self._("The defined font size is smaller (or equal) than 10.")
             )
 
         font_families = font.families()
@@ -179,7 +187,7 @@ class GetConfig:
                     not isshown
                 ):  # To prevent the application from showing the message box after open a new tab
                     messagebox.showwarning(
-                        message="Wrong font type in the configuration file."
+                        message=self._("Wrong font type in the configuration file.")
                     )
                     isshown = True
                 font_type = "Consolas"
@@ -202,8 +210,10 @@ class AutoColor:
     def __init__(self, parent):
         super().__init__()
         self.parent = parent
-        self.autocolor = GetConfig.getvalue("global", "autocolor")
-        self.start = autocolormode
+        
+        self.start = autocolormode = GetConfig.getvalue("global", "autocolor")
+        self.autocolor = self.start
+
         self.bg = GetConfig.getvalue("global", "color")
         self.fg = GetConfig.getvalue("global", "sub_color")
         self.colors = {"light": str(constants.DARK_BG), "dark": str(constants.LIGHT_BG)}

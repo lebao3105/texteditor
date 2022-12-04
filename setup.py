@@ -1,9 +1,15 @@
 from pathlib import Path
 from setuptools import find_packages, setup
+from texteditor.backend import constants
 
 currdir = Path(__file__).parent
 long_des = (currdir / "README.md").read_text(encoding="utf8")
 
+if constants.STATE == "DEV":
+    print("You are in a development build of texteditor")
+else:
+    print("You are in a stable build of texteditor - maybe?")
+    
 setup(
     name="texteditor",
     author="Le Bao Nguyen",

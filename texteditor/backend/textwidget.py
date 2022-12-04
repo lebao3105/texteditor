@@ -160,7 +160,7 @@ class TextWidget(Text):
 
 class StatusBar(ttk.Frame):
 
-    def __init__(self, parent, _=None, **kwargs):
+    def __init__(self, parent, _=None, bindsignal:bool=None, **kwargs):
         super().__init__(master=parent, **kwargs)
 
         if _ is None:
@@ -170,9 +170,14 @@ class StatusBar(ttk.Frame):
 
         self.lefttext = ttk.Label(self)
         self.righttext = ttk.Label(self)
+        self.lefttext.configure(state="readonly")
+        self.righttext.configure(state="readonly")
+        
+        if bindsignal is True:
+            self.righttext.bind("<KeyRelease>", self.keypress)
+        
         self.lefttext.pack(side="left")
         self.righttext.pack(side="right")
-        self.righttext.bind("<KeyRelease>", self.keypress)
 
         get_config.GetConfig.configure(self)
         get_config.GetConfig.configure(self.lefttext)
@@ -189,4 +194,4 @@ class StatusBar(ttk.Frame):
         self.righttext.config(text=self._("Line %s : Col %s") % (str(row), str(col)))
 
     def writeleftmessage(self, message:str, event=None):
-        return self.lefttext.config(text=message) # TODO: Collect all messages then clear this box after a period
+        self.lefttext.config(text=message) # TODO: Collect all messages then clear this box after a period
