@@ -53,6 +53,7 @@ class MainWindow(Tk):
         # Auto change color
         self.autocolor = BooleanVar()
         self.wrapbtn.set(False)
+        self.autocolormode = get_config.AutoColor(self)
 
         # Window size
         self.geometry("810x610")
@@ -184,12 +185,13 @@ class MainWindow(Tk):
     def autocolor_mode(self, event=None):
         if self.autocolor.get() is False:
             get_config.autocolormode = False
-            get_config.AutoColor.stopasync()
+            self.autocolormode.stopasync()
             get_config.GetConfig.configure(self.text_editor)
             self.text_editor.statusbar.writeleftmessage(self._("Stopped autocolor service."))
             tel = False
         else:
             get_config.autocolormode = True
+            self.autocolormode.startasync()
             get_config.GetConfig.configure(self.text_editor)
             self.text_editor.statusbar.writeleftmessage(self._("Started autocolor service."))
             tel = True

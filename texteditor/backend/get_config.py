@@ -224,10 +224,9 @@ class AutoColor:
         else:
             self.start = True
 
-    @staticmethod
-    def stopasync():
-        if hasattr(AutoColor, "t"):
-            del AutoColor.t
+    def stopasync(self):
+        if hasattr(self, "t"):
+            del self.t
 
     def changecolor(self):
         if self.start is True:
@@ -265,5 +264,5 @@ class AutoColor:
             else:
                 fg2 = constants.LIGHT_BG
         else:
-            fg2 = constants.LIGHT_BG
+            fg2 = constants.DARK_BG
         return fg2
