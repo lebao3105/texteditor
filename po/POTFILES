@@ -1,0 +1,11 @@
+texteditor/mainwindow.py
+texteditor/tabs.py
+texteditor/extensions/autosave.py
+texteditor/extensions/cmd.py
+texteditor/extensions/finding.py
+texteditor/backend/file_operations.py
+texteditor/backend/get_config.py
+texteditor/backend/textwidget.py
+texteditor/views/about.py
+texteditor/views/about.ui
+texteditor/views/menubar.ui
