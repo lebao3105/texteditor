@@ -61,6 +61,7 @@ Once done, run ```python3 -m texteditor```.
 To make executable files (on Windows only), read the instruction from [makerelease](makerelease/).
 
 ## Screenshots
+![image](https://user-images.githubusercontent.com/77564176/206902963-b65f0c3c-efa4-438c-8f9b-1d98fa4faae1.png)
 <div align="center">
     <img id="image" src="https://user-images.githubusercontent.com/77564176/166142583-5fe685a1-21a4-44e1-8088-73ca27e0b04a.png">
     <img id="image" src="https://user-images.githubusercontent.com/77564176/166142604-791a81ca-4f4c-47db-b037-b5525c7cf313.png">
