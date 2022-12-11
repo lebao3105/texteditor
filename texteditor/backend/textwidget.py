@@ -51,9 +51,7 @@ class TextWidget(Text):
         if self.enableMenu is True:
             self.RMenu = Menu(self, tearoff=0)
             self.__menu_init()
-            self.bind(
-                "<Button-3>", lambda event: self.__open_menu(event)
-            )
+            self.bind("<Button-3>", lambda event: self.__open_menu(event))
         if self.enableStatusBar is True:
             self.statusbar = StatusBar(self, self._)
 
@@ -159,8 +157,7 @@ class TextWidget(Text):
 
 
 class StatusBar(ttk.Frame):
-
-    def __init__(self, parent, _=None, bindsignal:bool=None, **kwargs):
+    def __init__(self, parent, _=None, bindsignal: bool = None, **kwargs):
         super().__init__(master=parent, **kwargs)
 
         if _ is None:
@@ -172,10 +169,10 @@ class StatusBar(ttk.Frame):
         self.righttext = ttk.Label(self)
         self.lefttext.configure(state="readonly")
         self.righttext.configure(state="readonly")
-        
+
         if bindsignal is True:
             self.righttext.bind("<KeyRelease>", self.keypress)
-        
+
         self.lefttext.pack(side="left")
         self.righttext.pack(side="right")
 
@@ -193,5 +190,7 @@ class StatusBar(ttk.Frame):
         row, col = self.textw.index("insert").split(".")
         self.righttext.config(text=self._("Line %s : Col %s") % (str(row), str(col)))
 
-    def writeleftmessage(self, message:str, event=None):
-        self.lefttext.config(text=message) # TODO: Collect all messages then clear this box after a period
+    def writeleftmessage(self, message: str, event=None):
+        self.lefttext.config(
+            text=message
+        )  # TODO: Collect all messages then clear this box after a period

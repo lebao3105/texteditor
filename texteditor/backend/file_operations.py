@@ -13,7 +13,7 @@ saved_files = []
 
 if sys.platform == "win32":
     searchdir = os.environ["USERPROFILE"] + "\Documents"
-    script_type = ("Windows Shell Script", "*.bat, *.cmd")
+    script_type = ("Windows Shell Script", "*.bat, *.cmd, *.ps1")
 elif sys.platform == "linux":
     searchdir = os.environ["HOME"] + "/Documents"
     script_type = ("UNIX Shell Script", "*.sh")
@@ -33,11 +33,7 @@ def open_file(self, event=None):
     file_name = askopenfilename(
         initialdir=searchdir,
         title=_("Select a file to open"),
-        filetypes=(
-            (_("All files"), "*.*"),
-            script_type,
-            (_("Text files"), "*.txt")
-        ),
+        filetypes=((_("All files"), "*.*"), script_type, (_("Text files"), "*.txt")),
     )
     if file_name:
 
@@ -72,13 +68,15 @@ def savefilename(tkwin, filename):
             print("Saving file: ", filename)
             if hasattr(tkwin.text_editor, "statusbar"):
                 tkwin.text_editor.statusbar.writeleftmessage(
-                        _("Saving file %s") % filename)
+                    _("Saving file %s") % filename
+                )
             f.write(tkwin.text_editor.get(1.0, tkinter.END))
         except OSError as e:
             print("Error: Unable to save file ", filename)
             if hasattr(tkwin.text_editor, "statusbar"):
                 tkwin.text_editor.statusbar.writeleftmessage(
-                        _("Unable to save file %s - %s") % (filename, str(e)))
+                    _("Unable to save file %s - %s") % (filename, str(e))
+                )
             return False
         else:
             saved_files.append(filename)

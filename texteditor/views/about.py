@@ -7,17 +7,19 @@ from texteditor.backend import get_config
 PROJECT_PATH = pathlib.Path(__file__).parent
 PROJECT_UI = PROJECT_PATH / "about.ui"
 
+
 class AboutDialog(Toplevel):
-    
     def __init__(self, master, translator=None):
         super().__init__(master=master)
         self.title(texteditor._("About this app"))
+        self.grab_release()
+        self.resizable = False
         builder = pygubu.Builder(translator)
 
         # Call both the project folder and
         # the current folder (which contains this file)
         builder.add_resource_path(PROJECT_PATH)
-        #print(texteditor.currdir)
+        # print(texteditor.currdir)
         builder.add_resource_path(texteditor.currdir)
 
         # Load the UI layout

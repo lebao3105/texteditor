@@ -9,7 +9,7 @@ if constants.STATE == "DEV":
     print("You are in a development build of texteditor")
 else:
     print("You are in a stable build of texteditor - maybe?")
-    
+
 setup(
     name="texteditor",
     author="Le Bao Nguyen",
@@ -22,7 +22,9 @@ setup(
     entry_points={"gui_scripts": ["texteditor = texteditor:start_app"]},
     include_package_data=True,
     packages=find_packages(),
-    package_data={"texteditor": ["icons/*.png", "../po/*/LC_MESSAGES/*.mo", "views/*.ui"]},
+    package_data={
+        "texteditor": ["icons/*.png", "../po/*/LC_MESSAGES/*.mo", "views/*.ui"]
+    },
     classifiers=[
         "Development Status :: 5 - Production/Stable",
         "Intended Audience :: End Users/Desktop",

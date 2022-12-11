@@ -26,3 +26,6 @@ texteditor.start_app()
 
 to runtextd.py (or something else you want) - save to somewhere safe.
 Try to run it.
+
+3. Using build script (builder.py)
+Use help flag to see the usage of the script. Note that this is not completed yet.

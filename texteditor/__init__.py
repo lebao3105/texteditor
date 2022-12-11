@@ -23,7 +23,7 @@ try:
     from texteditor.defs import LOCALE_DIR
 except ImportError:
     LOCALE_DIR = currdir / "po"
-	#LOCALE_DIR = "build/po/"
+# LOCALE_DIR = "build/po/"
 
 locale.setlocale(locale.LC_ALL, None)
 gettext.bindtextdomain("me.lebao3105.texteditor", LOCALE_DIR)
@@ -32,7 +32,7 @@ gettext.install("me.lebao3105.texteditor")
 texteditor._ = gettext.gettext
 
 
-def start_app(argv = None):
+def start_app(argv=None):
     if not argv:  # For __main__
         argv = sys.argv
     root = mainwindow.MainWindow()

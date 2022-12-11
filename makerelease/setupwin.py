@@ -2,14 +2,21 @@ import glob
 import py2exe
 from distutils.core import setup
 from setuptools import find_packages
-import files
+import miscs
 
 setup(
     windows=[{"script": "__main__.py"}],
     options={
         "py2exe": {
             "optimize": 2,
-            "includes": ["os", "configparser", "pathlib", "sv_ttk", "darkdetect"],
+            "includes": [
+                "os",
+                "configparser",
+                "pathlib",
+                "sv_ttk",
+                "darkdetect",
+                "pygubu",
+            ],
             "bundle_files": 1,
         }
     },

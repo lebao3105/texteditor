@@ -64,6 +64,7 @@ fg = cfg.get("global", "sub_color")
 
 autocolormode = False
 
+
 class GetConfig:
     """Changes Tkinter/TTK widget configurations from the configuration file."""
 
@@ -104,8 +105,8 @@ class GetConfig:
                 f.write(bck)
         except OSError as e:
             messagebox.showerror(
-                self._("Error occured while writing contents to the file"), 
-                self._("Details: %s") % str(e)
+                self._("Error occured while writing contents to the file"),
+                self._("Details: %s") % str(e),
             )
             return
         finally:
@@ -169,13 +170,15 @@ class GetConfig:
         if not int(font_size):
             messagebox.showwarning(
                 self._("Warning"),
-                self._("Wrong font size defined on the configuration file - the program will use font size 14."),
+                self._(
+                    "Wrong font size defined on the configuration file - the program will use font size 14."
+                ),
             )
             font_size = "14"
         elif int(font_size) <= 11:
             messagebox.showwarning(
                 self._("Warning"),
-                self._("The defined font size is smaller (or equal) than 10.")
+                self._("The defined font size is smaller (or equal) than 10."),
             )
 
         font_families = font.families()
@@ -210,7 +213,7 @@ class AutoColor:
     def __init__(self, parent):
         super().__init__()
         self.parent = parent
-        
+
         self.start = autocolormode = GetConfig.getvalue("global", "autocolor")
         self.autocolor = self.start
 

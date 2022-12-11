@@ -36,16 +36,14 @@ class TabsViewer(Notebook):
         )
         self.right_click_menu.add_command(
             label=self._("Duplicate the current opening tab"),
-            command=lambda: self.duplicate_tab(self)
+            command=lambda: self.duplicate_tab(self),
         )
         self.right_click_menu.add_command(
-            label=self._("Reopen the file"),
-            command=lambda: self.reopenfile(self)
+            label=self._("Reopen the file"), command=lambda: self.reopenfile(self)
         )
         self.bind(
             "<Button-3>",
-            lambda event: self.right_click_menu.post(
-                event.x_root, event.y_root),
+            lambda event: self.right_click_menu.post(event.x_root, event.y_root),
         )
         self.bind("<<NotebookTabChanged>>", self.tab_changed)
 
@@ -53,7 +51,9 @@ class TabsViewer(Notebook):
         if do_place is True:
             self.pack(expand=True, fill="both")
 
-    def add_right_click_command(self, label: str = None, fn: object = None, acc: str = None):
+    def add_right_click_command(
+        self, label: str = None, fn: object = None, acc: str = None
+    ):
         return self.right_click_menu.add_command(label, fn, acc)
 
     def add_tab(self, event=None, idx=None):
@@ -70,8 +70,7 @@ class TabsViewer(Notebook):
 
         # Add contents
         self.parent.text_editor = textwidget.TextWidget(
-            textframe, _=self._, useMenu=True,
-            useUnRedo=True, enableStatusBar=False
+            textframe, _=self._, useMenu=True, useUnRedo=True, enableStatusBar=False
         )
         self.parent.text_editor.addMenusepr()
         self.parent.text_editor.addMenucmd(
@@ -85,7 +84,8 @@ class TabsViewer(Notebook):
             fn=lambda: file_operations.save_as(self.parent),
         )
         self.parent.text_editor.statusbar = textwidget.StatusBar(
-            self.parent.text_editor, self._)
+            self.parent.text_editor, self._
+        )
         self.parent.text_editor.bind("<KeyRelease>", self.__bindkey)
         self.parent.text_editor.pack(expand=True, fill="both")
 

@@ -35,8 +35,12 @@ class MainWindow(Tk):
             "resetcfg": lambda: self.resetcfg(),
             "change_color": lambda: self.change_color(),
             "autocolor_mode": lambda: self.autocolor_mode(),
-            "set_wrap": lambda: textwidget.TextWidget.wrapmode(self), # TODO: Fix on/off value
-            "open_doc": lambda: webbrowser.open("https://lebao3105.gitbook.io/texteditor_doc"),
+            "set_wrap": lambda: textwidget.TextWidget.wrapmode(
+                self
+            ),  # TODO: Fix on/off value
+            "open_doc": lambda: webbrowser.open(
+                "https://lebao3105.gitbook.io/texteditor_doc"
+            ),
             "aboutdlg": lambda: self.aboutdlg(),
         }
 
@@ -91,10 +95,10 @@ class MainWindow(Tk):
             )
 
         if get_config.GetConfig.getvalue("cmd", "isenabled") == "yes":
-            #self.menu2.add_separator()
+            self.menu2.add_separator()
             addeditcmd(
                 label=self._("Open System Shell"),
-                command=lambda: cmd.CommandPrompt(self),
+                command=lambda: cmd.CommandPrompt(self, _=self._),
                 accelerator="Ctrl+T",
             )
         # Add menus to the main one
@@ -111,7 +115,7 @@ class MainWindow(Tk):
         bindcfg = self.bind
         bindcfg("<Control-n>", lambda event: self.add_tab(self))
         if get_config.GetConfig.getvalue("cmd", "isenabled") == "yes":
-            bindcfg("<Control-t>", lambda event: cmd.CommandPrompt(self))
+            bindcfg("<Control-t>", lambda event: cmd.CommandPrompt(self, _=self._))
         bindcfg("<Control-f>", lambda event: finding.Finder(self, "find"))
         bindcfg("<Control-r>", lambda event: finding.Finder(self, ""))
         bindcfg("<Control-Shift-S>", lambda event: file_operations.save_as(self))
@@ -136,7 +140,9 @@ class MainWindow(Tk):
                         "Unable to reset configuration file: Backed up default variables not found"
                     ),
                 )
-                self.text_editor.statusbar.writeleftmessage(self._("Error: Unable to reset all configurations!"))
+                self.text_editor.statusbar.writeleftmessage(
+                    self._("Error: Unable to reset all configurations!")
+                )
                 return
             else:
                 msgbox.showinfo(
@@ -145,7 +151,9 @@ class MainWindow(Tk):
                         "Resetted texteditor configurations.\nRestart the application to take the effect."
                     ),
                 )
-                self.text_editor.statusbar.writeleftmessage(self._("Resetted all configurations."))
+                self.text_editor.statusbar.writeleftmessage(
+                    self._("Resetted all configurations.")
+                )
                 self.setcolorvar()
 
     def opencfg(self, event=None):
@@ -187,13 +195,17 @@ class MainWindow(Tk):
             get_config.autocolormode = False
             self.autocolormode.stopasync()
             get_config.GetConfig.configure(self.text_editor)
-            self.text_editor.statusbar.writeleftmessage(self._("Stopped autocolor service."))
+            self.text_editor.statusbar.writeleftmessage(
+                self._("Stopped autocolor service.")
+            )
             tel = False
         else:
             get_config.autocolormode = True
             self.autocolormode.startasync()
             get_config.GetConfig.configure(self.text_editor)
-            self.text_editor.statusbar.writeleftmessage(self._("Started autocolor service."))
+            self.text_editor.statusbar.writeleftmessage(
+                self._("Started autocolor service.")
+            )
             tel = True
         self.get_color()
         if tel is True:
