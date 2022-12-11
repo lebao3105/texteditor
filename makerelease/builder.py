@@ -13,7 +13,6 @@ FOUND_NREQ = False  # Found not-solved dependency
 ## Build
 BUILD_FLAG = True
 MESON_FLAG = False
-SETUPPY_FLAG = False
 
 if sys.platform == "win32":
     pycmd = "python"
@@ -71,12 +70,9 @@ def checkreq():
 
 
 def checkflag(arg: str):
-    if arg == "--use-setup-py":
-        SETUPPY_FLAG = True
-        BUILD_FLAG = MESON_FLAG = False
-    elif arg == "--use-meson":
+    if arg == "--use-meson":
         MESON_FLAG = True
-        BUILD_FLAG = SETUPPY_FLAG = False
+        BUILD_FLAG = False
     if arg == "--no-checkreq":
         CHECKREQ_FLAG = False
 
@@ -98,7 +94,6 @@ def help():
     print("help : Show this box then exit")
     print("checkreq : Check for build requirements")
     print(miscs.boldtext("Flags:"))
-    print("--use-setup-py : Use setup.py instead of the build module")
     print("--use-meson : Build/install using meson and ninja")
     print("--no-checkreq : Tell us not to check for requirements")
     print(miscs.boldtext("Build requirements: (use the latest version for be sure)"))
@@ -110,19 +105,12 @@ def help():
     print("gettext (optional) : To generate translations")
     print("tkinter : GUI Framework")
     print("darkdetect, pygubu, configparser, sv_ttk : Install via pip")
-    print(
-        miscs.boldtext("Note: "),
-        "If you don't want install meson and build, simply add --use-setup-py.",
-    )
     exit()
 
 
 def build_():
     os.chdir("..")
     print(miscs.boldtext("Starting the build...Check the output below."))
-    if SETUPPY_FLAG is True:
-        command = pycmd + " setup.py build"
-        pass
     if BUILD_FLAG is True:
         command = pycmd + " -m build"
         pass
@@ -144,11 +132,8 @@ def build_():
 def install_():
     os.chdir("..")
     print(miscs.boldtext("Starting the project installation...Check the output below."))
-    if SETUPPY_FLAG is True:
-        command = pycmd + " setup.py install"
-        pass
     if BUILD_FLAG is True:
-        command = pycmd + " -m pip install dists/*.whl"
+        command = pycmd + " -m pip install dists/*.whl --force-reinstall"
         pass
     if MESON_FLAG is True:
         command = "ninja -C build install"
