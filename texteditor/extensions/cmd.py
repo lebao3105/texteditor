@@ -26,7 +26,7 @@ class cmd(textwidget.TextWidget):
         )
         self.configure(foreground="white", background="black", insertbackground="white")
         self.statusbar.righttext.configure(text="")
-        self.statusbar.writeleftmessage(texteditor.currdir)
+        self.statusbar.writeleftmessage(os.getcwd())
 
     def checkcmds(self, *args):
         command = self.get(1.0, END).split("\n")[-2]
@@ -74,23 +74,13 @@ class cmd(textwidget.TextWidget):
             )
             cmd = get_config.GetConfig.getvalue("cmd", "defconsole")
 
-            if cmd == (
-                "bash"
-                or "xonsh"
-                or "zsh"
-                or "fish"
-                or "sh"
-                or "pwsh"
-                or "powershell"
-                or "tmux"
-                or "kgx"
-            ):
+            if cmd == ("bash" or "xonsh" or "zsh" or "fish" or "sh"):
                 messagebox.showerror(
                     title="Error",
                     message="This application cannot run shell, use terminal emulator instead.\nProgram: "
                     + cmd,
                 )
-            elif cmd == ("cmd" or "powershell"):
+            elif cmd == ("cmd" or "powershell" or "pwsh"):
                 threading.Thread(target=lambda: self.runcommand("start " + cmd)).start()
             else:
                 threading.Thread(target=lambda: self.runcommand(cmd)).start()

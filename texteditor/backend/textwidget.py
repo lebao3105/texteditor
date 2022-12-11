@@ -56,9 +56,7 @@ class TextWidget(Text):
             self.statusbar = StatusBar(self, self._)
 
         # Do some customization
-        self.configure(
-            wrap="word"
-        )  # This is enabled by the default in this application
+        self.configure(wrap="word")
         get_config.GetConfig.configure(self)
 
     # Place scrollbars
@@ -184,7 +182,7 @@ class StatusBar(ttk.Frame):
         self.keypress()
         self.writeleftmessage(self._("No new message."))
 
-        self.pack(side="bottom", fill="x")
+        self.pack(side="bottom", fill="x")  # TODO: Place it outside the text editor
 
     def keypress(self, event=None):
         row, col = self.textw.index("insert").split(".")
