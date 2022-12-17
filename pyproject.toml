@@ -29,4 +29,4 @@ dependencies = [
 package-dir = {"texteditor" = "texteditor"}
 
 [project.gui-scripts]
-cli-name = "texteditor:start_app"
+texteditor = "texteditor:start_app"
