@@ -13,7 +13,7 @@ class AboutDialog(Toplevel):
         super().__init__(master=master)
         self.title(texteditor._("About this app"))
         self.grab_release()
-        self.resizable = False
+        self.resizable(False, False)
         builder = pygubu.Builder(translator)
 
         # Call both the project folder and

@@ -1,5 +1,6 @@
 import gettext
-from tkinter import Frame, Menu, END
+from tkinter import Frame, Menu, END, Tk
+from tkinter.messagebox import askyesnocancel
 from tkinter.ttk import Notebook
 from texteditor.backend import constants, file_operations, textwidget
 
@@ -108,23 +109,31 @@ class TabsViewer(Notebook):
                 self.parent.title(self._("Text Editor") + " - " + tabname + " *")
 
     def close_tab(self, event=None):
-        # TODO: Check for the file content (also for mainwindow close event)
-        # TODO-CRITICAL: This function won't work if the first tab is not selected
-        tabnum = int(self.index("end")) - 1
-        if tabnum == 1:
-            print(self._("No other tabs left, exiting..."))
-            if self.parent.winfo_class() == "Tk":
-                self.parent.destroy()
+        # This function won't work if the first tab is not selected
+        tabname = self.tab(self.select(), "text")
+        if tabname.endswith(" *"):
+            result = askyesnocancel(
+                title=self._("Tab close"),
+                message=self._("The content of this tab is modified. Save it?"),
+                icon="info",
+            )
+            if result == True:
+                file_operations.save_file(self.parent)
+                self.forget(self.select())
+            elif result == None:
+                return
+            else:
+                self.forget(self.select())
         else:
             self.forget(self.select())
 
-    def tab_changed(self, event=None):
+    def tab_changed(self, event):
         if self.select() == self.tabs()[-1]:
             self.add_tab(idx=(len(self.tabs()) - 1))
         tabname = event.widget.tab("current")["text"]
         # Check if the tab name is + (new tab button)
         if tabname == "+":
-            self.add_tab(idx=(len(self.tabs()) - 1))  # Will this work?
+            self.add_tab(idx=(len(self.tabs())))  # Will this work?
         if self.parent.winfo_class() == "Tk":
             self.parent.title(self._("Text Editor") + " - " + tabname)
 

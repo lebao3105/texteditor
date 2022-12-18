@@ -87,8 +87,7 @@ def save_file(self, event=None):
     find_text_editor(self)
     filefind = self.notebook.tab(self.notebook.select(), "text")
     if filefind.endswith(" *"):
-        savefilename(self, filefind.removesuffix(" *"))
-        return
+        filefind = filefind.removesuffix(" *")
     if self.text_editor.compare("end-1c", "==", 1.0):
         save_as(self)
     elif not (filefind in constants.FILES_ARR):

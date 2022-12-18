@@ -46,7 +46,10 @@ class MainWindow(Tk):
 
         # Set icon
         if os.path.isfile(texteditor.icon):
-            self.wm_iconphoto(False, PhotoImage(file=texteditor.icon))
+            try:
+                self.wm_iconphoto(False, PhotoImage(file=texteditor.icon))
+            except TclError:
+                print("Unable to set icon : TclError exception occurred.")
         else:
             print("Warning: Application icon", texteditor.icon, "not found!")
 
