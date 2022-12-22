@@ -24,10 +24,10 @@ class MainWindow(Tk):
 
         # Configure all menu items callbacks
         self.callbacks = {
-            "openfile": lambda: file_operations.open_file(self),
+            # "openfile": lambda: file_operations.open_file(self),
             "add_tab": lambda: self.add_tab(),
-            "savefile": lambda: file_operations.save_file(self),
-            "savefileas": lambda: file_operations.save_as(self),
+            # "savefile": lambda: file_operations.save_file(self),
+            # "savefileas": lambda: file_operations.save_as(self),
             "gofind": lambda: finding.Finder(self, "find"),
             "goreplace": lambda: finding.Finder(self, ""),
             "destroy": lambda: self.destroy(),
@@ -111,6 +111,9 @@ class MainWindow(Tk):
         menu.add_cascade(menu=self.menu4, label="?")
         # Do stuff
         self.notebook = TabsViewer(self, _=self._, do_place=True)
+        self.callbacks["openfile"] = lambda: self.notebook.fileops.openfile_()
+        self.callbacks["savefile"] = lambda: self.notebook.fileops.savefile_()
+        self.callbacks["savefileas"] = lambda: self.notebook.fileops.saveas()
         builder.connect_callbacks(self.callbacks)
 
     # Binding commands to the application

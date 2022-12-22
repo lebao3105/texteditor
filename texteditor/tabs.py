@@ -1,5 +1,5 @@
-import gettext
-from tkinter import Frame, Menu, END, Tk
+import texteditor
+from tkinter import Frame, Menu, END
 from tkinter.messagebox import askyesnocancel
 from tkinter.ttk import Notebook
 from texteditor.backend import constants, file_operations, textwidget
@@ -10,7 +10,7 @@ class TabsViewer(Notebook):
         super().__init__(master, **kw)
 
         if _ is None:
-            self._ = gettext.gettext
+            self._ = texteditor._
         else:
             self._ = _
 
@@ -71,21 +71,24 @@ class TabsViewer(Notebook):
 
         # Add contents
         self.parent.text_editor = textwidget.TextWidget(
-            textframe, _=self._, useMenu=True, useUnRedo=True, enableStatusBar=False
+            textframe, _=self._, useMenu=True, useUnRedo=True, enableStatusBar=True
+        )
+        self.fileops = file_operations.FileOperations(
+            textw=self.parent.text_editor,
+            notebook=self,
+            newtabfn=lambda: self.add_tab(),
+            statusbar=self.parent.text_editor.statusbar,
         )
         self.parent.text_editor.addMenusepr()
         self.parent.text_editor.addMenucmd(
             label=self._("Save"),
             acc="Ctrl+S",
-            fn=lambda: file_operations.save_file(self.parent),
+            fn=lambda: self.fileops.savefile_,
         )
         self.parent.text_editor.addMenucmd(
             label=self._("Save as"),
             acc="Ctrl+Shift+S",
-            fn=lambda: file_operations.save_as(self.parent),
-        )
-        self.parent.text_editor.statusbar = textwidget.StatusBar(
-            self.parent.text_editor, self._
+            fn=self.fileops.saveas,
         )
         self.parent.text_editor.bind("<KeyRelease>", self.__bindkey)
         self.parent.text_editor.pack(expand=True, fill="both")
@@ -118,7 +121,7 @@ class TabsViewer(Notebook):
                 icon="info",
             )
             if result == True:
-                file_operations.save_file(self.parent)
+                self.fileops.savefile(self.parent)
                 self.forget(self.select())
             elif result == None:
                 return
