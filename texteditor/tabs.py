@@ -1,7 +1,7 @@
 import texteditor
 from tkinter import Frame, Menu, END
 from tkinter.messagebox import askyesnocancel
-from tkinter.ttk import Notebook
+from tkinter.ttk import Notebook, Scrollbar
 from texteditor.backend import constants, file_operations, textwidget
 
 
@@ -71,14 +71,29 @@ class TabsViewer(Notebook):
 
         # Add contents
         self.parent.text_editor = textwidget.TextWidget(
-            textframe, _=self._, useMenu=True, useUnRedo=True, enableStatusBar=True
+            textframe,
+            _=self._,
+            useMenu=True,
+            useUnRedo=True,
+            useScrollbars=False,
+            enableStatusBar=True,
         )
         self.fileops = file_operations.FileOperations(
             textw=self.parent.text_editor,
             notebook=self,
-            newtabfn=lambda: self.add_tab(),
+            newtabfn=lambda: self.add_tab(idx="default"),
             statusbar=self.parent.text_editor.statusbar,
         )
+        ## Scroll bars
+        xbar = Scrollbar(
+            textframe, orient="horizontal", command=self.parent.text_editor.xview
+        )
+        ybar = Scrollbar(
+            textframe, orient="vertical", command=self.parent.text_editor.yview
+        )
+        xbar.pack(side="bottom", fill="x")
+        ybar.pack(side="right", fill="y")
+        ## Right-click menu
         self.parent.text_editor.addMenusepr()
         self.parent.text_editor.addMenucmd(
             label=self._("Save"),

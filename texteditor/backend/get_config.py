@@ -1,12 +1,12 @@
 import configparser
 import darkdetect
-import gettext
 import os
 import platform
 import sv_ttk
+import texteditor
 import threading
 from tkinter import TclError, font, messagebox
-from . import constants
+from . import constants, logger
 
 
 if platform.system() == "Windows":
@@ -19,6 +19,7 @@ else:
     defconsole = "xterm"
 
 cfg = configparser.ConfigParser()
+log = logger.Logger("texteditor.backend.get_config")
 
 # Default variables.
 # We must use cfg.get() to get the current variable's value.
@@ -42,8 +43,6 @@ cfg["cmd"] = {"defconsole": defconsole, "isenabled": "yes"}
 # New: Auto-save files
 cfg["filemgr"] = {"autosave": "yes", "autosave-time": "120"}  # in seconds
 
-cfg["versioning"] = {"version": "1.4", "branch": "dev"}
-
 # File write/backup
 with open(backup, "w") as f2:
     cfg.write(f2)
@@ -51,11 +50,11 @@ with open(backup, "r") as f:
     bck = f.read()
 
 if not os.path.isfile(file):
-    try:
-        with open(file, "w") as f:
-            cfg.write(f)
-    except:
-        raise Exception("Unable to write configuration file!")
+    with open(file, mode="w") as f:
+        try:
+            f.write(cfg)
+        except:
+            log.throwerr("Unable to write things into the configuration file")
 
 cfg.read(file)
 
@@ -74,13 +73,12 @@ class GetConfig:
         --> config : Configure the widget\n
         --> reset : Reset the configuration file\n
         If you use config, you must include parent also.\n
-        _=None: Gettext"""
-        super().__init__()
+        _=None: Gettext translation"""
 
         if _ is not None:
             self._ = _
         else:
-            self._ = gettext.gettext
+            self._ = texteditor._
 
         if parent is None or "":
             if action == "reset":
@@ -88,15 +86,16 @@ class GetConfig:
 
         if action is not None or "":
             if action == "config":
-                GetConfig.configure(parent)
+                self.configure(parent)
             elif action == "reset":
-                GetConfig.reset()
+                self.reset()
 
     @staticmethod
     def reset():
         if not bck:
-            print(
-                "Error: Unable to reset configuration file: Backed up default variables not found"
+            log.throwerr(
+                "Error: Unable to reset configration file",
+                "Backed up variables not found",
             )
             return False
         try:
@@ -105,12 +104,13 @@ class GetConfig:
                 f.write(bck)
         except OSError as e:
             messagebox.showerror(
-                self._("Error occured while writing contents to the file"),
-                self._("Details: %s") % str(e),
+                GetConfig._("Error occured while writing contents to the file"),
+                GetConfig._("Details: %s") % str(e),
             )
+            log.throwerr("Error: Unable to reset configuration file")
             return
         finally:
-            print("Completed resetting texteditor configuration file.")
+            log.throwinf("Reset texteditor configuration file - completed.")
             return True
 
     @staticmethod
@@ -148,19 +148,19 @@ class GetConfig:
     @staticmethod
     def change_config(section: str, option: str, value: str | int, event=None):
         cfg.set(section, option, str(value))
-        try:
-            with open(file, "w") as filed:
+        with open(file, "w") as filed:
+            try:
                 cfg.write(filed)
-        except:
-            print("Unable to write new configuration!")
-            print(
-                "Detail: make section %s->option %s to use value %s"
-                % (section, option, value)
-            )
-            return False
-        finally:
-            print("Changed texteditor configuration.")
-            return True
+            except:
+                log.throwerr(
+                    "Unable to write new configuration! (make %s->%s use %s)" % section,
+                    option,
+                    value,
+                )
+                return False
+            finally:
+                log.throwinf("Changed texteditor configuration.")
+                return True
 
     def _checkfont(self):
         # Get values
@@ -200,9 +200,9 @@ class GetConfig:
     @staticmethod
     def getvalue(section: str, name: str):
         if not section in cfg.sections():
-            raise Exception("Section %s not found" % section)
+            raise log.throwerr("Configuration section %s not found" % section)
         elif not cfg[section][name]:
-            raise Exception("%s->%s not found" % section, name)
+            raise log.throwerr("Configuration %s->%s not found" % section, name)
         else:
             return cfg.get(section, name)
 

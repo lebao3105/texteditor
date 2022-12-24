@@ -7,7 +7,6 @@ from tkinter.filedialog import *
 from tkinter.messagebox import *
 
 from . import constants
-from .. import tabs
 
 if sys.platform == "win32":
     searchdir = os.environ["USERPROFILE"] + "\Documents"
@@ -16,13 +15,15 @@ else:
 
 
 class FileOperations:
-    """File operations unit for texteditor.
+    """File operations unit for texteditor.\n
     Paramaters:
     textw : text widget
     notebook : notebook widget
     newtabfn : create new tab function for the notebook
     statusbar=None : status bar (texteditor.backend.textwidget.StatusBar)
-    _=None : gettext translator"""
+    _=None : gettext translator\n
+    Variable(s):
+    files : Open files (not implemented yet, but everything is loaded into this"""
 
     def __init__(self, textw, notebook, newtabfn, statusbar=None, _=None):
         if _ is None:
@@ -31,7 +32,7 @@ class FileOperations:
             self._ = _
 
         self.textw = textw
-        self.files = []
+        self.files = []  # TODO:Manage saves and unsaved-edits
         self.notebook = notebook
         self.newtabfn = newtabfn
         self.statusbar = statusbar if statusbar is not None else None
@@ -41,7 +42,9 @@ class FileOperations:
         return self.notebook.tab(self.notebook.select(), "text")
 
     def saveas(self, event=None):
-        filename = asksaveasfile(initialdir=searchdir, initialfile=self.tabname())
+        filename = asksaveasfile(
+            initialdir=searchdir, initialfile=self.tabname().removesuffix(" *")
+        )
         if filename:
             self.savefile(filename)
 
@@ -55,9 +58,7 @@ class FileOperations:
                 "Seems that the file you're trying to open is in another tab.\nLoad anyway? (to a new tab)"
             ),
         )
-        if ask:
-            self.newtabfn()
-            return True
+        return ask
 
     def savefile(self, filename):
         """Saves a file (filename parameter)."""
@@ -67,10 +68,10 @@ class FileOperations:
             try:
                 f.write(self.textw.get(1.0, "end"))
             except Exception:
-                self.throwerr("Unable to save file", str(traceback.format_exc()))
+                self.throwerr("Unable to save file")
             else:
                 self.notebook.tab("current", text=filename)
-                constants.FILES_ARR.append(filename)
+                self.files.append(filename)
 
     def savefile_(self, event=None):
         """Checks if the file is a new file or not, then make the choice."""
@@ -88,10 +89,10 @@ class FileOperations:
             try:
                 self.textw.insert(1.0, f.read())
             except Exception:
-                self.throwerr("Unable to open file", str(traceback.format_exc()))
+                self.throwerr("Unable to open file")
             else:
-                self.textw.event_generate("<<NotebookTabChanged>>")
-                constants.FILES_ARR.append(filename)
+                self.notebook.event_generate("<<NotebookTabChanged>>")
+                self.files.append(filename)
                 self.notebook.tab("current", text=filename)
 
     def openfile_(self, event=None):
@@ -101,12 +102,11 @@ class FileOperations:
             for x in constants.FILES_ARR:
                 if filename in x:
                     if self.asktoopen():
-                        nonewtab = True
-                        break
-                    else:
-                        return
+                        self.newtabfn()
+                        self.openfile(filename)
                 else:
                     self.openfile(filename)
-            if not self.textw.compare("end-1c", "==", 1.0) and nonewtab is not True:
+                return
+            if not self.textw.compare("end-1c", "==", 1.0):
                 self.newtabfn()
-            self.openfile(filename)
+                self.openfile(filename)

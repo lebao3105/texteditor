@@ -7,8 +7,10 @@ from tkinter import *
 import texteditor
 from .tabs import TabsViewer
 from .extensions import autosave, cmd, finding
-from .backend import file_operations, get_config, textwidget
+from .backend import file_operations, get_config, textwidget, logger
 from .views import about
+
+log = logger.Logger("texteditor.mainwindow")
 
 
 class MainWindow(Tk):
@@ -49,9 +51,9 @@ class MainWindow(Tk):
             try:
                 self.wm_iconphoto(False, PhotoImage(file=texteditor.icon))
             except TclError:
-                print("Unable to set icon : TclError exception occurred.")
+                log.throwerr("Unable to set application icon", "TCLError occured")
         else:
-            print("Warning: Application icon", texteditor.icon, "not found!")
+            log.throwwarn("Warning: Application icon %s not found" % texteditor.icon)
 
         # Wrap button
         self.wrapbtn = BooleanVar()
@@ -124,9 +126,9 @@ class MainWindow(Tk):
             bindcfg("<Control-t>", lambda event: cmd.CommandPrompt(self, _=self._))
         bindcfg("<Control-f>", lambda event: finding.Finder(self, "find"))
         bindcfg("<Control-r>", lambda event: finding.Finder(self, ""))
-        bindcfg("<Control-Shift-S>", lambda event: file_operations.save_as(self))
-        bindcfg("<Control-s>", lambda event: file_operations.save_file(self))
-        bindcfg("<Control-o>", lambda event: file_operations.open_file(self))
+        bindcfg("<Control-Shift-S>", lambda event: self.notebook.fileops.saveas())
+        bindcfg("<Control-s>", lambda event: self.notebook.fileops.savefile_())
+        bindcfg("<Control-o>", lambda event: self.notebook.fileops.openfile_())
         bindcfg("<Control-w>", lambda event: self.set_wrap(self))
 
     # Menu bar callbacks
@@ -187,11 +189,11 @@ class MainWindow(Tk):
         if self.wrapbtn.get() == True:
             self.text_editor.configure(wrap="none")
             self.wrapbtn.set(False)
-            print("Disabled wrapping on the text widget.")
+            log.throwinf("Disabled wrapping on the text widget.")
         else:
             self.text_editor.configure(wrap="word")
             self.wrapbtn.set(True)
-            print("Enabled wrapping on the text widget.")
+            log.throwinf("Enabled wrapping on the text widget.")
 
     def add_tab(self, event=None):
         return self.notebook.add_tab(idx="default")

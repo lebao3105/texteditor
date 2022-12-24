@@ -3,11 +3,11 @@ import locale
 import os.path
 import pathlib
 import sys
-from tkinter.messagebox import showinfo
+from tkinter.messagebox import showerror
 
 import texteditor
 from . import mainwindow
-from .backend import constants, file_operations
+from .backend import constants
 
 currdir = pathlib.Path(__file__).parent
 
@@ -39,15 +39,15 @@ def start_app(argv=None):
     n = len(argv)
     if n - 1 > 0:
         if os.path.isfile(argv[1]):
-            file_operations.openfilename(root, argv[1])
+            root.text_editor.fileops.openfile(argv[1])
         else:
-            showinfo(message="File not found : %s" % str(argv[1]))
+            showerror(message=root._("File not found : %s") % str(argv[1]))
         for i in range(2, n):
             if os.path.isfile(argv[i]):
                 root.add_tab()
-                file_operations.openfilename(root, argv[i])
+                root.text_editor.fileops.openfile(root, argv[i])
             else:
-                showinfo(message="File not found : %s" % str(argv[i]))
+                showerror(message=root._("File not found : %s") % str(argv[i]))
     else:
         pass
 

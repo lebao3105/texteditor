@@ -1,7 +1,7 @@
 import tkinter.ttk as ttk
 import gettext
 from tkinter import BooleanVar, Menu, Text
-from texteditor.backend import file_operations, get_config
+from texteditor.backend import get_config
 
 
 class TextWidget(Text):
@@ -24,12 +24,12 @@ class TextWidget(Text):
         useMenu: bool = None,
         useUnRedo: bool = None,
         addWrap: bool = None,
+        useScrollbars: bool = None,
         enableStatusBar: bool = None,
         **kw
     ):
         super().__init__(parent, **kw)
 
-        self.__place_scrollbar()
         self.master = parent
         self.wrapbtn = BooleanVar(self)
         self.wrapbtn.set(True)
@@ -54,6 +54,8 @@ class TextWidget(Text):
             self.bind("<Button-3>", lambda event: self.__open_menu(event))
         if self.enableStatusBar is True:
             self.statusbar = StatusBar(self, self._)
+        if useScrollbars is True:
+            self.__place_scrollbar()
 
         # Do some customization
         self.configure(wrap="word")
@@ -141,7 +143,6 @@ class TextWidget(Text):
 
     # @staticmethod
     def wrapmode(self, event=None):
-        file_operations.find_text_editor(self)
         # Find the button first:)
         if not hasattr(self, "wrapbtn"):
             print("Couldn't find Wrap mode button!")
