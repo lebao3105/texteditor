@@ -17,6 +17,7 @@
 * Make configuring easier with a Preferences window
 * Implement a new notebook - why not?! (= move all texteditor.tabs defs to a class) (Done-still working more)
 * Zoom in/out?
+* Folder explorer!
 
 Other things:
 * Implement a debian package?

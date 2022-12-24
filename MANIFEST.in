@@ -1,1 +1,2 @@
 include texteditor/icons/*.png
+include po/*/*/*.mo

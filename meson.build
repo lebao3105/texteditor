@@ -1,10 +1,11 @@
-project('texteditor',
-    version: '1.4-dev',
+project(
+    'texteditor',
+    version: '1.4-beta',
     meson_version: '>= 0.59.0',
     license: 'GPL-3.0+'
 )
 
-message('Note: Please make sure that you have Tkinter/Tk installed for your Python installation.')
+message('Note: Please make sure that you have dependencies installed before building this project.')
 message('Note: Only Python3.7+ is supported here.')
 
 # Import modules
