@@ -1,7 +1,6 @@
 import os
 import sys
 import texteditor
-import traceback
 
 from tkinter.filedialog import *
 from tkinter.messagebox import *
@@ -42,7 +41,7 @@ class FileOperations:
         return self.notebook.tab(self.notebook.select(), "text")
 
     def saveas(self, event=None):
-        filename = asksaveasfile(
+        filename = asksaveasfilename(
             initialdir=searchdir, initialfile=self.tabname().removesuffix(" *")
         )
         if filename:
@@ -63,7 +62,9 @@ class FileOperations:
     def savefile(self, filename):
         """Saves a file (filename parameter)."""
         if self.statusbar is not None:
-            self.statusbar.writeleftmessage(self._("Saving file %s") % filename)
+            self.statusbar.writeleftmessage(
+                self._("Saving file %s") % filename, nowrite=True
+            )
         with open(filename, "w") as f:
             try:
                 f.write(self.textw.get(1.0, "end"))
