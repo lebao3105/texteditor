@@ -1,7 +1,7 @@
 import tkinter.ttk as ttk
 import gettext
 from tkinter import BooleanVar, Menu, Text
-from texteditor.backend import get_config
+from texteditor.backend import get_config, logger
 
 
 class TextWidget(Text):
@@ -53,7 +53,7 @@ class TextWidget(Text):
             self.__menu_init()
             self.bind("<Button-3>", lambda event: self.__open_menu(event))
         if self.enableStatusBar is True:
-            self.statusbar = StatusBar(self, self._)
+            self.statusbar = logger.StatusBar(self, self._)
         if useScrollbars is True:
             self.__place_scrollbar()
 
@@ -153,43 +153,3 @@ class TextWidget(Text):
         else:
             self.text_editor.configure(wrap="none")
             self.statusbar.writeleftmessage("Disabled wrapping on the text widget.")
-
-
-class StatusBar(ttk.Frame):
-    def __init__(self, parent, _=None, bindsignal: bool = None, **kwargs):
-        super().__init__(master=parent, **kwargs)
-
-        if _ is None:
-            self._ = gettext.gettext
-        else:
-            self._ = _
-
-        self.lefttext = ttk.Label(self)
-        self.righttext = ttk.Label(self)
-        self.lefttext.configure(state="readonly")
-        self.righttext.configure(state="readonly")
-
-        if bindsignal is True:
-            self.righttext.bind("<KeyRelease>", self.keypress)
-
-        self.lefttext.pack(side="left")
-        self.righttext.pack(side="right")
-
-        get_config.GetConfig.configure(self)
-        get_config.GetConfig.configure(self.lefttext)
-        get_config.GetConfig.configure(self.righttext)
-
-        self.textw = parent
-        self.keypress()
-        self.writeleftmessage(self._("No new message."))
-
-        self.pack(side="bottom", fill="x")  # TODO: Place it outside the text editor
-
-    def keypress(self, event=None):
-        row, col = self.textw.index("insert").split(".")
-        self.righttext.config(text=self._("Line %s : Col %s") % (str(row), str(col)))
-
-    def writeleftmessage(self, message: str, event=None):
-        self.lefttext.config(
-            text=message
-        )  # TODO: Collect all messages then clear this box after a period
