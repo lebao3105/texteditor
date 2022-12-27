@@ -1,0 +1,4 @@
+configparser
+darkdetect
+pygubu
+sv_ttk
