@@ -71,7 +71,7 @@ class TabsViewer(Notebook):
 
         # Add contents
         self.parent.text_editor = textwidget.TextWidget(
-            textframe,
+            parent=textframe,
             _=self._,
             useMenu=True,
             useUnRedo=True,

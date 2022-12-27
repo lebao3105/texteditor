@@ -120,20 +120,6 @@
 		  <property name="label" translatable="yes">Toggle color mode...</property>
       </object>
     </child>
-    <child>
-      <object class="tk.Menuitem.Command" id="command17">
-        <property name="command" type="command" cbtype="simple">autocolor_mode</property>
-        <property name="label" translatable="yes">Auto-color mode</property>
-      </object>
-    </child>
-    <child>
-      <object class="tk.Menuitem.Checkbutton" id="checkbutton1">
-        <property name="accelerator">Ctrl+W</property>
-        <property name="command" type="command" cbtype="simple">set_wrap</property>
-        <property name="label" translatable="yes">Wrap (by word)</property>
-        <property name="variable">boolean:wrapbtn</property>
-      </object>
-    </child>
   </object>
   <object class="tk.Menu" id="menu4">
     <property name="tearoff">false</property>

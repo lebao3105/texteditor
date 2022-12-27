@@ -7,7 +7,7 @@ from tkinter import *
 import texteditor
 from .tabs import TabsViewer
 from .extensions import autosave, cmd, finding
-from .backend import file_operations, get_config, textwidget, logger
+from .backend import file_operations, get_config, logger
 from .views import about
 
 log = logger.Logger("texteditor.mainwindow")
@@ -36,10 +36,6 @@ class MainWindow(Tk):
             "opencfg": lambda: self.opencfg(),
             "resetcfg": lambda: self.resetcfg(),
             "change_color": lambda: self.change_color(),
-            "autocolor_mode": lambda: self.autocolor_mode(),
-            "set_wrap": lambda: textwidget.TextWidget.wrapmode(
-                self
-            ),  # TODO: Fix on/off value
             "open_doc": lambda: webbrowser.open(
                 "https://lebao3105.gitbook.io/texteditor_doc"
             ),
@@ -74,24 +70,26 @@ class MainWindow(Tk):
         self.add_event()
 
     def load_ui(self):
-        """Loads the "menu bar" defined from a .ui file,
+        """Load the "menu bar" defined from a .ui file,
         then place other widgets."""
+
         viewsdir = texteditor.currdir / "views"
         builder = pygubu.Builder(self._)
-        # Set the menu bar
+
         menu = Menu(self)
         self.config(menu=menu)
-        # Load all menus
+
+        ## Read all menus
         builder.add_resource_path(texteditor.currdir)
         builder.add_resource_path(viewsdir)
         builder.add_from_file(viewsdir / "menubar.ui")
-        builder.import_variables(self, ["autocolor", "wrapbtn"])
-        # Get objects
+
         self.menu1 = builder.get_object("menu1", self)
         self.menu2 = builder.get_object("menu2", self)
         self.menu3 = builder.get_object("menu3", self)
         self.menu4 = builder.get_object("menu4", self)
-        # Add menu items
+
+        ## Add "code-only" menu items
         addeditcmd = self.menu2.add_command
         if get_config.GetConfig.getvalue("filemgr", "autosave") == "yes":
             addeditcmd(
@@ -106,12 +104,25 @@ class MainWindow(Tk):
                 command=lambda: cmd.CommandPrompt(self, _=self._),
                 accelerator="Ctrl+T",
             )
-        # Add menus to the main one
+        self.menu3.add_checkbutton(
+            label=self._("Autocolor mode"),
+            command=lambda: self.autocolor_mode,
+            variable=self.autocolor,
+        )
+        self.menu3.add_checkbutton(
+            label=self._("Wrap (by word)"),
+            command=lambda: self.text_editor.wrapmode,
+            variable=self.wrapbtn,
+            accelerator="Ctrl+W",
+        )
+
+        ## Add menus to the main one
         menu.add_cascade(menu=self.menu1, label=self._("File"))
         menu.add_cascade(menu=self.menu2, label=self._("Edit"))
         menu.add_cascade(menu=self.menu3, label=self._("Config"))
         menu.add_cascade(menu=self.menu4, label="?")
-        # Do stuff
+
+        ## Do stuff
         self.notebook = TabsViewer(self, _=self._, do_place=True)
         self.callbacks["openfile"] = lambda: self.notebook.fileops.openfile_()
         self.callbacks["savefile"] = lambda: self.notebook.fileops.savefile_()
@@ -206,7 +217,7 @@ class MainWindow(Tk):
             self.text_editor.statusbar.writeleftmessage(
                 self._("Stopped autocolor service.")
             )
-            tel = False
+            self.menu3.entryconfig(2, state="disabled")
         else:
             get_config.autocolormode = True
             self.autocolormode.startasync()
@@ -214,9 +225,5 @@ class MainWindow(Tk):
             self.text_editor.statusbar.writeleftmessage(
                 self._("Started autocolor service.")
             )
-            tel = True
-        self.get_color()
-        if tel is True:
-            self.menu3.entryconfig(2, state="disabled")
-        else:
             self.menu3.entryconfig(2, state="normal")
+        self.get_color()

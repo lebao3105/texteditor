@@ -6,9 +6,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: me.lebao3105.texteditor 1.4-dev\n"
+"Project-Id-Version: me.lebao3105.texteditor 1.4-beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-12-04 16:29+0700\n"
+"POT-Creation-Date: 2022-12-24 18:44+0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,145 +17,167 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: texteditor/mainwindow.py:88
+#: texteditor/mainwindow.py:98
 msgid "Autosave"
 msgstr ""
 
-#: texteditor/mainwindow.py:95
+#: texteditor/mainwindow.py:105
 msgid "Open System Shell"
 msgstr ""
 
-#: texteditor/mainwindow.py:100
+#: texteditor/mainwindow.py:110
 msgid "File"
 msgstr ""
 
-#: texteditor/mainwindow.py:101
+#: texteditor/mainwindow.py:111
 msgid "Edit"
 msgstr ""
 
-#: texteditor/mainwindow.py:102
+#: texteditor/mainwindow.py:112
 msgid "Config"
 msgstr ""
 
-#: texteditor/mainwindow.py:126
+#: texteditor/mainwindow.py:139 texteditor/backend/get_config.py:172
+#: texteditor/backend/get_config.py:180
 msgid "Warning"
 msgstr ""
 
-#: texteditor/mainwindow.py:127
+#: texteditor/mainwindow.py:140
 msgid "This will reset ALL configurations you have ever made. Continue?"
 msgstr ""
 
-#: texteditor/mainwindow.py:133
+#: texteditor/mainwindow.py:146
 msgid "Error occured!"
 msgstr ""
 
-#: texteditor/mainwindow.py:135
+#: texteditor/mainwindow.py:148
 msgid ""
 "Unable to reset configuration file: Backed up default variables not found"
 msgstr ""
 
-#: texteditor/mainwindow.py:138
+#: texteditor/mainwindow.py:152
 msgid "Error: Unable to reset all configurations!"
 msgstr ""
 
-#: texteditor/mainwindow.py:142
+#: texteditor/mainwindow.py:157
 msgid "Completed"
 msgstr ""
 
-#: texteditor/mainwindow.py:144
+#: texteditor/mainwindow.py:159
 msgid ""
 "Resetted texteditor configurations.\n"
 "Restart the application to take the effect."
 msgstr ""
 
-#: texteditor/mainwindow.py:147
+#: texteditor/mainwindow.py:163
 msgid "Resetted all configurations."
 msgstr ""
 
-#: texteditor/mainwindow.py:189
+#: texteditor/mainwindow.py:207
 msgid "Stopped autocolor service."
 msgstr ""
 
-#: texteditor/mainwindow.py:194
+#: texteditor/mainwindow.py:215
 msgid "Started autocolor service."
 msgstr ""
 
-#: texteditor/tabs.py:29
+#: texteditor/tabs.py:30
 msgid "New tab"
 msgstr ""
 
-#: texteditor/tabs.py:34
+#: texteditor/tabs.py:35
 msgid "Close the current opening tab"
 msgstr ""
 
-#: texteditor/tabs.py:48
+#: texteditor/tabs.py:39
+msgid "Duplicate the current opening tab"
+msgstr ""
+
+#: texteditor/tabs.py:43
+msgid "Reopen the file"
+msgstr ""
+
+#: texteditor/tabs.py:61
 msgid "Untitled"
 msgstr ""
 
-#: texteditor/tabs.py:65 texteditor/views/menubar.ui:23
+#: texteditor/tabs.py:99 texteditor/views/menubar.ui:23
 msgid "Save"
 msgstr ""
 
-#: texteditor/tabs.py:70 texteditor/backend/file_operations.py:92
+#: texteditor/tabs.py:104
 msgid "Save as"
 msgstr ""
 
-#: texteditor/tabs.py:81 texteditor/tabs.py:104 texteditor/views/about.ui:14
+#: texteditor/tabs.py:116 texteditor/tabs.py:127 texteditor/tabs.py:156
+#: texteditor/views/about.ui:14
 msgid "Text Editor"
 msgstr ""
 
-#: texteditor/tabs.py:90
-msgid "No other tabs left, exiting..."
+#: texteditor/tabs.py:134
+msgid "Tab close"
 msgstr ""
 
-#: texteditor/extensions/cmd.py:27
+#: texteditor/tabs.py:135
+msgid "The content of this tab is modified. Save it?"
+msgstr ""
+
+#: texteditor/tabs.py:164
+msgid " (Duplicated)"
+msgstr ""
+
+#: texteditor/tabs.py:170
+msgid "Cannot reopen this tab because it opens no file."
+msgstr ""
+
+#: texteditor/tabs.py:177
+msgid "Text editor"
+msgstr ""
+
+#: texteditor/extensions/cmd.py:25
 msgid "Read only"
 msgstr ""
 
-#: texteditor/extensions/cmd.py:52
+#: texteditor/extensions/cmd.py:49
 msgid "Available commands:\n"
 msgstr ""
 
-#: texteditor/extensions/cmd.py:53
+#: texteditor/extensions/cmd.py:50
 msgid "exit: Close this box\n"
 msgstr ""
 
-#: texteditor/extensions/cmd.py:54
+#: texteditor/extensions/cmd.py:51
 msgid "help: Show this message\n"
 msgstr ""
 
-#: texteditor/extensions/cmd.py:55
+#: texteditor/extensions/cmd.py:52
 msgid "clear: Clear this box\n"
 msgstr ""
 
-#: texteditor/extensions/cmd.py:59
+#: texteditor/extensions/cmd.py:56
 msgid ""
 "term: Open terminal (not this one) - don't run this if you are running this "
 "application from console!\n"
 msgstr ""
 
-#: texteditor/extensions/cmd.py:65
+#: texteditor/extensions/cmd.py:62
 msgid ""
 "Running CONSOLE application which requires user input is not recommended "
 "yet.\n"
 msgstr ""
 
-#: texteditor/extensions/cmd.py:68
+#: texteditor/extensions/cmd.py:65
 msgid "You won't get anything.\n"
 msgstr ""
 
-#: texteditor/extensions/cmd.py:75
+#: texteditor/extensions/cmd.py:72
 msgid ""
 "This will open console defined by defconsole value in configuration file. "
 "Please don't run any shell!"
 msgstr ""
 
 #: texteditor/extensions/cmd.py:91
-msgid "You cannot use cd in this environment."
-msgstr ""
-
-#: texteditor/extensions/cmd.py:120
-msgid "Command Window"
+msgid "No such a directory like that"
 msgstr ""
 
 #: texteditor/extensions/finding.py:22
@@ -171,59 +193,83 @@ msgstr ""
 msgid "Replace"
 msgstr ""
 
-#: texteditor/backend/file_operations.py:34
-msgid "Select a file to open"
-msgstr ""
-
-#: texteditor/backend/file_operations.py:55
-msgid "Text editor"
-msgstr ""
-
-#: texteditor/backend/file_operations.py:103
+#: texteditor/backend/file_operations.py:56
 msgid "Infomation"
 msgstr ""
 
-#: texteditor/backend/file_operations.py:105
+#: texteditor/backend/file_operations.py:58
 msgid ""
-"This file is opened in another tab. By default we will load the contents to "
-"a new tab.\n"
-"Do it?"
+"Seems that the file you're trying to open is in another tab.\n"
+"Load anyway? (to a new tab)"
 msgstr ""
 
-#: texteditor/backend/textwidget.py:80 texteditor/views/menubar.ui:70
+#: texteditor/backend/file_operations.py:66
+#, python-format
+msgid "Saving file %s"
+msgstr ""
+
+#: texteditor/backend/file_operations.py:87
+#, python-format
+msgid "Opening file %s"
+msgstr ""
+
+#: texteditor/backend/get_config.py:107
+msgid "Error occured while writing contents to the file"
+msgstr ""
+
+#: texteditor/backend/get_config.py:108
+#, python-format
+msgid "Details: %s"
+msgstr ""
+
+#: texteditor/backend/get_config.py:174
+msgid ""
+"Wrong font size defined on the configuration file - the program will use "
+"font size 14."
+msgstr ""
+
+#: texteditor/backend/get_config.py:181
+msgid "The defined font size is smaller (or equal) than 10."
+msgstr ""
+
+#: texteditor/backend/get_config.py:193
+msgid "Wrong font type in the configuration file."
+msgstr ""
+
+#: texteditor/backend/textwidget.py:78 texteditor/views/menubar.ui:70
 msgid "Cut"
 msgstr ""
 
-#: texteditor/backend/textwidget.py:85 texteditor/views/menubar.ui:76
+#: texteditor/backend/textwidget.py:83 texteditor/views/menubar.ui:76
 msgid "Copy"
 msgstr ""
 
-#: texteditor/backend/textwidget.py:90 texteditor/views/menubar.ui:82
+#: texteditor/backend/textwidget.py:88 texteditor/views/menubar.ui:82
 msgid "Paste"
 msgstr ""
 
-#: texteditor/backend/textwidget.py:97 texteditor/views/menubar.ui:133
+#: texteditor/backend/textwidget.py:95 texteditor/views/menubar.ui:133
 msgid "Wrap (by word)"
 msgstr ""
 
-#: texteditor/backend/textwidget.py:105 texteditor/views/menubar.ui:49
+#: texteditor/backend/textwidget.py:103 texteditor/views/menubar.ui:49
 msgid "Undo"
 msgstr ""
 
-#: texteditor/backend/textwidget.py:110 texteditor/views/menubar.ui:55
+#: texteditor/backend/textwidget.py:108 texteditor/views/menubar.ui:55
 msgid "Redo"
 msgstr ""
 
-#: texteditor/backend/textwidget.py:183
+#: texteditor/backend/textwidget.py:184
 msgid "No new message."
 msgstr ""
 
-#: texteditor/backend/textwidget.py:189
+#: texteditor/backend/textwidget.py:190
 #, python-format
 msgid "Line %s : Col %s"
 msgstr ""
 
-#: texteditor/views/about.py:13
+#: texteditor/views/about.py:14
 msgid "About this app"
 msgstr ""
 
