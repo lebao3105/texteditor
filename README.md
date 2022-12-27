@@ -48,11 +48,11 @@ If needed, let this app speak your language. On your UNIX, use [```upd_trans.sh`
 
 Or, you can use meson and ninja - which are installable via pip:
 ```
-# Modify translation(s) on po directory if needed first
 $ pip install meson ninja
 $ meson build
 $ ninja -C build me.lebao3105.texteditor-pot
 $ ninja -C build me.lebao3105.texteditor-update-po
+$ # Update your translation
 $ ninja -C build me.lebao3105.texteditor-gmo
 $ cp -r build/po/* po/
 ```
