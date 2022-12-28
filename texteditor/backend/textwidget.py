@@ -15,7 +15,6 @@ class TextWidget(Text):
     enableMenu: bool = True
     useUnRedo: bool = False
     useWrap: bool = False
-    enableStatusBar: bool = True
 
     def __init__(
         self,
@@ -40,8 +39,6 @@ class TextWidget(Text):
             self.useUnRedo = useUnRedo
         if addWrap != None:
             self.useWrap = addWrap
-        if enableStatusBar != None:
-            self.enableStatusBar = enableStatusBar
 
         if _ is None:
             self._ = gettext.gettext
@@ -52,7 +49,7 @@ class TextWidget(Text):
             self.RMenu = Menu(self, tearoff=0)
             self.__menu_init()
             self.bind("<Button-3>", lambda event: self.__open_menu(event))
-        if self.enableStatusBar is True:
+        if enableStatusBar is True:
             self.statusbar = logger.StatusBar(self, self._)
         if useScrollbars is True:
             self.__place_scrollbar()

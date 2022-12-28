@@ -26,7 +26,7 @@ class cmd(textwidget.TextWidget):
         )
         self.configure(foreground="white", background="black", insertbackground="white")
         self.statusbar.righttext.configure(text="")
-        self.statusbar.writeleftmessage(os.getcwd())
+        self.statusbar.writeleftmessage(os.getcwd(), nowrite=True)
 
     def checkcmds(self, *args):
         command = self.get(1.0, END).split("\n")[-2]

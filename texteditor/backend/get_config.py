@@ -96,6 +96,7 @@ class GetConfig:
             log.throwerr(
                 "Error: Unable to reset configration file",
                 "Backed up variables not found",
+                noexp=True
             )
             return False
         try:

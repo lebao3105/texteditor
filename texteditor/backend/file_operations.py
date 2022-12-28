@@ -54,7 +54,8 @@ class FileOperations:
         ask = askyesno(
             self._("Infomation"),
             self._(
-                "Seems that the file you're trying to open is in another tab.\nLoad anyway? (to a new tab)"
+                """It seems that the file you're trying to open is in another tab.\n
+                Load anyway? (to a new tab)"""
             ),
         )
         return ask
@@ -69,7 +70,7 @@ class FileOperations:
             try:
                 f.write(self.textw.get(1.0, "end"))
             except Exception:
-                self.throwerr("Unable to save file")
+                self.throwerr("Unable to save file {}".format(filename))
             else:
                 self.notebook.tab("current", text=filename)
                 self.files.append(filename)
@@ -90,7 +91,7 @@ class FileOperations:
             try:
                 self.textw.insert(1.0, f.read())
             except Exception:
-                self.throwerr("Unable to open file")
+                self.throwerr("Unable to open file {}".format(filename))
             else:
                 self.notebook.event_generate("<<NotebookTabChanged>>")
                 self.files.append(filename)

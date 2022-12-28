@@ -7,10 +7,10 @@
 * Fix icon path defined on texteditor.mainwindow (Done)
 
 ; 1.4
-* Better usage of Gettext (Working on?)
-* Improve backend.file_operations
+* Better usage of Gettext
+* Improve backend.file_operations (Initially completed)
 * A status bar (Working on)
-* *Autocolor*: Sync the color with the system (is it ok now?)
+* Autocolor: Sync the color with the system
 * Remake get_config configure function so it can change any config (canceled)
 
 ; 1.5

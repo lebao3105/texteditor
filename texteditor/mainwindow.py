@@ -64,7 +64,8 @@ class MainWindow(Tk):
         self.geometry("810x610")
 
         # Place widgets then handle events
-        self.autosv = autosave.AutoSave(self, self._)
+        self.notebook = TabsViewer(self, _=self._, do_place=True)
+        self.autosv = autosave.AutoSave(self, savefile_fn=lambda: self.notebook.fileops.savefile_(), _=self._)
         self.get_color()
         self.load_ui()
         self.add_event()
@@ -106,12 +107,12 @@ class MainWindow(Tk):
             )
         self.menu3.add_checkbutton(
             label=self._("Autocolor mode"),
-            command=lambda: self.autocolor_mode,
+            command=lambda: self.autocolor_mode(),
             variable=self.autocolor,
         )
         self.menu3.add_checkbutton(
             label=self._("Wrap (by word)"),
-            command=lambda: self.text_editor.wrapmode,
+            command=lambda: self.text_editor.wrapmode(),
             variable=self.wrapbtn,
             accelerator="Ctrl+W",
         )
@@ -123,7 +124,6 @@ class MainWindow(Tk):
         menu.add_cascade(menu=self.menu4, label="?")
 
         ## Do stuff
-        self.notebook = TabsViewer(self, _=self._, do_place=True)
         self.callbacks["openfile"] = lambda: self.notebook.fileops.openfile_()
         self.callbacks["savefile"] = lambda: self.notebook.fileops.savefile_()
         self.callbacks["savefileas"] = lambda: self.notebook.fileops.saveas()
