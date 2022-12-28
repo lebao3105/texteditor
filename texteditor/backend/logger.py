@@ -1,10 +1,10 @@
 import datetime
-import gettext
 import os
 import sys
+import texteditor
 import traceback
-import tkinter.ttk as ttk
-from texteditor.backend import get_config
+from tkinter import ttk
+from texteditor.backend import get_config, textwidget
 
 
 class Logger:
@@ -54,10 +54,14 @@ class Logger:
                 f.write(full)
         print(full)
 
-    def throwerr(self, title, msg=None):
+    def throwerr(self, title, noexp:bool=None, msg=None):
         """Throws an exception message with its traceback and a custom message."""
+        if noexp is True:
+            traceback_msg = ""
+        else:
+            traceback_msg = traceback.format_exc()
         return self.printtext(
-            title, msg if msg is not None else "", traceback.format_exc()
+            title, msg if msg is not None else "", traceback_msg
         )
 
     def throwinf(self, title, msg=None):
@@ -68,21 +72,24 @@ class Logger:
 
 
 class StatusBar(ttk.Frame):
-    def __init__(self, parent, _=None, bindsignal: bool = None, **kwargs):
+    def __init__(self, parent, _=None, **kwargs):
         super().__init__(master=parent, **kwargs)
 
         if _ is None:
-            self._ = gettext.gettext
+            self._ = texteditor._
         else:
             self._ = _
+
+        self.textw = parent
+        self.logs = []
+        self.islogwindowopen = False
 
         self.lefttext = ttk.Label(self, cursor="hand2")
         self.righttext = ttk.Label(self)
         self.lefttext.configure(state="readonly")
         self.righttext.configure(state="readonly")
 
-        if bindsignal is True:
-            self.righttext.bind("<KeyRelease>", self.keypress)
+        self.righttext.bind("<KeyRelease>", self.keypress)
         self.lefttext.bind("<Button-1>", lambda e: self.get_messages())
 
         self.lefttext.pack(side="left")
@@ -92,8 +99,6 @@ class StatusBar(ttk.Frame):
         get_config.GetConfig.configure(self.lefttext)
         get_config.GetConfig.configure(self.righttext)
 
-        self.textw = parent
-        self.logs = []
         self.keypress()
         self.writeleftmessage(self._("No new message."), nowrite=True)
 
@@ -112,20 +117,77 @@ class StatusBar(ttk.Frame):
         time = now.strftime(Logger.format_time)
         self.logs.append("{} {} - {}".format(date, time, message))
         self.after(
-            1500,
-            self.writeleftmessage(self._("New message(s) collected."), nowrite=True),
+            3500,
+            lambda: self.lefttext.config(text=self._("New message(s) collected.")),
         )
 
     def get_messages(self):
+        curridx : int = 0
+        isplaced : bool
+
+        def refresh(replace:bool=None, event=None):
+            nonlocal curridx
+            nonlocal isplaced
+
+            # This needs a fix
+            if not self.logs:
+                label = ttk.Label(mss, text=self._("No new message here."))
+                label2 = ttk.Label(mss, text=self._("You always can refresh by just press F5."), cursor="hand2")
+                label.config(font=(label["font"], 14))
+                mss.bind("<F5>", lambda event: refresh(replace=True))
+
+                get_config.GetConfig(label, "config")
+                get_config.GetConfig(label2, "config")
+
+                alllogs.forget()
+                yscroll.forget()
+                label.pack(pady="0 30")
+                label2.pack(pady="0 30")
+                isplaced = False
+            
+            if replace == True and isplaced == False:
+                mss.bind("<F5>", lambda event: refresh())
+                label.forget()
+                label2.forget()
+                yscroll.pack(side="right", fill="y")
+                alllogs.pack(expand=True, fill='both')
+                isplaced = True
+
+            alllogs.config(state='normal')
+            for i in range(curridx, len(self.logs)):
+                alllogs.insert('end', self.logs[i]+"\n")
+            curridx = len(self.logs)
+
+            alllogs.config(state='disabled')
+
+        def on_close():
+            self.islogwindowopen = False
+            mss.destroy()
+            return # That's it
+
         import tkinter as tk
+        
+        if self.islogwindowopen is True:
+            return
 
         mss = tk.Toplevel(self)
-        alllogs = tk.Text(mss)
+        alllogs = textwidget.TextWidget(mss, _=self._, useMenu=True, addWrap=True)
+        yscroll = ttk.Scrollbar(mss, orient='vertical', command=alllogs.yview)
 
-        for i in self.logs:
-            alllogs.insert(1.0, i)
-
-        mss.wm_title("Logs")
+        mss.bind("<F5>", lambda event: refresh())
         alllogs.config(state="disabled")
-        alllogs.pack()
+        alllogs.RMenu.delete(2)
+        alllogs.RMenu.add_command(
+            label=self._("Refresh"),
+            command=lambda: refresh(),
+            accelerator="F5"
+        )
+
+        yscroll.pack(side="right", fill='y')
+        alllogs.pack(expand=True, fill='both')
+        refresh()
+
+        mss.wm_title(self._("Logs"))
+        mss.protocol("WM_DELETE_WINDOW", on_close)
         mss.mainloop()
+        self.islogwindowopen = True
