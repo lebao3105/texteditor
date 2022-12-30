@@ -2,6 +2,7 @@
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
 A simple and cross-platform Python text editor.
+
 (This is an initial port of texteditor to use wxPython - not all features are implemented.)
 
 <div align="center">
@@ -10,7 +11,8 @@ A simple and cross-platform Python text editor.
 </div>
 
 ## Setup
-> Note: Please uninstall older version of texteditor first, if you have installed it
+> Note: Please uninstall older version of texteditor first, if you have installed it.
+
 This project requires Python >=3.8 with only wxPython installed (for this time). To generate wheel files you also need ```build``` installed.
 
 Let's get started:
