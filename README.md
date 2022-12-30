@@ -36,17 +36,7 @@ python3 -m texteditor
 
 Start from version 1.3-dev1, you can use ```texteditor``` directly.
 
-## Running from source
-If needed, let this app speak your language. On your UNIX, use [```upd_trans.sh```](upd_trans.sh) should work:
-```
-./upd_trans.sh -upd
-# If you see wrong text, do:
-./upd_trans.sh -tep # Generate new .pot file
-# Translate the application by editing <language code>/LC_MESSAGES/base.po, then save it:
-./upd_trans.sh -upd
-```
-
-Or, you can use meson and ninja - which are installable via pip:
+If needed, let this app speak your language. Use meson and ninja - which are installable via pip should work:
 ```
 $ pip install meson ninja
 $ meson build
