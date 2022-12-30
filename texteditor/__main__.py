@@ -1,4 +1,4 @@
-from texteditor import start_app
+import texteditor
 
 if __name__ == "__main__":
-    start_app()
+    texteditor.start_app()

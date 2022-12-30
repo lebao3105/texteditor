@@ -1,229 +1,106 @@
-# Import modules
-import os
-import webbrowser
-import pygubu
-from tkinter import *
-
+import platform
 import texteditor
-from .tabs import TabsViewer
-from .extensions import autosave, cmd, finding
-from .backend import file_operations, get_config, logger
-from .views import about
+import webbrowser
+import wx
 
-log = logger.Logger("texteditor.mainwindow")
+from .tabs import Tabber
+from .backend import logger, constants
+
+log = logger.Logger('texteditor.mainwindow')
+
+class MainFrame(wx.Frame):
+    def __init__(self, *args, **kwds):
+        kwds["style"] = kwds.get("style", 0) | wx.DEFAULT_FRAME_STYLE
+        wx.Frame.__init__(self, *args, **kwds)
+        self.SetSize((820, 685))
+        self.SetIcon(wx.Icon(texteditor.icon))
+
+        self.notebook = Tabber(self, wx.ID_ANY)
+        self.menuitem = {}
+        self.SetTitle(_("Texteditor - %s") % self.notebook.GetPageText(self.notebook.GetSelection()))
+        self.PlaceMenu()
+        self.Binder()
+        self.Layout()
+    
+    def PlaceMenu(self):
+        # Menu Bar
+        self.menubar = wx.MenuBar()
+
+        ## File
+        filemenu = wx.Menu()
+        addfilecmd = filemenu.Append
+        self.menuitem["newtab"] = addfilecmd(wx.ID_NEW, _("New\tCtrl-N"))
+        self.menuitem["open"] = addfilecmd(wx.ID_OPEN, _("Open\tCtrl-O"))
+        self.menuitem["save"] = addfilecmd(wx.ID_SAVE, _("Save\tCtrl-S"))
+        self.menuitem["saveas"] = addfilecmd(wx.ID_SAVEAS, _("Save as...\tCtrl-Shift-S"))
+        self.exitItem = addfilecmd(wx.ID_EXIT)
+        self.menubar.Append(filemenu, _("&File"))
+
+        ## Edit
+        editmenu = wx.Menu()
+        addeditcmd = editmenu.Append
+        self.menuitem["copy"] = addeditcmd(wx.ID_ANY, _("Copy\tCtrl-C"))
+        self.menuitem["paste"] = addeditcmd(wx.ID_ANY, _("Paste\tCtrl-V"))
+        self.menuitem["cut"] = addeditcmd(wx.ID_ANY, _("Cut\tCtrl-X"))
+        editmenu.AppendSeparator()
+        self.menuitem["selall"] = addeditcmd(wx.ID_ANY, _("Select All\tCtrl-A"))
+        self.menuitem["autosv"] = addeditcmd(wx.ID_ANY, _("AutoSave"), _("Configure auto-save preferences"))
+        self.menubar.Append(editmenu, _("&Edit"))
+
+        ## Help
+        helpmenu = wx.Menu()
+        self.aboutItem = helpmenu.Append(wx.ID_ABOUT)
+        self.helpItem = helpmenu.Append(wx.ID_ANY, "Help", "Read documents and visit the source code")
+        self.menubar.Append(helpmenu, _("&Help"))
+        self.SetMenuBar(self.menubar)
 
 
-class MainWindow(Tk):
-    """The main application class."""
+        self.statusbar = self.CreateStatusBar(1)
+        self.statusbar.SetStatusWidths([-1])
+        self.SetStatusText(self.notebook.GetPageText(self.notebook.GetSelection()))
 
-    def __init__(self, _=None, **kwargs):
-        super().__init__(**kwargs)
-
-        if _ == None:
-            self._ = texteditor._
-        else:
-            self._ = _
-
-        # Configure all menu items callbacks
-        self.callbacks = {
-            # "openfile": lambda: file_operations.open_file(self),
-            "add_tab": lambda: self.add_tab(),
-            # "savefile": lambda: file_operations.save_file(self),
-            # "savefileas": lambda: file_operations.save_as(self),
-            "gofind": lambda: finding.Finder(self, "find"),
-            "goreplace": lambda: finding.Finder(self, ""),
-            "destroy": lambda: self.destroy(),
-            "opencfg": lambda: self.opencfg(),
-            "resetcfg": lambda: self.resetcfg(),
-            "change_color": lambda: self.change_color(),
-            "open_doc": lambda: webbrowser.open(
-                "https://lebao3105.gitbook.io/texteditor_doc"
-            ),
-            "aboutdlg": lambda: self.aboutdlg(),
+    
+        ## Callbacks
+    def Binder(self):
+        self.menucommand = {
+            self.menuitem["newtab"]: lambda evt: self.notebook.AddTab(),
+            self.menuitem["open"]: lambda evt: (self.notebook.text_editor.fileops.openfile_(), self.notebook.OnPageChanged()),
+            self.menuitem["save"]: lambda evt: self.notebook.text_editor.fileops.savefile_(),
+            self.menuitem["saveas"]: lambda evt: self.notebook.text_editor.fileops.saveas(),
+            self.menuitem["copy"]: lambda evt: self.notebook.text_editor.Copy(),
+            self.menuitem["paste"]: lambda evt: self.notebook.text_editor.Paste(),
+            self.menuitem["cut"]: lambda evt: self.notebook.text_editor.Cut(),
+            self.menuitem["selall"]: lambda evt: self.notebook.text_editor.SelectAll(),
         }
-
-        # Set icon
-        if os.path.isfile(texteditor.icon):
-            try:
-                self.wm_iconphoto(False, PhotoImage(file=texteditor.icon))
-            except TclError:
-                log.throwerr("Unable to set application icon", "TCLError occured")
-        else:
-            log.throwwarn("Warning: Application icon %s not found" % texteditor.icon)
-
-        # Wrap button
-        self.wrapbtn = BooleanVar()
-        self.wrapbtn.set(True)
-
-        # Auto change color
-        self.autocolor = BooleanVar()
-        self.wrapbtn.set(False)
-        self.autocolormode = get_config.AutoColor(self)
-
-        # Window size
-        self.geometry("810x610")
-
-        # Place widgets then handle events
-        self.notebook = TabsViewer(self, _=self._, do_place=True)
-        self.autosv = autosave.AutoSave(self, savefile_fn=lambda: self.notebook.fileops.savefile_(), _=self._)
-        self.get_color()
-        self.load_ui()
-        self.add_event()
-
-    def load_ui(self):
-        """Load the "menu bar" defined from a .ui file,
-        then place other widgets."""
-
-        viewsdir = texteditor.currdir / "views"
-        builder = pygubu.Builder(self._)
-
-        menu = Menu(self)
-        self.config(menu=menu)
-
-        ## Read all menus
-        builder.add_resource_path(texteditor.currdir)
-        builder.add_resource_path(viewsdir)
-        builder.add_from_file(viewsdir / "menubar.ui")
-
-        self.menu1 = builder.get_object("menu1", self)
-        self.menu2 = builder.get_object("menu2", self)
-        self.menu3 = builder.get_object("menu3", self)
-        self.menu4 = builder.get_object("menu4", self)
-
-        ## Add "code-only" menu items
-        addeditcmd = self.menu2.add_command
-        if get_config.GetConfig.getvalue("filemgr", "autosave") == "yes":
-            addeditcmd(
-                label=self._("Autosave"),
-                command=lambda: self.autosv.openpopup(),
-            )
-
-        if get_config.GetConfig.getvalue("cmd", "isenabled") == "yes":
-            self.menu2.add_separator()
-            addeditcmd(
-                label=self._("Open System Shell"),
-                command=lambda: cmd.CommandPrompt(self, _=self._),
-                accelerator="Ctrl+T",
-            )
-        self.menu3.add_checkbutton(
-            label=self._("Autocolor mode"),
-            command=lambda: self.autocolor_mode(),
-            variable=self.autocolor,
-        )
-        self.menu3.add_checkbutton(
-            label=self._("Wrap (by word)"),
-            command=lambda: self.text_editor.wrapmode(),
-            variable=self.wrapbtn,
-            accelerator="Ctrl+W",
+        self.Bind(wx.EVT_MENU, self.Quit, self.exitItem)
+        self.Bind(wx.EVT_MENU, self.ShowAbout, self.aboutItem)
+        self.Bind(wx.EVT_MENU, lambda evt: webbrowser.open_new_tab("https://github.com/lebao3105/texteditor"), self.helpItem)
+        for item in self.menucommand:
+            self.Bind(wx.EVT_MENU, self.menucommand[item], item)
+    
+    def Quit(self, event):
+        self.Close(True)
+    
+    def ShowAbout(self, event):
+        wxver = wx.__version__
+        pyver = platform.python_version()
+        ostype = platform.system() if platform.system() != '' or None else _("Unknown")
+        msg = _(f'''texteditor 1.6 Alpha (wx version)
+A simple, cross-platform text editor.
+Branch: {constants.STATE}
+wxPython version: {wxver}
+Python version: {pyver}
+OS type: {ostype}''')
+        return wx.MessageBox(
+            message=msg,
+            caption=_("About this app"),
+            style=wx.OK|wx.ICON_INFORMATION
         )
 
-        ## Add menus to the main one
-        menu.add_cascade(menu=self.menu1, label=self._("File"))
-        menu.add_cascade(menu=self.menu2, label=self._("Edit"))
-        menu.add_cascade(menu=self.menu3, label=self._("Config"))
-        menu.add_cascade(menu=self.menu4, label="?")
+class MyApp(wx.App):
 
-        ## Do stuff
-        self.callbacks["openfile"] = lambda: self.notebook.fileops.openfile_()
-        self.callbacks["savefile"] = lambda: self.notebook.fileops.savefile_()
-        self.callbacks["savefileas"] = lambda: self.notebook.fileops.saveas()
-        builder.connect_callbacks(self.callbacks)
-
-    # Binding commands to the application
-    def add_event(self):
-        bindcfg = self.bind
-        bindcfg("<Control-n>", lambda event: self.add_tab(self))
-        if get_config.GetConfig.getvalue("cmd", "isenabled") == "yes":
-            bindcfg("<Control-t>", lambda event: cmd.CommandPrompt(self, _=self._))
-        bindcfg("<Control-f>", lambda event: finding.Finder(self, "find"))
-        bindcfg("<Control-r>", lambda event: finding.Finder(self, ""))
-        bindcfg("<Control-Shift-S>", lambda event: self.notebook.fileops.saveas())
-        bindcfg("<Control-s>", lambda event: self.notebook.fileops.savefile_())
-        bindcfg("<Control-o>", lambda event: self.notebook.fileops.openfile_())
-        bindcfg("<Control-w>", lambda event: self.set_wrap(self))
-
-    # Menu bar callbacks
-    def resetcfg(self, event=None):
-        import tkinter.messagebox as msgbox
-
-        message = msgbox.askyesno(
-            self._("Warning"),
-            self._("This will reset ALL configurations you have ever made. Continue?"),
-        )
-        if message:
-            check = get_config.GetConfig.reset()
-            if not check:
-                msgbox.showerror(
-                    self._("Error occured!"),
-                    self._(
-                        "Unable to reset configuration file: Backed up default variables not found"
-                    ),
-                )
-                self.text_editor.statusbar.writeleftmessage(
-                    self._("Error: Unable to reset all configurations!")
-                )
-                return
-            else:
-                msgbox.showinfo(
-                    self._("Completed"),
-                    self._(
-                        "Resetted texteditor configurations.\nRestart the application to take the effect."
-                    ),
-                )
-                self.text_editor.statusbar.writeleftmessage(
-                    self._("Resetted all configurations.")
-                )
-                self.setcolorvar()
-
-    def opencfg(self, event=None):
-        self.add_tab()
-        file_operations.openfilename(self, get_config.file)
-
-    def aboutdlg(self, event=None):
-        return about.AboutDialog(self).run()
-
-    def get_color(self):
-        # Get color mode
-        if get_config.GetConfig.getvalue("global", "color") == "dark":
-            self.lb = "light"
-        else:
-            self.lb = "dark"
-
-    def change_color(self, event=None):
-        get_config.GetConfig.change_config("global", "color", self.lb)
-        self.get_color()
-        get_config.GetConfig.configure(self.text_editor)
-
-    # Set wrap mode (keyboard shortcut)
-    # It is different from the textwidget's default function. A lot.
-    def set_wrap(self, event=None):
-        if self.wrapbtn.get() == True:
-            self.text_editor.configure(wrap="none")
-            self.wrapbtn.set(False)
-            log.throwinf("Disabled wrapping on the text widget.")
-        else:
-            self.text_editor.configure(wrap="word")
-            self.wrapbtn.set(True)
-            log.throwinf("Enabled wrapping on the text widget.")
-
-    def add_tab(self, event=None):
-        return self.notebook.add_tab(idx="default")
-
-    def autocolor_mode(self, event=None):
-        if self.autocolor.get() is False:
-            get_config.autocolormode = False
-            self.autocolormode.stopasync()
-            get_config.GetConfig.configure(self.text_editor)
-            self.text_editor.statusbar.writeleftmessage(
-                self._("Stopped autocolor service.")
-            )
-            self.menu3.entryconfig(2, state="disabled")
-        else:
-            get_config.autocolormode = True
-            self.autocolormode.startasync()
-            get_config.GetConfig.configure(self.text_editor)
-            self.text_editor.statusbar.writeleftmessage(
-                self._("Started autocolor service.")
-            )
-            self.menu3.entryconfig(2, state="normal")
-        self.get_color()
+    def OnInit(self):
+        frame = MainFrame(None, wx.ID_ANY, "")
+        self.SetTopWindow(frame)
+        frame.Show()
+        return True

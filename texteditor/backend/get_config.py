@@ -1,3 +1,5 @@
+"""Unused (temporary) module on texteditor (wx version).
+Don't import this."""
 import configparser
 import darkdetect
 import os
@@ -96,7 +98,7 @@ class GetConfig:
             log.throwerr(
                 "Error: Unable to reset configration file",
                 "Backed up variables not found",
-                noexp=True
+                noexp=True,
             )
             return False
         try:

@@ -1,11 +1,8 @@
 import os
 import sys
-import texteditor
+import wx
 
-from tkinter.filedialog import *
-from tkinter.messagebox import *
-
-from . import constants
+from . import constants, logger
 
 if sys.platform == "win32":
     searchdir = os.environ["USERPROFILE"] + "\Documents"
@@ -17,19 +14,13 @@ class FileOperations:
     """File operations unit for texteditor.\n
     Paramaters:
     textw : text widget
-    notebook : notebook widget
+    notebook : wx.notebook widget
     newtabfn : create new tab function for the notebook
-    statusbar=None : status bar (texteditor.backend.textwidget.StatusBar)
-    _=None : gettext translator\n
+    statusbar = None : Your wx.Frame's (or other wxPython widget) statusbar
     Variable(s):
     files : Open files (not implemented yet, but everything is loaded into this"""
 
-    def __init__(self, textw, notebook, newtabfn, statusbar=None, _=None):
-        if _ is None:
-            self._ = texteditor._
-        else:
-            self._ = _
-
+    def __init__(self, textw, notebook, newtabfn, statusbar=None):
         self.textw = textw
         self.files = []  # TODO:Manage saves and unsaved-edits
         self.notebook = notebook
@@ -38,42 +29,41 @@ class FileOperations:
 
     def tabname(self):
         """Returns the current tab name."""
-        return self.notebook.tab(self.notebook.select(), "text")
+        return self.notebook.GetPageText(self.notebook.GetSelection())
 
     def saveas(self, event=None):
-        filename = asksaveasfilename(
-            initialdir=searchdir, initialfile=self.tabname().removesuffix(" *")
+        filedlg = wx.FileDialog(
+            self.textw,
+            _("Save file"),
+            style=wx.FD_SAVE | wx.FD_OVERWRITE_PROMPT,
+            defaultDir=searchdir,
         )
-        if filename:
+        if filedlg.ShowModal() == wx.ID_CANCEL:
+            return
+        else:
+            filename = filedlg.GetPath()
             self.savefile(filename)
 
-    def throwerr(self, title, err):
-        showerror(title=self._(title), message=err)
-
     def asktoopen(self):
-        ask = askyesno(
-            self._("Infomation"),
-            self._(
+        ask = wx.MessageBox(
+            _(
                 """It seems that the file you're trying to open is in another tab.\n
                 Load anyway? (to a new tab)"""
             ),
+            _("Infomation"),
+            wx.ICON_QUESTION | wx.YES_NO,
+            self.textw,
         )
-        return ask
+        if ask == wx.YES:
+            return True
+        else:
+            return False
 
     def savefile(self, filename):
         """Saves a file (filename parameter)."""
         if self.statusbar is not None:
-            self.statusbar.writeleftmessage(
-                self._("Saving file %s") % filename, nowrite=True
-            )
-        with open(filename, "w") as f:
-            try:
-                f.write(self.textw.get(1.0, "end"))
-            except Exception:
-                self.throwerr("Unable to save file {}".format(filename))
-            else:
-                self.notebook.tab("current", text=filename)
-                self.files.append(filename)
+            self.statusbar.SetStatusText(_("Saving file %s...") % filename)
+        self.textw.SaveFile(filename)
 
     def savefile_(self, event=None):
         """Checks if the file is a new file or not, then make the choice."""
@@ -86,29 +76,37 @@ class FileOperations:
     def openfile(self, filename):
         """Opens a file then show it to the text editor."""
         if self.statusbar is not None:
-            self.statusbar.writeleftmessage(self._("Opening file %s") % filename)
-        with open(filename, "r") as f:
-            try:
-                self.textw.insert(1.0, f.read())
-            except Exception:
-                self.throwerr("Unable to open file {}".format(filename))
-            else:
-                self.notebook.event_generate("<<NotebookTabChanged>>")
-                self.files.append(filename)
-                self.notebook.tab("current", text=filename)
+            self.statusbar.SetStatusText(_("Opening file %s") % filename)
+        try:
+            f = open(filename, "r")
+        except:
+            logger.Logger("texteditor.backend.file_operations").throwerr(
+                _("Error occured"),
+                msg=_("Error occured while opening file %s") % filename,
+                showdialog=True,
+            )
+            return
+        else:
+            del f
+            self.textw.LoadFile(filename)
+            self.notebook.SetPageText(page=self.notebook.GetSelection(), text=filename)
 
     def openfile_(self, event=None):
         """Asks the user to open a file."""
-        filename = askopenfilename(initialdir=searchdir)
-        if filename is not None:
+        filedlg = wx.FileDialog(
+            self.textw,
+            _("Open a file"),
+            style=wx.FD_OPEN | wx.FD_FILE_MUST_EXIST,
+            defaultDir=searchdir,
+        )
+        if filedlg.ShowModal() == wx.ID_CANCEL:
+            return
+        else:
+            filename = filedlg.GetPath()
             for x in constants.FILES_ARR:
                 if filename in x:
                     if self.asktoopen():
                         self.newtabfn()
-                        self.openfile(filename)
-                else:
-                    self.openfile(filename)
-                return
-            if not self.textw.compare("end-1c", "==", 1.0):
+            if self.textw.GetValue() != "":
                 self.newtabfn()
-                self.openfile(filename)
+            self.openfile(filename)

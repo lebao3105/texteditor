@@ -24,4 +24,3 @@ install_data(
 subdir('backend')
 subdir('extensions')
 subdir('icons')
-subdir('views')
