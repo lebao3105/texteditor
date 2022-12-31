@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: me.lebao3105.texteditor 1.4-beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-12-24 18:44+0700\n"
+"POT-Creation-Date: 2022-12-31 13:20+0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,67 +17,75 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: texteditor/mainwindow.py:98
+#: texteditor/mainwindow.py:97
 msgid "Autosave"
 msgstr ""
 
-#: texteditor/mainwindow.py:105
+#: texteditor/mainwindow.py:104
 msgid "Open System Shell"
 msgstr ""
 
-#: texteditor/mainwindow.py:110
+#: texteditor/mainwindow.py:109
+msgid "Autocolor mode"
+msgstr ""
+
+#: texteditor/mainwindow.py:114 texteditor/backend/textwidget.py:92
+msgid "Wrap (by word)"
+msgstr ""
+
+#: texteditor/mainwindow.py:121
 msgid "File"
 msgstr ""
 
-#: texteditor/mainwindow.py:111
+#: texteditor/mainwindow.py:122
 msgid "Edit"
 msgstr ""
 
-#: texteditor/mainwindow.py:112
+#: texteditor/mainwindow.py:123
 msgid "Config"
 msgstr ""
 
-#: texteditor/mainwindow.py:139 texteditor/backend/get_config.py:172
-#: texteditor/backend/get_config.py:180
+#: texteditor/mainwindow.py:150 texteditor/backend/get_config.py:173
+#: texteditor/backend/get_config.py:181
 msgid "Warning"
 msgstr ""
 
-#: texteditor/mainwindow.py:140
+#: texteditor/mainwindow.py:151
 msgid "This will reset ALL configurations you have ever made. Continue?"
 msgstr ""
 
-#: texteditor/mainwindow.py:146
+#: texteditor/mainwindow.py:157
 msgid "Error occured!"
 msgstr ""
 
-#: texteditor/mainwindow.py:148
+#: texteditor/mainwindow.py:159
 msgid ""
 "Unable to reset configuration file: Backed up default variables not found"
 msgstr ""
 
-#: texteditor/mainwindow.py:152
+#: texteditor/mainwindow.py:163
 msgid "Error: Unable to reset all configurations!"
 msgstr ""
 
-#: texteditor/mainwindow.py:157
+#: texteditor/mainwindow.py:168
 msgid "Completed"
 msgstr ""
 
-#: texteditor/mainwindow.py:159
+#: texteditor/mainwindow.py:170
 msgid ""
 "Resetted texteditor configurations.\n"
 "Restart the application to take the effect."
 msgstr ""
 
-#: texteditor/mainwindow.py:163
+#: texteditor/mainwindow.py:174
 msgid "Resetted all configurations."
 msgstr ""
 
-#: texteditor/mainwindow.py:207
+#: texteditor/mainwindow.py:218
 msgid "Stopped autocolor service."
 msgstr ""
 
-#: texteditor/mainwindow.py:215
+#: texteditor/mainwindow.py:226
 msgid "Started autocolor service."
 msgstr ""
 
@@ -132,6 +140,32 @@ msgstr ""
 
 #: texteditor/tabs.py:177
 msgid "Text editor"
+msgstr ""
+
+#: texteditor/extensions/autosave.py:56
+msgid "Autosave configuration"
+msgstr ""
+
+#: texteditor/extensions/autosave.py:64
+msgid ""
+"Select autosave time (minutes)\n"
+"Autosave function will be launched after a time."
+msgstr ""
+
+#: texteditor/extensions/autosave.py:68
+msgid "Please note that Autosave only saves the current selected tab."
+msgstr ""
+
+#: texteditor/extensions/autosave.py:78
+msgid "Save this value"
+msgstr ""
+
+#: texteditor/extensions/autosave.py:88
+msgid "Cancel"
+msgstr ""
+
+#: texteditor/extensions/autosave.py:124
+msgid "Wrong autosave time specified."
 msgstr ""
 
 #: texteditor/extensions/cmd.py:25
@@ -193,80 +227,68 @@ msgstr ""
 msgid "Replace"
 msgstr ""
 
-#: texteditor/backend/file_operations.py:56
+#: texteditor/backend/file_operations.py:55
 msgid "Infomation"
 msgstr ""
 
-#: texteditor/backend/file_operations.py:58
+#: texteditor/backend/file_operations.py:57
 msgid ""
-"Seems that the file you're trying to open is in another tab.\n"
-"Load anyway? (to a new tab)"
+"It seems that the file you're trying to open is in another tab.\n"
+"\n"
+"                Load anyway? (to a new tab)"
 msgstr ""
 
-#: texteditor/backend/file_operations.py:66
+#: texteditor/backend/file_operations.py:67
 #, python-format
 msgid "Saving file %s"
 msgstr ""
 
-#: texteditor/backend/file_operations.py:87
+#: texteditor/backend/file_operations.py:89
 #, python-format
 msgid "Opening file %s"
 msgstr ""
 
-#: texteditor/backend/get_config.py:107
+#: texteditor/backend/get_config.py:108
 msgid "Error occured while writing contents to the file"
 msgstr ""
 
-#: texteditor/backend/get_config.py:108
+#: texteditor/backend/get_config.py:109
 #, python-format
 msgid "Details: %s"
 msgstr ""
 
-#: texteditor/backend/get_config.py:174
+#: texteditor/backend/get_config.py:175
 msgid ""
 "Wrong font size defined on the configuration file - the program will use "
 "font size 14."
 msgstr ""
 
-#: texteditor/backend/get_config.py:181
+#: texteditor/backend/get_config.py:182
 msgid "The defined font size is smaller (or equal) than 10."
 msgstr ""
 
-#: texteditor/backend/get_config.py:193
+#: texteditor/backend/get_config.py:194
 msgid "Wrong font type in the configuration file."
 msgstr ""
 
-#: texteditor/backend/textwidget.py:78 texteditor/views/menubar.ui:70
+#: texteditor/backend/textwidget.py:75 texteditor/views/menubar.ui:70
 msgid "Cut"
 msgstr ""
 
-#: texteditor/backend/textwidget.py:83 texteditor/views/menubar.ui:76
+#: texteditor/backend/textwidget.py:80 texteditor/views/menubar.ui:76
 msgid "Copy"
 msgstr ""
 
-#: texteditor/backend/textwidget.py:88 texteditor/views/menubar.ui:82
+#: texteditor/backend/textwidget.py:85 texteditor/views/menubar.ui:82
 msgid "Paste"
 msgstr ""
 
-#: texteditor/backend/textwidget.py:95 texteditor/views/menubar.ui:133
-msgid "Wrap (by word)"
-msgstr ""
-
-#: texteditor/backend/textwidget.py:103 texteditor/views/menubar.ui:49
+#: texteditor/backend/textwidget.py:100 texteditor/views/menubar.ui:49
 msgid "Undo"
 msgstr ""
 
-#: texteditor/backend/textwidget.py:108 texteditor/views/menubar.ui:55
+#: texteditor/backend/textwidget.py:105 texteditor/views/menubar.ui:55
 msgid "Redo"
-msgstr ""
-
-#: texteditor/backend/textwidget.py:184
-msgid "No new message."
-msgstr ""
-
-#: texteditor/backend/textwidget.py:190
-#, python-format
-msgid "Line %s : Col %s"
 msgstr ""
 
 #: texteditor/views/about.py:14
@@ -317,14 +339,10 @@ msgstr ""
 msgid "Toggle color mode..."
 msgstr ""
 
-#: texteditor/views/menubar.ui:126
-msgid "Auto-color mode"
-msgstr ""
-
-#: texteditor/views/menubar.ui:143
+#: texteditor/views/menubar.ui:129
 msgid "Read documents..."
 msgstr ""
 
-#: texteditor/views/menubar.ui:149
+#: texteditor/views/menubar.ui:135
 msgid "About"
 msgstr ""

@@ -37,7 +37,6 @@ class AboutDialog(Toplevel):
         get_config.GetConfig(label3, "config")
         get_config.GetConfig(btn_ok, "config")
 
-        label1.configure(font=(label1["font"], 17))
         builder.connect_callbacks(self)
 
     def run(self):

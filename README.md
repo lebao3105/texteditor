@@ -14,12 +14,11 @@ Documents are available on https://lebao3105.gitbook.io/texteditor_doc.
 * Tabs support
 * Fast
 * Dark mode + Text colors support
-* [Working] Configuration file support
-* [Working] Autosave
-* Able to make Windows executable file (.exe)
+* Configuration file support
+* Autosave
 * Command window where you can run external commands (except Console apps which require your inputs)
 
-> Note: This project also available on GitLab ([link here.](https://gitlab.com/lebao3105/texteditor_tk)) Gitlab repo is less-often updated then the Github one.
+> Note: This project also available on GitLab ([link here.](https://gitlab.com/lebao3105/texteditor_tk))
 
 ## Running
 You need Python 3.8+ with Tkinter & pip installed.
@@ -29,12 +28,6 @@ Install texteditor from Pypi Test repo first:
 pip install -i https://test.pypi.org/simple/ texteditor
 ```
 
-Then run:
-```
-python3 -m texteditor
-```
-
-Start from version 1.3-dev1, you can use ```texteditor``` directly.
 
 If needed, let this app speak your language. Use meson and ninja - which are installable via pip should work:
 ```
@@ -46,7 +39,11 @@ $ # Update your translation
 $ ninja -C build me.lebao3105.texteditor-gmo
 $ cp -r build/po/* po/
 ```
-Once done, run ```python3 -m texteditor```.
+
+Once you're done, run:
+```
+python3 -m texteditor
+```
 
 To make executable files (on Windows only), read the instruction from [makerelease](makerelease/).
 
