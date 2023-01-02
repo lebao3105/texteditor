@@ -72,7 +72,7 @@ class Logger:
 
 
 class StatusBar(ttk.Frame):
-    def __init__(self, parent, _=None, **kwargs):
+    def __init__(self, parent, _=None, pack:bool=True, **kwargs):
         super().__init__(master=parent, **kwargs)
 
         if _ is None:
@@ -102,7 +102,8 @@ class StatusBar(ttk.Frame):
         self.keypress()
         self.writeleftmessage(self._("No new message."), nowrite=True)
 
-        self.pack(side="bottom", fill="x")  # TODO: Place it outside the text editor
+        if pack == True:
+            self.pack(side="bottom", fill="x")  # TODO: Place it outside the text editor
 
     def keypress(self, event=None):
         row, col = self.textw.index("insert").split(".")
@@ -129,26 +130,26 @@ class StatusBar(ttk.Frame):
             nonlocal curridx
             nonlocal isplaced
 
+            label1 = ttk.Label(mss, text=self._("No new message here."))
+            label2 = ttk.Label(mss, text=self._("You always can refresh by press F5 key."))
+
             # This needs a fix
             if not self.logs:
-                label = ttk.Label(mss, text=self._("No new message here."))
-                label2 = ttk.Label(mss, text=self._("You always can refresh by just press F5."), cursor="hand2")
-                label.config(font=(label["font"], 14))
+                label1.config(font=(label1["font"], 14))
                 mss.bind("<F5>", lambda event: refresh(replace=True))
 
-                get_config.GetConfig(label, "config")
+                get_config.GetConfig(label1, "config")
                 get_config.GetConfig(label2, "config")
 
                 alllogs.forget()
                 yscroll.forget()
-                label.pack(pady="0 30")
+                label1.pack(pady="0 30")
                 label2.pack(pady="0 30")
                 isplaced = False
             
             if replace == True and isplaced == False:
                 mss.bind("<F5>", lambda event: refresh())
-                label.forget()
-                label2.forget()
+                label1.config(text=self._("All logs"))
                 yscroll.pack(side="right", fill="y")
                 alllogs.pack(expand=True, fill='both')
                 isplaced = True
@@ -191,3 +192,46 @@ class StatusBar(ttk.Frame):
         mss.protocol("WM_DELETE_WINDOW", on_close)
         mss.mainloop()
         self.islogwindowopen = True
+
+class LoggerWithStatusbar(Logger):
+    def __init__(
+        self,
+        obj,
+        parent,
+        showlog:bool=False,
+        pack:bool=False,
+        **kwargs
+    ):
+        """Parameters:
+        * obj: Module name
+        * parent: Parent of the statusbar or the statusbar itself
+            (texteditor.backend.logger.StatusBar)
+        * showlog (boolean): Whetever to show the message to the statusbar
+            (default is False, anyway this class will append messages to
+            StatusBar.logs)
+        * pack (boolean): Pack the StatusBar (ignore this if you use Grid or parent is a StatusBar)
+        * **kwargs: Configurations for the base Logger class"""
+        super().__init__(obj, **kwargs)
+        self.showlog = showlog
+        if isinstance(parent, StatusBar):
+            self.statusbar = parent
+        else:
+            self.statusbar = StatusBar(parent, pack)
+    
+    def throwerr(self, title, noexp: bool = None, msg=None):
+        super().throwerr(title, noexp, msg)
+        if self.showlog is True:
+            self.statusbar.writeleftmessage(title)
+        self.statusbar.logs.append(title)
+    
+    def throwinf(self, title, msg=None):
+        super().throwinf(title, msg)
+        if self.showlog is True:
+            self.statusbar.writeleftmessage(title)
+        self.statusbar.logs.append(title)
+    
+    def throwwarn(self, title, msg=None):
+        super().throwwarn(title, msg)
+        if self.showlog is True:
+            self.statusbar.writeleftmessage(title)
+        self.statusbar.logs.append(title)
