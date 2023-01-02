@@ -47,8 +47,8 @@ class FileOperations:
     def asktoopen(self):
         ask = wx.MessageBox(
             _(
-                """It seems that the file you're trying to open is in another tab.\n
-                Load anyway? (to a new tab)"""
+                f"""It seems that the file you're trying to open is in another tab.\n
+Load anyway? (to a new tab)"""
             ),
             _("Infomation"),
             wx.ICON_QUESTION | wx.YES_NO,
