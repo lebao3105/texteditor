@@ -60,34 +60,38 @@ class Tabber(wx.Notebook):
 
 
 class TextWidget(wx.TextCtrl):
+    rcmenu : bool = True
+
     def __init__(self, *args, **kwds):
         super().__init__(*args, **kwds)
-        self.Bind(wx.EVT_RIGHT_DOWN, self.OpenMenu)
+        if self.rcmenu == True:
+            self.Bind(wx.EVT_RIGHT_DOWN, self.OpenMenu)
 
-    def OpenMenu(self, event):
-        pt = event.GetPosition()
-        self.RightClickMenu(event, pt, True)
+    if rcmenu == True:
+        def OpenMenu(self, event):
+            pt = event.GetPosition()
+            self.RightClickMenu(event, pt, True)
 
-    def RightClickMenu(self, event, pt, enable):
-        menu = wx.Menu()
-        cut = menu.Append(wx.ID_CUT, _("Cut\tCtrl-X"))
-        copy = menu.Append(wx.ID_COPY, _("Copy\tCtrl-C"))
-        paste = menu.Append(wx.ID_PASTE, _("Paste\tCtrl-V"))
-        menu.AppendSeparator()
-        undo = menu.Append(wx.ID_UNDO, _("Undo\tCtrl-Z"))
-        delete = menu.Append(wx.ID_REDO, _("Redo\tCtrl-Y"))
-        selectall = menu.Append(wx.ID_SELECTALL, _("Select All\tCtrl-A"))
+        def RightClickMenu(self, event, pt, enable):
+            menu = wx.Menu()
+            cut = menu.Append(wx.ID_CUT, _("Cut\tCtrl-X"))
+            copy = menu.Append(wx.ID_COPY, _("Copy\tCtrl-C"))
+            paste = menu.Append(wx.ID_PASTE, _("Paste\tCtrl-V"))
+            menu.AppendSeparator()
+            undo = menu.Append(wx.ID_UNDO, _("Undo\tCtrl-Z"))
+            delete = menu.Append(wx.ID_REDO, _("Redo\tCtrl-Y"))
+            selectall = menu.Append(wx.ID_SELECTALL, _("Select All\tCtrl-A"))
 
-        undo.Enable(False)
-        cut.Enable(False)
-        copy.Enable(False)
+            undo.Enable(False)
+            cut.Enable(False)
+            copy.Enable(False)
 
-        if enable:
-            paste.Enable(True)
-        else:
-            paste.Enable(False)
-        delete.Enable(False)
-        selectall.Enable(False)
+            if enable:
+                paste.Enable(True)
+            else:
+                paste.Enable(False)
+            delete.Enable(False)
+            selectall.Enable(False)
 
-        self.PopupMenu(menu, pt)
-        menu.Destroy()
+            self.PopupMenu(menu, pt)
+            menu.Destroy()

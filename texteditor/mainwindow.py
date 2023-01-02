@@ -8,7 +8,6 @@ from .backend import logger, constants
 
 log = logger.Logger("texteditor.mainwindow")
 
-
 class MainFrame(wx.Frame):
     def __init__(self, *args, **kwds):
         kwds["style"] = kwds.get("style", 0) | wx.DEFAULT_FRAME_STYLE
@@ -32,8 +31,9 @@ class MainFrame(wx.Frame):
         self.statusbar = self.CreateStatusBar(2)
         w1 = self.statusbar.Size[0] - 50
         self.statusbar.SetStatusWidths([w1, -1])
-        self.statusbar.righttext = wx.StaticText(self.statusbar, wx.ID_ANY)
+        self.statusbar.righttext = wx.StaticText(self.statusbar, wx.ID_ANY, label="Messages")
         self.statusbar.righttext.SetPosition((w1 + 2, 2))
+        self.statusbar.righttext.Bind(wx.EVT_LEFT_DOWN, lambda evt: log.logwindow())
 
     def PlaceMenu(self):
         # Menu Bar
