@@ -10,7 +10,6 @@ from .extensions import autosave, cmd, finding
 from .backend import file_operations, get_config, logger
 from .views import about
 
-log = logger.Logger("texteditor.mainwindow")
 
 
 class MainWindow(Tk):
@@ -47,17 +46,15 @@ class MainWindow(Tk):
             try:
                 self.wm_iconphoto(False, PhotoImage(file=texteditor.icon))
             except TclError:
-                log.throwerr("Unable to set application icon", "TCLError occured")
+                self.log.throwerr("Unable to set application icon", "TCLError occured")
         else:
-            log.throwwarn("Warning: Application icon %s not found" % texteditor.icon)
+            self.log.throwwarn("Warning: Application icon %s not found" % texteditor.icon)
 
         # Wrap button
-        self.wrapbtn = BooleanVar()
-        self.wrapbtn.set(True)
+        self.wrapbtn = BooleanVar(value=True)
 
         # Auto change color
         self.autocolor = BooleanVar()
-        self.wrapbtn.set(False)
         self.autocolormode = get_config.AutoColor(self)
 
         # Window size
@@ -65,7 +62,9 @@ class MainWindow(Tk):
 
         # Place widgets then handle events
         self.notebook = TabsViewer(self, _=self._, do_place=True)
+        self.log = logger.LoggerWithStatusbar("texteditor.mainwindow", self.text_editor.statusbar, showlog=True)
         self.autosv = autosave.AutoSave(self, savefile_fn=lambda: self.notebook.fileops.savefile_(), _=self._)
+
         self.get_color()
         self.load_ui()
         self.add_event()
@@ -140,7 +139,7 @@ class MainWindow(Tk):
         bindcfg("<Control-Shift-S>", lambda event: self.notebook.fileops.saveas())
         bindcfg("<Control-s>", lambda event: self.notebook.fileops.savefile_())
         bindcfg("<Control-o>", lambda event: self.notebook.fileops.openfile_())
-        bindcfg("<Control-w>", lambda event: self.set_wrap(self))
+        bindcfg("<Control-w>", lambda event: self.text_editor.wrapmode())
 
     # Menu bar callbacks
     def resetcfg(self, event=None):
@@ -193,18 +192,6 @@ class MainWindow(Tk):
         get_config.GetConfig.change_config("global", "color", self.lb)
         self.get_color()
         get_config.GetConfig.configure(self.text_editor)
-
-    # Set wrap mode (keyboard shortcut)
-    # It is different from the textwidget's default function. A lot.
-    def set_wrap(self, event=None):
-        if self.wrapbtn.get() == True:
-            self.text_editor.configure(wrap="none")
-            self.wrapbtn.set(False)
-            log.throwinf("Disabled wrapping on the text widget.")
-        else:
-            self.text_editor.configure(wrap="word")
-            self.wrapbtn.set(True)
-            log.throwinf("Enabled wrapping on the text widget.")
 
     def add_tab(self, event=None):
         return self.notebook.add_tab(idx="default")

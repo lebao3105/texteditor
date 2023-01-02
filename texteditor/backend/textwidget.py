@@ -1,5 +1,5 @@
 import tkinter.ttk as ttk
-import gettext
+import texteditor
 from tkinter import BooleanVar, Menu, Text
 from texteditor.backend import get_config, logger
 
@@ -41,7 +41,7 @@ class TextWidget(Text):
             self.useWrap = addWrap
 
         if _ is None:
-            self._ = gettext.gettext
+            self._ = texteditor._
         else:
             self._ = _
 
@@ -65,7 +65,7 @@ class TextWidget(Text):
         xbar.pack(side="bottom", fill="x")
         ybar.pack(side="right", fill="y")
 
-    ## Right click menu
+    # Right click menu
     # Initialize the rightclick menu.
     # By the default we will place Copy, Cut & Paste.
     def __menu_init(self):
@@ -86,14 +86,18 @@ class TextWidget(Text):
             accelerator="Ctrl+V",
             command=lambda: root.event_generate("<Control-v>"),
         )
-        if self.useWrap == True:
+        # Wrap button is temporary disabled because
+        # texteditor.mainwindow now uses wrapbtn function,
+        # and our wrapbtn variable doesnot fit with the
+        # mainwindow's one (I need to rename the function)
+        """if self.useWrap == True:
             self.RMenu.add_separator()
             self.RMenu.add_checkbutton(
                 label=self._("Wrap (by word)"),
                 accelerator="Ctrl+W",
                 command=lambda: self.wrapmode(self),
                 variable=self.wrapbtn,
-            )
+            )"""
         if self.useUnRedo == True:
             self.RMenu.add_separator()
             addcmd(
@@ -140,13 +144,11 @@ class TextWidget(Text):
 
     # @staticmethod
     def wrapmode(self, event=None):
-        # Find the button first:)
-        if not hasattr(self, "wrapbtn"):
-            print("Couldn't find Wrap mode button!")
-            return
         if self.wrapbtn.get() == True:
-            self.text_editor.configure(wrap="word")
-            self.statusbar.writeleftmessage("Enabled wrapping on the text widget")
+            self.configure(wrap="none")
+            self.statusbar.writeleftmessage(
+                "Disabled wrapping on the text widget.")
         else:
-            self.text_editor.configure(wrap="none")
-            self.statusbar.writeleftmessage("Disabled wrapping on the text widget.")
+            self.configure(wrap="word")
+            self.statusbar.writeleftmessage(
+                "Enabled wrapping on the text widget")
