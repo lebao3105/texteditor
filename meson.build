@@ -19,8 +19,8 @@ if not py_inst.found()
     error('Python 3 installation not found!')
 endif
 
-if not py_inst.language_version().version_compare('>= 3.7')
-    error('Only Python 3.7 and higher is supported.')
+if not py_inst.language_version().version_compare('>= 3.8')
+    error('Only Python 3.8 and higher is supported.')
 endif
 
 prefix = get_option('prefix')

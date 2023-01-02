@@ -6,9 +6,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: me.lebao3105.texteditor 1.4-beta\n"
+"Project-Id-Version: me.lebao3105.texteditor 1.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-12-31 13:20+0700\n"
+"POT-Creation-Date: 2023-01-02 10:52+0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -118,7 +118,7 @@ msgid "Save as"
 msgstr ""
 
 #: texteditor/tabs.py:116 texteditor/tabs.py:127 texteditor/tabs.py:156
-#: texteditor/views/about.ui:14
+#: texteditor/views/about.ui:18
 msgid "Text Editor"
 msgstr ""
 
@@ -295,15 +295,15 @@ msgstr ""
 msgid "About this app"
 msgstr ""
 
-#: texteditor/views/about.ui:22
+#: texteditor/views/about.ui:27
 msgid "Version 1.4-Dev"
 msgstr ""
 
-#: texteditor/views/about.ui:30
+#: texteditor/views/about.ui:35
 msgid "A small, lightweight and customizable text editor."
 msgstr ""
 
-#: texteditor/views/about.ui:40
+#: texteditor/views/about.ui:46
 msgid "OK"
 msgstr ""
 

@@ -16,6 +16,9 @@ class TabsViewer(Notebook):
 
         self.parent = master
 
+        # Add an initial tab
+        self.add_tab()
+
         # A tab but it's used to add a new tab
         # Idea from StackOverflow.. I don't know there was something like this
         dummy = Frame()
@@ -46,7 +49,7 @@ class TabsViewer(Notebook):
             "<Button-3>",
             lambda event: self.right_click_menu.post(event.x_root, event.y_root),
         )
-        self.bind("<<NotebookTabChanged>>", self.tab_changed)
+        self.bind("<<NotebookTabChanged>>", lambda evt: self.tab_changed)
 
         # Place the notebook, if you want
         if do_place is True:
@@ -77,6 +80,7 @@ class TabsViewer(Notebook):
             useUnRedo=True,
             useScrollbars=False,
             enableStatusBar=True,
+            addWrap=True
         )
         self.fileops = file_operations.FileOperations(
             textw=self.parent.text_editor,
@@ -151,7 +155,7 @@ class TabsViewer(Notebook):
         tabname = event.widget.tab("current")["text"]
         # Check if the tab name is + (new tab button)
         if tabname == "+":
-            self.add_tab(idx=(len(self.tabs())))  # Will this work?
+            self.add_tab(idx=(len(self.tabs())))
         if self.parent.winfo_class() == "Tk":
             self.parent.title(self._("Text Editor") + " - " + tabname)
 

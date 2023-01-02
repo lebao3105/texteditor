@@ -23,6 +23,8 @@ print(miscs.headertext("texteditor Python package build script"))
 
 # Checking functions
 def checkreq():
+    global FOUND_NREQ
+    global CHECKREQ_NOT_IN_FLAG
     print(miscs.boldtext("Checking for requirements..."))
     print(
         miscs.warntext(
@@ -31,16 +33,10 @@ def checkreq():
     )
     print("Use help flag to see all requirements.")
     # Python version
-    if sys.version_info.major < 3:
-        print(miscs.failtext("Python major verison is smaller than 3!"))
+    if sys.version_info.major < 3 or sys.version_info.minor < 8:
+        print(miscs.failtext("Python version 3.8 or higher is required."))
         exit(1)
-    if sys.version_info.minor < 7:
-        print(
-            miscs.failtext(
-                "Python minor version is smaller than 7 - Python 3.7+ is required."
-            )
-        )
-        exit(1)
+
     # Build system
     if BUILD_FLAG is True:
         try:
@@ -70,6 +66,11 @@ def checkreq():
 
 
 def checkflag(arg: str):
+    global MESON_FLAG
+    global BUILD_FLAG
+    global CHECKREQ_FLAG
+    global CHECKREQ_NOT_IN_FLAG
+
     if arg == "--use-meson":
         MESON_FLAG = True
         BUILD_FLAG = False
@@ -97,7 +98,7 @@ def help():
     print("--use-meson : Build/install using meson and ninja")
     print("--no-checkreq : Tell us not to check for requirements")
     print(miscs.boldtext("Build requirements: (use the latest version for be sure)"))
-    print("python version 3.7+")
+    print("python version 3.8+")
     print("meson (and ninja) : Installable via pip")
     print(
         "build : Install it via pip - you don't need both build and meson are installed together."
