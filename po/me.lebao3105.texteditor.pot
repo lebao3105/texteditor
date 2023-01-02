@@ -6,9 +6,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: me.lebao3105.texteditor 1.4\n"
+"Project-Id-Version: me.lebao3105.texteditor 1.4-beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-01-02 10:52+0700\n"
+"POT-Creation-Date: 2023-01-02 13:16+0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,128 +17,128 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: texteditor/mainwindow.py:97
+#: texteditor/mainwindow.py:96
 msgid "Autosave"
 msgstr ""
 
-#: texteditor/mainwindow.py:104
+#: texteditor/mainwindow.py:103
 msgid "Open System Shell"
 msgstr ""
 
-#: texteditor/mainwindow.py:109
+#: texteditor/mainwindow.py:108
 msgid "Autocolor mode"
 msgstr ""
 
-#: texteditor/mainwindow.py:114 texteditor/backend/textwidget.py:92
+#: texteditor/mainwindow.py:113
 msgid "Wrap (by word)"
 msgstr ""
 
-#: texteditor/mainwindow.py:121
+#: texteditor/mainwindow.py:120
 msgid "File"
 msgstr ""
 
-#: texteditor/mainwindow.py:122
+#: texteditor/mainwindow.py:121
 msgid "Edit"
 msgstr ""
 
-#: texteditor/mainwindow.py:123
+#: texteditor/mainwindow.py:122
 msgid "Config"
 msgstr ""
 
-#: texteditor/mainwindow.py:150 texteditor/backend/get_config.py:173
+#: texteditor/mainwindow.py:149 texteditor/backend/get_config.py:173
 #: texteditor/backend/get_config.py:181
 msgid "Warning"
 msgstr ""
 
-#: texteditor/mainwindow.py:151
+#: texteditor/mainwindow.py:150
 msgid "This will reset ALL configurations you have ever made. Continue?"
 msgstr ""
 
-#: texteditor/mainwindow.py:157
+#: texteditor/mainwindow.py:156
 msgid "Error occured!"
 msgstr ""
 
-#: texteditor/mainwindow.py:159
+#: texteditor/mainwindow.py:158
 msgid ""
 "Unable to reset configuration file: Backed up default variables not found"
 msgstr ""
 
-#: texteditor/mainwindow.py:163
+#: texteditor/mainwindow.py:162
 msgid "Error: Unable to reset all configurations!"
 msgstr ""
 
-#: texteditor/mainwindow.py:168
+#: texteditor/mainwindow.py:167
 msgid "Completed"
 msgstr ""
 
-#: texteditor/mainwindow.py:170
+#: texteditor/mainwindow.py:169
 msgid ""
 "Resetted texteditor configurations.\n"
 "Restart the application to take the effect."
 msgstr ""
 
-#: texteditor/mainwindow.py:174
+#: texteditor/mainwindow.py:173
 msgid "Resetted all configurations."
 msgstr ""
 
-#: texteditor/mainwindow.py:218
+#: texteditor/mainwindow.py:205
 msgid "Stopped autocolor service."
 msgstr ""
 
-#: texteditor/mainwindow.py:226
+#: texteditor/mainwindow.py:213
 msgid "Started autocolor service."
 msgstr ""
 
-#: texteditor/tabs.py:30
+#: texteditor/tabs.py:33
 msgid "New tab"
 msgstr ""
 
-#: texteditor/tabs.py:35
+#: texteditor/tabs.py:38
 msgid "Close the current opening tab"
 msgstr ""
 
-#: texteditor/tabs.py:39
+#: texteditor/tabs.py:42
 msgid "Duplicate the current opening tab"
 msgstr ""
 
-#: texteditor/tabs.py:43
+#: texteditor/tabs.py:46
 msgid "Reopen the file"
 msgstr ""
 
-#: texteditor/tabs.py:61
+#: texteditor/tabs.py:64
 msgid "Untitled"
 msgstr ""
 
-#: texteditor/tabs.py:99 texteditor/views/menubar.ui:23
+#: texteditor/tabs.py:103 texteditor/views/menubar.ui:23
 msgid "Save"
 msgstr ""
 
-#: texteditor/tabs.py:104
+#: texteditor/tabs.py:108
 msgid "Save as"
 msgstr ""
 
-#: texteditor/tabs.py:116 texteditor/tabs.py:127 texteditor/tabs.py:156
+#: texteditor/tabs.py:120 texteditor/tabs.py:131 texteditor/tabs.py:160
 #: texteditor/views/about.ui:18
 msgid "Text Editor"
 msgstr ""
 
-#: texteditor/tabs.py:134
+#: texteditor/tabs.py:138
 msgid "Tab close"
 msgstr ""
 
-#: texteditor/tabs.py:135
+#: texteditor/tabs.py:139
 msgid "The content of this tab is modified. Save it?"
 msgstr ""
 
-#: texteditor/tabs.py:164
+#: texteditor/tabs.py:168
 msgid " (Duplicated)"
 msgstr ""
 
-#: texteditor/tabs.py:170
+#: texteditor/tabs.py:174
 msgid "Cannot reopen this tab because it opens no file."
 msgstr ""
 
-#: texteditor/tabs.py:177
+#: texteditor/tabs.py:181
 msgid "Text editor"
 msgstr ""
 
@@ -283,11 +283,11 @@ msgstr ""
 msgid "Paste"
 msgstr ""
 
-#: texteditor/backend/textwidget.py:100 texteditor/views/menubar.ui:49
+#: texteditor/backend/textwidget.py:104 texteditor/views/menubar.ui:49
 msgid "Undo"
 msgstr ""
 
-#: texteditor/backend/textwidget.py:105 texteditor/views/menubar.ui:55
+#: texteditor/backend/textwidget.py:109 texteditor/views/menubar.ui:55
 msgid "Redo"
 msgstr ""
 
