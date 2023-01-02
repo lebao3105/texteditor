@@ -3,9 +3,9 @@ from os.path import isfile
 # These are __init__.py files in the source code.
 # Without they we can't import any file(s)
 initfiles = [
-    "extensions/__init__.py",
+    #"extensions/__init__.py",
     "backend/__init__.py",
-    "views/__init__.py",
+    #"views/__init__.py",
     "__init__.py",
 ]
 

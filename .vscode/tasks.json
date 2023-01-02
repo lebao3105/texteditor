@@ -1,0 +1,71 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Build with meson",
+            "type": "shell",
+            "linux": {"command" : "python3 builder.py build"},
+            "windows": {"command": "python builder.py build --use-meson"},
+            "problemMatcher": [],
+            "group": {
+                "kind": "build",
+            },
+            "options": {
+                "cwd": "${workspaceFolder}/makerelease"
+            }
+        },
+        {
+            "label": "Build with build module",
+            "type": "shell",
+            "linux": {"command" : "python3 builder.py build"},
+            "windows": {"command" : "python builder.py build"},
+            "problemMatcher": [],
+            "group": {
+                "kind": "build",
+            },
+            "options": {
+                "cwd": "${workspaceFolder}/makerelease"
+            }
+        },
+        {
+            "label": "Install with meson",
+            "type": "shell",
+            "command": "ninja -C build install",
+            "problemMatcher": [],
+            "group": {
+                "kind": "build",
+            },
+            "options": {
+                "cwd": "${workspaceFolder}/makerelease"
+            }
+        },
+        {
+            "label": "Install with pip",
+            "type": "shell",
+            "linux": {"command" : "python3 builder.py install"},
+            "windows": {"command" : "python builder.py install"},
+            "problemMatcher": [],
+            "group": {
+                "kind": "build",
+            },
+            "options": {
+                "cwd": "${workspaceFolder}/makerelease"
+            }
+        },
+        {
+            "label": "Check for dependencies",
+            "type": "shell",
+            "linux": {"command" : "python3 builder.py checkreq"},
+            "windows": {"command" : "python builder.py checkreq"},
+            "problemMatcher": [],
+            "group": {
+                "kind": "build",
+            },
+            "options": {
+                "cwd": "${workspaceFolder}/makerelease"
+            }
+        }
+    ]
+}

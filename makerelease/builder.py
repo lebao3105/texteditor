@@ -4,7 +4,7 @@ import subprocess
 import sys
 import miscs
 
-# Options
+## Options
 ALL_ARGS = ["build", "install", "help", "checkreq"]
 ## Checkreq
 CHECKREQ_FLAG = True
@@ -23,6 +23,7 @@ print(miscs.headertext("texteditor Python package build script"))
 
 # Checking functions
 def checkreq():
+    global FOUND_NREQ
     print(miscs.boldtext("Checking for requirements..."))
     print(
         miscs.warntext(
@@ -30,17 +31,11 @@ def checkreq():
         )
     )
     print("Use help flag to see all requirements.")
+
     # Python version
-    if sys.version_info.major < 3:
-        print(miscs.failtext("Python major verison is smaller than 3!"))
-        exit(1)
-    if sys.version_info.minor < 7:
-        print(
-            miscs.failtext(
-                "Python minor version is smaller than 7 - Python 3.7+ is required."
-            )
-        )
-        exit(1)
+    if sys.version_info.major < 3 or sys.version_info.minor < 8:
+        raise Exception("Python 3.8+ is required")
+
     # Build system
     if BUILD_FLAG is True:
         try:
@@ -51,10 +46,6 @@ def checkreq():
     if MESON_FLAG is True:
         if shutil.which("meson") is None:
             print(miscs.failtext("Meson program not found"))
-        try:
-            import mesonbuild
-        except ImportError:
-            print(miscs.failtext("'Meson' module not found"))
             FOUND_NREQ = True
 
     if CHECKREQ_NOT_IN_FLAG is True:
@@ -65,11 +56,14 @@ def checkreq():
                 )
             )
             exit(1)
-        else:
-            build_()
+    miscs.oktext("Check requirements task completed.")
 
 
 def checkflag(arg: str):
+    global CHECKREQ_NOT_IN_FLAG
+    global MESON_FLAG
+    global BUILD_FLAG
+    global CHECKREQ_FLAG
     if arg == "--use-meson":
         MESON_FLAG = True
         BUILD_FLAG = False
@@ -85,6 +79,7 @@ def checkflag(arg: str):
         build_()
     elif arg == "install":
         install_()
+    exit()
 
 
 def help():
@@ -96,15 +91,15 @@ def help():
     print(miscs.boldtext("Flags:"))
     print("--use-meson : Build/install using meson and ninja")
     print("--no-checkreq : Tell us not to check for requirements")
-    print(miscs.boldtext("Build requirements: (use the latest version for be sure)"))
-    print("python version 3.7+")
-    print("meson (and ninja) : Installable via pip")
-    print(
-        "build : Install it via pip - you don't need both build and meson are installed together."
-    )
-    print("gettext (optional) : To generate translations")
-    print("tkinter : GUI Framework")
-    print("darkdetect, pygubu, configparser, sv_ttk : Install via pip")
+    print(miscs.boldtext("Build requirements: (use the latest version for sure)"))
+    print("Python 3.8 or higher,")
+    print("Build systems:")
+    print("* meson and ninja - To make a system-wide installation. Texteditor will NOT be found by pip.")
+    print("* build : Build wheel files - which are often used for pip releases.")
+    print("(You dont need all of them, depend on your need.)")
+    print("Dependencies:")
+    print("* wxPython : GUI. Visit extras.wxpython.org for wheels (install its dependencies yourself)")
+    print("*nothing more*")
     exit()
 
 
