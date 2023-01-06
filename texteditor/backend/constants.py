@@ -1,14 +1,24 @@
-# This file contains many variables used in the program.
-# It's useful for parsing configurations in our configuration file.
+import wx
 
-# Colors
-DARK_BG = "#1c1c1c"
-LIGHT_BG = "#ffffff"
-GREEN_TEXT = "#00ff00"
-RED_TEXT = "#ff0000"
+# Font weight
+FONTWT = {
+    "light": wx.FONTWEIGHT_LIGHT,
+    "normal": wx.FONTWEIGHT_NORMAL,
+    "semibold": wx.FONTWEIGHT_SEMIBOLD,
+    "bold": wx.FONTWEIGHT_BOLD,
+    "maxlight": wx.FONTWEIGHT_EXTRALIGHT,
+    "maxbold": wx.FONTWEIGHT_EXTRABOLD,
+}
 
-# Opened files
-FILES_ARR = []
+# Font style
+FONTST = {"normal": wx.FONTSTYLE_NORMAL, "italic": wx.FONTSTYLE_ITALIC}
+
+# Font size
+FONTSZ = {
+    "normal": wx.FONTSIZE_MEDIUM,
+    "small": wx.FONTSIZE_SMALL,
+    "large": wx.FONTSIZE_LARGE,
+}
 
 # Is this package in a stable version?
 STATE = "DEV"
