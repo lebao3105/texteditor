@@ -23,11 +23,12 @@ Documents are available on https://lebao3105.gitbook.io/texteditor_doc.
 ## Running
 You need Python 3.8+ with Tkinter & pip installed.
 
-Install texteditor from Pypi Test repo first:
+The fastest way is to install texteditor from Pypi Test repo:
 ```
 pip install -i https://test.pypi.org/simple/ texteditor
 ```
 
+Or you can clone the source code.
 
 If needed, let this app speak your language. Use meson and ninja - which are installable via pip should work:
 ```

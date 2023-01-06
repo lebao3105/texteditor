@@ -25,10 +25,7 @@ class MainWindow(Tk):
 
         # Configure all menu items callbacks
         self.callbacks = {
-            # "openfile": lambda: file_operations.open_file(self),
             "add_tab": lambda: self.add_tab(),
-            # "savefile": lambda: file_operations.save_file(self),
-            # "savefileas": lambda: file_operations.save_as(self),
             "gofind": lambda: finding.Finder(self, "find"),
             "goreplace": lambda: finding.Finder(self, ""),
             "destroy": lambda: self.destroy(),

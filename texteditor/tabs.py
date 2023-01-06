@@ -173,7 +173,7 @@ class TabsViewer(Notebook):
             self.parent.text_editor.statusbar.writeleftmessage(
                 self._("Cannot reopen this tab because it opens no file.")
             )
-            return  # Whether we can reload the tab content
+            return  # Whetever we can reload the tab content
         else:
             with open(filename, "r") as f:
                 print("Opening file: ", filename)
