@@ -60,7 +60,7 @@ class Tabber(wx.Notebook):
 
 
 class TextWidget(wx.TextCtrl):
-    rcmenu : bool = True
+    rcmenu: bool = True
 
     def __init__(self, *args, **kwds):
         super().__init__(*args, **kwds)
@@ -68,6 +68,7 @@ class TextWidget(wx.TextCtrl):
             self.Bind(wx.EVT_RIGHT_DOWN, self.OpenMenu)
 
     if rcmenu == True:
+
         def OpenMenu(self, event):
             pt = event.GetPosition()
             self.RightClickMenu(event, pt, True)
@@ -78,6 +79,7 @@ class TextWidget(wx.TextCtrl):
             copy = menu.Append(wx.ID_COPY, _("Copy\tCtrl-C"))
             paste = menu.Append(wx.ID_PASTE, _("Paste\tCtrl-V"))
             menu.AppendSeparator()
+
             undo = menu.Append(wx.ID_UNDO, _("Undo\tCtrl-Z"))
             delete = menu.Append(wx.ID_REDO, _("Redo\tCtrl-Y"))
             selectall = menu.Append(wx.ID_SELECTALL, _("Select All\tCtrl-A"))
@@ -90,6 +92,7 @@ class TextWidget(wx.TextCtrl):
                 paste.Enable(True)
             else:
                 paste.Enable(False)
+
             delete.Enable(False)
             selectall.Enable(False)
 

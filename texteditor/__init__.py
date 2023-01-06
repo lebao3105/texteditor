@@ -7,7 +7,7 @@ import wx
 
 import texteditor
 from . import mainwindow
-from .backend import constants, logger
+from .backend import constants
 
 currdir = pathlib.Path(__file__).parent
 
@@ -29,9 +29,6 @@ if constants.STATE == "DEV":
 elif constants.STATE == "STABLE":
     texteditor.icon = str(currdir / "icons/texteditor.png")
 else:
-    logger.Logger("texteditor").throwwarn(
-        title=_("Unknown application branch found (DEV/STABLE)")
-    )
     constants.STATE = "UNKNOWN (%s)" % constants.STATE
     texteditor.icon = None
 

@@ -1,10 +1,12 @@
 import datetime
 import os
 import sys
+import texteditor.backend
 import texteditor.tabs as tabs
 import traceback
 import wx
 
+texteditor.backend.require_version(1.6, "alpha")
 
 __dir = os.environ["USERPROFILE"] if sys.platform == "win32" else os.environ["HOME"]
 if sys.platform == "win32":
@@ -33,7 +35,7 @@ class Logger:
             self.log_file = logfile
         self.obj = obj
         self.logs = []
-        self.islogwindopen:bool = False
+        self.islogwindopen: bool = False
 
         try:
             open(self.log_file)
@@ -95,60 +97,104 @@ class Logger:
         return self.printtext(title, msg if msg is not None else "")
 
     def logwindow(self, evt=None):
-        """Shows a log window - not tested the F5 key yet."""
-        curridx: int = 0
-        istexthere: bool = False
-
-        def onkeypressed(evt):
-            key = evt.GetKeyCode()
-            if key == wx.WXK_F5:
-                refresh()
-            else:
-                evt.Skip()
-
-        def refresh():
-            nonlocal curridx
-            nonlocal istexthere
-            if istexthere == False and self.logs:
-                text.Show()
-                for i in range(curridx, len(self.logs)):
-                    text.AppendText(self.logs[i]+"\n")
-                curridx = len(self.logs)
-                istexthere = True
-            else:
-                text.Hide()
-                label1.SetLabelText("No new message collected.")
-                label2.SetLabelText("Press F5 to refresh.")
-                istexthere = False
-        
-        def closewindow(evt):
+        def onwindowclose(evt):
             self.islogwindopen = False
-            fm.Destroy()
+            logwind.fm.Destroy()
 
         if self.islogwindopen == True:
             return
 
-        fm = wx.Frame(None, title="Logs")
+        logwind = LogsWindow(self.logs)
+        logwind.fm.Bind(wx.EVT_CLOSE, onwindowclose)
 
-        panel = wx.Panel(fm, wx.ID_ANY)
+        logwind.Show()
+        self.islogwindopen = True
+
+
+class LogsWindow:
+    def __init__(self, logs: list[str], parent=None):
+        """Logs window - use wx.Frame
+        :param logs (list) : All logs
+        :param parent=None : Parent of the frame
+
+        Objects:
+        * fm : Main frame
+        * label1, label2 : Message text
+        * text : Log object
+
+        Press F5 to refresh the log window (not tested.)
+        """
+
+        self._curridx: int = 0
+        self._istexthere: bool = False
+        self.logs = logs
+
+        self.fm = wx.Frame(parent, title="Logs")
+
+        panel = wx.Panel(self.fm, wx.ID_ANY)
         sizer = wx.BoxSizer(wx.VERTICAL)
 
-        label1 = wx.StaticText(panel, wx.ID_ANY, "No new message collected.", style=wx.TE_READONLY)
-        label1.SetFont(wx.Font(14, wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD, 0, ""))
-        sizer.Add(label1, 0, wx.ALIGN_CENTER_HORIZONTAL | wx.ALL, 52, wx.EXPAND)
+        self.label1 = wx.StaticText(
+            panel, wx.ID_ANY, "No new message collected.", style=wx.TE_READONLY
+        )
+        self.label1.SetFont(
+            wx.Font(
+                14,
+                wx.FONTFAMILY_DEFAULT,
+                wx.FONTSTYLE_NORMAL,
+                wx.FONTWEIGHT_BOLD,
+                0,
+                "",
+            )
+        )
+        sizer.Add(self.label1, 0, wx.ALIGN_CENTER_HORIZONTAL | wx.ALL, 52, wx.EXPAND)
 
-        label2 = wx.StaticText(panel, wx.ID_ANY, "Press F5 to refresh.", style=wx.TE_READONLY)
-        label2.SetFont(wx.Font(12, wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, 1, ""))
-        sizer.Add(label2, 0, wx.ALIGN_CENTER_HORIZONTAL | wx.ALL, 0, wx.EXPAND)
+        self.label2 = wx.StaticText(
+            panel, wx.ID_ANY, "Press F5 to refresh.", style=wx.TE_READONLY
+        )
+        self.label2.SetFont(
+            wx.Font(
+                12,
+                wx.FONTFAMILY_DEFAULT,
+                wx.FONTSTYLE_NORMAL,
+                wx.FONTWEIGHT_NORMAL,
+                1,
+                "",
+            )
+        )
+        sizer.Add(self.label2, 0, wx.ALIGN_CENTER_HORIZONTAL | wx.ALL, 0, wx.EXPAND)
 
-        text = tabs.TextWidget(panel, -1, style=wx.TE_MULTILINE | wx.TE_READONLY | wx.EXPAND)
-        text.Hide()
+        self.text = tabs.TextWidget(
+            panel, -1, style=wx.TE_MULTILINE | wx.TE_READONLY | wx.EXPAND
+        )
+        self.text.Hide()
 
         panel.SetSizerAndFit(sizer)
-        fm.Bind(wx.EVT_CHAR_HOOK, onkeypressed)
-        fm.Bind(wx.EVT_CLOSE, closewindow)
-        refresh()
+        self.fm.Bind(wx.EVT_CHAR_HOOK, self.onkeypressed)
+        self.refresh()
 
-        fm.Layout()
-        fm.Show()
-        self.islogwindopen = True
+        self.fm.Layout()
+
+    def onkeypressed(self, evt):
+        key = evt.GetKeyCode()
+        if key == wx.WXK_F5:
+            self.refresh()
+        else:
+            evt.Skip()
+
+    def refresh(self):
+        if self._istexthere == False and self.logs:
+            self.text.Show()
+            for i in range(self._curridx, len(self.logs)):
+                self.text.AppendText(self.logs[i] + "\n")
+            self._curridx = len(self.logs)
+            self._istexthere = True
+        else:
+            self.text.Hide()
+            self.label1.SetLabelText("No new message collected.")
+            self.label2.SetLabelText("Press F5 to refresh.")
+            self._istexthere = False
+
+    def Show(self, show: bool = True):
+        """Show the window."""
+        return self.fm.Show(show)

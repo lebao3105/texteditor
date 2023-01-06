@@ -2,7 +2,7 @@ import os
 import sys
 import wx
 
-from . import constants, logger
+from texteditor.backend import constants, logger
 
 if sys.platform == "win32":
     searchdir = os.environ["USERPROFILE"] + "\Documents"

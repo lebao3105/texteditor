@@ -2,11 +2,14 @@ import platform
 import texteditor
 import webbrowser
 import wx
+import wx.adv
 
-from .tabs import Tabber
-from .backend import logger, constants
+from texteditor.tabs import Tabber
+from texteditor.backend import logger, constants, get_config
 
 log = logger.Logger("texteditor.mainwindow")
+cfg = get_config.GetConfig(get_config.cfg, get_config.file)
+
 
 class MainFrame(wx.Frame):
     def __init__(self, *args, **kwds):
@@ -31,7 +34,9 @@ class MainFrame(wx.Frame):
         self.statusbar = self.CreateStatusBar(2)
         w1 = self.statusbar.Size[0] - 50
         self.statusbar.SetStatusWidths([w1, -1])
-        self.statusbar.righttext = wx.StaticText(self.statusbar, wx.ID_ANY, label="Messages")
+        self.statusbar.righttext = wx.StaticText(
+            self.statusbar, wx.ID_ANY, label="Messages"
+        )
         self.statusbar.righttext.SetPosition((w1 + 2, 2))
         self.statusbar.righttext.Bind(wx.EVT_LEFT_DOWN, lambda evt: log.logwindow())
 
@@ -112,16 +117,38 @@ class MainFrame(wx.Frame):
         pyver = platform.python_version()
         ostype = platform.system() if platform.system() != "" or None else _("Unknown")
         msg = _(
-            f"""texteditor 1.6 Alpha (wx version)
-A simple, cross-platform text editor.
-Branch: {constants.STATE}
-wxPython version: {wxver}
-Python version: {pyver}
-OS type: {ostype}"""
+            f"""\
+        A simple, cross-platform text editor.
+        Branch: {constants.STATE}
+        wxPython version: {wxver}
+        Python verison: {pyver}
+        OS type: {ostype}
+        """
         )
-        return wx.MessageBox(
-            message=msg, caption=_("About this app"), style=wx.OK | wx.ICON_INFORMATION
-        )
+        license = """\
+        This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <https://www.gnu.org/licenses/>."""
+
+        aboutinf = wx.adv.AboutDialogInfo()
+        aboutinf.SetName("texteditor")
+        aboutinf.SetVersion("1.6 Alpha (wx version)")
+        aboutinf.SetIcon(wx.Icon(texteditor.icon))
+        aboutinf.SetDescription(msg)
+        aboutinf.SetCopyright("(C) 2022-2023")
+        aboutinf.SetWebSite("https://github.com/lebao3105/texteditor")
+        aboutinf.SetLicence(license)
+        aboutinf.AddDeveloper(_("Le Bao Nguyen"))
+        return wx.adv.AboutBox(aboutinf)
 
 
 class MyApp(wx.App):
