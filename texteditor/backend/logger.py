@@ -1,10 +1,15 @@
 import datetime
+import inspect
 import os
+import os.path
 import sys
 import texteditor
+import texteditor.backend
+import tkinter.ttk as ttk
 import traceback
-from tkinter import ttk
 from texteditor.backend import get_config, textwidget
+
+texteditor.backend.require_version("1.4b0", "=<")
 
 
 class Logger:
@@ -16,22 +21,31 @@ class Logger:
     else:
         logfile = __dir + "/.logs/texteditor.log"
 
-    def __init__(self, obj: str, fmt_date=None, fmt_time=None, logfile=None):
+    def __init__(self, fmt_date=None, fmt_time=None, logfile=None):
+        """
+        A basic logger class.
+        :param fmt_date=None : Date format (default is %m-%d-%Y)
+        :param fmt_time=None : Time format (default is %H:%M:%S)
+        :param logfile=None : File to log to (default is texteditor's one)
+        """
         if fmt_date is not None:
             self.format_date = fmt_date
         if fmt_time is not None:
             self.format_time = fmt_time
         if logfile is not None:
             self.logfile = logfile
-        self.obj = obj
+        self.obj = inspect.getmodule(inspect.stack()[1][0]).__name__
 
-        try:
-            open(self.logfile, mode="w")
-        except Exception:
-            self.usable = False
-            self.throwerr(
-                "Error occured: (open log file)", "Please contact the developer."
-            )
+        if not os.path.isfile(self.logfile):
+            try:
+                open(self.logfile, mode="w")
+            except:
+                self.usable = False
+                self.throwerr(
+                    "Error occured: (open log file)", "Please contact the developer."
+                )
+            else:
+                self.usable = True
         else:
             self.usable = True
 
@@ -50,19 +64,18 @@ class Logger:
         default = "%s %s %s ~" % (date, time, str(self.obj))
         full = default + " %s" % message
         if self.usable == True:
-            with open(self.logfile, mode="w") as f:
+            with open(self.logfile, mode="a") as f:
+                f.write("\n")
                 f.write(full)
         print(full)
 
-    def throwerr(self, title, noexp:bool=None, msg=None):
+    def throwerr(self, title, noexp: bool = None, msg=None):
         """Throws an exception message with its traceback and a custom message."""
         if noexp is True:
             traceback_msg = ""
         else:
             traceback_msg = traceback.format_exc()
-        return self.printtext(
-            title, msg if msg is not None else "", traceback_msg
-        )
+        return self.printtext(title, msg if msg is not None else "", traceback_msg)
 
     def throwinf(self, title, msg=None):
         return self.printtext(title, msg if msg is not None else "")
@@ -72,7 +85,7 @@ class Logger:
 
 
 class StatusBar(ttk.Frame):
-    def __init__(self, parent, _=None, pack:bool=True, **kwargs):
+    def __init__(self, parent, _=None, pack: bool = False, **kwargs):
         super().__init__(master=parent, **kwargs)
 
         if _ is None:
@@ -123,15 +136,17 @@ class StatusBar(ttk.Frame):
         )
 
     def get_messages(self):
-        curridx : int = 0
-        isplaced : bool
+        curridx: int = 0
+        isplaced: bool
 
-        def refresh(replace:bool=None, event=None):
+        def refresh(replace: bool = None, event=None):
             nonlocal curridx
             nonlocal isplaced
 
             label1 = ttk.Label(mss, text=self._("No new message here."))
-            label2 = ttk.Label(mss, text=self._("You always can refresh by press F5 key."))
+            label2 = ttk.Label(
+                mss, text=self._("You always can refresh by press F5 key.")
+            )
 
             # This needs a fix
             if not self.logs:
@@ -146,46 +161,44 @@ class StatusBar(ttk.Frame):
                 label1.pack(pady="0 30")
                 label2.pack(pady="0 30")
                 isplaced = False
-            
+
             if replace == True and isplaced == False:
                 mss.bind("<F5>", lambda event: refresh())
                 label1.config(text=self._("All logs"))
                 yscroll.pack(side="right", fill="y")
-                alllogs.pack(expand=True, fill='both')
+                alllogs.pack(expand=True, fill="both")
                 isplaced = True
 
-            alllogs.config(state='normal')
+            alllogs.config(state="normal")
             for i in range(curridx, len(self.logs)):
-                alllogs.insert('end', self.logs[i]+"\n")
+                alllogs.insert("end", self.logs[i] + "\n")
             curridx = len(self.logs)
 
-            alllogs.config(state='disabled')
+            alllogs.config(state="disabled")
 
         def on_close():
             self.islogwindowopen = False
             mss.destroy()
-            return # That's it
+            return  # That's it
 
         import tkinter as tk
-        
+
         if self.islogwindowopen is True:
             return
 
         mss = tk.Toplevel(self)
         alllogs = textwidget.TextWidget(mss, _=self._, useMenu=True, addWrap=True)
-        yscroll = ttk.Scrollbar(mss, orient='vertical', command=alllogs.yview)
+        yscroll = ttk.Scrollbar(mss, orient="vertical", command=alllogs.yview)
 
         mss.bind("<F5>", lambda event: refresh())
         alllogs.config(state="disabled")
         alllogs.RMenu.delete(2)
         alllogs.RMenu.add_command(
-            label=self._("Refresh"),
-            command=lambda: refresh(),
-            accelerator="F5"
+            label=self._("Refresh"), command=lambda: refresh(), accelerator="F5"
         )
 
-        yscroll.pack(side="right", fill='y')
-        alllogs.pack(expand=True, fill='both')
+        yscroll.pack(side="right", fill="y")
+        alllogs.pack(expand=True, fill="both")
         refresh()
 
         mss.wm_title(self._("Logs"))
@@ -193,17 +206,10 @@ class StatusBar(ttk.Frame):
         mss.mainloop()
         self.islogwindowopen = True
 
+
 class LoggerWithStatusbar(Logger):
-    def __init__(
-        self,
-        obj,
-        parent,
-        showlog:bool=False,
-        pack:bool=False,
-        **kwargs
-    ):
+    def __init__(self, parent, showlog: bool = False, pack: bool = False, **kwargs):
         """Parameters:
-        * obj: Module name
         * parent: Parent of the statusbar or the statusbar itself
             (texteditor.backend.logger.StatusBar)
         * showlog (boolean): Whetever to show the message to the statusbar
@@ -211,25 +217,25 @@ class LoggerWithStatusbar(Logger):
             StatusBar.logs)
         * pack (boolean): Pack the StatusBar (ignore this if you use Grid or parent is a StatusBar)
         * **kwargs: Configurations for the base Logger class"""
-        super().__init__(obj, **kwargs)
+        super().__init__(**kwargs)
         self.showlog = showlog
         if isinstance(parent, StatusBar):
             self.statusbar = parent
         else:
             self.statusbar = StatusBar(parent, pack)
-    
+
     def throwerr(self, title, noexp: bool = None, msg=None):
         super().throwerr(title, noexp, msg)
         if self.showlog is True:
             self.statusbar.writeleftmessage(title)
         self.statusbar.logs.append(title)
-    
+
     def throwinf(self, title, msg=None):
         super().throwinf(title, msg)
         if self.showlog is True:
             self.statusbar.writeleftmessage(title)
         self.statusbar.logs.append(title)
-    
+
     def throwwarn(self, title, msg=None):
         super().throwwarn(title, msg)
         if self.showlog is True:

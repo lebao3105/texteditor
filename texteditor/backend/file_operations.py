@@ -1,6 +1,7 @@
 import os
 import sys
 import texteditor
+import texteditor.backend
 
 from tkinter.filedialog import *
 from tkinter.messagebox import *
@@ -11,6 +12,8 @@ if sys.platform == "win32":
     searchdir = os.environ["USERPROFILE"] + "\Documents"
 else:
     searchdir = os.environ["HOME"] + "/Documents"
+
+texteditor.backend.require_version("1.4a0", ">=")
 
 
 class FileOperations:

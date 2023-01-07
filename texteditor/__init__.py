@@ -1,23 +1,22 @@
 import gettext
 import locale
 import os.path
+import packaging.version
 import pathlib
 import sys
 from tkinter.messagebox import showerror
 
 import texteditor
 from . import mainwindow
-from .backend import constants
+from .backend import __version__ as version
 
 currdir = pathlib.Path(__file__).parent
+__version__ = version
 
-if constants.STATE == "DEV":
+if packaging.version.parse(version).is_prerelease:
     texteditor.icon = currdir / "icons/texteditor.Devel.png"
-elif constants.STATE == "STABLE":
-    texteditor.icon = currdir / "icons/texteditor.png"
 else:
-    print("Warning: Wrong application branch (STABLE/DEV) in miscs.constants module")
-    texteditor.icon = None
+    texteditor.icon = currdir / "icons/texteditor.png"
 
 try:
     from texteditor.defs import LOCALE_DIR

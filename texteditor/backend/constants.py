@@ -13,6 +13,3 @@ DEFAULT_OTHERS_WIGHT = 250
 
 # Opened files
 FILES_ARR = []
-
-# Is this package in a stable version?
-STATE = "DEV"

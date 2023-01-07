@@ -96,7 +96,7 @@ class GetConfig:
             log.throwerr(
                 "Error: Unable to reset configration file",
                 "Backed up variables not found",
-                noexp=True
+                noexp=True,
             )
             return False
         try:
@@ -215,7 +215,7 @@ class AutoColor:
         super().__init__()
         self.parent = parent
 
-        self.start = autocolormode = GetConfig.getvalue("global", "autocolor")
+        self.start = GetConfig.getvalue("global", "autocolor")
         self.autocolor = self.start
 
         self.bg = GetConfig.getvalue("global", "color")
