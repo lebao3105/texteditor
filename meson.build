@@ -1,6 +1,6 @@
 project(
     'texteditor',
-    version: '1.4-beta',
+    version: '1.4.0',
     meson_version: '>= 0.59.0',
     license: 'GPL-3.0+'
 )

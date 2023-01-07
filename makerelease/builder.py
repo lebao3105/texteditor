@@ -105,12 +105,13 @@ def help():
     )
     print("gettext (optional) : To generate translations")
     print("tkinter : GUI Framework")
-    print("darkdetect, pygubu, configparser, sv_ttk : Install via pip")
+    print("darkdetect, packaging, pygubu, configparser, sv_ttk : Install via pip")
     exit()
 
 
 def build_():
     os.chdir("..")
+    clean_()
     print(miscs.boldtext("Starting the build...Check the output below."))
     if BUILD_FLAG is True:
         command = pycmd + " -m build"
@@ -134,7 +135,7 @@ def install_():
     os.chdir("..")
     print(miscs.boldtext("Starting the project installation...Check the output below."))
     if BUILD_FLAG is True:
-        command = pycmd + " -m pip install dists/*.whl --force-reinstall"
+        command = pycmd + " -m pip install dists/*.whl --force-reinstall" # This needs a fix
         pass
     if MESON_FLAG is True:
         command = "ninja -C build install"
@@ -150,6 +151,14 @@ def install_():
     os.chdir("makerelease")
     exit()
 
+def clean_():
+    try:
+        os.rmdir('build')
+        os.rmdir('dist')
+    except OSError as e:
+        print('Clean error (ignore if you dont have build & dist folder): {}'
+            .format(e.__str__)
+        )
 
 def main():
     args = sys.argv
