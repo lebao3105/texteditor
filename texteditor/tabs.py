@@ -77,10 +77,9 @@ class TabsViewer(Notebook):
             parent=textframe,
             _=self._,
             useMenu=True,
-            useUnRedo=True,
             useScrollbars=False,
             enableStatusBar=True,
-            addWrap=True
+            unRedo=True,
         )
         self.fileops = file_operations.FileOperations(
             textw=self.parent.text_editor,

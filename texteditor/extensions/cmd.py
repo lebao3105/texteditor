@@ -1,21 +1,21 @@
 import os
-import signal
 import subprocess
-import texteditor
+import texteditor.backend
 import threading
 
-from tkinter import END, BooleanVar, Toplevel, messagebox
+from tkinter import END, BooleanVar, TclError, Toplevel, messagebox
 from texteditor.backend import get_config, textwidget
 
 arr = []
 
+texteditor.backend.require_version("1.4a", ">=")
+
 
 class cmd(textwidget.TextWidget):
-    useUnRedo = True
     useWrap = True
 
     def __init__(self, master, _=None, **kw):
-        super().__init__(master, _=_, **kw)
+        super().__init__(master, _=_, enableStatusBar=True, **kw)
         self.parent = master
         self.bind("<Return>", self.checkcmds)
 
@@ -32,19 +32,16 @@ class cmd(textwidget.TextWidget):
         command = self.get(1.0, END).split("\n")[-2]
         append = self.insert
 
-        if command == "exit":
-            try:
-                for pids in arr:
-                    os.kill(pids, signal.SIGTERM)
-            except ProcessLookupError:
-                pass
+        if command.startswith("exit"):
+            for pid in arr:
+                pid.kill
             print("Closed Console Window.")
             self.parent.destroy()  # Destroy the Toplevel widget
 
-        elif command == "clear":
+        elif command.startswith("clear"):
             self.delete(1.0, END)
 
-        elif command == "help":
+        elif command.startswith("help"):
             append("end", "\n")
             append("end", self._("Available commands:\n"))
             append("end", self._("exit: Close this box\n"))
@@ -64,7 +61,7 @@ class cmd(textwidget.TextWidget):
             )
             append("end", self._("You won't get anything.\n"))
 
-        elif command == "term":
+        elif command.startswith("term"):
             append("end", "\n")
             append(
                 "end",
@@ -81,9 +78,13 @@ class cmd(textwidget.TextWidget):
                     + cmd,
                 )
             elif cmd == ("cmd" or "powershell" or "pwsh"):
-                threading.Thread(target=lambda: self.runcommand("start " + cmd)).start()
+                threading.Thread(
+                    target=lambda: self.runcommand("start " + cmd, noout=True)
+                ).start()
             else:
-                threading.Thread(target=lambda: self.runcommand(cmd)).start()
+                threading.Thread(
+                    target=lambda: self.runcommand(cmd, noout=True)
+                ).start()
         elif command.startswith("cd "):
             try:
                 os.chdir(command.removeprefix("cd "))
@@ -95,7 +96,7 @@ class cmd(textwidget.TextWidget):
             rec_thread = threading.Thread(target=lambda: self.runcommand(command))
             rec_thread.start()
 
-    def runcommand(self, cmd: str):
+    def runcommand(self, cmd: str, noout: bool = None):
         self.result = subprocess.Popen(
             cmd,
             shell=True,  # preexec_fn=os.setsid,
@@ -103,9 +104,19 @@ class cmd(textwidget.TextWidget):
             stderr=subprocess.PIPE,
         )
         output, error = self.result.communicate()
-        arr.append(self.result.pid)
-        self.insert("end", output)
-        self.insert("end", error)
+        arr.append(self.result)
+        try:
+            self.insert("end", output)
+            self.insert("end", error)
+        except TclError:
+            if not noout:
+                messagebox.showerror(
+                    _("Error"),
+                    _(
+                        "Cannot return the command result to the terminal : TCLError occured!"
+                    ),
+                )
+            return
         self.result.wait()
 
     def readonlymode(self, event=None):

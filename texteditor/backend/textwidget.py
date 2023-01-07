@@ -1,33 +1,39 @@
 import tkinter.ttk as ttk
 import texteditor
+import texteditor.backend
+
 from tkinter import BooleanVar, Menu, Text
 from texteditor.backend import get_config, logger
 
+texteditor.backend.require_version("1.4a", ">=")
+
 
 class TextWidget(Text):
-    """Tkinter Text widget with scrollbars & right-click menu placed by default.\n
-    Configurations for the menu:\n
-    |-> enableMenu: bool : Enable (default) Menu or not\n
-    |-> useUnRedo: bool : Use Undo/Redo in the menu, also make this class able to use them\n
-    |-> useWrap : bool : Add wrap button to the menu\n
-    |-> enableStatusBar : bool : Add a status bar"""
-
     enableMenu: bool = True
-    useUnRedo: bool = False
-    useWrap: bool = False
+    unRedo: bool = False
 
     def __init__(
         self,
         parent,
         _=None,
         useMenu: bool = None,
-        useUnRedo: bool = None,
-        addWrap: bool = None,
         useScrollbars: bool = None,
         enableStatusBar: bool = None,
-        **kw
+        unRedo: bool = False,
+        **kwds
     ):
-        super().__init__(parent, **kw)
+        """Customized Tkinter Text widget with a basic right-click menu.
+        :param parent : Where to place this widget
+        :param _=None : Translator, will remove in 1.5
+        :param useMenu:bool=None : Enable right-click menu or not (default is true)
+        :param unredo:bool=False : Undo Redo
+        :param useScrollbars:bool=None : Use scrollbars (default is true)
+        :param enableStatusBar:bool=None : Show a statusbar (default is false)
+        :param **kwds : Other configurations (tkinter.Text)
+
+        You can set TextWidget.wrapbtn to your own wrapbtn to use the wrap feature.
+        The wrap function is wrapmode(event=None)."""
+        super().__init__(parent, **kwds)
 
         self.master = parent
         self.wrapbtn = BooleanVar(self)
@@ -35,40 +41,40 @@ class TextWidget(Text):
 
         if useMenu != None:
             self.enableMenu = useMenu
-        if useUnRedo != None:
-            self.useUnRedo = useUnRedo
-        if addWrap != None:
-            self.useWrap = addWrap
 
         if _ is None:
             self._ = texteditor._
         else:
             self._ = _
+        self.statusbar = logger.StatusBar(self, self._)
 
         if self.enableMenu is True:
             self.RMenu = Menu(self, tearoff=0)
-            self.__menu_init()
-            self.bind("<Button-3>", lambda event: self.__open_menu(event))
-        if enableStatusBar is True:
-            self.statusbar = logger.StatusBar(self, self._)
+            self._menu_init()
+            self.bind("<Button-3>", lambda event: self._open_menu(event))
+
         if useScrollbars is True:
-            self.__place_scrollbar()
+            self._place_scrollbar()
+
+        if enableStatusBar is True:
+            self.statusbar.pack(side="bottom", fill="x")
+
+        self.unRedo = unRedo
+        self.config(undo=self.unRedo)
 
         # Do some customization
         self.configure(wrap="word")
         get_config.GetConfig.configure(self)
 
     # Place scrollbars
-    def __place_scrollbar(self):
+    def _place_scrollbar(self):
         xbar = ttk.Scrollbar(self, orient="horizontal", command=self.xview)
         ybar = ttk.Scrollbar(self, orient="vertical", command=self.yview)
         xbar.pack(side="bottom", fill="x")
         ybar.pack(side="right", fill="y")
 
     # Right click menu
-    # Initialize the rightclick menu.
-    # By the default we will place Copy, Cut & Paste.
-    def __menu_init(self):
+    def _menu_init(self):
         addcmd = self.RMenu.add_command
         root = self.master
         addcmd(
@@ -86,19 +92,7 @@ class TextWidget(Text):
             accelerator="Ctrl+V",
             command=lambda: root.event_generate("<Control-v>"),
         )
-        # Wrap button is temporary disabled because
-        # texteditor.mainwindow now uses wrapbtn function,
-        # and our wrapbtn variable doesnot fit with the
-        # mainwindow's one (I need to rename the function)
-        """if self.useWrap == True:
-            self.RMenu.add_separator()
-            self.RMenu.add_checkbutton(
-                label=self._("Wrap (by word)"),
-                accelerator="Ctrl+W",
-                command=lambda: self.wrapmode(self),
-                variable=self.wrapbtn,
-            )"""
-        if self.useUnRedo == True:
+        if self.unRedo:
             self.RMenu.add_separator()
             addcmd(
                 label=self._("Undo"),
@@ -110,15 +104,14 @@ class TextWidget(Text):
                 accelerator="Ctrl+Y",
                 command=lambda: root.event_generate("<Control-y>"),
             )
-            self.configure(undo=True)
 
-    def __open_menu(self, event=None):
+    def _open_menu(self, event=None):
         try:
             self.RMenu.post(event.x_root, event.y_root)
         finally:
             self.RMenu.grab_release()
 
-    # Add commands
+    # Add menu item commands
     def addMenucmd(self, label: str, acc: str = None, fn: object = None, **kw):
         return self.RMenu.add_command(label=label, accelerator=acc, command=fn, **kw)
 
@@ -142,13 +135,13 @@ class TextWidget(Text):
     def addMenucascade(self, label: str, menu: Menu, **kw):
         return self.RMenu.add_cascade(label=label, menu=menu, **kw)
 
-    # @staticmethod
+    # Wrap mode
     def wrapmode(self, event=None):
         if self.wrapbtn.get() == True:
             self.configure(wrap="none")
-            self.statusbar.writeleftmessage(
-                "Disabled wrapping on the text widget.")
+            self.wrapbtn.set(False)
+            self.statusbar.writeleftmessage("Disabled wrapping on the text widget.")
         else:
             self.configure(wrap="word")
-            self.statusbar.writeleftmessage(
-                "Enabled wrapping on the text widget")
+            self.wrapbtn.set(True)
+            self.statusbar.writeleftmessage("Enabled wrapping on the text widget")

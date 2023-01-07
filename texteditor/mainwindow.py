@@ -11,7 +11,6 @@ from .backend import file_operations, get_config, logger
 from .views import about
 
 
-
 class MainWindow(Tk):
     """The main application class."""
 
@@ -38,6 +37,12 @@ class MainWindow(Tk):
             "aboutdlg": lambda: self.aboutdlg(),
         }
 
+        self.notebook = TabsViewer(self, _=self._, do_place=True)
+        self.autosv = autosave.AutoSave(
+            self, savefile_fn=lambda: self.notebook.fileops.savefile_(), _=self._
+        )
+        self.log = logger.LoggerWithStatusbar(self.text_editor.statusbar, showlog=True)
+
         # Set icon
         if os.path.isfile(texteditor.icon):
             try:
@@ -45,22 +50,24 @@ class MainWindow(Tk):
             except TclError:
                 self.log.throwerr("Unable to set application icon", "TCLError occured")
         else:
-            self.log.throwwarn("Warning: Application icon %s not found" % texteditor.icon)
+            self.log.throwwarn(
+                "Warning: Application icon %s not found" % texteditor.icon
+            )
 
         # Wrap button
         self.wrapbtn = BooleanVar(value=True)
 
         # Auto change color
         self.autocolor = BooleanVar()
+        if get_config.GetConfig.getvalue("global", "autocolor") == "yes":
+            self.autocolor.set(True)
+        else:
+            self.autocolor.set(False)
+
         self.autocolormode = get_config.AutoColor(self)
 
         # Window size
         self.geometry("810x610")
-
-        # Place widgets then handle events
-        self.notebook = TabsViewer(self, _=self._, do_place=True)
-        self.log = logger.LoggerWithStatusbar("texteditor.mainwindow", self.text_editor.statusbar, showlog=True)
-        self.autosv = autosave.AutoSave(self, savefile_fn=lambda: self.notebook.fileops.savefile_(), _=self._)
 
         self.get_color()
         self.load_ui()
