@@ -1,7 +1,7 @@
 import inspect
 import packaging.version
 
-__version__ = "1.4rc0"
+__version__ = "1.4.0"
 
 
 def require_version(version: str, ctype):
