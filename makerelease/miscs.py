@@ -24,24 +24,24 @@ class bcolors:
 
 
 def headertext(text: str):
-    return bcolors.HEADER + text
+    return "{}{}".format(bcolors.HEADER, text)
 
 
 def oktext(text: str):
-    return bcolors.OKGREEN + text
+    return "{}{}".format(bcolors.OKGREEN, text)
 
 
 def warntext(text: str):
-    return bcolors.WARNING + text
+    return "{}{}".format(bcolors.WARNING, text)
 
 
 def failtext(text: str):
-    return bcolors.FAIL + text
+    return "{}{}".format(bcolors.FAIL, text)
 
 
 def boldtext(text: str):
-    return bcolors.BOLD + text
+    return "{}{}".format(bcolors.BOLD, text)
 
 
 def utext(text: str):
-    return bcolors.UNDERLINE + text
+    return "{}{}".format(bcolors.UNDERLINE, text)

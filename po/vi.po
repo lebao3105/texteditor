@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-01-02 13:16+0700\n"
+"POT-Creation-Date: 2023-01-08 12:59+0700\n"
 "PO-Revision-Date: 2022-10-30 16:40+0700\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -17,63 +17,63 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Poedit 3.1.1\n"
 
-#: texteditor/mainwindow.py:96
+#: texteditor/mainwindow.py:100
 msgid "Autosave"
 msgstr "Tu dong luu"
 
-#: texteditor/mainwindow.py:103
+#: texteditor/mainwindow.py:107
 msgid "Open System Shell"
 msgstr "Mo System Shell"
 
-#: texteditor/mainwindow.py:108
+#: texteditor/mainwindow.py:112
 #, fuzzy
 msgid "Autocolor mode"
 msgstr "Che do tu chon mau"
 
-#: texteditor/mainwindow.py:113
+#: texteditor/mainwindow.py:117
 msgid "Wrap (by word)"
 msgstr "Xuong dong (theo tu)"
 
-#: texteditor/mainwindow.py:120
+#: texteditor/mainwindow.py:124
 msgid "File"
 msgstr "Tep"
 
-#: texteditor/mainwindow.py:121
+#: texteditor/mainwindow.py:125
 msgid "Edit"
 msgstr "Chinh sua"
 
-#: texteditor/mainwindow.py:122
+#: texteditor/mainwindow.py:126
 msgid "Config"
 msgstr "Tuy chinh"
 
-#: texteditor/mainwindow.py:149 texteditor/backend/get_config.py:173
+#: texteditor/mainwindow.py:153 texteditor/backend/get_config.py:173
 #: texteditor/backend/get_config.py:181
 msgid "Warning"
 msgstr "Canh bao"
 
-#: texteditor/mainwindow.py:150
+#: texteditor/mainwindow.py:154
 msgid "This will reset ALL configurations you have ever made. Continue?"
 msgstr "Se hoan lai tat ca cai dat da co tu dau. Tiep tuc?"
 
-#: texteditor/mainwindow.py:156
+#: texteditor/mainwindow.py:160
 msgid "Error occured!"
 msgstr "Co loi xay ra!"
 
-#: texteditor/mainwindow.py:158
+#: texteditor/mainwindow.py:162
 msgid ""
 "Unable to reset configuration file: Backed up default variables not found"
 msgstr "Khong reset duoc file cai dat: Khong tim thay cac bien duoc sao luu"
 
-#: texteditor/mainwindow.py:162
+#: texteditor/mainwindow.py:166
 #, fuzzy
 msgid "Error: Unable to reset all configurations!"
 msgstr "Reset tat ca cai dat"
 
-#: texteditor/mainwindow.py:167
+#: texteditor/mainwindow.py:171
 msgid "Completed"
 msgstr "Da hoan thanh"
 
-#: texteditor/mainwindow.py:169
+#: texteditor/mainwindow.py:173
 msgid ""
 "Resetted texteditor configurations.\n"
 "Restart the application to take the effect."
@@ -81,16 +81,16 @@ msgstr ""
 "Da hoan lai cac cai dat cho texteditor.\n"
 "Vui long khoi dong lai ung dung."
 
-#: texteditor/mainwindow.py:173
+#: texteditor/mainwindow.py:177
 #, fuzzy
 msgid "Resetted all configurations."
 msgstr "Reset tat ca cai dat"
 
-#: texteditor/mainwindow.py:205
+#: texteditor/mainwindow.py:209
 msgid "Stopped autocolor service."
 msgstr "Da tat service Autocolor"
 
-#: texteditor/mainwindow.py:213
+#: texteditor/mainwindow.py:217
 msgid "Started autocolor service."
 msgstr "Da bat service Autocolor."
 
@@ -115,36 +115,36 @@ msgstr "Mo lai tep"
 msgid "Untitled"
 msgstr "Chua co ten"
 
-#: texteditor/tabs.py:103 texteditor/views/menubar.ui:23
+#: texteditor/tabs.py:102 texteditor/views/menubar.ui:23
 msgid "Save"
 msgstr "Luu"
 
-#: texteditor/tabs.py:108
+#: texteditor/tabs.py:107
 msgid "Save as"
 msgstr "Luu nhu"
 
-#: texteditor/tabs.py:120 texteditor/tabs.py:131 texteditor/tabs.py:160
-#: texteditor/views/about.ui:18
+#: texteditor/tabs.py:119 texteditor/tabs.py:130 texteditor/tabs.py:159
+#: texteditor/views/about.ui:10
 msgid "Text Editor"
 msgstr "Trinh chinh sua van ban"
 
-#: texteditor/tabs.py:138
+#: texteditor/tabs.py:137
 msgid "Tab close"
 msgstr "Dong tab"
 
-#: texteditor/tabs.py:139
+#: texteditor/tabs.py:138
 msgid "The content of this tab is modified. Save it?"
 msgstr "Noi dung trong tab nay da duoc chinh sua. Luu lai?"
 
-#: texteditor/tabs.py:168
+#: texteditor/tabs.py:167
 msgid " (Duplicated)"
 msgstr " (tab lap)"
 
-#: texteditor/tabs.py:174
+#: texteditor/tabs.py:173
 msgid "Cannot reopen this tab because it opens no file."
 msgstr "Khong the mo lai tab nay vi no khong mo tep nao."
 
-#: texteditor/tabs.py:181
+#: texteditor/tabs.py:180
 msgid "Text editor"
 msgstr "Trinh chinh sua van ban"
 
@@ -153,7 +153,7 @@ msgstr "Trinh chinh sua van ban"
 msgid "Autosave configuration"
 msgstr "Reset tat ca cai dat"
 
-#: texteditor/extensions/autosave.py:64
+#: texteditor/extensions/autosave.py:65
 msgid ""
 "Select autosave time (minutes)\n"
 "Autosave function will be launched after a time."
@@ -161,19 +161,19 @@ msgstr ""
 "Chon thoi gian tu dong luu (phut)\n"
 "Chuc nang tu dong luu se bat dau sau mot luc."
 
-#: texteditor/extensions/autosave.py:68
+#: texteditor/extensions/autosave.py:71
 msgid "Please note that Autosave only saves the current selected tab."
 msgstr "Luu y rang Autosave chi hoat dong voi tab dang mo hien tai."
 
-#: texteditor/extensions/autosave.py:78
+#: texteditor/extensions/autosave.py:82
 msgid "Save this value"
 msgstr "Luu lai"
 
-#: texteditor/extensions/autosave.py:88
+#: texteditor/extensions/autosave.py:93
 msgid "Cancel"
 msgstr "Huy"
 
-#: texteditor/extensions/autosave.py:124
+#: texteditor/extensions/autosave.py:129
 msgid "Wrong autosave time specified."
 msgstr "Sai gia tri autosave."
 
@@ -181,39 +181,39 @@ msgstr "Sai gia tri autosave."
 msgid "Read only"
 msgstr "Chi doc"
 
-#: texteditor/extensions/cmd.py:49
+#: texteditor/extensions/cmd.py:46
 msgid "Available commands:\n"
 msgstr "Cac lenh co san:\n"
 
-#: texteditor/extensions/cmd.py:50
+#: texteditor/extensions/cmd.py:47
 msgid "exit: Close this box\n"
 msgstr "exit: Dong System Shell\n"
 
-#: texteditor/extensions/cmd.py:51
+#: texteditor/extensions/cmd.py:48
 msgid "help: Show this message\n"
 msgstr "help: Hien thi hop nay\n"
 
-#: texteditor/extensions/cmd.py:52
+#: texteditor/extensions/cmd.py:49
 msgid "clear: Clear this box\n"
 msgstr "clear: Lam trong box nay\n"
 
-#: texteditor/extensions/cmd.py:56
+#: texteditor/extensions/cmd.py:53
 msgid ""
 "term: Open terminal (not this one) - don't run this if you are running this "
 "application from console!\n"
 msgstr "term: Mo mot trinh dong lenh (khong phai cai nay)\n"
 
-#: texteditor/extensions/cmd.py:62
+#: texteditor/extensions/cmd.py:59
 msgid ""
 "Running CONSOLE application which requires user input is not recommended "
 "yet.\n"
 msgstr "Chay cac chuong trinh dong lenh khong duoc khuyen nghi.\n"
 
-#: texteditor/extensions/cmd.py:65
+#: texteditor/extensions/cmd.py:62
 msgid "You won't get anything.\n"
 msgstr "Ban se khong nhan duoc gi ca.\n"
 
-#: texteditor/extensions/cmd.py:72
+#: texteditor/extensions/cmd.py:69
 msgid ""
 "This will open console defined by defconsole value in configuration file. "
 "Please don't run any shell!"
@@ -221,9 +221,17 @@ msgstr ""
 "No se mo chuong trinh duoc dat trong defconsole tu file cai dat. Dung dung "
 "shell!"
 
-#: texteditor/extensions/cmd.py:91
+#: texteditor/extensions/cmd.py:92
 msgid "No such a directory like that"
 msgstr "Khong co thu muc nao nhu vay"
+
+#: texteditor/extensions/cmd.py:114
+msgid "Error"
+msgstr "Loi"
+
+#: texteditor/extensions/cmd.py:116
+msgid "Cannot return the command result to the terminal : TCLError occured!"
+msgstr "Khong chuyen ket qua lenh sang terminal : TCLError da xay ra!"
 
 #: texteditor/extensions/finding.py:22
 msgid "Find something here..."
@@ -238,11 +246,11 @@ msgstr "Tim"
 msgid "Replace"
 msgstr "Thay the"
 
-#: texteditor/backend/file_operations.py:55
+#: texteditor/backend/file_operations.py:58
 msgid "Infomation"
 msgstr "Thong tin"
 
-#: texteditor/backend/file_operations.py:57
+#: texteditor/backend/file_operations.py:60
 msgid ""
 "It seems that the file you're trying to open is in another tab.\n"
 "\n"
@@ -252,12 +260,12 @@ msgstr ""
 "\n"
 "                Van mo? (sang tab moi)"
 
-#: texteditor/backend/file_operations.py:67
+#: texteditor/backend/file_operations.py:70
 #, python-format
 msgid "Saving file %s"
 msgstr "Dang luu tep %s"
 
-#: texteditor/backend/file_operations.py:89
+#: texteditor/backend/file_operations.py:92
 #, python-format
 msgid "Opening file %s"
 msgstr "Dang mo tep %s"
@@ -285,23 +293,23 @@ msgstr "Co chu duoc chon nho hon hoac bang 10."
 msgid "Wrong font type in the configuration file."
 msgstr "Sai phong chu trong file tuy chinh."
 
-#: texteditor/backend/textwidget.py:75 texteditor/views/menubar.ui:70
+#: texteditor/backend/textwidget.py:81 texteditor/views/menubar.ui:70
 msgid "Cut"
 msgstr "Cat"
 
-#: texteditor/backend/textwidget.py:80 texteditor/views/menubar.ui:76
+#: texteditor/backend/textwidget.py:86 texteditor/views/menubar.ui:76
 msgid "Copy"
 msgstr "Sao chep"
 
-#: texteditor/backend/textwidget.py:85 texteditor/views/menubar.ui:82
+#: texteditor/backend/textwidget.py:91 texteditor/views/menubar.ui:82
 msgid "Paste"
 msgstr "Dan"
 
-#: texteditor/backend/textwidget.py:104 texteditor/views/menubar.ui:49
+#: texteditor/backend/textwidget.py:98 texteditor/views/menubar.ui:49
 msgid "Undo"
 msgstr "Hoan tac"
 
-#: texteditor/backend/textwidget.py:109 texteditor/views/menubar.ui:55
+#: texteditor/backend/textwidget.py:103 texteditor/views/menubar.ui:55
 msgid "Redo"
 msgstr "Lam lai"
 
@@ -309,15 +317,16 @@ msgstr "Lam lai"
 msgid "About this app"
 msgstr "Ve chuong trinh nay"
 
-#: texteditor/views/about.ui:27
-msgid "Version 1.4-Dev"
-msgstr "Phien ban 1.4-Dev"
+#: texteditor/views/about.py:34
+#, fuzzy
+msgid "Version {}"
+msgstr "Phien ban {}"
 
-#: texteditor/views/about.ui:35
+#: texteditor/views/about.ui:26
 msgid "A small, lightweight and customizable text editor."
 msgstr "Mot trinh soan thao nho, nhe va tuy bien."
 
-#: texteditor/views/about.ui:46
+#: texteditor/views/about.ui:37
 msgid "OK"
 msgstr "Xong"
 
@@ -361,10 +370,3 @@ msgstr "Doc tai lieu..."
 #: texteditor/views/menubar.ui:135
 msgid "About"
 msgstr "Ve ung dung nay"
-
-#~ msgid "No new message."
-#~ msgstr "Khong co thong bao moi."
-
-#, python-format
-#~ msgid "Line %s : Col %s"
-#~ msgstr "Dong %s : Cot %s"

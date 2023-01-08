@@ -1,2 +1,3 @@
 include texteditor/icons/*.png
+include texteditor/views/*.ui
 include po/*/*/*.mo

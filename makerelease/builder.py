@@ -83,7 +83,7 @@ def checkflag(arg: str):
         CHECKREQ_NOT_IN_FLAG = False
         checkreq()
     if arg == "build":
-        build_()
+        build_(noexit=False)
     elif arg == "install":
         install_()
 
@@ -109,7 +109,7 @@ def help():
     exit()
 
 
-def build_():
+def build_(noexit: bool = True):
     os.chdir("..")
     clean_()
     print(miscs.boldtext("Starting the build...Check the output below."))
@@ -120,45 +120,70 @@ def build_():
         command = "meson build --reconfigure"
         pass
     result = subprocess.Popen(
-        command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE
+        command,
+        shell=True,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        universal_newlines=True,
     )
-    out = result.stdout.readline()
-    err = result.stderr.readline()
-    print(out.strip())
-    print(miscs.boldtext("Errors if have: "), err.strip())
+    out, err = result.communicate()
+    print(out)
+    print(miscs.boldtext("Errors if have: "), err)
     result.wait()
     os.chdir("makerelease")
-    exit()
+    if noexit == False:
+        exit()
 
 
 def install_():
+    build_()
     os.chdir("..")
     print(miscs.boldtext("Starting the project installation...Check the output below."))
     if BUILD_FLAG is True:
-        command = pycmd + " -m pip install dists/*.whl --force-reinstall" # This needs a fix
+        import re
+
+        dir = "dist"
+        regex = re.compile("(.*whl$)")
+        for root, dirs, files in os.walk(dir):
+            for file in files:
+                print(file)
+                if regex.match(file):
+                    pass
+                else:
+                    print(
+                        miscs.failtext(
+                            "Unable to find required files for the installation."
+                        )
+                    )
+                    print(miscs.failtext("Exiting..."))
+                    exit(1)
+        command = pycmd + " -m pip install {}/{} --force-reinstall".format(dir, file)
         pass
     if MESON_FLAG is True:
         command = "ninja -C build install"
         pass
     result = subprocess.Popen(
-        command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE
+        command,
+        shell=True,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        universal_newlines=True,
     )
-    out = result.stdout.readline()
-    err = result.stderr.readline()
-    print(out.strip())
-    print(miscs.boldtext("Errors if have: "), err.strip())
+    out, err = result.communicate()
+    print(out)
+    print(miscs.boldtext("Errors if have: "), err)
     result.wait()
     os.chdir("makerelease")
     exit()
 
+
 def clean_():
     try:
-        os.rmdir('build')
-        os.rmdir('dist')
-    except OSError as e:
-        print('Clean error (ignore if you dont have build & dist folder): {}'
-            .format(e.__str__)
-        )
+        os.rmdir("build")
+        os.rmdir("dist")
+    except:
+        return
+
 
 def main():
     args = sys.argv

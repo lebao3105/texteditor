@@ -31,6 +31,8 @@ class AboutDialog(Toplevel):
         label3 = builder.get_object("label3", self)
         btn_ok = builder.get_object("btn_ok", self)
 
+        label2.configure(text=_("Version {}".format(texteditor.version)))
+
         # ...and configure them
         get_config.GetConfig(label1, "config")
         get_config.GetConfig(label2, "config")

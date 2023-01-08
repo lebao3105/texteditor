@@ -6,14 +6,6 @@
       <property name="side">top</property>
     </layout>
     <child>
-      <object class="ttk.Label" id="img0">
-        <property name="image">texteditor.png</property>
-        <layout manager="pack">
-          <property name="side">top</property>
-        </layout>
-      </object>
-    </child>
-    <child>
       <object class="ttk.Label" id="label1">
         <property name="text" translatable="yes">Text Editor</property>
         <layout manager="pack">
@@ -24,7 +16,6 @@
     </child>
     <child>
       <object class="ttk.Label" id="label2">
-        <property name="text" translatable="yes">Version 1.4-Dev</property>
         <layout manager="pack">
           <property name="side">top</property>
         </layout>
