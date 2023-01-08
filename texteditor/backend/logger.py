@@ -6,7 +6,7 @@ import texteditor.tabs as tabs
 import traceback
 import wx
 
-texteditor.backend.require_version(1.6, "alpha")
+texteditor.backend.require_version("1.6a", ">=")
 
 __dir = os.environ["USERPROFILE"] if sys.platform == "win32" else os.environ["HOME"]
 if sys.platform == "win32":

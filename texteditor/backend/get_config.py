@@ -6,7 +6,7 @@ import traceback
 import wx
 from . import logger, constants
 
-texteditor.backend.require_version(1.6, "alpha")
+texteditor.backend.require_version("1.6a", ">=")
 
 # Configuration file
 if platform.system() == "Windows":
