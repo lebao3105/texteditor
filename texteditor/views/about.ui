@@ -25,6 +25,29 @@
       <object class="ttk.Label" id="label3">
         <property name="text" translatable="yes">A small, lightweight and customizable text editor.</property>
         <layout manager="pack">
+          <property name="expand">true</property>
+          <property name="fill">both</property>
+          <property name="pady">0 20</property>
+          <property name="side">top</property>
+        </layout>
+      </object>
+    </child>
+    <child>
+      <object class="ttk.Label" id="label4">
+        <property name="cursor">hand2</property>
+        <property name="text" translatable="yes">Documentation</property>
+        <layout manager="pack">
+          <property name="expand">false</property>
+          <property name="pady">0 20</property>
+          <property name="side">top</property>
+        </layout>
+      </object>
+    </child>
+    <child>
+      <object class="ttk.Label" id="label5">
+        <property name="cursor">hand2</property>
+        <property name="text" translatable="yes">Source code</property>
+        <layout manager="pack">
           <property name="expand">false</property>
           <property name="pady">0 20</property>
           <property name="side">top</property>

@@ -2,6 +2,7 @@
 import os
 import webbrowser
 import pygubu
+import tkinter.messagebox as msgbox
 from tkinter import *
 
 import texteditor
@@ -14,13 +15,8 @@ from .views import about
 class MainWindow(Tk):
     """The main application class."""
 
-    def __init__(self, _=None, **kwargs):
+    def __init__(self, **kwargs):
         super().__init__(**kwargs)
-
-        if _ == None:
-            self._ = texteditor._
-        else:
-            self._ = _
 
         # Configure all menu items callbacks
         self.callbacks = {
@@ -37,9 +33,9 @@ class MainWindow(Tk):
             "aboutdlg": lambda: self.aboutdlg(),
         }
 
-        self.notebook = TabsViewer(self, _=self._, do_place=True)
+        self.notebook = TabsViewer(self, do_place=True)
         self.autosv = autosave.AutoSave(
-            self, savefile_fn=lambda: self.notebook.fileops.savefile_(), _=self._
+            self, savefile_fn=lambda: self.notebook.fileops.savefile_()
         )
         self.log = logger.LoggerWithStatusbar(self.text_editor.statusbar, showlog=True)
 
@@ -78,7 +74,7 @@ class MainWindow(Tk):
         then place other widgets."""
 
         viewsdir = texteditor.currdir / "views"
-        builder = pygubu.Builder(self._)
+        builder = pygubu.Builder(_)
 
         menu = Menu(self)
         self.config(menu=menu)
@@ -97,33 +93,33 @@ class MainWindow(Tk):
         addeditcmd = self.menu2.add_command
         if get_config.GetConfig.getvalue("filemgr", "autosave") == "yes":
             addeditcmd(
-                label=self._("Autosave"),
+                label=_("Autosave"),
                 command=lambda: self.autosv.openpopup(),
             )
 
         if get_config.GetConfig.getvalue("cmd", "isenabled") == "yes":
             self.menu2.add_separator()
             addeditcmd(
-                label=self._("Open System Shell"),
-                command=lambda: cmd.CommandPrompt(self, _=self._),
+                label=_("Open System Shell"),
+                command=lambda: cmd.CommandPrompt(self, _=_),
                 accelerator="Ctrl+T",
             )
         self.menu3.add_checkbutton(
-            label=self._("Autocolor mode"),
+            label=_("Autocolor mode"),
             command=lambda: self.autocolor_mode(),
             variable=self.autocolor,
         )
         self.menu3.add_checkbutton(
-            label=self._("Wrap (by word)"),
+            label=_("Wrap (by word)"),
             command=lambda: self.text_editor.wrapmode(),
             variable=self.wrapbtn,
             accelerator="Ctrl+W",
         )
 
         ## Add menus to the main one
-        menu.add_cascade(menu=self.menu1, label=self._("File"))
-        menu.add_cascade(menu=self.menu2, label=self._("Edit"))
-        menu.add_cascade(menu=self.menu3, label=self._("Config"))
+        menu.add_cascade(menu=self.menu1, label=_("File"))
+        menu.add_cascade(menu=self.menu2, label=_("Edit"))
+        menu.add_cascade(menu=self.menu3, label=_("Config"))
         menu.add_cascade(menu=self.menu4, label="?")
 
         ## Do stuff
@@ -137,7 +133,7 @@ class MainWindow(Tk):
         bindcfg = self.bind
         bindcfg("<Control-n>", lambda event: self.add_tab(self))
         if get_config.GetConfig.getvalue("cmd", "isenabled") == "yes":
-            bindcfg("<Control-t>", lambda event: cmd.CommandPrompt(self, _=self._))
+            bindcfg("<Control-t>", lambda event: cmd.CommandPrompt(self))
         bindcfg("<Control-f>", lambda event: finding.Finder(self, "find"))
         bindcfg("<Control-r>", lambda event: finding.Finder(self, ""))
         bindcfg("<Control-Shift-S>", lambda event: self.notebook.fileops.saveas())
@@ -147,34 +143,33 @@ class MainWindow(Tk):
 
     # Menu bar callbacks
     def resetcfg(self, event=None):
-        import tkinter.messagebox as msgbox
 
         message = msgbox.askyesno(
-            self._("Warning"),
-            self._("This will reset ALL configurations you have ever made. Continue?"),
+            _("Warning"),
+            _("This will reset ALL configurations you have ever made. Continue?"),
         )
         if message:
             check = get_config.GetConfig.reset()
             if not check:
                 msgbox.showerror(
-                    self._("Error occured!"),
-                    self._(
+                    _("Error occured!"),
+                    _(
                         "Unable to reset configuration file: Backed up default variables not found"
                     ),
                 )
                 self.text_editor.statusbar.writeleftmessage(
-                    self._("Error: Unable to reset all configurations!")
+                    _("Error: Unable to reset all configurations!")
                 )
                 return
             else:
                 msgbox.showinfo(
-                    self._("Completed"),
-                    self._(
+                    _("Completed"),
+                    _(
                         "Resetted texteditor configurations.\nRestart the application to take the effect."
                     ),
                 )
                 self.text_editor.statusbar.writeleftmessage(
-                    self._("Resetted all configurations.")
+                    _("Resetted all configurations.")
                 )
                 self.setcolorvar()
 
@@ -193,6 +188,19 @@ class MainWindow(Tk):
             self.lb = "dark"
 
     def change_color(self, event=None):
+        if self.autocolor.get() == True:
+            if msgbox.askyesno(
+                _("Warning"),
+                _(
+                    """\
+                Changing the application color requires the autocolor function to be turned off.
+                Turn off autocolor then change the application color (permanently)?
+                """
+                ),
+            ):
+                pass
+            else:
+                return
         get_config.GetConfig.change_config("global", "color", self.lb)
         self.get_color()
         get_config.GetConfig.configure(self.text_editor)
@@ -205,16 +213,12 @@ class MainWindow(Tk):
             get_config.autocolormode = False
             self.autocolormode.stopasync()
             get_config.GetConfig.configure(self.text_editor)
-            self.text_editor.statusbar.writeleftmessage(
-                self._("Stopped autocolor service.")
-            )
+            self.text_editor.statusbar.writeleftmessage(_("Stopped autocolor service."))
             self.menu3.entryconfig(2, state="disabled")
         else:
             get_config.autocolormode = True
             self.autocolormode.startasync()
             get_config.GetConfig.configure(self.text_editor)
-            self.text_editor.statusbar.writeleftmessage(
-                self._("Started autocolor service.")
-            )
+            self.text_editor.statusbar.writeleftmessage(_("Started autocolor service."))
             self.menu3.entryconfig(2, state="normal")
         self.get_color()

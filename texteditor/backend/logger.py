@@ -85,13 +85,8 @@ class Logger:
 
 
 class StatusBar(ttk.Frame):
-    def __init__(self, parent, _=None, pack: bool = False, **kwargs):
+    def __init__(self, parent, pack: bool = False, **kwargs):
         super().__init__(master=parent, **kwargs)
-
-        if _ is None:
-            self._ = texteditor._
-        else:
-            self._ = _
 
         self.textw = parent
         self.logs = []
@@ -113,14 +108,14 @@ class StatusBar(ttk.Frame):
         get_config.GetConfig.configure(self.righttext)
 
         self.keypress()
-        self.writeleftmessage(self._("No new message."), nowrite=True)
+        self.writeleftmessage(_("No new message."), nowrite=True)
 
         if pack == True:
             self.pack(side="bottom", fill="x")  # TODO: Place it outside the text editor
 
     def keypress(self, event=None):
         row, col = self.textw.index("insert").split(".")
-        self.righttext.config(text=self._("Line %s : Col %s") % (str(row), str(col)))
+        self.righttext.config(text=_("Line %s : Col %s") % (str(row), str(col)))
 
     def writeleftmessage(self, message: str, nowrite: bool = None, event=None):
         self.lefttext.config(text=message)
@@ -132,7 +127,7 @@ class StatusBar(ttk.Frame):
         self.logs.append("{} {} - {}".format(date, time, message))
         self.after(
             3500,
-            lambda: self.lefttext.config(text=self._("New message(s) collected.")),
+            lambda: self.lefttext.config(text=_("New message(s) collected.")),
         )
 
     def get_messages(self):
@@ -143,10 +138,8 @@ class StatusBar(ttk.Frame):
             nonlocal curridx
             nonlocal isplaced
 
-            label1 = ttk.Label(mss, text=self._("No new message here."))
-            label2 = ttk.Label(
-                mss, text=self._("You always can refresh by press F5 key.")
-            )
+            label1 = ttk.Label(mss, text=_("No new message here."))
+            label2 = ttk.Label(mss, text=_("You always can refresh by press F5 key."))
 
             # This needs a fix
             if not self.logs:
@@ -164,7 +157,7 @@ class StatusBar(ttk.Frame):
 
             if replace == True and isplaced == False:
                 mss.bind("<F5>", lambda event: refresh())
-                label1.config(text=self._("All logs"))
+                label1.config(text=_("All logs"))
                 yscroll.pack(side="right", fill="y")
                 alllogs.pack(expand=True, fill="both")
                 isplaced = True
@@ -187,21 +180,21 @@ class StatusBar(ttk.Frame):
             return
 
         mss = tk.Toplevel(self)
-        alllogs = textwidget.TextWidget(mss, _=self._, useMenu=True, addWrap=True)
+        alllogs = textwidget.TextWidget(mss, useMenu=True, unRedo=False)
         yscroll = ttk.Scrollbar(mss, orient="vertical", command=alllogs.yview)
 
         mss.bind("<F5>", lambda event: refresh())
         alllogs.config(state="disabled")
         alllogs.RMenu.delete(2)
         alllogs.RMenu.add_command(
-            label=self._("Refresh"), command=lambda: refresh(), accelerator="F5"
+            label=_("Refresh"), command=lambda: refresh(), accelerator="F5"
         )
 
         yscroll.pack(side="right", fill="y")
         alllogs.pack(expand=True, fill="both")
         refresh()
 
-        mss.wm_title(self._("Logs"))
+        mss.wm_title(_("Logs"))
         mss.protocol("WM_DELETE_WINDOW", on_close)
         mss.mainloop()
         self.islogwindowopen = True

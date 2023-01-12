@@ -1,4 +1,3 @@
-import gettext
 from tkinter import END, StringVar
 from tkinter.ttk import Button, Entry, Frame, Label
 
@@ -9,7 +8,6 @@ class Finder(Frame):
             parent.findbox.destroy()
             parent.text_editor.tag_remove("found", 1.0, END)
         super().__init__()
-        self._ = gettext.gettext
         # Get some needed values
         self.text = parent.text_editor
         self.check_options(option)
@@ -19,10 +17,10 @@ class Finder(Frame):
 
     def placewidgets(self):
         # Title first
-        title = Label(self, text=self._("Find something here..."))
+        title = Label(self, text=_("Find something here..."))
         title.grid(row=0, column=0)
         # Find entry
-        find_text = Label(self, text=self._("Find"))
+        find_text = Label(self, text=_("Find"))
         find_text.grid(row=1, column=0)
         self.entry_find = Entry(self)
         self.entry_find.grid(row=1, column=1)
@@ -33,11 +31,11 @@ class Finder(Frame):
 
         # Replace
         if self.i == []:
-            replace_text = Label(self, text=self._("Replace"))
+            replace_text = Label(self, text=_("Replace"))
             replace_text.grid(row=2, column=0)
             self.entry_replace = Entry(self)
             self.entry_replace.grid(row=2, column=1)
-            btn_replace = Button(self, text=self._("Replace"))
+            btn_replace = Button(self, text=_("Replace"))
             btn_replace.config(command=self.replace)
             btn_replace.grid(row=3, column=1)
 

@@ -15,7 +15,6 @@ class TextWidget(Text):
     def __init__(
         self,
         parent,
-        _=None,
         useMenu: bool = None,
         useScrollbars: bool = None,
         enableStatusBar: bool = None,
@@ -24,7 +23,6 @@ class TextWidget(Text):
     ):
         """Customized Tkinter Text widget with a basic right-click menu.
         :param parent : Where to place this widget
-        :param _=None : Translator, will remove in 1.5
         :param useMenu:bool=None : Enable right-click menu or not (default is true)
         :param unredo:bool=False : Undo Redo
         :param useScrollbars:bool=None : Use scrollbars (default is true)
@@ -33,20 +31,18 @@ class TextWidget(Text):
 
         You can set TextWidget.wrapbtn to your own wrapbtn to use the wrap feature.
         The wrap function is wrapmode(event=None)."""
+        self.unRedo = unRedo
+        self.master = parent
+        kwds["undo"] = kwds.get("undo", 0) | self.unRedo
         super().__init__(parent, **kwds)
 
-        self.master = parent
         self.wrapbtn = BooleanVar(self)
         self.wrapbtn.set(True)
 
         if useMenu != None:
             self.enableMenu = useMenu
 
-        if _ is None:
-            self._ = texteditor._
-        else:
-            self._ = _
-        self.statusbar = logger.StatusBar(self, self._)
+        self.statusbar = logger.StatusBar(self, _)
 
         if self.enableMenu is True:
             self.RMenu = Menu(self, tearoff=0)
@@ -58,9 +54,6 @@ class TextWidget(Text):
 
         if enableStatusBar is True:
             self.statusbar.pack(side="bottom", fill="x")
-
-        self.unRedo = unRedo
-        self.config(undo=self.unRedo)
 
         # Do some customization
         self.configure(wrap="word")
@@ -78,29 +71,29 @@ class TextWidget(Text):
         addcmd = self.RMenu.add_command
         root = self.master
         addcmd(
-            label=self._("Cut"),
+            label=_("Cut"),
             accelerator="Ctrl+X",
             command=lambda: root.event_generate("<Control-x>"),
         )
         addcmd(
-            label=self._("Copy"),
+            label=_("Copy"),
             accelerator="Ctrl+C",
             command=lambda: root.event_generate("<Control-c>"),
         )
         addcmd(
-            label=self._("Paste"),
+            label=_("Paste"),
             accelerator="Ctrl+V",
             command=lambda: root.event_generate("<Control-v>"),
         )
         if self.unRedo:
             self.RMenu.add_separator()
             addcmd(
-                label=self._("Undo"),
+                label=_("Undo"),
                 accelerator="Ctrl+Z",
                 command=lambda: root.event_generate("<Control-z>"),
             )
             addcmd(
-                label=self._("Redo"),
+                label=_("Redo"),
                 accelerator="Ctrl+Y",
                 command=lambda: root.event_generate("<Control-y>"),
             )

@@ -3,7 +3,6 @@ import darkdetect
 import os
 import platform
 import sv_ttk
-import texteditor
 import threading
 from tkinter import TclError, font, messagebox
 from . import constants, logger
@@ -67,18 +66,12 @@ autocolormode = False
 class GetConfig:
     """Changes Tkinter/TTK widget configurations from the configuration file."""
 
-    def __init__(self, parent=None, action: str = None, _=None):
+    def __init__(self, parent=None, action: str = None):
         """parent: Widget to use\n
         action:str=None: |\n
         --> config : Configure the widget\n
         --> reset : Reset the configuration file\n
-        If you use config, you must include parent also.\n
-        _=None: Gettext translation"""
-
-        if _ is not None:
-            self._ = _
-        else:
-            self._ = texteditor._
+        If you use config, you must include parent also."""
 
         if parent is None or "":
             if action == "reset":
@@ -170,16 +163,16 @@ class GetConfig:
 
         if not int(font_size):
             messagebox.showwarning(
-                self._("Warning"),
-                self._(
+                _("Warning"),
+                _(
                     "Wrong font size defined on the configuration file - the program will use font size 14."
                 ),
             )
             font_size = "14"
         elif int(font_size) <= 11:
             messagebox.showwarning(
-                self._("Warning"),
-                self._("The defined font size is smaller (or equal) than 10."),
+                _("Warning"),
+                _("The defined font size is smaller (or equal) than 10."),
             )
 
         font_families = font.families()
@@ -191,7 +184,7 @@ class GetConfig:
                     not isshown
                 ):  # To prevent the application from showing the message box after open a new tab
                     messagebox.showwarning(
-                        message=self._("Wrong font type in the configuration file.")
+                        message=_("Wrong font type in the configuration file.")
                     )
                     isshown = True
                 font_type = "Consolas"

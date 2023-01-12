@@ -17,22 +17,15 @@ texteditor.backend.require_version("1.4a0", ">=")
 
 
 class FileOperations:
-    """File operations unit for texteditor.\n
-    Paramaters:
-    textw : text widget
-    notebook : notebook widget
-    newtabfn : create new tab function for the notebook
-    statusbar=None : status bar (texteditor.backend.textwidget.StatusBar)
-    _=None : gettext translator\n
-    Variable(s):
-    files : Open files (not implemented yet, but everything is loaded into this"""
+    def __init__(self, notebook, newtabfn, textw=None, statusbar=None):
+        """File operations unit for texteditor.
+        :param textw=None : text widget
+        :param notebook : notebook widget
+        :param newtabfn : create new tab function for the notebook
+        :param statusbar=None : status bar (texteditor.backend.textwidget.StatusBar)
 
-    def __init__(self, textw, notebook, newtabfn, statusbar=None, _=None):
-        if _ is None:
-            self._ = texteditor._
-        else:
-            self._ = _
-
+        Variable(s):
+        files : Open files (not implemented yet, but everything is loaded into this"""
         self.textw = textw
         self.files = []  # TODO:Manage saves and unsaved-edits
         self.notebook = notebook
@@ -51,12 +44,12 @@ class FileOperations:
             self.savefile(filename)
 
     def throwerr(self, title, err):
-        showerror(title=self._(title), message=err)
+        showerror(title=_(title), message=err)
 
     def asktoopen(self):
         ask = askyesno(
-            self._("Infomation"),
-            self._(
+            _("Infomation"),
+            _(
                 """It seems that the file you're trying to open is in another tab.\n
                 Load anyway? (to a new tab)"""
             ),
@@ -67,7 +60,7 @@ class FileOperations:
         """Saves a file (filename parameter)."""
         if self.statusbar is not None:
             self.statusbar.writeleftmessage(
-                self._("Saving file %s") % filename, nowrite=True
+                _("Saving file %s") % filename, nowrite=True
             )
         with open(filename, "w") as f:
             try:
@@ -86,17 +79,16 @@ class FileOperations:
         else:
             self.savefile()
 
-    def openfile(self, filename):
+    def openfile(self, filename): # TODO: Set window title
         """Opens a file then show it to the text editor."""
         if self.statusbar is not None:
-            self.statusbar.writeleftmessage(self._("Opening file %s") % filename)
+            self.statusbar.writeleftmessage(_("Opening file %s") % filename)
         with open(filename, "r") as f:
             try:
                 self.textw.insert(1.0, f.read())
             except Exception:
                 self.throwerr("Unable to open file {}".format(filename))
             else:
-                self.notebook.event_generate("<<NotebookTabChanged>>")
                 self.files.append(filename)
                 self.notebook.tab("current", text=filename)
 

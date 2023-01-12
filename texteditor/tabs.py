@@ -6,18 +6,23 @@ from texteditor.backend import constants, file_operations, textwidget
 
 
 class TabsViewer(Notebook):
-    def __init__(self, master, do_place: bool, _=None, **kw):
+    def __init__(self, master, do_place: bool, newtablabel:str=None, **kw):
         super().__init__(master, **kw)
-
-        if _ is None:
-            self._ = texteditor._
-        else:
-            self._ = _
-
         self.parent = master
+        if newtablabel == None:
+            self.newtablabel = _("Untitled")
+        else:
+            self.newtablabel = newtablabel
+
+        self.fileops = file_operations.FileOperations(
+            notebook=self,
+            newtabfn=lambda: self.add_tab(idx="default"),
+        )
 
         # Add an initial tab
         self.add_tab()
+        self.fileops.textw = self.parent.text_editor
+        self.fileops.statusbar = self.parent.text_editor.statusbar
 
         # A tab but it's used to add a new tab
         # Idea from StackOverflow.. I don't know there was something like this
@@ -30,20 +35,20 @@ class TabsViewer(Notebook):
         # Now, make a right-click menu
         self.right_click_menu = Menu(self, tearoff=0)
         self.right_click_menu.add_command(
-            label=self._("New tab"),
+            label=_("New tab"),
             command=lambda: self.add_tab(idx="default"),
             accelerator="Ctrl+N",
         )
         self.right_click_menu.add_command(
-            label=self._("Close the current opening tab"),
+            label=_("Close the current opening tab"),
             command=lambda: self.close_tab(self),
         )
         self.right_click_menu.add_command(
-            label=self._("Duplicate the current opening tab"),
+            label=_("Duplicate the current opening tab"),
             command=lambda: self.duplicate_tab(self),
         )
         self.right_click_menu.add_command(
-            label=self._("Reopen the file"), command=lambda: self.reopenfile(self)
+            label=_("Reopen the file"), command=lambda: self.reopenfile(self)
         )
         self.bind(
             "<Button-3>",
@@ -61,7 +66,7 @@ class TabsViewer(Notebook):
         return self.right_click_menu.add_command(label, fn, acc)
 
     def add_tab(self, event=None, idx=None):
-        newtab_name = self._("Untitled")
+        newtab_name = self.newtablabel
 
         # Add a new tab
         textframe = Frame(self)
@@ -75,18 +80,12 @@ class TabsViewer(Notebook):
         # Add contents
         self.parent.text_editor = textwidget.TextWidget(
             parent=textframe,
-            _=self._,
             useMenu=True,
             useScrollbars=False,
             enableStatusBar=True,
             unRedo=True,
         )
-        self.fileops = file_operations.FileOperations(
-            textw=self.parent.text_editor,
-            notebook=self,
-            newtabfn=lambda: self.add_tab(idx="default"),
-            statusbar=self.parent.text_editor.statusbar,
-        )
+        
         ## Scroll bars
         xbar = Scrollbar(
             textframe, orient="horizontal", command=self.parent.text_editor.xview
@@ -96,15 +95,16 @@ class TabsViewer(Notebook):
         )
         xbar.pack(side="bottom", fill="x")
         ybar.pack(side="right", fill="y")
+
         ## Right-click menu
         self.parent.text_editor.addMenusepr()
         self.parent.text_editor.addMenucmd(
-            label=self._("Save"),
+            label=_("Save"),
             acc="Ctrl+S",
             fn=lambda: self.fileops.savefile_,
         )
         self.parent.text_editor.addMenucmd(
-            label=self._("Save as"),
+            label=_("Save as"),
             acc="Ctrl+Shift+S",
             fn=self.fileops.saveas,
         )
@@ -116,7 +116,7 @@ class TabsViewer(Notebook):
         self.parent.text_editor.focus()
 
         if self.parent.winfo_class() == "Tk" or "TopLevel":
-            window_title = self._("Text Editor") + " - "
+            window_title = _("Text Editor") + " - "
             self.titletext = window_title + newtab_name
             self.parent.title(self.titletext)
 
@@ -127,15 +127,15 @@ class TabsViewer(Notebook):
         if not tabname.endswith(" *"):
             self.tab("current", text=tabname + " *")
             if self.parent.winfo_class() == "Tk" or "TopLevel":
-                self.parent.title(self._("Text Editor") + " - " + tabname + " *")
+                self.parent.title(_("Text Editor") + " - " + tabname + " *")
 
     def close_tab(self, event=None):
         # This function won't work if the first tab is not selected
         tabname = self.tab(self.select(), "text")
         if tabname.endswith(" *"):
             result = askyesnocancel(
-                title=self._("Tab close"),
-                message=self._("The content of this tab is modified. Save it?"),
+                title=_("Tab close"),
+                message=_("The content of this tab is modified. Save it?"),
                 icon="info",
             )
             if result == True:
@@ -156,7 +156,7 @@ class TabsViewer(Notebook):
         if tabname == "+":
             self.add_tab(idx=(len(self.tabs())))
         if self.parent.winfo_class() == "Tk":
-            self.parent.title(self._("Text Editor") + " - " + tabname)
+            self.parent.title(_("Text Editor") + " - " + tabname)
 
     def duplicate_tab(self, event=None):
         content = self.parent.text_editor.get(1.0, END)
@@ -164,18 +164,18 @@ class TabsViewer(Notebook):
 
         self.add_tab(idx="default")
         self.parent.text_editor.insert(1.0, content)
-        self.tab("current", text=tabname + self._(" (Duplicated)"))
+        self.tab("current", text=tabname + _(" (Duplicated)"))
 
     def reopenfile(self, event=None):
         filename = self.tab(self.select(), "text")
         if filename not in constants.FILES_ARR:
             self.parent.text_editor.statusbar.writeleftmessage(
-                self._("Cannot reopen this tab because it opens no file.")
+                _("Cannot reopen this tab because it opens no file.")
             )
             return  # Whetever we can reload the tab content
         else:
             with open(filename, "r") as f:
                 print("Opening file: ", filename)
                 self.parent.text_editor.insert(1.0, f.read())
-                self.parent.title(self._("Text editor") + " - " + filename)
+                self.parent.title(_("Text editor") + " - " + filename)
                 self.tab("current", text=filename)
