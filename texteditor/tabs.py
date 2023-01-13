@@ -1,4 +1,3 @@
-import texteditor
 from tkinter import Frame, Menu, END
 from tkinter.messagebox import askyesnocancel
 from tkinter.ttk import Notebook, Scrollbar

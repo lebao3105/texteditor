@@ -9,6 +9,7 @@ from texteditor.backend import get_config, textwidget
 arr = []
 
 texteditor.backend.require_version("1.4a", ">=")
+texteditor.backend.require_version("1.6a", "<")
 
 
 class cmd(textwidget.TextWidget):

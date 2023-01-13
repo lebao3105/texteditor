@@ -14,6 +14,7 @@ MIN_30 = MIN_15 * 2  # 1800 secs
 
 log = logger.Logger("texteditor.extensions.autosave")
 
+texteditor.backend.require_version("1.6a", "<")
 
 class AutoSave:
     """Contructs the autosaving files function on texteditor.\n

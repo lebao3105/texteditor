@@ -30,16 +30,8 @@ cfg["global"] = {
     "font_size": "12",
 }
 
-# An old configuration
-cfg["popups"] = {
-    # TODO/NOTE: They should be different
-    "width": str(constants.DEFAULT_OTHERS_WIGHT),
-    "height": str(constants.DEFAULT_OTHERS_WIGHT),
-}
-
 cfg["cmd"] = {"defconsole": defconsole, "isenabled": "yes"}
 
-# New: Auto-save files
 cfg["filemgr"] = {"autosave": "yes", "autosave-time": "120"}  # in seconds
 
 # File write/backup

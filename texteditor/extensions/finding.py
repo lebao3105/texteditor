@@ -1,6 +1,8 @@
+import texteditor.backend
 from tkinter import END, StringVar
 from tkinter.ttk import Button, Entry, Frame, Label
 
+texteditor.backend.require_version("1.6a", "<")
 
 class Finder(Frame):
     def __init__(self, parent, option, event=None):

@@ -37,7 +37,7 @@ $ cp -r build/po/* po/
 
 a. Using build module
 ```sh
-$ pip install build
+$ pip install build wheel
 $ rm -rf dist build # Remove generated files, if have
 $ python3 -m build
 $ pip install dist/<file name>.whl --force-reinstall
