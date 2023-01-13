@@ -1,27 +1,34 @@
 import configparser
 import os
+import os.path
+import pathlib
 import platform
 import texteditor.backend
-import traceback
 import wx
-from . import logger, constants
+from . import constants
 
 texteditor.backend.require_version(1.6, "alpha")
 
 # Configuration file
 if platform.system() == "Windows":
     file = os.environ["USERPROFILE"] + "\\.config\\texteditor_configs.ini"
-    backup = os.environ["USERPROFILE"] + "\\.config\\texteditor_bck.ini"
     defconsole = "cmd"
 else:
     file = os.environ["HOME"] + "/.config/texteditor_configs.ini"
-    backup = os.environ["HOME"] + "/.config/texteditor_bck.ini"
     defconsole = "xterm"
+
+file = pathlib.Path(file)
+
+if texteditor.backend.is_devlopment_build():
+    file = str(file).removesuffix("texteditor_configs.ini") / "texteditor" / "configs_dev.ini"
+    #file = pathlib.Path(file) 
 
 # Default configs
 cfg = {}
 
-cfg["font"] = {
+cfg["interface"] = {"color": "light", "autocolor": "no", "textcolor": "default"}
+
+cfg["interface.font"] = {
     "style": "normal",
     "weight": "normal",
     "family": "default",
@@ -29,6 +36,8 @@ cfg["font"] = {
 }
 
 cfg["cmd"] = {"enable": "yes", "console": defconsole}
+
+cfg["autosave"] =  {"enable": "no", "time":"120"}
 
 
 class GetConfig(configparser.ConfigParser):
@@ -41,16 +50,48 @@ class GetConfig(configparser.ConfigParser):
         """Customized configuration parser.
         :param config : Default configurations, used to reset the file or do some comparisions
         :param file : Configuration file
-        :param *args : To pass to configparser.ConfigParser"""
+        :param *args : To pass to configparser.ConfigParser (base class)
+        
+        When initialized, GetConfig will load all default configs (config param) and store it in
+        a dictionary for further actions (backup/restore file)"""
         super().__init__(self, *args)
         self.cfg = {}
         for key in config:
+            self[key] = config[key]
             self.cfg[key] = config[key]
-        self.read(file)
+        self.readf(file)
         self.file = file
 
+    def readf(self, file, encoding:str=None):
+        if os.path.isfile(file):
+            self.read(file, encoding)
+        else:
+            with open(file, mode="w") as f:
+                try:
+                    self.write(f)
+                except OSError:
+                    raise Exception("Unable to access to the file name %s" % file)
+                else:
+                    self.read(file, encoding)
+            del f
+
+            #raise Exception("Unable to read configuration file")
+
+    def reset(self, evt=None):
+        try:
+            os.remove(self.file)
+        except:
+            raise Exception(
+                "Unable to reset configuration file!"
+            )
+        else:
+            for key in self.cfg:
+                self[key] = self.cfg[key]
+            with open(self.file, mode="w") as f:
+                self.write(f)
+
     def getkey(self, section, option):
-        value = self[section][option]
+        value = self.get(section, option)
         if value == self.yes_value:
             if self.returnbool == True:
                 return True
@@ -76,24 +117,11 @@ class GetConfig(configparser.ConfigParser):
     def alias(self, value, value2):
         self.aliases[value] = value2
 
-    def reset(self, evt=None):
-        try:
-            os.remove(self.file)
-        except:
-            raise Exception(
-                "Unable to reset configuration file - {}".format(traceback.format_exc())
-            )
-        else:
-            for key in self.cfg:
-                self[key] = self.cfg[key]
-            with open(self.file, mode="w") as f:
-                self.write(f)
-
     def _get_font(self):
-        family = self.get("font", "family")
-        size = self.get("font", "size")
-        weight = self.get("font", "weight")
-        style = self.get("font", "style")
+        family = self.get("interface.font", "family")
+        size = self.get("interface.font", "size")
+        weight = self.get("interface.font", "weight")
+        style = self.get("interface.font", "style")
 
         weight_ = constants.FONTWT[weight]
         style_ = constants.FONTST[style]
@@ -101,9 +129,15 @@ class GetConfig(configparser.ConfigParser):
         if family == "default":
             family = ""
 
-        if int(size):
-            size_ = int(size)
-        else:
+        try:
+            int(size)
+        except ValueError:
             size_ = constants.FONTSZ[size]
+        else:
+            size_ = int(size)
 
         return wx.Font(size_, wx.FONTFAMILY_DEFAULT, style_, weight_, 0, family)
+
+    def configure(self, widget):
+        """Configures a wxPython widget."""
+        return widget.SetFont(self._get_font())
