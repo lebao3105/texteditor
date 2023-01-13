@@ -1,4 +1,5 @@
 import inspect
+import packaging.version
 
 __version__ = "1.6.0alpha"
 
@@ -49,3 +50,7 @@ def require_version(version: float, branch):
     if version_ < float(version):
         print(err_msg)
     return
+
+
+def is_devlopment_build():
+    return packaging.version.parse(__version__).is_devrelease

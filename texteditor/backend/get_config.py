@@ -20,8 +20,12 @@ else:
 file = pathlib.Path(file)
 
 if texteditor.backend.is_devlopment_build():
-    file = str(file).removesuffix("texteditor_configs.ini") / "texteditor" / "configs_dev.ini"
-    #file = pathlib.Path(file) 
+    file = (
+        str(file).removesuffix("texteditor_configs.ini")
+        / "texteditor"
+        / "configs_dev.ini"
+    )
+    # file = pathlib.Path(file)
 
 # Default configs
 cfg = {}
@@ -37,7 +41,7 @@ cfg["interface.font"] = {
 
 cfg["cmd"] = {"enable": "yes", "console": defconsole}
 
-cfg["autosave"] =  {"enable": "no", "time":"120"}
+cfg["autosave"] = {"enable": "no", "time": "120"}
 
 
 class GetConfig(configparser.ConfigParser):
@@ -51,7 +55,7 @@ class GetConfig(configparser.ConfigParser):
         :param config : Default configurations, used to reset the file or do some comparisions
         :param file : Configuration file
         :param *args : To pass to configparser.ConfigParser (base class)
-        
+
         When initialized, GetConfig will load all default configs (config param) and store it in
         a dictionary for further actions (backup/restore file)"""
         super().__init__(self, *args)
@@ -62,7 +66,7 @@ class GetConfig(configparser.ConfigParser):
         self.readf(file)
         self.file = file
 
-    def readf(self, file, encoding:str=None):
+    def readf(self, file, encoding: str = None):
         if os.path.isfile(file):
             self.read(file, encoding)
         else:
@@ -75,15 +79,13 @@ class GetConfig(configparser.ConfigParser):
                     self.read(file, encoding)
             del f
 
-            #raise Exception("Unable to read configuration file")
+            # raise Exception("Unable to read configuration file")
 
     def reset(self, evt=None):
         try:
             os.remove(self.file)
         except:
-            raise Exception(
-                "Unable to reset configuration file!"
-            )
+            raise Exception("Unable to reset configuration file!")
         else:
             for key in self.cfg:
                 self[key] = self.cfg[key]
