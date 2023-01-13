@@ -1,5 +1,5 @@
 import wx
-from texteditor.backend import file_operations
+from texteditor.backend import file_operations, get_config
 
 
 class Tabber(wx.Notebook):
@@ -59,7 +59,7 @@ class Tabber(wx.Notebook):
         menu.Destroy()
 
 
-class TextWidget(wx.TextCtrl):
+class TextWidget(wx.stc.StyledTextCtrl):
     rcmenu: bool = True
 
     def __init__(self, *args, **kwds):
