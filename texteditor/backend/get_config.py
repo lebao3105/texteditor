@@ -3,18 +3,23 @@ import os
 import os.path
 import pathlib
 import platform
-import texteditor.backend
+
+import darkdetect
 import wx
+from PIL import ImageColor
+
+import texteditor.backend
+
 from . import constants
 
 texteditor.backend.require_version(1.6, "alpha")
 
 # Configuration file
 if platform.system() == "Windows":
-    file = os.environ["USERPROFILE"] + "\\.config\\texteditor_configs.ini"
+    file = os.environ["USERPROFILE"] + "\\.config\\texteditor\\configs.ini"
     defconsole = "cmd"
 else:
-    file = os.environ["HOME"] + "/.config/texteditor_configs.ini"
+    file = os.environ["HOME"] + "/.config/texteditor/configs.ini"
     defconsole = "xterm"
 
 file = pathlib.Path(file)
@@ -25,7 +30,6 @@ if texteditor.backend.is_devlopment_build():
         / "texteditor"
         / "configs_dev.ini"
     )
-    # file = pathlib.Path(file)
 
 # Default configs
 cfg = {}
@@ -39,16 +43,34 @@ cfg["interface.font"] = {
     "size": "normal",
 }
 
-cfg["cmd"] = {"enable": "yes", "console": defconsole}
+cfg["extensions.cmd"] = {"enable": "yes", "console": defconsole}
 
-cfg["autosave"] = {"enable": "no", "time": "120"}
+cfg["extensions.autosave"] = {"enable": "no", "time": "120"}
+
+
+class ConfigurationError(Exception):
+    def __init__(
+        self, section: str = None, option: str = None, msg: str = None, *args: object
+    ):
+        prefix = "Error in the configuration file: "
+        if not msg:
+            msg = "*UNKNOW ERROR*"
+        elif section and option != None:
+            msg = "[{}->{}] : {}".format(section, option, msg)
+        full = prefix + msg
+        super().__init__(full, *args)
 
 
 class GetConfig(configparser.ConfigParser):
+    # Values
     yes_value = "yes"
     no_value = "no"
     returnbool = True
-    aliases: dict
+    aliases = {}
+
+    # Functions
+    setfontfn = {}
+    setcolorfn = {}
 
     def __init__(self, config: dict, file: str, *args):
         """Customized configuration parser.
@@ -56,8 +78,19 @@ class GetConfig(configparser.ConfigParser):
         :param file : Configuration file
         :param *args : To pass to configparser.ConfigParser (base class)
 
-        When initialized, GetConfig will load all default configs (config param) and store it in
-        a dictionary for further actions (backup/restore file)"""
+        When initialized, GetConfig loads all default configs (from config param) and store it in
+        a dictionary for further actions (backup/restore file).
+
+        How to use:
+        * Just call it once for your project, pass everything needed to the contrucstor and do things
+        your self!
+
+        For the configure function (must do):
+        * Use setcolorfunc function to set the color (background)-set function
+        * Use setfontcfunc function to set the font color(foreground)-set function
+
+        Both of them will be used in configure function.
+        """
         super().__init__(self, *args)
         self.cfg = {}
         for key in config:
@@ -66,6 +99,7 @@ class GetConfig(configparser.ConfigParser):
         self.readf(file)
         self.file = file
 
+    # File tasks
     def readf(self, file, encoding: str = None):
         if os.path.isfile(file):
             self.read(file, encoding)
@@ -81,17 +115,19 @@ class GetConfig(configparser.ConfigParser):
 
             # raise Exception("Unable to read configuration file")
 
-    def reset(self, evt=None):
+    def reset(self, evt=None) -> bool:
         try:
             os.remove(self.file)
         except:
-            raise Exception("Unable to reset configuration file!")
+            return False
         else:
             for key in self.cfg:
                 self[key] = self.cfg[key]
             with open(self.file, mode="w") as f:
                 self.write(f)
+            return True
 
+    # Options
     def getkey(self, section, option):
         value = self.get(section, option)
         if value == self.yes_value:
@@ -119,6 +155,7 @@ class GetConfig(configparser.ConfigParser):
     def alias(self, value, value2):
         self.aliases[value] = value2
 
+    # Configure widgets
     def _get_font(self):
         family = self.get("interface.font", "family")
         size = self.get("interface.font", "size")
@@ -140,6 +177,89 @@ class GetConfig(configparser.ConfigParser):
 
         return wx.Font(size_, wx.FONTFAMILY_DEFAULT, style_, weight_, 0, family)
 
+    def _get_color(self):
+        def _get_sys_mode():
+            return darkdetect.theme().lower()
+
+        # Get values
+        color = self.get("interface", "color")
+        fontcolor = self.get("interface", "textcolor")
+        autocolor = self.getkey("interface", "autocolor")
+
+        # Interface color
+        ## Default color modes
+        colors = {
+            "light": "#ffffff",
+            "dark": "#1c1c1c",
+        }
+        ## Check
+        if autocolor == True:
+            color_ = colors[_get_sys_mode()]
+        elif color in colors:
+            color_ = colors[color]
+
+        # Text color
+        colors["green"] = "#00ff00"
+        colors["red"] = "#ff0000"
+        if fontcolor == "default":
+            if autocolor == False:
+                if color == "light":
+                    fontcolor_ = colors["dark"]
+                elif color == "dark":
+                    fontcolor_ = colors["light"]
+            else:
+                if _get_sys_mode() == "dark":
+                    fontcolor_ = colors["light"]
+                else:
+                    fontcolor_ = colors["dark"]
+        else:
+            if fontcolor in colors:
+                fontcolor_ = colors[fontcolor]
+            elif fontcolor.startswith("#") and len(fontcolor) == 7:
+                try:
+                    ImageColor.getrgb(fontcolor)
+                except ValueError:
+                    raise ConfigurationError(
+                        "interface", "textcolor", "Invalid color name/code"
+                    )
+                else:
+                    fontcolor_ = fontcolor
+            else:
+                raise ConfigurationError(
+                    "interface", "textcolor", "Invalid color name/code"
+                )
+
+        return ImageColor.getrgb(color_), ImageColor.getrgb(fontcolor_)
+
+    def setcolorfunc(self, objname: str, obj, func: str, params):
+        self.setcolorfn[objname] = {}
+        self.setcolorfn[objname]["obj"] = obj
+        self.setcolorfn[objname]["fn"] = func
+        self.setcolorfn[objname]["params"] = params
+
+    def setfontcfunc(self, objname: str, obj, func: str, params):
+        self.setfontfn[objname] = {}
+        self.setfontfn[objname]["obj"] = obj
+        self.setfontfn[objname]["fn"] = func
+        self.setfontfn[objname]["params"] = params
+
     def configure(self, widget):
         """Configures a wxPython widget."""
-        return widget.SetFont(self._get_font())
+        widget.SetFont(self._get_font())
+        color, fontcolor = self._get_color()
+
+        for item in self.setfontfn:
+            if self.setfontfn[item]["obj"] == widget:
+                fn = getattr(self.setfontfn[item]["obj"], self.setfontfn[item]["fn"])
+                if not self.setfontfn[item]["params"]:
+                    fn(fontcolor)
+                else:
+                    fn(self.setfontfn[item]["params"], fontcolor)
+
+        for item in self.setcolorfn:
+            if self.setcolorfn[item]["obj"] == widget:
+                fn = getattr(self.setcolorfn[item]["obj"], self.setcolorfn[item]["fn"])
+                if not self.setcolorfn[item]["params"]:
+                    fn(color)
+                else:
+                    fn(self.setcolorfn[item]["params"], color)

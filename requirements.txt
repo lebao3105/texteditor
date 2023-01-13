@@ -1,2 +1,4 @@
 configparser
+darkdetect
+pillow
 wxpython

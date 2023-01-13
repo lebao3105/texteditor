@@ -23,6 +23,12 @@ class MainFrame(wx.Frame):
         self.menuitem = {}
         self._StatusBar()
 
+        textw = self.notebook.text_editor
+        cfg.setcolorfunc("textw", textw, "StyleSetBackground", wx.stc.STC_STYLE_DEFAULT)
+        cfg.setfontcfunc("textw", textw, "StyleSetForeground", wx.stc.STC_STYLE_DEFAULT)
+
+        cfg.configure(textw)
+
         tabname = self.notebook.GetPageText(self.notebook.GetSelection())
         self.SetTitle(_("Texteditor - %s") % tabname)
         self.SetStatusText(tabname)
@@ -108,10 +114,8 @@ class MainFrame(wx.Frame):
             self.menuitem["paste"]: lambda evt: self.notebook.text_editor.Paste(),
             self.menuitem["cut"]: lambda evt: self.notebook.text_editor.Cut(),
             self.menuitem["selall"]: lambda evt: self.notebook.text_editor.SelectAll(),
-            self.menuitem[
-                "showcfgs"
-            ]: lambda evt: self.notebook.text_editor.fileops.openfile(get_config.file),
-            self.menuitem["reset"]: lambda evt: cfg.reset(),
+            self.menuitem["showcfgs"]: lambda evt: self.ShowCfgs(),
+            self.menuitem["reset"]: lambda evt: self.ResetCfgs(),
             self.menuitem["about"]: lambda evt: self.ShowAbout(),
             self.menuitem["help"]: lambda evt: webbrowser.open_new_tab(
                 "https://lebao3105.gitbook.io/texteditor_doc"
@@ -123,6 +127,22 @@ class MainFrame(wx.Frame):
 
     def Quit(self, event):
         self.Close(True)
+
+    def ShowCfgs(self, evt=None):
+        if self.notebook.text_editor.GetValue() != "":
+            self.notebook.AddTab()
+        self.notebook.text_editor.fileops.openfile(get_config.file)
+
+    def ResetCfgs(self, evt=None):
+        ask = wx.MessageDialog(
+            None,
+            _("Are you sure want to reset all configurations?"),
+            _("Confirm configs reset"),
+            wx.YES_NO | wx.ICON_WARNING,
+        ).ShowModal()
+        if ask == wx.ID_YES:
+            if cfg.reset():
+                self.SetStatusText(_("Restored all default app configurations."))
 
     def ShowAbout(self, event=None):
         wxver = wx.__version__
@@ -138,7 +158,7 @@ class MainFrame(wx.Frame):
         """
         )
         license = """\
-        This program is free software: you can redistribute it and/or modify
+    This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
