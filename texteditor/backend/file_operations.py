@@ -2,7 +2,7 @@ import os
 import sys
 import wx
 
-from texteditor.backend import constants, logger
+from texteditor.backend import logger
 
 if sys.platform == "win32":
     searchdir = os.environ["USERPROFILE"] + "\Documents"
@@ -18,13 +18,15 @@ class FileOperations:
     newtabfn : create new tab function for the notebook
     statusbar = None : Your wx.Frame's (or other wxPython widget) statusbar
     Variable(s):
-    files : Open files (not implemented yet, but everything is loaded into this"""
+    files : Open files (not implemented yet, but everything is loaded into this
+    settitle : Set the object title"""
 
     def __init__(self, textw, notebook, newtabfn, statusbar=None):
         self.textw = textw
         self.files = []  # TODO:Manage saves and unsaved-edits
         self.notebook = notebook
         self.newtabfn = newtabfn
+        self.settitle = None
         self.statusbar = statusbar if statusbar is not None else None
 
     def tabname(self):
@@ -68,10 +70,10 @@ Load anyway? (to a new tab)"""
     def savefile_(self, event=None):
         """Checks if the file is a new file or not, then make the choice."""
         tabname = self.tabname()
-        if tabname not in constants.FILES_ARR:
+        if tabname not in self.files:
             self.saveas()
         else:
-            self.savefile()
+            self.savefile(tabname)
 
     def openfile(self, filename):
         """Opens a file then show it to the text editor."""
@@ -88,8 +90,13 @@ Load anyway? (to a new tab)"""
             return
         else:
             del f
-            self.textw.LoadFile(filename)
-            self.notebook.SetPageText(page=self.notebook.GetSelection(), text=filename)
+            self.textw.LoadFile(str(filename))
+            self.notebook.SetPageText(
+                page=self.notebook.GetSelection(), text=str(filename)
+            )
+            self.files.append(str(filename))
+            if self.settitle != None:
+                self.settitle()
 
     def openfile_(self, event=None):
         """Asks the user to open a file."""
@@ -103,7 +110,7 @@ Load anyway? (to a new tab)"""
             return
         else:
             filename = filedlg.GetPath()
-            for x in constants.FILES_ARR:
+            for x in self.files:
                 if filename in x:
                     if self.asktoopen():
                         self.newtabfn()
