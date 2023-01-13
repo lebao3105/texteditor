@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "texteditor"
-version = "1.6wx_alpha"
+version = "1.6a"
 requires-python = ">=3.8"
 description = "A simple, cross-platform text editor."
 readme = "README.md"
@@ -19,6 +19,7 @@ classifiers = [
 ]
 dependencies = [
     "configparser",
+    "packaging",
     "wxpython",
 ]
 
