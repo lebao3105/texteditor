@@ -3,6 +3,7 @@ import texteditor
 import webbrowser
 import wx
 import wx.adv
+import wx.stc
 
 from texteditor.tabs import Tabber
 from texteditor.backend import logger, constants, get_config
@@ -69,13 +70,20 @@ class MainFrame(wx.Frame):
         )
         self.menubar.Append(editmenu, _("&Edit"))
 
+        ## Configs
+        cfgmenu = wx.Menu()
+        self.menuitem["showcfgs"] = cfgmenu.Append(wx.ID_ANY, _("Show all configurations"))
+        self.menuitem["reset"] = cfgmenu.Append(wx.ID_ANY, _("Reset all configs"))
+        self.menubar.Append(cfgmenu, _("&Config"))
+
         ## Help
         helpmenu = wx.Menu()
-        self.aboutItem = helpmenu.Append(wx.ID_ABOUT)
-        self.helpItem = helpmenu.Append(
-            wx.ID_ANY, "Help", "Read documents and visit the source code"
+        self.menuitem["about"] = helpmenu.Append(wx.ID_ANY, _("About"), _("About this tab"))
+        self.menuitem["help"] = helpmenu.Append(
+            wx.ID_ANY, _("Help"), _("Read documents online")
         )
         self.menubar.Append(helpmenu, _("&Help"))
+
         self.SetMenuBar(self.menubar)
 
     ## Callbacks
@@ -96,23 +104,19 @@ class MainFrame(wx.Frame):
             self.menuitem["paste"]: lambda evt: self.notebook.text_editor.Paste(),
             self.menuitem["cut"]: lambda evt: self.notebook.text_editor.Cut(),
             self.menuitem["selall"]: lambda evt: self.notebook.text_editor.SelectAll(),
+            self.menuitem["showcfgs"]: lambda evt: self.notebook.text_editor.fileops.openfile(get_config.file),
+            self.menuitem["reset"]: lambda evt: cfg.reset(),
+            self.menuitem["about"]: lambda evt: self.ShowAbout(),
+            self.menuitem["help"]: lambda evt: webbrowser.open_new_tab("https://lebao3105.gitbook.io/texteditor_doc")
         }
         self.Bind(wx.EVT_MENU, self.Quit, self.exitItem)
-        self.Bind(wx.EVT_MENU, self.ShowAbout, self.aboutItem)
-        self.Bind(
-            wx.EVT_MENU,
-            lambda evt: webbrowser.open_new_tab(
-                "https://github.com/lebao3105/texteditor"
-            ),
-            self.helpItem,
-        )
         for item in self.menucommand:
             self.Bind(wx.EVT_MENU, self.menucommand[item], item)
 
     def Quit(self, event):
         self.Close(True)
 
-    def ShowAbout(self, event):
+    def ShowAbout(self, event=None):
         wxver = wx.__version__
         pyver = platform.python_version()
         ostype = platform.system() if platform.system() != "" or None else _("Unknown")
