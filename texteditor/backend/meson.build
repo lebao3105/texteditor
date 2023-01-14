@@ -6,4 +6,4 @@ backend_sources = [
     'logger.py',
     'textwidget.py',
 ]
-install_data(backend_sources, install_dir: join_paths(moduledir, 'backend'))
+install_data(backend_sources, install_dir: join_paths(installdir, 'backend'))

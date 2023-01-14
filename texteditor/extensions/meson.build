@@ -4,4 +4,4 @@ exts_sources = [
     'cmd.py',
     'finding.py',
 ]
-install_data(exts_sources, install_dir: join_paths(moduledir, 'extensions'))
+install_data(exts_sources, install_dir: join_paths(installdir, 'extensions'))

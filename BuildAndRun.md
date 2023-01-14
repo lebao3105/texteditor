@@ -43,10 +43,11 @@ $ python3 -m build
 $ pip install dist/<file name>.whl --force-reinstall
 ```
 
-b. Using meson (only use this on Linux)
+b. Using meson
 ```sh
 $ pip install meson ninja
 $ meson build --prefix=/usr
 $ ninja -C build
 $ sudo ninja -C build install
+$ me.lebao3105.texteditor # Run
 ```
