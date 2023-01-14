@@ -1,6 +1,5 @@
 import wx
 import wx.stc
-from PIL import ImageColor
 from texteditor.backend import file_operations, get_config
 
 
@@ -21,24 +20,24 @@ class Tabber(wx.Notebook):
 
         self.text_editor = TextWidget(self, style=wx.TE_MULTILINE | wx.EXPAND)
         self.text_editor.fileops = file_operations.FileOperations(
-            self.text_editor, self, self.AddTab, self.Parent
+            self.text_editor, self, self.AddTab, self.SetTitle, self.Parent
         )
         if tabname is None:
             _tabname = _("New file")
         else:
             _tabname = tabname
-        self.text_editor.fileops.settitle = self.Parent.SetTitle(
-            _("Text Editor - %s" % tabname)
-        )
+        
         self.AddPage(self.text_editor, _tabname, select=True)
-        self.OnPageChanged()
-        return
+        self.SetTitle(_("Texteditor - %s") % _tabname)
+
+    def SetTitle(self, evt=None, title=None):
+        return self.Parent.SetTitle(title)
 
     def OnPageChanged(self, evt=None):
         tabname = self.GetPageText(self.GetSelection())
         if self.setstatus is True:
             self.Parent.SetStatusText(tabname)
-        self.Parent.SetTitle(_("Texteditor - %s") % tabname)
+        self.SetTitle(_("Texteditor - %s") % tabname)
 
     def CloneTab(self, evt=None):
         tabname = self.GetPageText(self.GetSelection())
