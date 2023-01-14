@@ -14,6 +14,7 @@ else:
     searchdir = os.environ["HOME"] + "/Documents"
 
 texteditor.backend.require_version("1.4a0", ">=")
+# texteditor.backend.require_version("1.6a", "<") # It doesn't work! Why?
 
 
 class FileOperations:
@@ -79,7 +80,7 @@ class FileOperations:
         else:
             self.savefile()
 
-    def openfile(self, filename): # TODO: Set window title
+    def openfile(self, filename):  # TODO: Set window title
         """Opens a file then show it to the text editor."""
         if self.statusbar is not None:
             self.statusbar.writeleftmessage(_("Opening file %s") % filename)

@@ -1,27 +1,50 @@
 import configparser
 import darkdetect
 import os
-import platform
+import sys
 import sv_ttk
+import texteditor.backend as backend
 import threading
 from tkinter import TclError, font, messagebox
-from . import constants, logger
+from texteditor.backend import constants, logger
+
+backend.require_version("1.4a", ">=")
+# backend.require_version("1.6a", "<")
 
 
-if platform.system() == "Windows":
-    file = os.environ["USERPROFILE"] + "\\.config\\texteditor_configs.ini"
-    backup = os.environ["USERPROFILE"] + "\\.config\\texteditor_bck.ini"
+# File & Directory management
+if sys.platform == "win32":
+    dird = os.environ["USERPROFILE"] + "\\.config\\texteditor\\"
     defconsole = "cmd"
 else:
-    file = os.environ["HOME"] + "/.config/texteditor_configs.ini"
-    backup = os.environ["HOME"] + "/.config/texteditor_bck.ini"
+    dird = os.environ["HOME"] + "/.config/texteditor/"
     defconsole = "xterm"
+
+if backend.is_development_build():
+    file = dird + "configs_dev.ini"
+else:
+    file = dird + "configs.ini"
+
+
+def createdir(dirname):
+    if not os.path.exists(dirname):
+        return os.mkdir(dirname)
+    else:
+        return "break"
+
+
+createdir(dird.removesuffix("texteditor"))
+createdir(dird)
+
+if not os.path.isfile(file):
+    f = open(file, mode="w")
+    del f
+# --- #
 
 cfg = configparser.ConfigParser()
 log = logger.Logger("texteditor.backend.get_config")
 
 # Default variables.
-# We must use cfg.get() to get the current variable's value.
 cfg["global"] = {
     "color": "light",
     "sub_color": "default",
@@ -32,27 +55,11 @@ cfg["global"] = {
 
 cfg["cmd"] = {"defconsole": defconsole, "isenabled": "yes"}
 
-cfg["filemgr"] = {"autosave": "yes", "autosave-time": "120"}  # in seconds
+cfg["filemgr"] = {"autosave": "yes", "autosave-time": "120"}
 
-# File write/backup
-with open(backup, "w") as f2:
-    cfg.write(f2)
-with open(backup, "r") as f:
-    bck = f.read()
-
-if not os.path.isfile(file):
-    with open(file, mode="w") as f:
-        try:
-            f.write(cfg)
-        except:
-            log.throwerr("Unable to write things into the configuration file")
-
-cfg.read(file)
-
-bg = cfg.get("global", "color")
-fg = cfg.get("global", "sub_color")
-
-autocolormode = False
+bck = {}
+for key in cfg:
+    bck[key] = cfg[key]
 
 
 class GetConfig:
@@ -85,9 +92,11 @@ class GetConfig:
             )
             return False
         try:
+            for key in bck:
+                cfg[key] = bck[key]
             os.remove(file)
             with open(file, "w") as f:
-                f.write(bck)
+                cfg.write(f)
         except OSError as e:
             messagebox.showerror(
                 GetConfig._("Error occured while writing contents to the file"),
@@ -253,6 +262,8 @@ class AutoColor:
             self.parent.configure(foreground=fg)
 
     def __checkcolor(self, bg):
+        bg = GetConfig.getvalue("global", "color")
+        fg = GetConfig.getvalue("global", "sub_color")
         if bg == "dark":
             if fg == "default":
                 fg2 = constants.LIGHT_BG

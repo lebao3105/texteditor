@@ -1,19 +1,18 @@
 import gettext
 import locale
 import os.path
-import packaging.version
 import pathlib
 import sys
 import tkinter.messagebox as msgbox
 
 import texteditor
 from . import mainwindow
-from .backend import __version__ as version
+from .backend import __version__ as version, is_development_build
 
 currdir = pathlib.Path(__file__).parent
 __version__ = version
 
-if packaging.version.parse(version).is_prerelease:
+if is_development_build():
     texteditor.icon = currdir / "icons/texteditor.Devel.png"
 else:
     texteditor.icon = currdir / "icons/texteditor.png"
@@ -33,13 +32,13 @@ _ = gettext.gettext
 
 def __filenotfound(filepath):
     ask = msgbox.askyesno(
-        _("File not found"),
-        _("Cannot find the file %s - create it?" % str(filepath))
+        _("File not found"), _("Cannot find the file %s - create it?" % str(filepath))
     )
     if ask:
         return "add_tab"
     else:
         return "cancel"
+
 
 def start_app(argv=None):
     if not argv:  # For __main__

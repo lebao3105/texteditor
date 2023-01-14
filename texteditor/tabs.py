@@ -5,7 +5,7 @@ from texteditor.backend import constants, file_operations, textwidget
 
 
 class TabsViewer(Notebook):
-    def __init__(self, master, do_place: bool, newtablabel:str=None, **kw):
+    def __init__(self, master, do_place: bool, newtablabel: str = None, **kw):
         super().__init__(master, **kw)
         self.parent = master
         if newtablabel == None:
@@ -84,7 +84,7 @@ class TabsViewer(Notebook):
             enableStatusBar=True,
             unRedo=True,
         )
-        
+
         ## Scroll bars
         xbar = Scrollbar(
             textframe, orient="horizontal", command=self.parent.text_editor.xview
