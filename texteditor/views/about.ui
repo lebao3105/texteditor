@@ -6,8 +6,8 @@
       <property name="side">top</property>
     </layout>
     <child>
-      <object class="ttk.Label" id="label1">
-        <property name="text" translatable="yes">Text Editor</property>
+      <object class="ttk.Label" id="appname" named="True">
+        <property name="text">Texteditor</property>
         <layout manager="pack">
           <property name="pady">0 20</property>
           <property name="side">top</property>
@@ -15,53 +15,50 @@
       </object>
     </child>
     <child>
-      <object class="ttk.Label" id="label2">
+      <object class="ttk.Label" id="version" named="True">
         <layout manager="pack">
+          <property name="pady">0 20</property>
           <property name="side">top</property>
         </layout>
       </object>
     </child>
     <child>
-      <object class="ttk.Label" id="label3">
-        <property name="text" translatable="yes">A small, lightweight and customizable text editor.</property>
+      <object class="ttk.Frame" id="mainfm" named="True">
         <layout manager="pack">
           <property name="expand">true</property>
           <property name="fill">both</property>
-          <property name="pady">0 20</property>
           <property name="side">top</property>
         </layout>
-      </object>
-    </child>
-    <child>
-      <object class="ttk.Label" id="label4">
-        <property name="cursor">hand2</property>
-        <property name="text" translatable="yes">Documentation</property>
-        <layout manager="pack">
-          <property name="expand">false</property>
-          <property name="pady">0 20</property>
-          <property name="side">top</property>
-        </layout>
-      </object>
-    </child>
-    <child>
-      <object class="ttk.Label" id="label5">
-        <property name="cursor">hand2</property>
-        <property name="text" translatable="yes">Source code</property>
-        <layout manager="pack">
-          <property name="expand">false</property>
-          <property name="pady">0 20</property>
-          <property name="side">top</property>
-        </layout>
-      </object>
-    </child>
-    <child>
-      <object class="ttk.Button" id="btn_ok">
-        <property name="command" type="command" cbtype="simple">quit</property>
-        <property name="text" translatable="yes">OK</property>
-        <layout manager="pack">
-          <property name="expand">true</property>
-          <property name="side">right</property>
-        </layout>
+        <child>
+          <object class="ttk.Button" id="button1">
+            <property name="command" type="command" cbtype="simple">call_des</property>
+            <property name="text" translatable="yes">Description</property>
+            <layout manager="pack">
+              <property name="fill">x</property>
+              <property name="side">top</property>
+            </layout>
+          </object>
+        </child>
+        <child>
+          <object class="ttk.Button" id="button2">
+            <property name="command" type="command" cbtype="simple">call_devs</property>
+            <property name="text" translatable="yes">Developers</property>
+            <layout manager="pack">
+              <property name="fill">x</property>
+              <property name="side">top</property>
+            </layout>
+          </object>
+        </child>
+        <child>
+          <object class="ttk.Button" id="button3">
+            <property name="command" type="command" cbtype="simple">call_license</property>
+            <property name="text" translatable="yes">License</property>
+            <layout manager="pack">
+              <property name="fill">x</property>
+              <property name="side">top</property>
+            </layout>
+          </object>
+        </child>
       </object>
     </child>
   </object>
