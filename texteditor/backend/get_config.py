@@ -1,35 +1,28 @@
 import configparser
+import darkdetect
 import os
 import os.path
-import pathlib
 import platform
-
-import darkdetect
-import wx
-from PIL import ImageColor
-
 import texteditor.backend
+import wx
 
+from PIL import ImageColor
 from . import constants
 
 texteditor.backend.require_version("1.6a", ">=")
 
 # Configuration file
 if platform.system() == "Windows":
-    file = os.environ["USERPROFILE"] + "\\.config\\texteditor\\configs.ini"
+    dir = os.environ["USERPROFILE"] + "\\.config\\texteditor\\"
     defconsole = "cmd"
 else:
-    file = os.environ["HOME"] + "/.config/texteditor/configs.ini"
+    file = os.environ["HOME"] + "/.config/texteditor/"
     defconsole = "xterm"
 
-file = pathlib.Path(file)
-
-if texteditor.backend.is_devlopment_build():
-    file = (
-        str(file).removesuffix("texteditor_configs.ini")
-        / "texteditor"
-        / "configs_dev.ini"
-    )
+if texteditor.backend.is_development_build():
+    file = dir + "configs_dev.ini"
+else:
+    file = dir + "configs.ini"
 
 # Default configs
 cfg = {}

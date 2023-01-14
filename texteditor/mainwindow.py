@@ -206,7 +206,6 @@ class MainFrame(wx.Frame):
 
 
 class MyApp(wx.App):
-    
     def OnInit(self):
         self.frame = MainFrame(None, wx.ID_ANY, "")
         self.SetTopWindow(self.frame)

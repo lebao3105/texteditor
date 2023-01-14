@@ -26,7 +26,7 @@ class Tabber(wx.Notebook):
             _tabname = _("New file")
         else:
             _tabname = tabname
-        
+
         self.AddPage(self.text_editor, _tabname, select=True)
         self.SetTitle(_("Texteditor - %s") % _tabname)
 

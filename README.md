@@ -14,3 +14,5 @@ A simple and cross-platform Python text editor.
 > Note: Please uninstall older version of texteditor first, if you have installed it.
 
 Read the instruction on [BuildAndRun.md](BuildAndRun.md).
+
+See all app releases [here.](https://github.com/lebao3105/texteditor/releases)

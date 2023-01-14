@@ -39,7 +39,6 @@ class FileOperations:
             self.statusbar.SetStatusText(_("Saving file %s...") % filename)
         self.textw.SaveFile(filename)
 
-
     def openfile(self, filename):
         """Opens a file then show it to the text editor."""
         filename = str(pathlib.Path(filename).resolve(True).absolute())

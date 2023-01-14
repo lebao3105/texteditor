@@ -34,5 +34,6 @@ def require_version(version: str, ctype):
     else:
         raise ValueError("Unknown comparison type.")
 
+
 def is_development_build():
     return packaging.version.parse(__version__).is_devrelease
