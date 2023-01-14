@@ -7,7 +7,7 @@ import wx
 
 import texteditor
 from . import mainwindow
-from .backend import constants
+from .backend import is_development_build
 
 currdir = pathlib.Path(__file__).parent
 
@@ -24,13 +24,10 @@ gettext.install("me.lebao3105.texteditor")
 _ = gettext.gettext
 
 # Icon
-if constants.STATE == "DEV":
+if is_development_build() == True:
     texteditor.icon = str(currdir / "icons/texteditor.Devel.png")
-elif constants.STATE == "STABLE":
-    texteditor.icon = str(currdir / "icons/texteditor.png")
 else:
-    constants.STATE = "UNKNOWN (%s)" % constants.STATE
-    texteditor.icon = None
+    texteditor.icon = str(currdir / "icons/texteditor.png")
 
 
 # Start
@@ -38,8 +35,8 @@ def _file_not_found(filename):
     return wx.MessageDialog(
         None,
         message=_("File not found"),
-        caption=_("File not found %s") % filename,
-        style=wx.OK_DEFAULT | wx.ICON_INFORMATION,
+        caption=_("Cannot find file name %s - create it?") % filename,
+        style=wx.YES_NO | wx.ICON_INFORMATION,
     ).ShowModal()
 
 
@@ -48,19 +45,29 @@ def start_app():
     argv = sys.argv
     argc = len(argv) - 1
     root = mainwindow.MyApp(0)
-    root.MainLoop()
 
     if argc > 0:
+        textw = root.frame.notebook.text_editor
         if os.path.isfile(argv[1]):
-            root.notebook.text_editor.fileops.openfile(argv[1])
+            textw.fileops.openfile(argv[1])
         else:
-            _file_not_found(argv[1])
+            if _file_not_found(argv[1]) == wx.ID_YES:
+                f = open(argv[1], mode="w")
+                textw.fileops.openfile(argv[1])
+                del f
+
         for i in range(2, argc + 1):
+
             if os.path.isfile(argv[i]):
-                root.notebook.AddTab()
-                root.notebook.text_editor.fileops.openfile(argv[i])
+                root.frame.notebook.AddTab()
+                textw.fileops.openfile(argv[i])
             else:
-                _file_not_found(argv[i])
+                if _file_not_found(argv[i]) == wx.ID_YES:
+                    root.frame.notebook.AddTab()
+                    textw.fileops.openfile(argv[i])
+                    del f
+
+    root.MainLoop()
 
 
 if __name__ == "__main__":
