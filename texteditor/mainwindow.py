@@ -19,15 +19,16 @@ class MainFrame(wx.Frame):
         self.SetSize((820, 685))
         self.SetIcon(wx.Icon(texteditor.icon))
 
-        self.notebook = Tabber(self, wx.ID_ANY)
+        self.notebook = Tabber(self, wx.ID_ANY, style=wx.EXPAND)
         self.menuitem = {}
         self._StatusBar()
 
+        # ~ Configure the editor
         textw = self.notebook.text_editor
         cfg.setcolorfunc("textw", textw, "StyleSetBackground", wx.stc.STC_STYLE_DEFAULT)
         cfg.setfontcfunc("textw", textw, "StyleSetForeground", wx.stc.STC_STYLE_DEFAULT)
-
         cfg.configure(textw)
+        # ~
 
         tabname = self.notebook.GetPageText(self.notebook.GetSelection())
         self.SetTitle(_("Texteditor - %s") % tabname)
@@ -56,6 +57,7 @@ class MainFrame(wx.Frame):
         addfilecmd = filemenu.Append
         self.menuitem["newtab"] = addfilecmd(wx.ID_NEW, _("New\tCtrl-N"))
         self.menuitem["open"] = addfilecmd(wx.ID_OPEN, _("Open\tCtrl-O"))
+        self.menuitem["opendir"] = addfilecmd(wx.ID_OPEN, _("Open directory"))
         self.menuitem["save"] = addfilecmd(wx.ID_SAVE, _("Save\tCtrl-S"))
         self.menuitem["saveas"] = addfilecmd(
             wx.ID_SAVEAS, _("Save as...\tCtrl-Shift-S")
@@ -104,6 +106,7 @@ class MainFrame(wx.Frame):
                 self.notebook.text_editor.fileops.openfile_(),
                 self.notebook.OnPageChanged(),
             ),
+            self.menuitem["opendir"]: lambda evt: self.OpenDir(),
             self.menuitem[
                 "save"
             ]: lambda evt: self.notebook.text_editor.fileops.savefile_(),
@@ -125,8 +128,27 @@ class MainFrame(wx.Frame):
         for item in self.menucommand:
             self.Bind(wx.EVT_MENU, self.menucommand[item], item)
 
-    def Quit(self, event):
+    def Quit(self, evt):
         self.Close(True)
+
+    def OpenDir(self, evt=None):
+        ask = wx.DirDialog(
+            self,
+            _("Select a folder to start"),
+        )
+        if ask.ShowModal() == wx.ID_OK:
+            selected_dir = ask.GetPath()
+
+        newfm = wx.Frame(self, title=selected_dir)
+        self.dirs = wx.GenericDirCtrl(newfm, -1, selected_dir)
+        self.dirs.Bind(
+            wx.EVT_DIRCTRL_FILEACTIVATED,
+            lambda evt: self.notebook.text_editor.fileops.openfile(
+                self.dirs.GetFilePath()
+            ),
+        )
+        newfm.Layout()
+        newfm.Show()
 
     def ShowCfgs(self, evt=None):
         if self.notebook.text_editor.GetValue() != "":
@@ -184,8 +206,9 @@ class MainFrame(wx.Frame):
 
 
 class MyApp(wx.App):
+    
     def OnInit(self):
-        frame = MainFrame(None, wx.ID_ANY, "")
-        self.SetTopWindow(frame)
-        frame.Show()
+        self.frame = MainFrame(None, wx.ID_ANY, "")
+        self.SetTopWindow(self.frame)
+        self.frame.Show()
         return True
