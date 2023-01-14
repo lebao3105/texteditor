@@ -13,16 +13,16 @@ texteditor.backend.require_version("1.6a", ">=")
 
 # Configuration file
 if platform.system() == "Windows":
-    dir = os.environ["USERPROFILE"] + "\\.config\\texteditor\\"
+    dir_to_use = os.environ["USERPROFILE"] + "\\.config\\texteditor\\"
     defconsole = "cmd"
 else:
-    file = os.environ["HOME"] + "/.config/texteditor/"
+    dir_to_use = os.environ["HOME"] + "/.config/texteditor/"
     defconsole = "xterm"
 
 if texteditor.backend.is_development_build():
-    file = dir + "configs_dev.ini"
+    file = dir_to_use + "configs_dev.ini"
 else:
-    file = dir + "configs.ini"
+    file = dir_to_use + "configs.ini"
 
 # Default configs
 cfg = {}

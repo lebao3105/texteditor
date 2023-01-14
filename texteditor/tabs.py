@@ -30,7 +30,7 @@ class Tabber(wx.Notebook):
         self.AddPage(self.text_editor, _tabname, select=True)
         self.SetTitle(_("Texteditor - %s") % _tabname)
 
-    def SetTitle(self, evt=None, title=None):
+    def SetTitle(self, evt=None, title=""):
         return self.Parent.SetTitle(title)
 
     def OnPageChanged(self, evt=None):
