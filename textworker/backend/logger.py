@@ -1,31 +1,34 @@
 import datetime
+import inspect
 import os
 import sys
-import texteditor.backend
-import texteditor.tabs as tabs
+import textworker.backend
+import textworker.tabs as tabs
 import traceback
 import wx
 
-texteditor.backend.require_version("1.6a", ">=")
+textworker.backend.require_version("1.6a", ">=")
 
 __dir = os.environ["USERPROFILE"] if sys.platform == "win32" else os.environ["HOME"]
 if sys.platform == "win32":
-    logfile = __dir + "\\.logs\\texteditor.log"
+    logfile_ = __dir + "\\.logs\\texteditor.log"
 else:
-    logfile = __dir + "/.logs/texteditor.log"
+    logfile_ = __dir + "/.logs/texteditor.log"
 
 
 class Logger:
     format_date = "%m-%d-%Y"  # Month day year
     format_time = "%H:%M:%S"  # Hour min sec
-    log_file = logfile
+    log_file = logfile_
 
-    def __init__(self, obj: str, fmt_date=None, fmt_time=None, logfile=None):
+    def __init__(self, fmt_date=None, fmt_time=None, logfile:str|None=None):
         """Logging unit of texteditor.
-        :param obj : Your code object (just pass your object name)
         :param fmt_date=None : Date format
         :param fmt_time=None : Time format
         :param logfile=None : Log file
+
+        If logfile is not specified, logger will use texteditor's
+        default log path.
         """
         if fmt_date is not None:
             self.format_date = fmt_date
@@ -33,23 +36,27 @@ class Logger:
             self.format_time = fmt_time
         if logfile is not None:
             self.log_file = logfile
-        self.obj = obj
+
+        self.obj = inspect.getmodule(inspect.stack()[1][0]).__name__
         self.logs = []
         self.islogwindopen: bool = False
 
-        try:
-            open(self.log_file)
-        except Exception:
-            self.usable = False
-            self.throwerr(
-                _("Error occured: (open log file)"),
-                showdialog=True,
-            )
+        if not os.path.isfile(self.log_file):
+            try:
+                open(self.log_file, mode="w")
+            except:
+                self.usable = False
+                self.throwerr(
+                    "Error occured: (open log file)",
+                    showdialog=True
+                )
+            else:
+                self.usable = True
         else:
             self.usable = True
 
     def printtext(self, title, msg=None, traceback=None):
-        """Create a log message with time+date, write it to the text file
+        """Create a log message with time+date, write it to the log file
         and show it to the console."""
         ## Date time
         now = datetime.datetime.now()
@@ -65,12 +72,12 @@ class Logger:
         default = "%s %s %s ~" % (date, time, str(self.obj))
         full = default + " %s" % message
         if self.usable == True:
-            with open(self.logfile, mode="a") as f:
+            with open(self.log_file, mode="a") as f:
                 f.write(full)
         self.logs.append(full)
         print(full)
 
-    def throwerr(self, title, noexp: bool = None, msg=None, showdialog: bool = False):
+    def throwerr(self, title, noexp: bool = False, msg=None, showdialog: bool = False):
         """Throws an exception message with its traceback and a custom message."""
         if noexp is True:
             traceback_msg = ""

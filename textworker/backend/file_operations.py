@@ -1,12 +1,13 @@
 import os
 import pathlib
+import time
 import sys
 import wx
 
-from texteditor.backend import logger
+from textworker.backend import logger
 
 if sys.platform == "win32":
-    searchdir = os.environ["USERPROFILE"] + "\Documents"
+    searchdir = os.environ["USERPROFILE"] + "\\Documents"
 else:
     searchdir = os.environ["HOME"] + "/Documents"
 
@@ -35,15 +36,15 @@ class FileOperations:
 
     def savefile(self, filename):
         """Saves a file (filename parameter)."""
+        self.textw.SaveFile(filename)
         if self.statusbar is not None:
             self.statusbar.SetStatusText(_("Saving file %s...") % filename)
-        self.textw.SaveFile(filename)
+            time.sleep(1)
+            self.statusbar.SetStatusText(_("%s saved.") % filename)
 
     def openfile(self, filename):
         """Opens a file then show it to the text editor."""
         filename = str(pathlib.Path(filename).resolve(True).absolute())
-        if self.statusbar is not None:
-            self.statusbar.SetStatusText(_("Opening file %s") % filename)
         try:
             f = open(filename, "r")
         except:
@@ -56,6 +57,12 @@ class FileOperations:
         else:
             del f
             self.textw.LoadFile(str(filename))
+            
+            if self.statusbar is not None:
+                self.statusbar.SetStatusText(_("Opening file %s") % filename)
+                time.sleep(1)
+                self.statusbar.SetStatusText("%s" % filename)
+
             self.notebook.SetPageText(
                 page=self.notebook.GetSelection(), text=str(filename)
             )

@@ -3,13 +3,13 @@ import darkdetect
 import os
 import os.path
 import platform
-import texteditor.backend
+import textworker.backend
 import wx
 
 from PIL import ImageColor
 from . import constants
 
-texteditor.backend.require_version("1.6a", ">=")
+textworker.backend.require_version("1.6a", ">=")
 
 # Configuration file
 if platform.system() == "Windows":
@@ -19,7 +19,7 @@ else:
     dir_to_use = os.environ["HOME"] + "/.config/texteditor/"
     defconsole = "xterm"
 
-if texteditor.backend.is_development_build():
+if textworker.backend.is_development_build():
     file = dir_to_use + "configs_dev.ini"
 else:
     file = dir_to_use + "configs.ini"
@@ -43,7 +43,7 @@ cfg["extensions.autosave"] = {"enable": "no", "time": "120"}
 
 class ConfigurationError(Exception):
     def __init__(
-        self, section: str = None, option: str = None, msg: str = None, *args: object
+        self, section: str = "", option: str = "", msg: str = "", *args: object
     ):
         prefix = "Error in the configuration file: "
         if not msg:
@@ -77,6 +77,8 @@ class GetConfig(configparser.ConfigParser):
         How to use:
         * Just call it once for your project, pass everything needed to the contrucstor and do things
         your self!
+        * Always set default_section to one of your section (in str format)
+        * Configure function is used to config wxPython widgets - so override it if needed
 
         For the configure function (must do):
         * Use setcolorfunc function to set the color (background)-set function
@@ -84,16 +86,19 @@ class GetConfig(configparser.ConfigParser):
 
         Both of them will be used in configure function.
         """
-        super().__init__(self, *args)
+        super().__init__(*args)
+        
         self.cfg = {}
+        
         for key in config:
             self[key] = config[key]
             self.cfg[key] = config[key]
+
         self.readf(file)
         self.file = file
 
     # File tasks
-    def readf(self, file, encoding: str = None):
+    def readf(self, file, encoding: str | None = None):
         if os.path.isfile(file):
             self.read(file, encoding)
         else:
@@ -171,6 +176,7 @@ class GetConfig(configparser.ConfigParser):
         return wx.Font(size_, wx.FONTFAMILY_DEFAULT, style_, weight_, 0, family)
 
     def _get_color(self):
+
         def _get_sys_mode():
             return darkdetect.theme().lower()
 
@@ -185,6 +191,7 @@ class GetConfig(configparser.ConfigParser):
             "light": "#ffffff",
             "dark": "#1c1c1c",
         }
+
         ## Check
         if autocolor == True:
             color_ = colors[_get_sys_mode()]

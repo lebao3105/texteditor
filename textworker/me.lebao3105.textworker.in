@@ -1,0 +1,13 @@
+#!@PYTHON@
+
+import sys
+import signal
+
+pkgdatadir = '@pkgdatadir@'
+
+sys.path.insert(1, pkgdatadir)
+signal.signal(signal.SIGINT, signal.SIG_DFL)
+
+if __name__ == '__main__':
+    from textworker import start_app
+    sys.exit(start_app())

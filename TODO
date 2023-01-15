@@ -1,3 +1,16 @@
-## Welcome to my wxPython port of texteditor!
-## Because I've just created it, so there is nothing here.
-## Enjoy!
+## Welcome to my wxPython port of texteditor (now it's textworker)!
+
+- 1.6:
+    # Add fixes and implement missing features in older Tkinter versions.
+    - Building:
+        * (Meson) install icons in a better way
+        * (Pack) use py2exe.freeze
+        * (Pack) maybe use AppImage again?
+    - Toplevel folder (textworker)
+        * (Tabs) finish what it needs
+        * (Mainwindow) finish folder view
+    - textworker.backend
+        * (File_operations) implement file comparison and fix function names
+        * (Get_config) autocolor
+    - textworker.extensions
+        * Move autosave & cmd to use wxPython.

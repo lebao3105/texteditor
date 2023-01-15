@@ -1,34 +1,25 @@
 import platform
-import texteditor
+import textworker
 import webbrowser
 import wx
 import wx.adv
 import wx.stc
 
-from texteditor.tabs import Tabber
-from texteditor.backend import logger, constants, get_config
+from textworker.tabs import Tabber
+from textworker.backend import logger, constants, get_config
 
 log = logger.Logger("texteditor.mainwindow")
-cfg = get_config.GetConfig(get_config.cfg, get_config.file)
-
 
 class MainFrame(wx.Frame):
     def __init__(self, *args, **kwds):
         kwds["style"] = kwds.get("style", 0) | wx.DEFAULT_FRAME_STYLE
         wx.Frame.__init__(self, *args, **kwds)
         self.SetSize((820, 685))
-        self.SetIcon(wx.Icon(texteditor.icon))
+        self.SetIcon(wx.Icon(textworker.icon))
 
         self.notebook = Tabber(self, wx.ID_ANY, style=wx.EXPAND)
         self.menuitem = {}
         self._StatusBar()
-
-        # ~ Configure the editor
-        textw = self.notebook.text_editor
-        cfg.setcolorfunc("textw", textw, "StyleSetBackground", wx.stc.STC_STYLE_DEFAULT)
-        cfg.setfontcfunc("textw", textw, "StyleSetForeground", wx.stc.STC_STYLE_DEFAULT)
-        cfg.configure(textw)
-        # ~
 
         tabname = self.notebook.GetPageText(self.notebook.GetSelection())
         self.SetTitle(_("Texteditor - %s") % tabname)
@@ -57,7 +48,7 @@ class MainFrame(wx.Frame):
         addfilecmd = filemenu.Append
         self.menuitem["newtab"] = addfilecmd(wx.ID_NEW, _("New\tCtrl-N"))
         self.menuitem["open"] = addfilecmd(wx.ID_OPEN, _("Open\tCtrl-O"))
-        self.menuitem["opendir"] = addfilecmd(wx.ID_OPEN, _("Open directory"))
+        self.menuitem["opendir"] = addfilecmd(wx.ID_ANY, _("Open directory"))
         self.menuitem["save"] = addfilecmd(wx.ID_SAVE, _("Save\tCtrl-S"))
         self.menuitem["saveas"] = addfilecmd(
             wx.ID_SAVEAS, _("Save as...\tCtrl-Shift-S")
@@ -78,12 +69,21 @@ class MainFrame(wx.Frame):
         )
         self.menubar.Append(editmenu, _("&Edit"))
 
+        ## Views
+        viewsmenu = wx.Menu()
+        addviewscmd = viewsmenu.Append
+        self.menuitem["zoomin"] = addviewscmd(wx.ID_ANY, _("Zoom in"))
+        self.menuitem["zoomout"] = addviewscmd(wx.ID_ANY, _("Zoom out"))
+        self.menuitem["wrap"] = viewsmenu.AppendCheckItem(wx.ID_ANY, _("Word wrap"))
+        self.menubar.Append(viewsmenu, _("&Views"))
+
         ## Configs
         cfgmenu = wx.Menu()
-        self.menuitem["showcfgs"] = cfgmenu.Append(
+        addcfgmenu = cfgmenu.Append
+        self.menuitem["showcfgs"] = addcfgmenu(
             wx.ID_ANY, _("Show all configurations")
         )
-        self.menuitem["reset"] = cfgmenu.Append(wx.ID_ANY, _("Reset all configs"))
+        self.menuitem["reset"] = addcfgmenu(wx.ID_ANY, _("Reset all configs"))
         self.menubar.Append(cfgmenu, _("&Config"))
 
         ## Help
@@ -101,6 +101,7 @@ class MainFrame(wx.Frame):
     ## Callbacks
     def Binder(self):
         self.menucommand = {
+            # TODO: Separate all sub-menu items
             self.menuitem["newtab"]: lambda evt: self.notebook.AddTab(),
             self.menuitem["open"]: lambda evt: (
                 self.notebook.text_editor.fileops.openfile_(),
@@ -116,6 +117,8 @@ class MainFrame(wx.Frame):
             self.menuitem["copy"]: lambda evt: self.notebook.text_editor.Copy(),
             self.menuitem["paste"]: lambda evt: self.notebook.text_editor.Paste(),
             self.menuitem["cut"]: lambda evt: self.notebook.text_editor.Cut(),
+            self.menuitem["zoomin"]: lambda evt: (self.notebook.text_editor.ZoomIn()),
+            self.menuitem["zoomout"]: lambda evt: (self.notebook.text_editor.ZoomOut()),
             self.menuitem["selall"]: lambda evt: self.notebook.text_editor.SelectAll(),
             self.menuitem["showcfgs"]: lambda evt: self.ShowCfgs(),
             self.menuitem["reset"]: lambda evt: self.ResetCfgs(),
@@ -138,13 +141,15 @@ class MainFrame(wx.Frame):
         )
         if ask.ShowModal() == wx.ID_OK:
             selected_dir = ask.GetPath()
+        else:
+            return
 
         newfm = wx.Frame(self, title=selected_dir)
-        self.dirs = wx.GenericDirCtrl(newfm, -1, selected_dir)
-        self.dirs.Bind(
+        dirs = wx.GenericDirCtrl(newfm, -1, selected_dir)
+        dirs.Bind(
             wx.EVT_DIRCTRL_FILEACTIVATED,
             lambda evt: self.notebook.text_editor.fileops.openfile(
-                self.dirs.GetFilePath()
+                dirs.GetFilePath()
             ),
         )
         newfm.Layout()
@@ -163,7 +168,7 @@ class MainFrame(wx.Frame):
             wx.YES_NO | wx.ICON_WARNING,
         ).ShowModal()
         if ask == wx.ID_YES:
-            if cfg.reset():
+            if textworker.cfg.reset():
                 self.SetStatusText(_("Restored all default app configurations."))
 
     def ShowAbout(self, event=None):
@@ -194,9 +199,9 @@ class MainFrame(wx.Frame):
     along with this program.  If not, see <https://www.gnu.org/licenses/>."""
 
         aboutinf = wx.adv.AboutDialogInfo()
-        aboutinf.SetName("texteditor")
-        aboutinf.SetVersion("1.6 Alpha (wx version)")
-        aboutinf.SetIcon(wx.Icon(texteditor.icon))
+        aboutinf.SetName("TextWorker")
+        aboutinf.SetVersion(textworker.__version__)
+        aboutinf.SetIcon(wx.Icon(textworker.icon))
         aboutinf.SetDescription(msg)
         aboutinf.SetCopyright("(C) 2022-2023")
         aboutinf.SetWebSite("https://github.com/lebao3105/texteditor")

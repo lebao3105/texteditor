@@ -1,4 +1,4 @@
-import texteditor
+import textworker
 import tkinter.messagebox as msb
 from tkinter import BooleanVar, Label, StringVar, Toplevel
 from tkinter.ttk import Button, Checkbutton, Combobox
@@ -33,7 +33,7 @@ class AutoSave:
     def __init__(self, master, savefile_fn, _=None):
         super().__init__()
         if _ is None:
-            self._ = texteditor._
+            self._ = textworker._
         else:
             self._ = _
         self.autosave = get_config.GetConfig.getvalue("filemgr", "autosave")

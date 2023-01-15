@@ -1,50 +1,53 @@
 ## Requirements
-* Python 3.8+
-* Pip3 (comes with Python)
-* Tkinter (if you don't use wip/wx branch)
-* wxPython (if you use wip/wx branch, install wxPython's requirements also)
-* Packages specified in [requirements.txt](requirements.txt) via pip
-* Gettext (optional) to generate translations
-* Meson and ninja (installable via pip) (optional) to install the project
-* Build (install via pip) (optional) to build and install the project (after the installation pip will recognize texteditor as a Python package)
+```
+python 3.8+ with pip
+gettext (optional)
+meson and ninja (optional)
+```
 
 ## Notes
 * We assume that you have cloned this project repository and on the cloned folder.
-* To make portable version of this app (Windows only), please go to [makerelease](makerelease) folder.
+* You can use my builder script on [makerelease.](makerelease)
 
 ## Steps
 1. Install dependencies first, always:
-```sh
+```bash
 $ pip install -r requirements.txt
 ```
 
 2. (Optional) Generate translation
-```sh
+```bash
 $ meson build
-$ ninja -C build me.lebao3105.texteditor-pot
+$ ninja -C build me.lebao3105.textworker-pot
 $ # If you don't see any file that have your language translation,
 $ # please add your language code into po/LINGUAS or run the command
 $ # below and duplicate any generated .po file and rename it
 $ # your language code!
-$ ninja -C build me.lebao3105.texteditor-update-po
+$ ninja -C build me.lebao3105.textworker-update-po
 $ # Update your translation...
 $ # Now compile all translations
-$ ninja -C build me.lebao3105.texteditor-gmo
+$ ninja -C build me.lebao3105.textworker-gmo
 $ cp -r build/po/* po/
 ```
 
 3. Install!
 
 a. Using build module
-```sh
+```bash
 $ pip install build wheel
 $ rm -rf dist build # Remove generated files, if have
 $ python3 -m build
 $ pip install dist/<file name>.whl --force-reinstall
 ```
 
+(Or just run pip (still need build & wheel installed):
+```bash
+$ pip install .
+```
+)
+
 b. Using meson (only use this on Linux)
-```sh
+```bash
 $ pip install meson ninja
 $ meson build --prefix=/usr
 $ ninja -C build

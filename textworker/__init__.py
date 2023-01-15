@@ -5,17 +5,17 @@ import pathlib
 import sys
 import wx
 
-import texteditor
 from . import mainwindow
-from .backend import is_development_build
+from .backend import is_development_build, get_config, __version__ as version
 
 currdir = pathlib.Path(__file__).parent
 
 # Setup translation first
 try:
-    from texteditor.defs import LOCALE_DIR
+    from textworker.defs import LOCALE_DIR, ICON_DIR
 except ImportError:
     LOCALE_DIR = currdir / "po"
+    ICON_DIR = currdir / "icons"
 
 locale.setlocale(locale.LC_ALL, None)
 gettext.bindtextdomain("me.lebao3105.texteditor", LOCALE_DIR)
@@ -25,10 +25,16 @@ _ = gettext.gettext
 
 # Icon
 if is_development_build() == True:
-    texteditor.icon = str(currdir / "icons/texteditor.Devel.png")
+    icon = str(ICON_DIR / "textworker.Devel.png")
 else:
-    texteditor.icon = str(currdir / "icons/texteditor.png")
+    icon = str(ICON_DIR / "textworker.png")
 
+
+# Version
+__version__ = version
+
+cfg = get_config.GetConfig(get_config.cfg, get_config.file)
+cfg.default_section = 'interface'
 
 # Start
 def _file_not_found(filename):

@@ -1,11 +1,11 @@
 import os
 import signal
 import subprocess
-import texteditor
+import textworker
 import threading
 
 from tkinter import END, BooleanVar, Toplevel, messagebox
-from texteditor.backend import get_config, textwidget
+from textworker.backend import get_config, textwidget
 
 arr = []
 
