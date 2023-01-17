@@ -6,8 +6,8 @@ A simple and cross-platform Python text editor.
 (This is an initial port of texteditor to use wxPython - not all features are implemented.)
 
 <div align="center">
-    <img src="texteditor/icons/texteditor.png">
-    <img src="texteditor/icons/texteditor.Devel.png">
+    <img src="textworker/icons/textworker.png">
+    <img src="textworker/icons/textworker.Devel.png">
 </div>
 
 ## Setup

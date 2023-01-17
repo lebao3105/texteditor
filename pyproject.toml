@@ -19,6 +19,7 @@ classifiers = [
 ]
 dependencies = [
     "configparser",
+    "darkdetect",
     "packaging",
     "wxpython",
 ]
