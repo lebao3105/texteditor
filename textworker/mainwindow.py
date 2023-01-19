@@ -38,6 +38,7 @@ class MainFrame(wx.Frame):
         )
         self.statusbar.righttext.SetPosition((w1 + 2, 2))
         self.statusbar.righttext.Bind(wx.EVT_LEFT_DOWN, lambda evt: log.logwindow())
+        self.statusbar.Hide()
 
     def PlaceMenu(self):
         # Menu Bar
@@ -203,10 +204,10 @@ class MainFrame(wx.Frame):
         aboutinf.SetVersion(textworker.__version__)
         aboutinf.SetIcon(wx.Icon(textworker.icon))
         aboutinf.SetDescription(msg)
-        aboutinf.SetCopyright("(C) 2022-2023")
+        aboutinf.SetCopyright("(C) 2022-2023 Le Bao Nguyen")
         aboutinf.SetWebSite("https://github.com/lebao3105/texteditor")
         aboutinf.SetLicence(license)
-        aboutinf.AddDeveloper(_("Le Bao Nguyen"))
+        aboutinf.AddDeveloper("Le Bao Nguyen")
         return wx.adv.AboutBox(aboutinf)
 
 

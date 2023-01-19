@@ -5,7 +5,6 @@
     - Building:
         * (Meson) install icons in a better way
         * (Pack) use py2exe.freeze
-        * (Pack) maybe use AppImage again?
     - Toplevel folder (textworker)
         * (Tabs) finish what it needs
         * (Mainwindow) finish folder view

@@ -1,7 +1,7 @@
 import inspect
 import packaging.version
 
-__version__ = "1.6a0"
+__version__ = "1.6a1"
 
 
 def require_version(version: str, ctype):
@@ -36,4 +36,4 @@ def require_version(version: str, ctype):
 
 
 def is_development_build():
-    return packaging.version.parse(__version__).is_devrelease
+    return packaging.version.parse(__version__).is_prerelease
