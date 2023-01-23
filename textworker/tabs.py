@@ -2,6 +2,7 @@ import textworker
 import wx
 import wx.stc
 from textworker.backend import file_operations, get_config
+from .extensions import autosave
 
 
 class Tabber(wx.Notebook):
@@ -23,6 +24,10 @@ class Tabber(wx.Notebook):
         self.text_editor.fileops = file_operations.FileOperations(
             self.text_editor, self, self.AddTab, self.SetTitle, self.Parent
         )
+        self.text_editor.autosv = autosave.AutoSave()
+        self.text_editor.autosv.parent = self.Parent
+        self.text_editor.autosv.savefn = lambda: self.text_editor.fileops.savefile_()
+
         if tabname is None:
             _tabname = _("New file")
         else:
@@ -100,6 +105,7 @@ class TextWidget(wx.stc.StyledTextCtrl):
         bg = "#" + "%02x%02x%02x" % bg
         fg = "#" + "%02x%02x%02x" % fg
         self.StyleSetSpec(0, "fore:{},back:{}".format(fg, bg))
+        self.StyleSetSpec(wx.stc.STC_STYLE_LINENUMBER, "fore:{},back:{}".format(fg, bg))
 
         self.Bind(wx.stc.EVT_STC_MODIFIED, self.OnKeyPress)
 
@@ -122,15 +128,15 @@ class TextWidget(wx.stc.StyledTextCtrl):
 
         def RightClickMenu(self, event, pt, enable):
             menu = wx.Menu()
-            cut = menu.Append(wx.ID_CUT, _("Cut\tCtrl-X"))
-            copy = menu.Append(wx.ID_COPY, _("Copy\tCtrl-C"))
-            paste = menu.Append(wx.ID_PASTE, _("Paste\tCtrl-V"))
+            cut = menu.Append(wx.ID_CUT)
+            copy = menu.Append(wx.ID_COPY)
+            paste = menu.Append(wx.ID_PASTE)
             menu.AppendSeparator()
 
-            undo = menu.Append(wx.ID_UNDO, _("Undo\tCtrl-Z"))
-            redo = menu.Append(wx.ID_REDO, _("Redo\tCtrl-Y"))
+            undo = menu.Append(wx.ID_UNDO)
+            redo = menu.Append(wx.ID_REDO)
             delete = menu.Append(wx.ID_DELETE)
-            selectall = menu.Append(wx.ID_SELECTALL, _("Select All\tCtrl-A"))
+            selectall = menu.Append(wx.ID_SELECTALL)
             cut.Enable(False)
             copy.Enable(False)
 
@@ -149,7 +155,6 @@ class TextWidget(wx.stc.StyledTextCtrl):
             else:
                 paste.Enable(False)
 
-            # Can unfo can redo
             if self.GetValue() != "":
                 for item in [cut, copy, delete, selectall]:
                     item.Enable(True)
