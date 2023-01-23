@@ -4,7 +4,6 @@ icon_installdir = join_paths(get_option('datadir'), 'icons', scalable_icondir)
 
 defs_conf = configuration_data()
 defs_conf.set('LOCALE_DIR', localedir)
-defs_conf.set('VERSION', meson.project_version())
 defs_conf.set('ICON_DIR', icon_installdir)
 
 configure_file(
@@ -46,6 +45,5 @@ install_data(
 )
 
 subdir('backend')
-#subdir('extensions')
+subdir('extensions')
 subdir('icons')
-#subdir('views')

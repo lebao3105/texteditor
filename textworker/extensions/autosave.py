@@ -1,9 +1,5 @@
-import textworker
-import tkinter.messagebox as msb
-from tkinter import BooleanVar, Label, StringVar, Toplevel
-from tkinter.ttk import Button, Checkbutton, Combobox
-
-from ..backend import get_config, logger
+import wx
+from ..backend import logger, get_config
 
 # Minutes to seconds
 MIN_05 = 30  # 30 secs
@@ -12,146 +8,111 @@ MIN_15 = MIN_1 * 15  # 900 secs
 MIN_20 = MIN_15 + MIN_1 * 5  # 1200 secs
 MIN_30 = MIN_15 * 2  # 1800 secs
 
-log = logger.Logger("texteditor.extensions.autosave")
+cfg = get_config.GetConfig(get_config.cfg, get_config.file, default_section="interface")
+log = logger.Logger()
 
 
 class AutoSave:
-    """Contructs the autosaving files function on texteditor.\n
-    Configurations:
-    * forceEnable : bool : Force enable this
-    * useTime : float : Force auto save after a time
+    cmbitems = [
+        "30 seconds",
+        "1 minute",
+        "2 minutes",
+        "5 minutes",
+        "10 minutes",
+        "15 minutes",
+        "20 minutes",
+        "30 minutes",
+    ]
 
-    Functions:
-    * openpopup : Make a popup window which asks the user to change the auto save time.
-    It will modify useTime!
-    * start : Start the timing loop
-    """
+    timealiases = [
+        MIN_05,
+        MIN_1,
+        MIN_1 * 2,
+        MIN_1 * 5,
+        MIN_1 * 10,
+        MIN_15,
+        MIN_20,
+        MIN_30,
+    ]
 
-    forceEnable: bool = False
-    useTime: float = float(get_config.GetConfig.getvalue("filemgr", "autosave-time"))
+    savefn = object
+    usable = cfg.getkey("extensions.autosave", "enable")
+    forced = False
+    parent = object
+    shown = False
 
-    def __init__(self, master, savefile_fn, _=None):
-        super().__init__()
-        if _ is None:
-            self._ = textworker._
-        else:
-            self._ = _
-        self.autosave = get_config.GetConfig.getvalue("filemgr", "autosave")
-        self._do_check()
-        self.parent = master
-        self.savecommand = savefile_fn
+    def askwind(self):
+        def getvalue(evt):
+            nonlocal check_btn, cmb, timer
+            if check_btn.GetValue() == True:
+                self.saveconfig(cmb.GetValue())
+            self.start()
+            timer.Start(self.get(cmb.GetValue()) * 1000)
+            self.parent.Bind(wx.EVT_TIMER, lambda evt: self.savefn(), timer)
 
-    def _do_check(self):
-        if self.forceEnable == False:
-            if self.autosave == "yes":
-                self.__converter(self.useTime)
-                pass
-            else:
-                return "break"
-
-    def openpopup(self):
-        askwin = Toplevel(self.parent)
-        self.askwin = askwin
-        # askwin.geometry("400x230")
-        askwin.title(self._("Autosave configuration"))
-        askwin.resizable(False, False)
-
-        selected_time = StringVar()
-        updatest = BooleanVar()
-
-        label = Label(
-            askwin,
-            text=self._(
-                "Select autosave time (minutes)\nAutosave function will be launched after a time."
-            ),
-        )
-        label2 = Label(
-            askwin,
-            text=self._(
-                "Please note that Autosave only saves the current selected tab."
-            ),
-        )
-        cb = Combobox(askwin, textvariable=selected_time)
-        cb["values"] = [0.5, 1, 2, 5, 10, 15, 20, 30]
-        cb["state"] = "readonly"
-        if self.useTime in cb["values"]:
-            cb.current(self.__converter(self.useTime))
-
-        checkbtn = Checkbutton(
-            askwin,
-            text=self._("Save this value"),
-            variable=updatest,
-            onvalue=True,
-            offvalue=False,
-        )
-        okbtn = Button(
-            askwin,
-            text="OK",
-            command=lambda: self.__okbtn_clicked(selected_time, updatest),
-        )
-        cancelbtn = Button(
-            askwin, text=self._("Cancel"), command=lambda: askwin.destroy()
-        )
-
-        label.pack(fill="x")
-        cb.pack(fill="x", padx=15, pady=15)
-        checkbtn.pack(fill="x")
-        okbtn.pack(padx=30)
-        cancelbtn.pack(padx=40)
-        label2.pack(fill="x")
-
-        get_config.GetConfig(askwin, "config")
-        get_config.GetConfig(label, "config")
-        get_config.GetConfig(label2, "config")
-        get_config.GetConfig(cb, "config")
-
-    def __converter(self, time: float):
-        switch = {
-            0.5: MIN_05,
-            1: MIN_1,
-            2: MIN_1 * 2,
-            5: MIN_1 * 5,
-            10: MIN_1 * 10,
-            15: MIN_15,
-            20: MIN_20,
-            30: MIN_30,
-        }
-        return switch.get(time)
-
-    def __okbtn_clicked(self, selected_time, up_st, event=None):
-        tm = selected_time.get()
-        st = up_st.get()
-        timetouse = self.__converter(float(tm))
-
-        # This depends on the __converter function.
-        # No problem if you don't rewrite it.
-        if not isinstance(timetouse, int):
-            log.throwerr(self._("Wrong autosave time specified."), noexp=True)
+        if self.shown == True:
+            self.fm.Show()
             return
+
+        fm = wx.Frame(None, title="Autosave config")
+        timer = wx.Timer(fm)
+        panel = wx.Panel(fm)
+        box = wx.BoxSizer(wx.VERTICAL)
+        cmb = wx.ComboBox(
+            panel, choices=self.cmbitems, style=wx.CB_READONLY | wx.CB_DROPDOWN
+        )
+        check_btn = wx.CheckBox(panel, label="Save this value")
+        btn = wx.Button(panel, label="Start")
+        btn.Bind(wx.EVT_BUTTON, getvalue)
+
+        box.Add(cmb, 0, wx.ALIGN_CENTER)
+        box.Add(check_btn, 0, wx.ALIGN_CENTER)
+        box.Add(btn, 0, wx.ALIGN_CENTER)
+        panel.SetSizer(box)
+
+        for widget in [fm, panel, cmb, check_btn, btn]:
+            cfg.configure(widget)
+
+        fm.Show()
+        self.shown = True
+        self.fm = fm
+
+    def get(self, value: str):
+        if len(self.cmbitems) != len(self.timealiases):
+            raise Exception
         else:
-            self.config(timetouse)
+            seen = set()
+            for item in self.cmbitems and self.timealiases:
+                if item in seen:
+                    log.throwwarn(
+                        title="AutoSave - code bug",
+                        msg="Found duplicate item in AutoSave.cmbitems and/or AutoSave.timealiases. Please fix it. AutoSave will stop working now.",
+                    )
+                    self.usable = False
+                    return
+                else:
+                    seen.add(item)
+            return self.timealiases[self.cmbitems.index(value)]
 
-        if st is True:
-            get_config.GetConfig.change_config(
-                "filemgr", "autosave-time", str(self.useTime)
+    def check_state(self) -> bool:
+        if (self.forced == True) or (self.usable == "yes" or True):
+            self.usable = True
+        elif (self.usable == "no" or False) and (self.forced == False):
+            log.throwerr(
+                msg="""
+                AutoSave called when it's turned off in the configuration file and the developer not forced to turn it on temporary.
+                Please tell the devloper to set AutoSave.forced to True to use the auto-saving document feature.
+                """
             )
-        self.askwin.destroy()
-        self.start()
-
-    def config(self, useTime, event=None):
-        print("Trying to use autosave time: ", useTime)
-        self.useTime = float(useTime)
-        self._do_check()
+            self.usable = False
+        return self.usable
 
     def start(self):
-        result = msb.askquestion(message="Do you want to start autosave loop now?")
-        if result != "yes":
-            return
+        if self.check_state() == True:
+            self.savefn()
         else:
-            try:
-                self.parent.after(
-                    int(self.useTime * 1000),  # Tk().after() uses miliseconds
-                    lambda: self.savecommand(),
-                )
-            except:
-                return
+            return
+
+    def saveconfig(self, value: str) -> bool:
+        newvalue = str(self.get(value))
+        return cfg.set("extensions.autosave", "time", newvalue)
