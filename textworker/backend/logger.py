@@ -21,7 +21,7 @@ class Logger:
     format_time = "%H:%M:%S"  # Hour min sec
     log_file = logfile_
 
-    def __init__(self, fmt_date=None, fmt_time=None, logfile:str|None=None):
+    def __init__(self, fmt_date=None, fmt_time=None, logfile: str | None = None):
         """Logging unit of texteditor.
         :param fmt_date=None : Date format
         :param fmt_time=None : Time format
@@ -46,10 +46,7 @@ class Logger:
                 open(self.log_file, mode="w")
             except:
                 self.usable = False
-                self.throwerr(
-                    "Error occured: (open log file)",
-                    showdialog=True
-                )
+                self.throwerr("Error occured: (open log file)", showdialog=True)
             else:
                 self.usable = True
         else:

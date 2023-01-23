@@ -33,8 +33,7 @@ else:
 # Version
 __version__ = version
 
-cfg = get_config.GetConfig(get_config.cfg, get_config.file)
-cfg.default_section = 'interface'
+cfg = get_config.GetConfig(get_config.cfg, get_config.file, default_section="interface")
 
 # Start
 def _file_not_found(filename):

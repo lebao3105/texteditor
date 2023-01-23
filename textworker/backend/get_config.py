@@ -65,7 +65,7 @@ class GetConfig(configparser.ConfigParser):
     setfontfn = {}
     setcolorfn = {}
 
-    def __init__(self, config: dict, file: str, *args):
+    def __init__(self, config: dict, file: str, **kwds):
         """Customized configuration parser.
         :param config : Default configurations, used to reset the file or do some comparisions
         :param file : Configuration file
@@ -86,10 +86,10 @@ class GetConfig(configparser.ConfigParser):
 
         Both of them will be used in configure function.
         """
-        super().__init__(*args)
-        
+        super().__init__(**kwds)
+
         self.cfg = {}
-        
+
         for key in config:
             self[key] = config[key]
             self.cfg[key] = config[key]
@@ -176,7 +176,6 @@ class GetConfig(configparser.ConfigParser):
         return wx.Font(size_, wx.FONTFAMILY_DEFAULT, style_, weight_, 0, family)
 
     def _get_color(self):
-
         def _get_sys_mode():
             return darkdetect.theme().lower()
 

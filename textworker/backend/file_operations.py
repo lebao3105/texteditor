@@ -48,7 +48,7 @@ class FileOperations:
         try:
             f = open(filename, "r")
         except:
-            logger.Logger("texteditor.backend.file_operations").throwerr(
+            logger.Logger().throwerr(
                 _("Error occured"),
                 msg=_("Error occured while opening file %s") % filename,
                 showdialog=True,
@@ -57,7 +57,7 @@ class FileOperations:
         else:
             del f
             self.textw.LoadFile(str(filename))
-            
+
             if self.statusbar is not None:
                 self.statusbar.SetStatusText(_("Opening file %s") % filename)
                 time.sleep(1)
