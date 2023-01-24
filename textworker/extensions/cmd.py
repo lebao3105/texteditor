@@ -39,10 +39,13 @@ class CommandWidget(TextWidget):
                 line = self.GetLine(self.GetLineCount() - 1)
                 self.shell.getcommand(line)
         elif evt.GetKeyCode() == wx.WXK_LEFT:
-            if self.GetCurrentLine() == self.GetLineCount() - 1:
+            if self.GetCurrentLine() == self.GetLineCount():
                 currpos = self.PositionToXY(self.GetInsertionPoint())
-                if currpos != (len(self.shell.prompt), self.GetCurrentLine()):
+                if currpos != (self.GetCurrentLine(), len(self.shell.prompt)):
                     evt.Skip()
+        elif evt.GetKeyCode() == wx.WXK_UP or wx.WXK_DOWN:
+            if self.GetCurrentLine() != self.GetLineCount() - 1:
+                evt.Skip()
         else:
             evt.Skip()
 
@@ -107,7 +110,7 @@ class Shell:
     After you run a command, scroll down and place the mouse cursor to the next of the last prompt.
     """
 
-    prompt = "{} Shell> ".format(os.getlogin())
+    prompt = "({}) Shell> ".format(os.getlogin())
     intro = "Enter a command to start." "\nThis cant send input to any program.\n"
     aliases: dict = {}
     exitcode: int = 0

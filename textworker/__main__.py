@@ -1,4 +1,4 @@
-import textworker
+from textworker import main
 
 if __name__ == "__main__":
-    textworker.start_app()
+    main.start_app()
