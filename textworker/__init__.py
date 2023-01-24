@@ -6,7 +6,7 @@ import sys
 import wx
 
 from . import mainwindow
-from .backend import is_development_build, get_config, __version__ as version
+from .backend import is_development_build, get_config, __version__ as version, logger
 
 currdir = pathlib.Path(__file__).parent
 
@@ -49,7 +49,10 @@ def start_app():
     """Start the application."""
     argv = sys.argv
     argc = len(argv) - 1
-    root = mainwindow.MyApp(0)
+
+    root = wx.App(0, filename=logger.logfile_)
+    fm = mainwindow.MainFrame(None)
+    root.SetTopWindow(fm)
 
     if argc > 0:
         textw = root.frame.notebook.text_editor
@@ -71,7 +74,7 @@ def start_app():
                     root.frame.notebook.AddTab()
                     textw.fileops.openfile(argv[i])
                     del f
-
+    fm.Show()
     root.MainLoop()
 
 

@@ -7,6 +7,8 @@ import wx.stc
 
 from textworker.tabs import Tabber
 from textworker.backend import logger, constants, get_config
+from textworker.extensions import cmd
+
 
 log = logger.Logger()
 
@@ -30,7 +32,6 @@ class MainFrame(wx.Frame):
         self.PlaceMenu()
         self.Binder()
         self.Layout()
-
 
     def _StatusBar(self):
         self.statusbar = self.CreateStatusBar(2)
@@ -71,6 +72,7 @@ class MainFrame(wx.Frame):
         self.menuitem["autosv"] = addeditcmd(
             wx.ID_ANY, _("AutoSave"), _("Configure auto-saving file function")
         )
+        self.menuitem["cmd"] = addeditcmd(wx.ID_ANY, _("Command prompt"))
         self.menubar.Append(editmenu, _("&Edit"))
 
         ## Views
@@ -118,9 +120,8 @@ class MainFrame(wx.Frame):
             self.menuitem["copy"]: lambda evt: self.notebook.text_editor.Copy(),
             self.menuitem["paste"]: lambda evt: self.notebook.text_editor.Paste(),
             self.menuitem["cut"]: lambda evt: self.notebook.text_editor.Cut(),
-            self.menuitem[
-                "autosv"
-            ]: lambda evt: self.notebook.text_editor.autosv.askwind(),
+            self.menuitem["autosv"]: lambda evt: self.notebook.autosv.askwind(),
+            self.menuitem["cmd"]: lambda evt: self.OpenCmd(),
             self.menuitem["zoomin"]: lambda evt: self.notebook.text_editor.ZoomIn(),
             self.menuitem["zoomout"]: lambda evt: self.notebook.text_editor.ZoomOut(),
             self.menuitem["selall"]: lambda evt: self.notebook.text_editor.SelectAll(),
@@ -136,12 +137,12 @@ class MainFrame(wx.Frame):
             self.Bind(wx.EVT_MENU, self.menucommand[item], item)
 
     def OnClose(self, evt):
-        if hasattr(self.notebook.text_editor.autosv, "fm"):
+        if hasattr(self.notebook.autosv, "fm"):
             try:
-                self.notebook.text_editor.autosv.fm.Close()
+                self.notebook.autosv.fm.Close()
             except RuntimeError:
                 pass
-            self.notebook.text_editor.autosv.shown = False
+            self.notebook.autosv.shown = False
         evt.Skip()
 
     def OpenDir(self):
@@ -156,12 +157,22 @@ class MainFrame(wx.Frame):
 
         newfm = wx.Frame(self, title=selected_dir)
         dirs = wx.GenericDirCtrl(newfm, -1, selected_dir)
+        dirs.ShowHidden(False)
         dirs.Bind(
             wx.EVT_DIRCTRL_FILEACTIVATED,
             lambda evt: self.notebook.text_editor.fileops.openfile(dirs.GetFilePath()),
         )
         newfm.Layout()
         newfm.Show()
+
+    def OpenCmd(self):
+        wind = wx.Frame(self)
+        wind.SetTitle("Command Window")
+        wind.SetSize((450, 510))
+        wind.CreateStatusBar(2)
+        notebook = cmd.Tabb(wind)
+        notebook.setstatus = True
+        wind.Show()
 
     def ShowCfgs(self):
         if self.notebook.text_editor.GetValue() != "":
@@ -217,11 +228,3 @@ class MainFrame(wx.Frame):
         aboutinf.SetLicence(license)
         aboutinf.AddDeveloper("Le Bao Nguyen")
         return wx.adv.AboutBox(aboutinf)
-
-
-class MyApp(wx.App):
-    def OnInit(self):
-        self.frame = MainFrame(None)
-        self.SetTopWindow(self.frame)
-        self.frame.Show()
-        return True
