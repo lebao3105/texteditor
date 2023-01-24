@@ -24,9 +24,9 @@ class Tabber(wx.Notebook):
         self.text_editor.fileops = file_operations.FileOperations(
             self.text_editor, self, self.AddTab, self.SetTitle, self.Parent
         )
-        self.text_editor.autosv = autosave.AutoSave()
-        self.text_editor.autosv.parent = self.Parent
-        self.text_editor.autosv.savefn = lambda: self.text_editor.fileops.savefile_()
+        self.autosv = autosave.AutoSave()
+        self.autosv.parent = self.Parent
+        self.autosv.savefn = lambda: self.text_editor.fileops.savefile_()
 
         if tabname is None:
             _tabname = _("New file")
@@ -53,7 +53,7 @@ class Tabber(wx.Notebook):
         tabname = self.GetPageText(self.GetSelection())
         if self.setstatus is True:
             self.Parent.SetStatusText(tabname)
-        self.SetTitle(_("Texteditor - %s") % tabname)
+        self.SetTitle("Textworker - %s" % tabname)
 
     def CloneTab(self, evt=None):
         tabname = self.GetPageText(self.GetSelection())
@@ -124,9 +124,9 @@ class TextWidget(wx.stc.StyledTextCtrl):
 
         def OpenMenu(self, event):
             pt = event.GetPosition()
-            self.RightClickMenu(event, pt, True)
+            self.RightClickMenu(pt)
 
-        def RightClickMenu(self, event, pt, enable):
+        def RightClickMenu(self, pt):
             menu = wx.Menu()
             cut = menu.Append(wx.ID_CUT)
             copy = menu.Append(wx.ID_COPY)
@@ -137,8 +137,6 @@ class TextWidget(wx.stc.StyledTextCtrl):
             redo = menu.Append(wx.ID_REDO)
             delete = menu.Append(wx.ID_DELETE)
             selectall = menu.Append(wx.ID_SELECTALL)
-            cut.Enable(False)
-            copy.Enable(False)
 
             commands = {
                 cut: lambda evt: self.Cut(),
@@ -150,25 +148,17 @@ class TextWidget(wx.stc.StyledTextCtrl):
                 selectall: lambda evt: self.SelectAll(),
             }
 
-            if enable:
-                paste.Enable(True)
-            else:
-                paste.Enable(False)
+            cut.Enable(self.CanCut())
+            copy.Enable(self.CanCopy())
+            paste.Enable(self.CanPaste())
+            undo.Enable(self.CanUndo())
+            redo.Enable(self.CanRedo())
 
-            if self.GetValue() != "":
-                for item in [cut, copy, delete, selectall]:
+            for item in [delete, selectall]:
+                if self.GetValue() != "":
                     item.Enable(True)
-            else:
-                for item in [cut, copy, delete, selectall]:
+                else:
                     item.Enable(False)
-                    
-            if self.CanUndo():
-                undo.Enable(True)
-            if self.CanRedo():
-                redo.Enable(True)
-
-            delete.Enable(False)
-            selectall.Enable(False)
 
             for item in commands:
                 self.Bind(wx.EVT_MENU, commands[item], item)
@@ -181,5 +171,5 @@ class TextWidget(wx.stc.StyledTextCtrl):
         def OpenMenu(self, event):
             raise NotImplementedError
 
-        def RightClickMenu(self, event, pt, enable):
+        def RightClickMenu(self, pt):
             raise NotImplementedError

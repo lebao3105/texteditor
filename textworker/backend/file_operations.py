@@ -71,7 +71,7 @@ class FileOperations:
                 self.settitle()
 
     # Dialogs
-    def savefile_(self, event=None):
+    def savefile_dlg(self, event=None):
         """Checks if the file is a new file or not, then make the choice."""
         tabname = self.tabname()
         if tabname not in self.files:
@@ -107,7 +107,7 @@ Load anyway? (to a new tab)"""
         else:
             return False
 
-    def openfile_(self, event=None):
+    def openfile_dlg(self, event=None):
         """Asks the user to open a file."""
         filedlg = wx.FileDialog(
             self.textw,
