@@ -10,6 +10,12 @@ from textworker.backend import logger, constants, get_config
 from textworker.extensions import cmd
 
 
+# https://stackoverflow.com/a/27872625
+if platform.system() == "Windows":
+    import ctypes
+    myappid = u'me.lebao3105.texteditor' # arbitrary string
+    ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(myappid)
+
 log = logger.Logger()
 
 
@@ -168,7 +174,7 @@ class MainFrame(wx.Frame):
     def OpenCmd(self):
         wind = wx.Frame(self)
         wind.SetTitle("Command Window")
-        wind.SetSize((450, 510))
+        wind.SetSize((600, 400))
         wind.CreateStatusBar(2)
         notebook = cmd.Tabb(wind)
         notebook.setstatus = True
@@ -195,7 +201,7 @@ class MainFrame(wx.Frame):
         pyver = platform.python_version()
         ostype = platform.system() if platform.system() != "" or None else _("Unknown")
         msg = _(
-            f"""\
+        f"""\
         A simple, cross-platform text editor.
         Branch: {constants.STATE}
         wxPython version: {wxver}
@@ -203,20 +209,21 @@ class MainFrame(wx.Frame):
         OS type: {ostype}
         """
         )
-        license = """
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
+        license = \
+        """
+        This program is free software: you can redistribute it and/or modify
+        it under the terms of the GNU General Public License as published by
+        the Free Software Foundation, either version 3 of the License, or
+        (at your option) any later version.
 
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
+        This program is distributed in the hope that it will be useful,
+        but WITHOUT ANY WARRANTY; without even the implied warranty of
+        MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+        GNU General Public License for more details.
 
-    You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <https://www.gnu.org/licenses/>.
-    """
+        You should have received a copy of the GNU General Public License   
+        along with this program.  If not, see <https://www.gnu.org/licenses/>.
+        """
 
         aboutinf = wx.adv.AboutDialogInfo()
         aboutinf.SetName("TextWorker")
