@@ -44,7 +44,7 @@ class Tabber(wx.Notebook):
         )
         textworker.cfg.configure(textw)
 
-        self.SetTitle(_("Texteditor - %s") % _tabname)
+        self.SetTitle("Textworker - %s" % _tabname)
 
     def SetTitle(self, title=""):
         return self.Parent.SetTitle(title)
@@ -73,7 +73,7 @@ class Tabber(wx.Notebook):
             (wx.ID_ANY, _("New Tab\tCtrl-N"), lambda evt: self.AddTab()),
             (
                 wx.ID_ANY,
-                _("Close the current open tab"),
+                _("Close the current (open) tab"),
                 lambda evt: self.CloseTab(),
             ),
             (wx.ID_ANY, _("Clone this tab"), lambda evt: self.CloneTab()),
@@ -94,11 +94,9 @@ class TextWidget(wx.stc.StyledTextCtrl):
             self.Bind(wx.EVT_RIGHT_DOWN, self.OpenMenu)
 
         if line_number == True:
-            self.SetMarginType(1, wx.stc.STC_MARGIN_NUMBER)
-            self.SetMarginMask(1, 0)
-            self.SetMarginWidth(1, 20)
+            self.EnableLineCount(True)
         else:
-            self.SetMarginWidth(1, 0)
+            self.EnableLineCount(False)
 
         cfg = get_config.GetConfig(get_config.cfg, get_config.file)
         bg, fg = cfg._get_color()
@@ -108,6 +106,14 @@ class TextWidget(wx.stc.StyledTextCtrl):
         self.StyleSetSpec(wx.stc.STC_STYLE_LINENUMBER, "fore:{},back:{}".format(fg, bg))
 
         self.Bind(wx.stc.EVT_STC_MODIFIED, self.OnKeyPress)
+
+    def EnableLineCount(self, set:bool):
+        if set == True:
+            self.SetMarginType(1, wx.stc.STC_MARGIN_NUMBER)
+            self.SetMarginMask(1, 0)
+            self.SetMarginWidth(1, 20)
+        else:
+            self.SetMarginWidth(1, 0)
 
     def OnKeyPress(self, evt):
         if evt:
