@@ -99,7 +99,11 @@ def help():
     print("(You dont need all of them, depend on your need.)")
     print("Dependencies:")
     print("* wxPython : GUI. Visit extras.wxpython.org for wheels (install its dependencies yourself)")
-    print("*nothing more*")
+    print("* configparser")
+    print("* darkdetect")
+    print("* attrdict3 (install before you install wxPython)")
+    print("* pillow")
+    print("* packaging")
     exit()
 
 
