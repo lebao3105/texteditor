@@ -180,8 +180,8 @@ class GetConfig(configparser.ConfigParser):
             return darkdetect.theme().lower()
 
         # Get values
-        color = self.get("interface", "color")
-        fontcolor = self.get("interface", "textcolor")
+        color = self.getkey("interface", "color")
+        fontcolor = self.getkey("interface", "textcolor")
         autocolor = self.getkey("interface", "autocolor")
 
         # Interface color

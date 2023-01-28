@@ -13,3 +13,5 @@
         * (Get_config) autocolor (completed)
     - textworker.extensions
         * Move autosave & cmd to use wxPython.
+    - File content manage:
+        * Implement file state check

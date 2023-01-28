@@ -3,6 +3,7 @@ import locale
 import pathlib
 
 from . import main
+from . import backend, extensions
 from .backend import is_development_build, get_config, __version__ as version, logger
 
 currdir = pathlib.Path(__file__).parent
@@ -14,11 +15,15 @@ except ImportError:
     LOCALE_DIR = currdir / "po"
     ICON_DIR = currdir / "icons"
 
+
 locale.setlocale(locale.LC_ALL, None)
 gettext.bindtextdomain("me.lebao3105.texteditor", LOCALE_DIR)
 gettext.textdomain("me.lebao3105.texteditor")
 gettext.install("me.lebao3105.texteditor")
+
 _ = gettext.gettext
+backend._ = _
+extensions._ = _
 
 # Icon
 if is_development_build() == True:

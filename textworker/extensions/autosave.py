@@ -54,15 +54,15 @@ class AutoSave:
             self.fm.Show()
             return
 
-        fm = wx.Frame(None, title="Autosave config")
+        fm = wx.Frame(None, title=_("Autosave config"))
         timer = wx.Timer(fm)
         panel = wx.Panel(fm)
         box = wx.BoxSizer(wx.VERTICAL)
         cmb = wx.ComboBox(
             panel, choices=self.cmbitems, style=wx.CB_READONLY | wx.CB_DROPDOWN
         )
-        check_btn = wx.CheckBox(panel, label="Save this value")
-        btn = wx.Button(panel, label="Start")
+        check_btn = wx.CheckBox(panel, label=_("Save this value"))
+        btn = wx.Button(panel, label=_("Start"))
         btn.Bind(wx.EVT_BUTTON, getvalue)
 
         box.Add(cmb, 0, wx.ALIGN_CENTER)
@@ -99,10 +99,10 @@ class AutoSave:
             self.usable = True
         elif (self.usable == "no" or False) and (self.forced == False):
             log.throwerr(
-                msg="""
+                msg=_("""
                 AutoSave called when it's turned off in the configuration file and the developer not forced to turn it on temporary.
                 Please tell the devloper to set AutoSave.forced to True to use the auto-saving document feature.
-                """
+                """)
             )
             self.usable = False
         return self.usable

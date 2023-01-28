@@ -123,6 +123,6 @@ Load anyway? (to a new tab)"""
                 if filename in x:
                     if self.asktoopen():
                         self.newtabfn()
-            if self.textw.GetValue() != "":
+            if not self.textw.IsEmpty():
                 self.newtabfn()
             self.openfile(filename)
