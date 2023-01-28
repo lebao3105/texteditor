@@ -27,7 +27,7 @@ else:
 # Default configs
 cfg = {}
 
-cfg["interface"] = {"color": "light", "autocolor": "no", "textcolor": "default"}
+cfg["interface"] = {"color": "light", "autocolor": "yes", "textcolor": "default"}
 
 cfg["interface.font"] = {
     "style": "normal",
@@ -69,7 +69,7 @@ class GetConfig(configparser.ConfigParser):
         """Customized configuration parser.
         :param config : Default configurations, used to reset the file or do some comparisions
         :param file : Configuration file
-        :param *args : To pass to configparser.ConfigParser (base class)
+        :param **kwds : To pass to configparser.ConfigParser (base class)
 
         When initialized, GetConfig loads all default configs (from config param) and store it in
         a dictionary for further actions (backup/restore file).
