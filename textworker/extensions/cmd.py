@@ -1,6 +1,7 @@
 import os
 import subprocess
 import wx
+import wx.stc
 
 from ..tabs import *
 from ..backend import get_config, logger
@@ -26,12 +27,20 @@ class CommandWidget(TextWidget):
         menu = wx.Menu()
         copy = menu.Append(wx.ID_COPY)
         paste = menu.Append(wx.ID_PASTE)
+        readonly = menu.AppendCheckItem(wx.ID_ANY, _("Read only"))
 
         copy.Enable(self.CanCopy())
         paste.Enable(self.CanPaste())
+        readonly.Enable(self.IsEditable())
+
+        menu.Check(readonly.GetId(), False)
 
         self.Bind(wx.EVT_MENU, self.Copy, copy)
         self.Bind(wx.EVT_MENU, self.Paste, paste)
+        self.Bind(wx.EVT_MENU, self.SetEditable(not self.IsEditable()), readonly)
+
+        self.PopupMenu(menu)
+        menu.Destroy()
 
     def OnKeyPress2(self, evt):
         if evt.GetKeyCode() == wx.WXK_RETURN:
@@ -46,8 +55,7 @@ class CommandWidget(TextWidget):
         elif evt.GetKeyCode() == wx.WXK_UP or wx.WXK_DOWN:
             if self.GetCurrentLine() != self.GetLineCount() - 1:
                 evt.Skip()
-        else:
-            evt.Skip()
+        evt.Skip()
 
 
 class Tabb(Tabber):
@@ -110,7 +118,7 @@ class Shell:
     After you run a command, scroll down and place the mouse cursor to the next of the last prompt.
     """
 
-    prompt = "({}) Shell> ".format(os.getlogin())
+    prompt = "(User {}) Shell> ".format(os.getlogin())
     intro = "Enter a command to start." "\nThis cant send input to any program.\n"
     aliases: dict = {}
     exitcode: int = 0
@@ -155,8 +163,8 @@ class Shell:
             if self.root != None:
                 self.root.Close()
             else:
-                title = "Missing root variable for CommandWindow"
-                msg = "Please close the command window by any other way."
+                title = _("Missing root variable for CommandWindow")
+                msg = _("Please close the command window by any other way.")
                 logger.Logger().throwerr(title=title, msg=msg, showdialog=True)
 
         elif cmd.startswith("alias "):
@@ -195,7 +203,7 @@ class Shell:
     def finalize_run(self):
         if hasattr(self, "statusobj") and self.statusobj != None:
             self.statusobj.SetStatusText(
-                "Command exited with code {}".format(self.exitcode), 1
+                _("Command exited with code {}".format(self.exitcode)), 1
             )
 
         self.showprompt()
