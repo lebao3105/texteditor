@@ -1,6 +1,10 @@
-1. Making .exe file
+## Notes
+* This is used for maintaining the application.
+* Set up the translation first (should do)
+
+1. Make portable builds for Windows using pyinstaller
 Install pyinstaller, then run (thanks Auto Py to exe!):
-$ pyinstaller --noconfirm --onedir --windowed --icon "<project path>/textworker/icons/textworker.Devel.png" --name "Textworker" --clean --add-data "<project path>/textworker/icons/textworker.Devel.png;." --add-data "<project path>/textworker/icons/textworker.png;."  "<project path>/textworker/__main__.py"
+$ pyinstaller --noconfirm --onedir --windowed --icon "<project path>/textworker/icons/textworker.Devel.png" --name "Textworker" --clean --add-data "<project path>/textworker/icons/textworker.Devel.png;." --add-data "<project path>/textworker/icons/textworker.png;."  --add-data "<project path>/po;po/" "<project path>/textworker/__main__.py"
 
 2. Using meson (and ninja)
 > The project will be installed to C:\bin and C:\share by the default on Windows.
@@ -15,5 +19,5 @@ $ ninja -C build install
 to runtextd.py (or something else you want) - save to somewhere safe.
 Try to run it.
 
-3. Using build script (builder.py)
+3. Using the build script (builder.py)
 Use help flag to see the usage of the script. Note that this is not completed yet.

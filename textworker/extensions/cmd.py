@@ -13,7 +13,7 @@ class CommandWidget(TextWidget):
     """
     A terminal widget for wxPython.
     But it doesn't embed any shell to it like wx.py.shell, this is just a text widget with a prompt
-    that the user can enter command on it and get the result.
+    that the user can enter command in it and get the result.
     """
 
     def __init__(self, id, **kwds):
