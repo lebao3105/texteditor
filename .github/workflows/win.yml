@@ -16,8 +16,6 @@ jobs:
       # Checks-out the repository and setup MS Visual C++
       - uses: actions/checkout@v3
       - uses: ilammy/msvc-dev-cmd@v1
-        with:
-          toolset: '14.XX'
       
       - name: Setup Python
         uses: actions/setup-python@v4
