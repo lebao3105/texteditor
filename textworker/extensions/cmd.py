@@ -1,5 +1,6 @@
 import os
 import subprocess
+import threading
 import wx
 import wx.stc
 
@@ -31,7 +32,6 @@ class CommandWidget(TextWidget):
 
         copy.Enable(self.CanCopy())
         paste.Enable(self.CanPaste())
-        readonly.Enable(self.IsEditable())
 
         menu.Check(readonly.GetId(), False)
 
@@ -39,7 +39,7 @@ class CommandWidget(TextWidget):
         self.Bind(wx.EVT_MENU, self.Paste, paste)
         self.Bind(wx.EVT_MENU, self.SetEditable(not self.IsEditable()), readonly)
 
-        self.PopupMenu(menu)
+        self.PopupMenu(menu, pt)
         menu.Destroy()
 
     def OnKeyPress2(self, evt):
@@ -47,14 +47,14 @@ class CommandWidget(TextWidget):
             if self.GetCurrentLine() == self.GetLineCount() - 1:
                 line = self.GetLine(self.GetLineCount() - 1)
                 self.shell.getcommand(line)
-        elif evt.GetKeyCode() == wx.WXK_LEFT:
-            if self.GetCurrentLine() == self.GetLineCount():
-                currpos = self.PositionToXY(self.GetInsertionPoint())
-                if currpos != (self.GetCurrentLine(), len(self.shell.prompt)):
-                    evt.Skip()
         elif evt.GetKeyCode() == wx.WXK_UP or wx.WXK_DOWN:
             if self.GetCurrentLine() != self.GetLineCount() - 1:
                 evt.Skip()
+        """elif evt.GetKeyCode() == wx.WXK_LEFT:
+            if self.GetCurrentLine() == self.GetLineCount():
+                currpos = self.PositionToXY(self.GetInsertionPoint())
+                if currpos != (self.GetCurrentLine(), len(self.shell.prompt)):
+                    evt.Skip()"""
         evt.Skip()
 
 
@@ -67,7 +67,7 @@ class Tabb(Tabber):
         Create a new Terminal tab.
         Will use "Terminal" for the tab label if tabname is not specified.
         """
-        textw = CommandWidget(self)
+        textw = CommandWidget(self, style=wx.TE_MULTILINE)
         textw.shell.statusobj = self.Parent
         textw.shell.root = self.Parent
         self.Parent.SetStatusText(os.getcwd())
@@ -81,6 +81,10 @@ class Tabb(Tabber):
         else:
             newtabname = tabname
 
+        timer = wx.Timer(self)
+        timer.Start()
+        self.Bind(wx.EVT_TIMER, lambda evt: self.SetPageText(self.GetSelection(), os.getcwd()), timer)
+        
         self.AddPage(textw, newtabname, select=True)
         self.text_editor = textw
 
@@ -118,7 +122,7 @@ class Shell:
     After you run a command, scroll down and place the mouse cursor to the next of the last prompt.
     """
 
-    prompt = "(User {}) Shell> ".format(os.getlogin())
+    prompt = "(User: {}) Shell> ".format(os.getlogin())
     intro = "Enter a command to start." "\nThis cant send input to any program.\n"
     aliases: dict = {}
     exitcode: int = 0
@@ -135,12 +139,13 @@ class Shell:
 
     def showprompt(self, intro=False):
         if intro == True:
-            self.parent.AppendText(self.intro)
-        self.parent.AppendText("\n")
-        self.parent.AppendText(self.prompt)
+            self.parent.AddText(self.intro)
+        self.parent.AddText("\n")
+        self.parent.AddText(self.prompt)
 
     def getcommand(self, input: str):
         cmd = input.removeprefix(self.prompt)
+
         if "&&" in cmd:
             for i in range(len(cmd.split("&&"))):
                 self.getcommand(cmd.split("&&")[i])
@@ -168,7 +173,7 @@ class Shell:
                 logger.Logger().throwerr(title=title, msg=msg, showdialog=True)
 
         elif cmd.startswith("alias "):
-            args = cmd.removeprefix("alias ").split(" ")
+            args = cmd.removeprefix("alias ").split()
             self.aliases[args[1]] = args[2]
             self.exitcode = 0
 
@@ -176,29 +181,33 @@ class Shell:
             self.runcommand("alias {}".format(cmd.removeprefix("alias --system ")))
 
         elif cmd.startswith("runterm"):
-            self.runcommand(self.runterm)
+            threading.Thread(target=lambda: self.runcommand(self.runterm), daemon=True).start()
 
         elif cmd.startswith("help"):
-            self.parent.AppendText(self.__doc__)
+            self.parent.AddText(self.__doc__)
             self.exitcode = 0
 
+        # Issue: https://github.com/lebao3105/texteditor/issues/3
+        # Solution from the main branch...
         else:
-            self.runcommand(cmd)
-
-        self.finalize_run()
+            threading.Thread(target=lambda: self.runcommand(cmd), daemon=True).start()
 
     def runcommand(self, input: str):
         if input in self.aliases:
             input = self.aliases[input]
+        
         result = subprocess.Popen(
-            input, stderr=subprocess.PIPE, stdout=subprocess.PIPE, shell=True
+            input, stderr=subprocess.PIPE, stdout=subprocess.PIPE, shell=True,
         )
-        out, err = result.communicate()
-        self.parent.AppendText("\n")
-        self.parent.AppendText(out)
-        self.parent.AppendText(err)
+        self.parent.AddText("\n")
+
+        for item in result.communicate():
+            # https://stackoverflow.com/questions/606191/
+            self.parent.AddText(item.decode('utf-8'))
+
+        result.wait()
         self.exitcode = result.returncode
-        # self.SelectNone() # This will break SetInsertionPoint
+        self.finalize_run()
 
     def finalize_run(self):
         if hasattr(self, "statusobj") and self.statusobj != None:
@@ -207,6 +216,6 @@ class Shell:
             )
 
         self.showprompt()
-        self.parent.SetInsertionPoint(
-            self.parent.XYToPosition(len(self.prompt), self.parent.GetLineCount())
-        )
+        # self.parent.SetInsertionPoint(
+        #     self.parent.XYToPosition(len(self.prompt), self.parent.GetLineCount())
+        # )
