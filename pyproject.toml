@@ -21,6 +21,7 @@ dependencies = [
     "configparser",
     "darkdetect",
     "packaging",
+    "pillow",
     "wxpython",
 ]
 
