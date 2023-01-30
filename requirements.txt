@@ -1,4 +1,3 @@
-attrdict3 # For wxPython
 configparser
 darkdetect
 pillow

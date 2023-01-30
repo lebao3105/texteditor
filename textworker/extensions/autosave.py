@@ -35,27 +35,36 @@ class AutoSave:
         MIN_30,
     ]
 
-    savefn = object
-    usable = cfg.getkey("extensions.autosave", "enable")
-    forced = False
-    parent = object
+    enabled = cfg.getkey("extensions.autosave", "enable")
     shown = False
+
+    def __init__(self, savefn, parent):
+        self.savefn = savefn
+        self.parent = parent
+
+        self.timer = wx.Timer(parent)
+        if self.enabled in cfg.yes_value or [True]:
+            self.timer.Start(self.get(cfg.getkey("extensions.autosave", "time")) * 1000)
+            parent.Bind(wx.EVT_TIMER, lambda evt: self.savefn(), self.timer)
+            #savefn()
 
     def askwind(self):
         def getvalue(evt):
-            nonlocal check_btn, cmb, timer
+            nonlocal check_btn, cmb
             if check_btn.GetValue() == True:
+                if self.enabled in cfg.no_value or [False]:
+                    cfg.set("extensions.autosave", "enable", "yes")
                 self.saveconfig(cmb.GetValue())
-            self.start()
-            timer.Start(self.get(cmb.GetValue()) * 1000)
-            self.parent.Bind(wx.EVT_TIMER, lambda evt: self.savefn(), timer)
+                
+            self.savefn()
+            self.timer.Start(self.get(cmb.GetValue()) * 1000)
+            self.parent.Bind(wx.EVT_TIMER, lambda evt: self.savefn(), self.timer)
 
         if self.shown == True:
             self.fm.Show()
             return
 
         fm = wx.Frame(None, title=_("Autosave config"))
-        timer = wx.Timer(fm)
         panel = wx.Panel(fm)
         box = wx.BoxSizer(wx.VERTICAL)
         cmb = wx.ComboBox(
@@ -81,37 +90,10 @@ class AutoSave:
         if len(self.cmbitems) != len(self.timealiases):
             raise Exception
         else:
-            seen = set()
-            for item in self.cmbitems and self.timealiases:
-                if item in seen:
-                    log.throwwarn(
-                        title="AutoSave - code bug",
-                        msg="Found duplicate item in AutoSave.cmbitems and/or AutoSave.timealiases. Please fix it. AutoSave will stop working now.",
-                    )
-                    self.usable = False
-                    return
-                else:
-                    seen.add(item)
-            return self.timealiases[self.cmbitems.index(value)]
-
-    def check_state(self) -> bool:
-        if (self.forced == True) or (self.usable == "yes" or True):
-            self.usable = True
-        elif (self.usable == "no" or False) and (self.forced == False):
-            log.throwerr(
-                msg=_("""
-                AutoSave called when it's turned off in the configuration file and the developer not forced to turn it on temporary.
-                Please tell the devloper to set AutoSave.forced to True to use the auto-saving document feature.
-                """)
-            )
-            self.usable = False
-        return self.usable
-
-    def start(self):
-        if self.check_state() == True:
-            self.savefn()
-        else:
-            return
+            try:
+                return self.timealiases[self.cmbitems.index(value)]
+            except ValueError:
+                return self.timealiases[self.timealiases.index(int(value))]
 
     def saveconfig(self, value: str) -> bool:
         newvalue = str(self.get(value))

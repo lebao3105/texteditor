@@ -1,9 +1,9 @@
-import textworker
 import wx
 import wx.stc
 from textworker.backend import file_operations, get_config
 from .extensions import autosave
 
+cfg = get_config.GetConfig(get_config.cfg, get_config.file)
 
 class Tabber(wx.Notebook):
     def __init__(self, *args, **kwds):
@@ -24,9 +24,7 @@ class Tabber(wx.Notebook):
         self.text_editor.fileops = file_operations.FileOperations(
             self.text_editor, self, self.AddTab, self.SetTitle, self.Parent
         )
-        self.autosv = autosave.AutoSave()
-        self.autosv.parent = self.Parent
-        self.autosv.savefn = lambda: self.text_editor.fileops.savefile_()
+        self.autosv = autosave.AutoSave(lambda: self.text_editor.fileops.savefile_dlg(), self.Parent)
 
         if tabname is None:
             _tabname = _("New file")
@@ -36,13 +34,13 @@ class Tabber(wx.Notebook):
         self.AddPage(self.text_editor, _tabname, select=True)
 
         textw = self.text_editor
-        textworker.cfg.setcolorfunc(
+        cfg.setcolorfunc(
             "textw", textw, "StyleSetBackground", wx.stc.STC_STYLE_DEFAULT
         )
-        textworker.cfg.setfontcfunc(
+        cfg.setfontcfunc(
             "textw", textw, "StyleSetForeground", wx.stc.STC_STYLE_DEFAULT
         )
-        textworker.cfg.configure(textw)
+        cfg.configure(textw)
 
         self.SetTitle("Textworker - %s" % _tabname)
 
@@ -59,13 +57,13 @@ class Tabber(wx.Notebook):
         tabname = self.GetPageText(self.GetSelection())
         content = self.text_editor.GetValue()
         self.AddTab(tabname=tabname)
+        self.text_editor.ClearAll()
         self.text_editor.AppendText(content)
 
     def CloseTab(self, evt=None):
+        self.RemovePage(self.GetSelection())
         if self.GetPageCount() == 0:
-            self.Parent.Destroy()
-        else:
-            self.RemovePage(self.GetSelection())
+            self.AddTab()
 
     def OnRightClicked(self, evt):
         menu = wx.Menu()
@@ -98,7 +96,6 @@ class TextWidget(wx.stc.StyledTextCtrl):
         else:
             self.EnableLineCount(False)
 
-        cfg = get_config.GetConfig(get_config.cfg, get_config.file)
         bg, fg = cfg._get_color()
         bg = "#" + "%02x%02x%02x" % bg
         fg = "#" + "%02x%02x%02x" % fg
@@ -143,6 +140,8 @@ class TextWidget(wx.stc.StyledTextCtrl):
             redo = menu.Append(wx.ID_REDO)
             delete = menu.Append(wx.ID_DELETE)
             selectall = menu.Append(wx.ID_SELECTALL)
+            menu.AppendSeparator()
+            readonly = menu.AppendCheckItem(wx.ID_ANY, _("Read only"))
 
             commands = {
                 cut: lambda evt: self.Cut(),
@@ -152,6 +151,7 @@ class TextWidget(wx.stc.StyledTextCtrl):
                 redo: lambda evt: self.Redo(),
                 delete: lambda evt: self.DeleteBack(),
                 selectall: lambda evt: self.SelectAll(),
+                readonly: lambda evt: self.SetEditable(not self.IsEditable())
             }
 
             cut.Enable(self.CanCut())
@@ -159,6 +159,9 @@ class TextWidget(wx.stc.StyledTextCtrl):
             paste.Enable(self.CanPaste())
             undo.Enable(self.CanUndo())
             redo.Enable(self.CanRedo())
+            readonly.Enable(True)
+
+            menu.Check(readonly, False)
 
             for item in [delete, selectall]:
                 if self.GetValue() != "":

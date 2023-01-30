@@ -50,11 +50,11 @@ class CommandWidget(TextWidget):
         elif evt.GetKeyCode() == wx.WXK_UP or wx.WXK_DOWN:
             if self.GetCurrentLine() != self.GetLineCount() - 1:
                 evt.Skip()
-        """elif evt.GetKeyCode() == wx.WXK_LEFT:
-            if self.GetCurrentLine() == self.GetLineCount():
-                currpos = self.PositionToXY(self.GetInsertionPoint())
-                if currpos != (self.GetCurrentLine(), len(self.shell.prompt)):
-                    evt.Skip()"""
+        # elif evt.GetKeyCode() == wx.WXK_LEFT:
+        #     if self.GetCurrentLine() == self.GetLineCount():
+        #         currpos = self.PositionToXY(self.GetInsertionPoint())
+        #         if currpos != (self.GetCurrentLine() +- 1, len(self.shell.prompt)):
+        #             evt.Skip()
         evt.Skip()
 
 
@@ -84,7 +84,7 @@ class Tabb(Tabber):
         timer = wx.Timer(self)
         timer.Start()
         self.Bind(wx.EVT_TIMER, lambda evt: self.SetPageText(self.GetSelection(), os.getcwd()), timer)
-        
+
         self.AddPage(textw, newtabname, select=True)
         self.text_editor = textw
 
@@ -113,6 +113,7 @@ class Shell:
     Available commands:
     * alias [--system] item1=item2... : Set aliases - use --system flag to run the system's command
     * cd [directory] : Change the current directory
+    * clear (or cls) : Clear the window
     * help : Show this box
     * runterm : Start a terminal emulator, defined in textworker's configuration file
 
@@ -137,10 +138,11 @@ class Shell:
         if self.statusobj != None:
             self.statusobj.SetStatusText(os.getcwd())
 
-    def showprompt(self, intro=False):
+    def showprompt(self, intro:bool=False, godown:bool=True):
         if intro == True:
             self.parent.AddText(self.intro)
-        self.parent.AddText("\n")
+        if godown == True:
+            self.parent.AddText("\n")
         self.parent.AddText(self.prompt)
 
     def getcommand(self, input: str):
@@ -164,6 +166,14 @@ class Shell:
                     self.statusobj.SetStatusText(os.getcwd())
                 self.exitcode = 0
 
+        elif cmd.startswith("clear"):
+            self.parent.ClearAll()
+            self.showprompt(godown=False)
+        
+        elif cmd.startswith("cls"):
+            self.parent.ClearAll()
+            self.showprompt(godown=False)
+
         elif cmd.startswith("exit"):
             if self.root != None:
                 self.root.Close()
@@ -175,10 +185,10 @@ class Shell:
         elif cmd.startswith("alias "):
             args = cmd.removeprefix("alias ").split()
             self.aliases[args[1]] = args[2]
-            self.exitcode = 0
+            self.showprompt()
 
         elif cmd.startswith("alias --system "):  # Use the system alias command
-            self.runcommand("alias {}".format(cmd.removeprefix("alias --system ")))
+            threading.Thread(target=lambda: self.runcommand("alias {}".format(cmd.removeprefix("alias --system "))), daemon=True).start()
 
         elif cmd.startswith("runterm"):
             threading.Thread(target=lambda: self.runcommand(self.runterm), daemon=True).start()
@@ -186,6 +196,7 @@ class Shell:
         elif cmd.startswith("help"):
             self.parent.AddText(self.__doc__)
             self.exitcode = 0
+            self.showprompt()
 
         # Issue: https://github.com/lebao3105/texteditor/issues/3
         # Solution from the main branch...
@@ -216,6 +227,3 @@ class Shell:
             )
 
         self.showprompt()
-        # self.parent.SetInsertionPoint(
-        #     self.parent.XYToPosition(len(self.prompt), self.parent.GetLineCount())
-        # )

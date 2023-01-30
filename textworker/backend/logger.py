@@ -139,7 +139,7 @@ class LogsWindow:
         sizer = wx.BoxSizer(wx.VERTICAL)
 
         self.label1 = wx.StaticText(
-            panel, wx.ID_ANY, "No new message collected.", style=wx.TE_READONLY
+            panel, wx.ID_ANY, _("No new message collected."), style=wx.TE_READONLY
         )
         self.label1.SetFont(
             wx.Font(
@@ -154,7 +154,7 @@ class LogsWindow:
         sizer.Add(self.label1, 0, wx.ALIGN_CENTER_HORIZONTAL | wx.ALL, 52, wx.EXPAND)
 
         self.label2 = wx.StaticText(
-            panel, wx.ID_ANY, "Press F5 to refresh.", style=wx.TE_READONLY
+            panel, wx.ID_ANY, _("Press F5 to refresh."), style=wx.TE_READONLY
         )
         self.label2.SetFont(
             wx.Font(
@@ -195,8 +195,8 @@ class LogsWindow:
             self._istexthere = True
         else:
             self.text.Hide()
-            self.label1.SetLabelText("No new message collected.")
-            self.label2.SetLabelText("Press F5 to refresh.")
+            self.label1.SetLabelText(_("No new message collected."))
+            self.label2.SetLabelText(_("Press F5 to refresh."))
             self._istexthere = False
 
     def Show(self, show: bool = True):

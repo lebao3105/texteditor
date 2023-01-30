@@ -3,13 +3,12 @@ import darkdetect
 import os
 import os.path
 import platform
-import textworker.backend
 import wx
 
 from PIL import ImageColor
-from . import constants
+from . import constants, require_version, is_development_build
 
-textworker.backend.require_version("1.6a", ">=")
+require_version("1.6a", ">=")
 
 # Configuration file
 if platform.system() == "Windows":
@@ -19,7 +18,7 @@ else:
     dir_to_use = os.environ["HOME"] + "/.config/texteditor/"
     defconsole = "xterm"
 
-if textworker.backend.is_development_build():
+if is_development_build():
     file = dir_to_use + "configs_dev.ini"
 else:
     file = dir_to_use + "configs.ini"
@@ -39,6 +38,7 @@ cfg["interface.font"] = {
 cfg["extensions.cmd"] = {"enable": "yes", "console": defconsole}
 
 cfg["extensions.autosave"] = {"enable": "no", "time": "120"}
+cfg["extensions.multiview"] = {"notebook_location": "bottom"}
 
 
 class ConfigurationError(Exception):
@@ -56,8 +56,8 @@ class ConfigurationError(Exception):
 
 class GetConfig(configparser.ConfigParser):
     # Values
-    yes_value = "yes"
-    no_value = "no"
+    yes_value: list = ["yes"]
+    no_value: list = ["no"]
     returnbool = True
     aliases = {}
 
@@ -126,12 +126,36 @@ class GetConfig(configparser.ConfigParser):
             return True
 
     # Options
-    def getkey(self, section, option):
-        value = self.get(section, option)
-        if value == self.yes_value:
+    def getkey(self, section, option, needed:bool = False):
+        """
+        Try to get the value of an option under the spectified section.
+        
+        If the option does not exist and needed parameter is set to True,
+        GetConfig will add that option automatically with the value based on
+        its previously initialized backup configs.
+
+        Otherwise it will check for the value's alias, then return the value.
+        """
+        try:
+            value = self.get(section, option)
+        except KeyError or configparser.NoOptionError:
+            if needed == True:
+                self.set(section, option, self.cfg[section][option])
+            else:
+                raise ConfigurationError(section, option, "No option found ({})".format(option))
+        except configparser.NoSectionError:
+            if needed == True:
+                self.add_section(section)
+                self.set(section, option, self.cfg[section][option])
+            else:
+                raise configparser.NoSectionError(section)
+        else:
+            pass
+
+        if value in self.yes_value:
             if self.returnbool == True:
                 return True
-        elif value == self.no_value:
+        elif value in self.no_value:
             if self.returnbool == True:
                 return False
         elif value in self.aliases:
@@ -139,18 +163,19 @@ class GetConfig(configparser.ConfigParser):
         else:
             return value
 
-    def aliasyesno(self, yesvalue, novalue, enable: bool = True):
-        """Use a custom yes/no value, for example:
-        There is an option under [section], and GetConfig will return\
+    def aliasyesno(self, yesvalue, novalue, enable: bool = True) -> None:
+        """
+        Use a custom yes/no value, for example:
+        There is an option under [section], and GetConfig will return
         True if the options is 'yes', False if the options is 'no'.
         You can change 'yes' and 'no' value for your use.
-        If you dont want the parser return a boolean, set enable to false."""
+        If you dont want the parser return a boolean, set enable to false.
+        """
         self.yes_value = yesvalue
         self.no_value = novalue
         self.returnbool = enable
-        return
 
-    def alias(self, value, value2):
+    def alias(self, value, value2) -> None:
         self.aliases[value] = value2
 
     # Configure widgets

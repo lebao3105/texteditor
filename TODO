@@ -13,5 +13,6 @@
         * (Get_config) autocolor (completed)
     - textworker.extensions
         * Move autosave & cmd to use wxPython.
+        * (New) Implement multiview window
     - File content manage:
         * Implement file state check

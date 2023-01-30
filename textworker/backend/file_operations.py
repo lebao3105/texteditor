@@ -41,6 +41,8 @@ class FileOperations:
             self.statusbar.SetStatusText(_("Saving file %s...") % filename)
             time.sleep(1)
             self.statusbar.SetStatusText(_("%s saved.") % filename)
+            time.sleep(1)
+            self.statusbar.SetStatusText(filename)
 
     def openfile(self, filename):
         """Opens a file then show it to the text editor."""
@@ -60,7 +62,7 @@ class FileOperations:
 
             if self.statusbar is not None:
                 self.statusbar.SetStatusText(_("Opening file %s") % filename)
-                time.sleep(1)
+                time.sleep(0.5)
                 self.statusbar.SetStatusText("%s" % filename)
 
             self.notebook.SetPageText(
