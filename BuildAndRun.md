@@ -1,8 +1,10 @@
 ## Requirements
 ```
-python 3.8+ with pip
+python 3.8+ with pip and its development codes
 gettext (optional)
 meson and ninja (optional)
+Microsoft Visual C++ (Windows)
+GTK3 development files + pkgconfig and C/C++ compilers (Linux)
 ```
 
 ## Notes
@@ -11,7 +13,9 @@ meson and ninja (optional)
 
 ## Steps
 1. Install dependencies first, always:
+> On Linux use pip3 instead of the pip command below.
 ```bash
+$ pip install attrdict3
 $ pip install -r requirements.txt
 ```
 
@@ -40,16 +44,34 @@ $ python3 -m build
 $ pip install dist/<file name>.whl --force-reinstall
 ```
 
-(Or just run pip (still need build & wheel installed):
+Or just use pip (still need build & wheel installed):
 ```bash
 $ pip install .
 ```
-)
 
-b. Using meson (only use this on Linux)
+b. Using meson
 ```bash
 $ pip install meson ninja
-$ meson build --prefix=/usr
+$ meson build # Use --prefix=<dir> to change the installation location
 $ ninja -C build
-$ sudo ninja -C build install
+$ ninja -C build install # On Linux sudo may required
+```
+
+4. Run
+a. Don't install using meson
+```bash
+$ python3 -m textworker
+```
+
+b. Install using meson
+```bash
+$ me.lebao3105.textworker
+```
+
+On Windows:
+```cmd
+REM Default install
+> C:\bin\me.lebao3105.textworker
+REM Custom install prefix
+> <install prefix>\bin\me.lebao3105.textworker
 ```
