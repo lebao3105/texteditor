@@ -14,10 +14,7 @@ FOUND_NREQ = False  # Found not-solved dependency
 BUILD_FLAG = True
 MESON_FLAG = False
 
-if sys.platform == "win32":
-    pycmd = "python"
-else:
-    pycmd = "python3"
+pycmd = sys.executable
 
 print(miscs.headertext("texteditor Python package build script"))
 
