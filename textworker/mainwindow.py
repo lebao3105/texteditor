@@ -6,18 +6,17 @@ import wx.adv
 import wx.stc
 
 from textworker.tabs import Tabber
-from textworker.backend import logger, constants, get_config
-from textworker.extensions import cmd
+from textworker.backend import constants, get_config, logger
+from textworker.extensions import cmd, multiview
 
+cfg = get_config.GetConfig(get_config.cfg, get_config.file, default_section='interface')
+log = logger.Logger()
 
 # https://stackoverflow.com/a/27872625
 if platform.system() == "Windows":
     import ctypes
     myappid = u'me.lebao3105.texteditor' # arbitrary string
     ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(myappid)
-
-log = logger.Logger()
-
 
 class MainFrame(wx.Frame):
     def __init__(self, *args, **kwds):
@@ -28,6 +27,7 @@ class MainFrame(wx.Frame):
 
         self.notebook = Tabber(self, wx.ID_ANY, style=wx.EXPAND)
         self.menuitem = {}
+        self.sidebar = multiview.MultiViewer(self)
         self._StatusBar()
 
         tabname = self.notebook.GetPageText(self.notebook.GetSelection())
@@ -75,10 +75,12 @@ class MainFrame(wx.Frame):
         self.menuitem["cut"] = addeditcmd(wx.ID_CUT)
         editmenu.AppendSeparator()
         self.menuitem["selall"] = addeditcmd(wx.ID_SELECTALL)
+        editmenu.AppendSeparator()
         self.menuitem["autosv"] = addeditcmd(
             wx.ID_ANY, _("AutoSave"), _("Configure auto-saving file function")
         )
-        self.menuitem["cmd"] = addeditcmd(wx.ID_ANY, _("Command prompt"))
+        if cfg.getkey("extensions.cmd", "enable") in cfg.yes_value or [True]:
+            self.menuitem["cmd"] = addeditcmd(wx.ID_ANY, _("Command prompt"))
         self.menubar.Append(editmenu, _("&Edit"))
 
         ## Views
@@ -109,7 +111,7 @@ class MainFrame(wx.Frame):
         self.menucommand = {
             self.menuitem["newtab"]: lambda evt: self.notebook.AddTab(),
             self.menuitem["open"]: lambda evt: (
-                self.notebook.text_editor.fileops.openfile_(),
+                self.notebook.text_editor.fileops.openfile_dlg(),
                 self.notebook.OnPageChanged(),
             ),
             self.menuitem["opendir"]: lambda evt: self.OpenDir(),
@@ -119,7 +121,7 @@ class MainFrame(wx.Frame):
             ),
             self.menuitem[
                 "save"
-            ]: lambda evt: self.notebook.text_editor.fileops.savefile_(),
+            ]: lambda evt: self.notebook.text_editor.fileops.savefile_dlg(),
             self.menuitem[
                 "saveas"
             ]: lambda evt: self.notebook.text_editor.fileops.saveas(),
@@ -127,7 +129,6 @@ class MainFrame(wx.Frame):
             self.menuitem["paste"]: lambda evt: self.notebook.text_editor.Paste(),
             self.menuitem["cut"]: lambda evt: self.notebook.text_editor.Cut(),
             self.menuitem["autosv"]: lambda evt: self.notebook.autosv.askwind(),
-            self.menuitem["cmd"]: lambda evt: self.OpenCmd(),
             self.menuitem["zoomin"]: lambda evt: self.notebook.text_editor.ZoomIn(),
             self.menuitem["zoomout"]: lambda evt: self.notebook.text_editor.ZoomOut(),
             self.menuitem["selall"]: lambda evt: self.notebook.text_editor.SelectAll(),
@@ -138,7 +139,12 @@ class MainFrame(wx.Frame):
                 "https://lebao3105.gitbook.io/texteditor_doc"
             ),
         }
+
+        if cfg.getkey("extensions.cmd", "enable") in cfg.yes_value or [True]:
+            self.menucommand[self.menuitem["cmd"]] = lambda evt: self.OpenCmd()
+
         self.Bind(wx.EVT_MENU, self.OnClose, self.exitItem)
+        
         for item in self.menucommand:
             self.Bind(wx.EVT_MENU, self.menucommand[item], item)
 
@@ -160,17 +166,16 @@ class MainFrame(wx.Frame):
             selected_dir = ask.GetPath()
         else:
             return
-
-        newfm = wx.Frame(self, title=selected_dir)
-        dirs = wx.GenericDirCtrl(newfm, -1, selected_dir)
-        dirs.ShowHidden(False)
+        
+        dirs = wx.GenericDirCtrl(self.sidebar.tabs, -1, selected_dir)
         dirs.Bind(
             wx.EVT_DIRCTRL_FILEACTIVATED,
-            lambda evt: self.notebook.text_editor.fileops.openfile(dirs.GetFilePath()),
+            lambda evt: self.notebook.text_editor.fileops.openfile(dirs.GetFilePath())
         )
-        newfm.Layout()
-        newfm.Show()
-
+        dirs.Show()
+        self.sidebar.RegisterTab(selected_dir, dirs)
+        self.sidebar.Show()
+        
     def OpenCmd(self):
         wind = wx.Frame(self)
         wind.SetTitle("Command Window")

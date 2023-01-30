@@ -2,6 +2,7 @@ exts_sources = [
     '__init__.py',
     'autosave.py',
     'cmd.py',
+    'multiview.py'
 ]
 install_data(
     exts_sources,
