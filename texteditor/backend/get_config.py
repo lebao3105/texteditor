@@ -9,7 +9,7 @@ from tkinter import TclError, font, messagebox
 from texteditor.backend import constants, logger
 
 backend.require_version("1.4a", ">=")
-# backend.require_version("1.6a", "<")
+#backend.require_version("1.6a", "<") # Why the heck require_version stops at ctype == ">=" or ">" ?
 
 
 # File & Directory management
@@ -197,16 +197,15 @@ class GetConfig:
         if not section in cfg.sections():
             raise log.throwerr("Configuration section %s not found" % section)
         elif not cfg[section][name]:
-            raise log.throwerr("Configuration %s->%s not found" % section, name)
+            raise log.throwerr("Configuration [%s->%s] not found" % section, name)
         else:
             return cfg.get(section, name)
 
 
 class AutoColor:
-    """The color manager for texteditor."""
+    """Color manager for texteditor."""
 
     def __init__(self, parent):
-        super().__init__()
         self.parent = parent
 
         self.start = GetConfig.getvalue("global", "autocolor")
@@ -214,9 +213,15 @@ class AutoColor:
 
         self.bg = GetConfig.getvalue("global", "color")
         self.fg = GetConfig.getvalue("global", "sub_color")
-        self.colors = {"light": str(constants.DARK_BG), "dark": str(constants.LIGHT_BG)}
+        
+        self.colors = {
+            "light": str(constants.DARK_BG),
+            "dark": str(constants.LIGHT_BG)
+        }
+        
         if self.bg == "default":
             self.bg = "light"
+
         if self.fg == "default":
             self.fg = "dark"
 
@@ -224,8 +229,7 @@ class AutoColor:
         if self.start is True:
             # Automatically changes the theme if
             # the system theme is CHANGED
-            self.t = threading.Thread(target=darkdetect.listener, args=(self.setcolor,))
-            self.t.daemon = True
+            self.t = threading.Thread(target=darkdetect.listener, args=self.setcolor, daemon=True)
             self.t.start()
             self.setcolor(darkdetect.theme())
             return
@@ -260,10 +264,12 @@ class AutoColor:
             self.parent.configure(fg=fg)
         except TclError:
             self.parent.configure(foreground=fg)
+        
 
-    def __checkcolor(self, bg):
-        bg = GetConfig.getvalue("global", "color")
-        fg = GetConfig.getvalue("global", "sub_color")
+    def __checkcolor(self, bg: str|None = None):
+        if not bg:
+            bg = self.bg
+        fg = self.fg
         if bg == "dark":
             if fg == "default":
                 fg2 = constants.LIGHT_BG
