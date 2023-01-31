@@ -18,7 +18,7 @@ class MainWindow(Tk):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
-        # Configure all menu items callbacks
+        # Configure some required menu items callback
         self.callbacks = {
             "add_tab": lambda: self.add_tab(),
             "gofind": lambda: finding.Finder(self, "find"),
@@ -101,7 +101,7 @@ class MainWindow(Tk):
             self.menu2.add_separator()
             addeditcmd(
                 label=_("Open System Shell"),
-                command=lambda: cmd.CommandPrompt(self, _=_),
+                command=lambda: cmd.showcmd(self),
                 accelerator="Ctrl+T",
             )
         self.menu3.add_checkbutton(
@@ -110,7 +110,7 @@ class MainWindow(Tk):
             variable=self.autocolor,
         )
         self.menu3.add_checkbutton(
-            label=_("Wrap (by word)"),
+            label=_("Word wrap"),
             command=lambda: self.text_editor.wrapmode(),
             variable=self.wrapbtn,
             accelerator="Ctrl+W",
@@ -143,7 +143,6 @@ class MainWindow(Tk):
 
     # Menu bar callbacks
     def resetcfg(self, event=None):
-
         message = msgbox.askyesno(
             _("Warning"),
             _("This will reset ALL configurations you have ever made. Continue?"),
@@ -165,13 +164,12 @@ class MainWindow(Tk):
                 msgbox.showinfo(
                     _("Completed"),
                     _(
-                        "Resetted texteditor configurations.\nRestart the application to take the effect."
+                        "Resetted texteditor configurations.\nRestart the application to take effect."
                     ),
                 )
                 self.text_editor.statusbar.writeleftmessage(
-                    _("Resetted all configurations.")
+                    _("Resetted all configurations. Restart the app to take effect.")
                 )
-                self.setcolorvar()
 
     def opencfg(self, event=None):
         self.add_tab()
@@ -181,7 +179,6 @@ class MainWindow(Tk):
         return about.AboutDialog(self).run()
 
     def get_color(self):
-        # Get color mode
         if get_config.GetConfig.getvalue("global", "color") == "dark":
             self.lb = "light"
         else:
@@ -192,7 +189,7 @@ class MainWindow(Tk):
             if msgbox.askyesno(
                 _("Warning"),
                 _(
-                    """\
+                """\
                 Changing the application color requires the autocolor function to be turned off.
                 Turn off autocolor then change the application color (permanently)?
                 """

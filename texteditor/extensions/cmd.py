@@ -73,20 +73,11 @@ class cmd(textwidget.TextWidget):
             )
             cmd = get_config.GetConfig.getvalue("cmd", "defconsole")
 
-            if cmd == ("bash" or "xonsh" or "zsh" or "fish" or "sh"):
-                messagebox.showerror(
-                    title="Error",
-                    message="This application cannot run shell, use terminal emulator instead.\nProgram: "
-                    + cmd,
-                )
-            elif cmd == ("cmd" or "powershell" or "pwsh"):
-                threading.Thread(
-                    target=lambda: self.runcommand("start " + cmd, noout=True)
-                ).start()
-            else:
-                threading.Thread(
-                    target=lambda: self.runcommand(cmd, noout=True)
-                ).start()
+            threading.Thread(
+                target=lambda: self.runcommand(cmd, noout=True),
+                daemon=True
+            ).start()
+
         elif command.startswith("cd "):
             try:
                 os.chdir(command.removeprefix("cd "))
@@ -128,13 +119,8 @@ class cmd(textwidget.TextWidget):
             self.configure(state="normal")
 
 
-class CommandPrompt(Toplevel):
-    def __init__(self, master, _=None, event=None):
-        super().__init__(master)
-        self.geometry("600x400")
-        self.title("Commander")
-        console = cmd(
-            self,
-            undo=False,
-        )
-        console.pack(expand=True, fill="both")
+def showcmd(parent, evt=None):
+    toplv = Toplevel(parent)
+    toplv.geometry("600x400")
+    toplv.title(_("Command Prompt"))
+    cmd(toplv, undo=False).pack(expand=True, fill="both")
