@@ -74,8 +74,7 @@ class cmd(textwidget.TextWidget):
             cmd = get_config.GetConfig.getvalue("cmd", "defconsole")
 
             threading.Thread(
-                target=lambda: self.runcommand(cmd, noout=True),
-                daemon=True
+                target=lambda: self.runcommand(cmd, noout=True), daemon=True
             ).start()
 
         elif command.startswith("cd "):

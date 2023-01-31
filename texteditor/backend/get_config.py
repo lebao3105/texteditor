@@ -9,7 +9,7 @@ from tkinter import TclError, font, messagebox
 from texteditor.backend import constants, logger
 
 backend.require_version("1.4a", ">=")
-#backend.require_version("1.6a", "<") # Why the heck require_version stops at ctype == ">=" or ">" ?
+# backend.require_version("1.6a", "<") # Why the heck require_version stops at ctype == ">=" or ">" ?
 
 
 # File & Directory management
@@ -213,12 +213,9 @@ class AutoColor:
 
         self.bg = GetConfig.getvalue("global", "color")
         self.fg = GetConfig.getvalue("global", "sub_color")
-        
-        self.colors = {
-            "light": str(constants.DARK_BG),
-            "dark": str(constants.LIGHT_BG)
-        }
-        
+
+        self.colors = {"light": str(constants.DARK_BG), "dark": str(constants.LIGHT_BG)}
+
         if self.bg == "default":
             self.bg = "light"
 
@@ -229,7 +226,9 @@ class AutoColor:
         if self.start is True:
             # Automatically changes the theme if
             # the system theme is CHANGED
-            self.t = threading.Thread(target=darkdetect.listener, args=self.setcolor, daemon=True)
+            self.t = threading.Thread(
+                target=darkdetect.listener, args=self.setcolor, daemon=True
+            )
             self.t.start()
             self.setcolor(darkdetect.theme())
             return
@@ -264,9 +263,8 @@ class AutoColor:
             self.parent.configure(fg=fg)
         except TclError:
             self.parent.configure(foreground=fg)
-        
 
-    def __checkcolor(self, bg: str|None = None):
+    def __checkcolor(self, bg: str | None = None):
         if not bg:
             bg = self.bg
         fg = self.fg

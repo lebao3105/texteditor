@@ -15,7 +15,7 @@ class AboutDialog(Toplevel):
 
         self.grab_release()
         self.wm_title(_("About this app"))
-        self.geometry("516x356")
+        self.geometry("500x350")
         # self.resizable(False, False)
 
         builder = pygubu.Builder(_)
@@ -57,7 +57,7 @@ class AboutDialog(Toplevel):
     def quit(self, event=None):
         return self.destroy()
 
-    # Page switching
+    # Page switching functions
     def build_new_page(self):
         for item in self.mainfm.winfo_children():
             item.forget()

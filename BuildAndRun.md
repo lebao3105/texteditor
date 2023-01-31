@@ -43,6 +43,11 @@ $ python3 -m build
 $ pip install dist/<file name>.whl --force-reinstall
 ```
 
+Or (still need build and wheel packages):
+```
+$ pip install .
+```
+
 b. Using meson
 ```sh
 $ pip install meson ninja

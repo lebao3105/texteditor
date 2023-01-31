@@ -189,7 +189,7 @@ class MainWindow(Tk):
             if msgbox.askyesno(
                 _("Warning"),
                 _(
-                """\
+                    """\
                 Changing the application color requires the autocolor function to be turned off.
                 Turn off autocolor then change the application color (permanently)?
                 """

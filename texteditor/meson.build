@@ -2,11 +2,11 @@ installdir = join_paths(moduledir, 'texteditor')
 
 defs_conf = configuration_data()
 defs_conf.set('LOCALE_DIR', localedir)
-defs_conf.set('VERSION', meson.project_version())
+defs_conf.set('MESONTOUCH', true)
 
 configure_file(
-    input: 'defs.py.in',
-    output: 'defs.py',
+    input: '__init__.py',
+    output: '__init__.py',
     configuration: defs_conf,
     install: true,
     install_dir: installdir
@@ -31,7 +31,6 @@ configure_file(
 )
 
 toplv_sources = [
-    '__init__.py',
     '__main__.py',
     'mainwindow.py',
     'tabs.py'
