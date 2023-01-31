@@ -5,31 +5,38 @@ import pathlib
 import sys
 import tkinter.messagebox as msgbox
 
-import texteditor
 from . import mainwindow
 from .backend import __version__ as version, is_development_build
 
 currdir = pathlib.Path(__file__).parent
 __version__ = version
 
+# Icon
 if is_development_build():
-    texteditor.icon = currdir / "icons/texteditor.Devel.png"
+    icon = currdir / "icons" / "texteditor.Devel.png"
 else:
-    texteditor.icon = currdir / "icons/texteditor.png"
+    icon = currdir / "icons" / "texteditor.png"
+# --- ---
 
-try:
-    from texteditor.defs import LOCALE_DIR
-except ImportError:
-    LOCALE_DIR = currdir / "po"
-# LOCALE_DIR = "build/po/"
+# Translation
+LOCALE_DIR = "@LOCALE_DIR@"
+MESONTOUCH = "@MESONTOUCH@"
+LOCALE_DIR = currdir / "po"
+
+if MESONTOUCH != True:
+    if LOCALE_DIR == "@LOCALEDIR@":
+        LOCALE_DIR = currdir / "po"
+
+if not os.path.isdir(LOCALE_DIR):
+    LOCALE_DIR = currdir / ".." / "po"
 
 locale.setlocale(locale.LC_ALL, None)
 gettext.bindtextdomain("me.lebao3105.texteditor", LOCALE_DIR)
 gettext.textdomain("me.lebao3105.texteditor")
 gettext.install("me.lebao3105.texteditor")
-_ = gettext.gettext
+# --- ---
 
-
+# Startup functions
 def __filenotfound(filepath):
     ask = msgbox.askyesno(
         _("File not found"), _("Cannot find the file %s - create it?" % str(filepath))
@@ -69,7 +76,3 @@ def start_app(argv=None):
         pass
 
     root.mainloop()
-
-
-if __name__ == "__main__":
-    start_app(sys.argv)
