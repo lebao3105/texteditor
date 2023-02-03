@@ -206,16 +206,14 @@ class MainWindow(Tk):
         return self.notebook.add_tab(idx="default")
 
     def autocolor_mode(self, event=None):
-        if self.autocolor.get() is False:
-            get_config.autocolormode = False
+        get_config.autocolormode = self.autocolor.get()
+        if self.autocolor.get() == False:
             self.autocolormode.stopasync()
-            get_config.GetConfig.configure(self.text_editor)
             self.text_editor.statusbar.writeleftmessage(_("Stopped autocolor service."))
             self.menu3.entryconfig(2, state="disabled")
         else:
-            get_config.autocolormode = True
             self.autocolormode.startasync()
-            get_config.GetConfig.configure(self.text_editor)
             self.text_editor.statusbar.writeleftmessage(_("Started autocolor service."))
             self.menu3.entryconfig(2, state="normal")
+        get_config.GetConfig.configure(self.text_editor)
         self.get_color()
