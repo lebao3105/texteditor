@@ -22,7 +22,7 @@ jobs:
       
       - name: Install dependencies
         run: |
-          sudo apt install python3-pip python3-tk
+          sudo apt install python3-tk -y
           pip3 install build wheel
           pip3 install -r requirements.txt
       
