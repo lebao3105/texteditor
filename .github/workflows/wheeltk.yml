@@ -1,0 +1,37 @@
+name: Build releases (wheel) (Tk version)
+
+# Controls when the workflow will run
+on:
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+
+  build:
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+      
+      - name: Install dependencies
+        run: |
+          sudo apt install python3-tk -y
+          pip3 install build wheel
+          pip3 install -r requirements.txt
+      
+      - name: Build
+        run: |
+          python3 -m build
+      
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: TextworkerWheel
+          path: dist/
