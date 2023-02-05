@@ -27,7 +27,7 @@ else:
 cfg = {}
 
 cfg["interface"] = {"color": "light", "autocolor": "yes", "textcolor": "default"}
-cfg["interface.tabs"] = {"side": "default", "move_tabs": "yes", "middle_close": "no", "close_on_all_tabs": "no"}
+cfg["interface.tabs"] = {"move_tabs": "yes", "middle_close": "no", "close_on_all_tabs": "no"}
 
 cfg["interface.font"] = {
     "style": "normal",
@@ -70,6 +70,7 @@ class GetConfig(configparser.ConfigParser):
         """Customized configuration parser.
         :param config : Default configurations, used to reset the file or do some comparisions
         :param file : Configuration file
+        :param default_section : Default section
         :param **kwds : To pass to configparser.ConfigParser (base class)
 
         When initialized, GetConfig loads all default configs (from config param) and store it in
@@ -78,7 +79,6 @@ class GetConfig(configparser.ConfigParser):
         How to use:
         * Just call it once for your project, pass everything needed to the contrucstor and do things
         your self!
-        * Always set default_section to one of your section (in str format)
         * Configure function is used to config wxPython widgets - so override it if needed
 
         For the configure function (must do):
@@ -111,8 +111,6 @@ class GetConfig(configparser.ConfigParser):
                 else:
                     self.read(file, encoding)
             del f
-
-            # raise Exception("Unable to read configuration file")
 
     def reset(self, evt=None) -> bool:
         try:
