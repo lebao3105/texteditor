@@ -1,30 +1,68 @@
+import threading
 import wx
-import wx.stc
-from textworker.backend import file_operations, get_config
+import wx.aui
+
+from .backend import file_operations
 from .extensions import autosave
+from .generic import global_settings
+from .textwidget import TextWidget
 
-cfg = get_config.GetConfig(get_config.cfg, get_config.file)
+class Tabber(wx.aui.AuiNotebook):
 
-class Tabber(wx.Notebook):
     def __init__(self, *args, **kwds):
-        kwds["style"] = kwds.get("style", 0) | wx.NB_TOP
-        wx.Notebook.__init__(self, *args, **kwds)
+        kwds["style"] = kwds.get("style", 0) | wx.aui.AUI_NB_WINDOWLIST_BUTTON
+        # There are many styles (and I love them):
+        # AUI_NB_CLOSE_ON_ALL_TABS : Close button on all tabs (disabled by default)
+        # AUI_NB_MIDDLE_CLICK_CLOSE : Use middle click to close tabs
+        # AUI_NB_{BOTTOM/LEFT/RIGHT/TOP} : Notebook locations (default to top)
+        # AUI_NB_TAB_MOVE : Move tab
+        side = global_settings.get_setting("interface.tabs", "side", True)
+        movetabs = global_settings.get_setting("interface.tabs", "move_tabs")
+        middle_close = global_settings.get_setting("interface.tabs", "middle_close")
+        close_on_all_tabs = global_settings.get_setting("interface.tabs", "close_on_all_tabs")
+
+        if side == "top" or "default":
+            kwds["style"] |= wx.aui.AUI_NB_TOP
+        else:
+            if not hasattr(wx.aui, "AUI_NB_"+side.upper()):
+                kwds["style"] |= wx.aui.AUI_NB_TOP
+            else:
+                kwds["style"] |= getattr(wx.aui, "AUI_NB"+side.upper())
+        
+        if movetabs in global_settings.cfg.yes_value or [True]:
+            kwds["style"] |= wx.aui.AUI_NB_TAB_MOVE
+        
+        if middle_close in global_settings.cfg.yes_value or [True]:
+            kwds["style"] |= wx.aui.AUI_NB_MIDDLE_CLICK_CLOSE
+        
+        if close_on_all_tabs in global_settings.cfg.yes_value or [True]:
+            kwds["style"] |= wx.aui.AUI_NB_CLOSE_ON_ALL_TABS
+        else:
+            kwds["style"] |= wx.aui.AUI_NB_CLOSE_ON_ACTIVE_TAB
+
+        del side, movetabs, middle_close, close_on_all_tabs
+    
+        super().__init__(*args, **kwds)
 
         self.setstatus: bool = False
 
         self.AddTab()
-        self.Bind(wx.EVT_NOTEBOOK_PAGE_CHANGED, self.OnPageChanged)
-        self.Bind(wx.EVT_RIGHT_DOWN, self.OnRightClicked)
+        self.fileops = file_operations.FileOperations(
+            self, self.AddTab, self.SetTitle, self.Parent
+        )
+        self.autosv = autosave.AutoSave(lambda: self.fileops.savefile_dlg(), self.Parent)
+
+        self.Bind(wx.aui.EVT_AUINOTEBOOK_PAGE_CHANGED, self.OnPageChanged)
+        self.Bind(wx.aui.EVT_AUINOTEBOOK_PAGE_CLOSED, self.OnPageClose)
+
+        threading.Thread(target=self.SyncFileEdit(), daemon=True).start()
 
     def AddTab(self, evt=None, tabname=None):
         """Add a new tab.
         If tabname is not specified, use texteditor's new tab label."""
 
         self.text_editor = TextWidget(self, style=wx.TE_MULTILINE | wx.EXPAND)
-        self.text_editor.fileops = file_operations.FileOperations(
-            self.text_editor, self, self.AddTab, self.SetTitle, self.Parent
-        )
-        self.autosv = autosave.AutoSave(lambda: self.text_editor.fileops.savefile_dlg(), self.Parent)
+        self.text_editor.SetZoom(3)
 
         if tabname is None:
             _tabname = _("New file")
@@ -34,151 +72,31 @@ class Tabber(wx.Notebook):
         self.AddPage(self.text_editor, _tabname, select=True)
 
         textw = self.text_editor
-        cfg.setcolorfunc(
+        global_settings.cfg.setcolorfunc(
             "textw", textw, "StyleSetBackground", wx.stc.STC_STYLE_DEFAULT
         )
-        cfg.setfontcfunc(
+        global_settings.cfg.setfontcfunc(
             "textw", textw, "StyleSetForeground", wx.stc.STC_STYLE_DEFAULT
         )
-        cfg.configure(textw)
+        global_settings.cfg.configure(textw)
 
         self.SetTitle("Textworker - %s" % _tabname)
 
     def SetTitle(self, title=""):
         return self.Parent.SetTitle(title)
 
-    def OnPageChanged(self, evt=None):
-        tabname = self.GetPageText(self.GetSelection())
+    def OnPageChanged(self, evt):
+        tabname = self.GetPageText(evt.GetSelection())
         if self.setstatus is True:
             self.Parent.SetStatusText(tabname)
         self.SetTitle("Textworker - %s" % tabname)
 
-    def CloneTab(self, evt=None):
-        tabname = self.GetPageText(self.GetSelection())
-        content = self.text_editor.GetValue()
-        self.AddTab(tabname=tabname)
-        self.text_editor.ClearAll()
-        self.text_editor.AppendText(content)
-
-    def CloseTab(self, evt=None):
-        self.RemovePage(self.GetSelection())
+    def OnPageClose(self, evt):
         if self.GetPageCount() == 0:
             self.AddTab()
-
-    def OnRightClicked(self, evt):
-        menu = wx.Menu()
-        for id, label, handler in [
-            (wx.ID_ANY, _("New Tab\tCtrl-N"), lambda evt: self.AddTab()),
-            (
-                wx.ID_ANY,
-                _("Close the current (open) tab"),
-                lambda evt: self.CloseTab(),
-            ),
-            (wx.ID_ANY, _("Clone this tab"), lambda evt: self.CloneTab()),
-        ]:
-            item = menu.Append(id, label)
-            menu.Bind(wx.EVT_MENU, handler, item)
-        self.PopupMenu(menu)
-        menu.Destroy()
-
-
-class TextWidget(wx.stc.StyledTextCtrl):
-    rcmenu: bool = True
-
-    def __init__(self, id, line_number: bool = True, **kwds):
-        kwds["style"] = kwds.get("style", 0) | wx.stc.STC_STYLE_DEFAULT
-        super().__init__(id, **kwds)
-        if self.rcmenu == True:
-            self.Bind(wx.EVT_RIGHT_DOWN, self.OpenMenu)
-
-        if line_number == True:
-            self.EnableLineCount(True)
-        else:
-            self.EnableLineCount(False)
-
-        bg, fg = cfg._get_color()
-        bg = "#" + "%02x%02x%02x" % bg
-        fg = "#" + "%02x%02x%02x" % fg
-        self.StyleSetSpec(0, "fore:{},back:{}".format(fg, bg))
-        self.StyleSetSpec(wx.stc.STC_STYLE_LINENUMBER, "fore:{},back:{}".format(fg, bg))
-
-        self.Bind(wx.stc.EVT_STC_MODIFIED, self.OnKeyPress)
-
-    def EnableLineCount(self, set:bool):
-        if set == True:
-            self.SetMarginType(1, wx.stc.STC_MARGIN_NUMBER)
-            self.SetMarginMask(1, 0)
-            self.SetMarginWidth(1, 20)
-        else:
-            self.SetMarginWidth(1, 0)
-
-    def OnKeyPress(self, evt):
-        if evt:
-            pos = evt.GetPosition()
-            length = evt.GetLength()
-        else:
-            pos = 0
-            length = self.GetLength()
-        self.StartStyling(pos)
-        self.SetStyling(length, 0)
-        evt.Skip()
-
-    if rcmenu == True:
-
-        def OpenMenu(self, event):
-            pt = event.GetPosition()
-            self.RightClickMenu(pt)
-
-        def RightClickMenu(self, pt):
-            menu = wx.Menu()
-            cut = menu.Append(wx.ID_CUT)
-            copy = menu.Append(wx.ID_COPY)
-            paste = menu.Append(wx.ID_PASTE)
-            menu.AppendSeparator()
-
-            undo = menu.Append(wx.ID_UNDO)
-            redo = menu.Append(wx.ID_REDO)
-            delete = menu.Append(wx.ID_DELETE)
-            selectall = menu.Append(wx.ID_SELECTALL)
-            menu.AppendSeparator()
-            readonly = menu.AppendCheckItem(wx.ID_ANY, _("Read only"))
-
-            commands = {
-                cut: lambda evt: self.Cut(),
-                copy: lambda evt: self.Copy(),
-                paste: lambda evt: self.Paste(),
-                undo: lambda evt: self.Undo(),
-                redo: lambda evt: self.Redo(),
-                delete: lambda evt: self.DeleteBack(),
-                selectall: lambda evt: self.SelectAll(),
-                readonly: lambda evt: self.SetEditable(not self.IsEditable())
-            }
-
-            cut.Enable(self.CanCut())
-            copy.Enable(self.CanCopy())
-            paste.Enable(self.CanPaste())
-            undo.Enable(self.CanUndo())
-            redo.Enable(self.CanRedo())
-            readonly.Enable(True)
-
-            menu.Check(readonly, False)
-
-            for item in [delete, selectall]:
-                if self.GetValue() != "":
-                    item.Enable(True)
-                else:
-                    item.Enable(False)
-
-            for item in commands:
-                self.Bind(wx.EVT_MENU, commands[item], item)
-
-            self.PopupMenu(menu, pt)
-            menu.Destroy()
-
-    else:
-
-        def OpenMenu(self, event):
-            raise NotImplementedError
-
-        def RightClickMenu(self, pt):
-            raise NotImplementedError
+    
+    def SyncFileEdit(self):
+        if self.text_editor.IsModified():
+            print('edited')
+            self.SetPageText(self.GetCurrentPage(), 'test')
+        
