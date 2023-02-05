@@ -1,14 +1,13 @@
 import wx
 
-from ..backend import get_config
-cfg = get_config.GetConfig(get_config.cfg, get_config.file, default_section='interface')
+from ..generic import global_settings
 
 class MultiViewer(wx.Frame):
     def __init__(self, *args, **kw):
         kw["style"] = kw.get("style", 0) | wx.DEFAULT_FRAME_STYLE
         super().__init__(*args, **kw)
 
-        location = cfg.getkey("extensions.multiview", "notebook_location", needed=True)
+        location = global_settings.cfg.getkey("extensions.multiview", "notebook_location", needed=True)
         if location == "bottom":
             nbside = wx.NB_BOTTOM
         elif location == "left":

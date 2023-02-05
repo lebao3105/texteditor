@@ -1,4 +1,4 @@
-name: Build releases (wheel)
+name: Build releases (wheel) (wx version)
 
 # Controls when the workflow will run
 on:
@@ -23,7 +23,8 @@ jobs:
       - name: Install dependencies
         run: |
           sudo apt install libgtk-3-dev -y
-          pip3 install attrdict3 build wheel
+          pip3 install attrdict3 requests build wheel
+          pip3 install git+https://github.com/wxWidgets/Phoenix
           pip3 install -r requirements.txt
       
       - name: Build

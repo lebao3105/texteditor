@@ -35,8 +35,10 @@ configure_file(
 toplv_sources = [
     '__init__.py',
     '__main__.py',
+    'generic.py',
     'mainwindow.py',
-    'tabs.py'
+    'tabs.py',
+    'textwidget.py'
 ]
 
 install_data(
