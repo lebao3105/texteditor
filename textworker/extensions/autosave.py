@@ -1,5 +1,5 @@
 import wx
-from ..backend import logger, get_config
+from ..generic import global_settings, log
 
 # Minutes to seconds
 MIN_05 = 30  # 30 secs
@@ -7,10 +7,6 @@ MIN_1 = MIN_05 * 2  # 60 secs
 MIN_15 = MIN_1 * 15  # 900 secs
 MIN_20 = MIN_15 + MIN_1 * 5  # 1200 secs
 MIN_30 = MIN_15 * 2  # 1800 secs
-
-cfg = get_config.GetConfig(get_config.cfg, get_config.file, default_section="interface")
-log = logger.Logger()
-
 
 class AutoSave:
     cmbitems = [
@@ -35,7 +31,7 @@ class AutoSave:
         MIN_30,
     ]
 
-    enabled = cfg.getkey("extensions.autosave", "enable")
+    enabled = global_settings.get_setting("extensions.autosave", "enable")
     shown = False
 
     def __init__(self, savefn, parent):
@@ -43,8 +39,8 @@ class AutoSave:
         self.parent = parent
 
         self.timer = wx.Timer(parent)
-        if self.enabled in cfg.yes_value or [True]:
-            self.timer.Start(self.get(cfg.getkey("extensions.autosave", "time")) * 1000)
+        if self.enabled in global_settings.cfg.yes_value or [True]:
+            self.timer.Start(self.get(global_settings.cfg.getkey("extensions.autosave", "time")) * 1000)
             parent.Bind(wx.EVT_TIMER, lambda evt: self.savefn(), self.timer)
             #savefn()
 
@@ -52,8 +48,8 @@ class AutoSave:
         def getvalue(evt):
             nonlocal check_btn, cmb
             if check_btn.GetValue() == True:
-                if self.enabled in cfg.no_value or [False]:
-                    cfg.set("extensions.autosave", "enable", "yes")
+                if self.enabled in global_settings.cfg.no_value or [False]:
+                    global_settings.cfg.set("extensions.autosave", "enable", "yes")
                 self.saveconfig(cmb.GetValue())
                 
             self.savefn()
@@ -80,7 +76,7 @@ class AutoSave:
         panel.SetSizer(box)
 
         for widget in [fm, panel, cmb, check_btn, btn]:
-            cfg.configure(widget)
+            global_settings.cfg.configure(widget)
 
         fm.Show()
         self.shown = True
@@ -97,4 +93,4 @@ class AutoSave:
 
     def saveconfig(self, value: str) -> bool:
         newvalue = str(self.get(value))
-        return cfg.set("extensions.autosave", "time", newvalue)
+        return global_settings.set_setting("extensions.autosave", "time", newvalue)

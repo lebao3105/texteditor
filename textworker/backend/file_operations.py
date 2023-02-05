@@ -4,7 +4,7 @@ import time
 import sys
 import wx
 
-from textworker.backend import logger
+from . import logger
 
 if sys.platform == "win32":
     searchdir = os.environ["USERPROFILE"] + "\\Documents"
@@ -13,30 +13,20 @@ else:
 
 
 class FileOperations:
-    """File operations unit for texteditor.\n
-    Paramaters:
-    textw : text widget
-    notebook : wx.notebook widget
-    newtabfn : create new tab function for the notebook
-    settitle : function to set an object's title (optional)
-    statusbar = None : Your wx.Frame's (or other wxPython widget) statusbar
-    """
 
-    def __init__(self, textw, notebook, newtabfn, settitle=None, statusbar=None):
-        self.textw = textw
-        self.files = []  # TODO:Manage saves and unsaved-edits
+    def __init__(self, notebook, newtabfn, settitle=None, statusbar=None):
+        self.files = []
         self.notebook = notebook
         self.newtabfn = newtabfn
         self.statusbar = statusbar if statusbar is not None else None
         self.settitle = settitle
+        self.dummyfm = wx.Frame() # Dummy frame for dialogs
 
     def tabname(self):
-        """Returns the current tab name."""
         return self.notebook.GetPageText(self.notebook.GetSelection())
 
     def savefile(self, filename):
-        """Saves a file (filename parameter)."""
-        self.textw.SaveFile(filename)
+        self.notebook.GetCurrentPage().SaveFile(filename)
         if self.statusbar is not None:
             self.statusbar.SetStatusText(_("Saving file %s...") % filename)
             time.sleep(1)
@@ -45,20 +35,19 @@ class FileOperations:
             self.statusbar.SetStatusText(filename)
 
     def openfile(self, filename):
-        """Opens a file then show it to the text editor."""
         filename = str(pathlib.Path(filename).resolve(True).absolute())
         try:
             f = open(filename, "r")
         except:
             logger.Logger().throwerr(
-                _("Error occured"),
+                title=_("Error occured"),
                 msg=_("Error occured while opening file %s") % filename,
                 showdialog=True,
             )
             return
         else:
             del f
-            self.textw.LoadFile(str(filename))
+            self.notebook.GetCurrentPage().LoadFile(str(filename))
 
             if self.statusbar is not None:
                 self.statusbar.SetStatusText(_("Opening file %s") % filename)
@@ -83,7 +72,7 @@ class FileOperations:
 
     def saveas(self, event=None):
         filedlg = wx.FileDialog(
-            self.textw,
+            self.dummyfm,
             _("Save file"),
             style=wx.FD_SAVE | wx.FD_OVERWRITE_PROMPT,
             defaultDir=searchdir,
@@ -102,7 +91,7 @@ Load anyway? (to a new tab)"""
             ),
             _("Infomation"),
             wx.ICON_QUESTION | wx.YES_NO,
-            self.textw,
+            self.dummyfm,
         )
         if ask == wx.YES:
             return True
@@ -112,7 +101,7 @@ Load anyway? (to a new tab)"""
     def openfile_dlg(self, event=None):
         """Asks the user to open a file."""
         filedlg = wx.FileDialog(
-            self.textw,
+            self.dummyfm,
             _("Open a file"),
             style=wx.FD_OPEN | wx.FD_FILE_MUST_EXIST,
             defaultDir=searchdir,
@@ -125,6 +114,7 @@ Load anyway? (to a new tab)"""
                 if filename in x:
                     if self.asktoopen():
                         self.newtabfn()
-            if not self.textw.IsEmpty():
+
+            if not self.notebook.GetCurrentPage().IsEmpty():
                 self.newtabfn()
             self.openfile(filename)

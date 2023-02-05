@@ -1,4 +1,5 @@
 {
     "mesonbuild.configureOnOpen": false,
-    "python.formatting.provider": "black"
+    "python.formatting.provider": "black",
+    "scm.alwaysShowActions": true
 }

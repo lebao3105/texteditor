@@ -27,6 +27,7 @@ else:
 cfg = {}
 
 cfg["interface"] = {"color": "light", "autocolor": "yes", "textcolor": "default"}
+cfg["interface.tabs"] = {"side": "default", "move_tabs": "yes", "middle_close": "no", "close_on_all_tabs": "no"}
 
 cfg["interface.font"] = {
     "style": "normal",
@@ -48,8 +49,8 @@ class ConfigurationError(Exception):
         prefix = "Error in the configuration file: "
         if not msg:
             msg = "*UNKNOW ERROR*"
-        elif section and option != None:
-            msg = "[{}->{}] : {}".format(section, option, msg)
+        else:
+            msg = "[{}->{}] : {}".format(section, "(None)" if option == "" else option, "No Message" if msg == "" else msg)
         full = prefix + msg
         super().__init__(full, *args)
 
@@ -95,7 +96,7 @@ class GetConfig(configparser.ConfigParser):
             self.cfg[key] = config[key]
 
         self.readf(file)
-        self.file = file
+        self.__file = file
 
     # File tasks
     def readf(self, file, encoding: str | None = None):
@@ -115,13 +116,13 @@ class GetConfig(configparser.ConfigParser):
 
     def reset(self, evt=None) -> bool:
         try:
-            os.remove(self.file)
+            os.remove(self.__file)
         except:
             return False
         else:
             for key in self.cfg:
                 self[key] = self.cfg[key]
-            with open(self.file, mode="w") as f:
+            with open(self.__file, mode="w") as f:
                 self.write(f)
             return True
 
@@ -199,6 +200,7 @@ class GetConfig(configparser.ConfigParser):
             size_ = int(size)
 
         return wx.Font(size_, wx.FONTFAMILY_DEFAULT, style_, weight_, 0, family)
+    
 
     def _get_color(self):
         def _get_sys_mode():

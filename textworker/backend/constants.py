@@ -11,14 +11,11 @@ FONTWT = {
 }
 
 # Font style
-FONTST = {"normal": wx.FONTSTYLE_NORMAL, "italic": wx.FONTSTYLE_ITALIC}
+FONTST = {"normal": wx.FONTSTYLE_NORMAL, "italic": wx.ITALIC_FONT}
 
 # Font size
 FONTSZ = {
-    "normal": wx.FONTSIZE_MEDIUM,
-    "small": wx.FONTSIZE_SMALL,
-    "large": wx.FONTSIZE_LARGE,
+    "normal": 14,
+    "small": 12,
+    "large": 20,
 }
-
-# Is this package in a stable version?
-STATE = "DEV"
