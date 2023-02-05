@@ -1,4 +1,5 @@
 import platform
+import time
 import textworker
 import webbrowser
 import wx
@@ -6,7 +7,7 @@ import wx.adv
 import wx.stc
 
 from .textwidget import TextWidget
-from .generic import global_settings, log
+from .generic import global_settings, log, MenuBar
 from .tabs import Tabber
 from .backend import get_config, is_development_build
 from .extensions import cmd, multiview
@@ -38,117 +39,72 @@ class MainFrame(wx.Frame):
 
         self.Bind(wx.EVT_CLOSE, self.OnClose)
         self.PlaceMenu()
-        self.Binder()
         self.Layout()
 
     def _StatusBar(self):
-        self.statusbar = self.CreateStatusBar(2)
-        w1 = self.statusbar.Size[0] - 50
-        self.statusbar.SetStatusWidths([w1, -1])
-        self.statusbar.righttext = wx.StaticText(
-            self.statusbar, wx.ID_ANY, label=_("Messages")
+        self.CreateStatusBar(2)
+        w1 = self.StatusBar.Size[0] - 50
+        self.StatusBar.SetStatusWidths([w1, -1])
+        righttext = wx.StaticText(
+            self.StatusBar, wx.ID_ANY, label=_("Messages")
         )
-        self.statusbar.righttext.SetPosition((w1 + 2, 2))
-        self.statusbar.righttext.Bind(wx.EVT_LEFT_DOWN, self.OpenLogWind)
+        righttext.SetPosition((w1 + 2, 2))
+        righttext.Bind(wx.EVT_LEFT_DOWN, self.OpenLogWind)
 
     def PlaceMenu(self):
         # Menu Bar
-        self.menubar = wx.MenuBar()
+        self.menubar = MenuBar()
+        self.menubar.SetParent(self)
 
         ## File
-        filemenu = wx.Menu()
-        addfilecmd = filemenu.Append
-        self.menuitem["newtab"] = addfilecmd(wx.ID_NEW)
-        self.menuitem["open"] = addfilecmd(wx.ID_OPEN)
-        self.menuitem["opendir"] = addfilecmd(wx.ID_ANY, _("Open directory"))
-        self.menuitem["closeall"] = addfilecmd(wx.ID_ANY, _("Close all..."))
-        filemenu.AppendSeparator()
-        self.menuitem["save"] = addfilecmd(wx.ID_SAVE)
-        self.menuitem["saveas"] = addfilecmd(wx.ID_SAVEAS)
-        filemenu.AppendSeparator()
-        self.exitItem = addfilecmd(wx.ID_EXIT)
-        self.menubar.Append(filemenu, _("&File"))
+        self.menubar.AddMenu(_("&File"), [
+            (wx.ID_NEW, None, None, self.notebook.AddTab, None),
+            (wx.ID_OPEN, None, None, self.notebook.fileops.openfile_dlg, None),
+            (wx.ID_ANY, _("Open directory\tCtrl+Shift+D"), None, self.OpenDir, None),
+            (wx.ID_ANY, _("Close all tabs"), None, lambda evt: (self.notebook.DeleteAllPages(), self.notebook.AddTab()), None),
+            (None, None, None, None, None), # Separator
+            (wx.ID_SAVE, None, None, self.notebook.fileops.savefile_dlg, None),
+            (wx.ID_SAVEAS, _("Save as...\tCtrl+Shift+S"), None, self.notebook.fileops.saveas, None),
+            (None, None, None, None, None),
+            (wx.ID_EXIT, _("Quit\tAlt+F4"), None, self.OnClose, None)
+        ])
 
         ## Edit
-        editmenu = wx.Menu()
-        addeditcmd = editmenu.Append
-        self.menuitem["copy"] = addeditcmd(wx.ID_COPY)
-        self.menuitem["paste"] = addeditcmd(wx.ID_PASTE)
-        self.menuitem["cut"] = addeditcmd(wx.ID_CUT)
-        editmenu.AppendSeparator()
-        self.menuitem["selall"] = addeditcmd(wx.ID_SELECTALL)
-        editmenu.AppendSeparator()
-        self.menuitem["autosv"] = addeditcmd(
-            wx.ID_ANY, _("AutoSave"), _("Configure auto-saving file function")
-        )
-        if global_settings.get_setting("extensions.cmd", "enable") in cfg.yes_value or [True]:
-            self.menuitem["cmd"] = addeditcmd(wx.ID_ANY, _("Command prompt"))
-        self.menubar.Append(editmenu, _("&Edit"))
+        self.menubar.AddMenu(_("&Edit"), [
+            (wx.ID_COPY, None, None, lambda evt: self.notebook.text_editor.Copy, None),
+            (wx.ID_PASTE, None, None, lambda evt: self.notebook.text_editor.Paste, None),
+            (wx.ID_CUT, None, None, lambda evt: self.notebook.text_editor.Cut, None),
+            (None, None, None, None, None),
+            (wx.ID_SELECTALL, None, None, lambda evt: self.notebook.text_editor.SelectAll, None),
+            (wx.ID_DELETE, _("Delete\tDelete"), None, lambda evt: self.notebook.text_editor.DeleteBack, None),
+            (None, None, None, None, None),
+            (wx.ID_ANY, _("Auto save"), _("Configure auto-saving file function"), lambda evt: self.notebook.autosv.askwind, None),
+        ])
+        for menu, name in self.menubar.GetMenus():
+            if name == _("&Edit"):
+                if global_settings.get_setting("extensions.cmd", "enable") in cfg.yes_value or [True]:
+                    item = menu.Append(wx.ID_ANY, _("Command prompt"))
+                    self.Bind(wx.EVT_MENU, self.OpenCmd, item)
 
-        ## Views
-        viewsmenu = wx.Menu()
-        addviewscmd = viewsmenu.Append
-        self.menuitem["zoomin"] = addviewscmd(wx.ID_ZOOM_IN)
-        self.menuitem["zoomout"] = addviewscmd(wx.ID_ZOOM_OUT)
-        self.menuitem["wrap"] = viewsmenu.AppendCheckItem(wx.ID_ANY, _("Word wrap"))
-        self.menubar.Append(viewsmenu, _("&View"))
+        ## View
+        self.menubar.AddMenu(_("&View"), [
+            (wx.ID_ZOOM_IN, _("Zoom it\tCtrl++"), None, lambda evt: self.notebook.text_editor.ZoomIn, None),
+            (wx.ID_ZOOM_OUT, _("Zoom out\tCtrl+-"), None, lambda evt: self.notebook.text_editor.ZoomIn, None),
+            (wx.ID_ANY, _("Word wrap"), None, lambda evt: print("not implemented yet"), wx.ITEM_CHECK), # Not completed
+        ])
 
         ## Configs
-        cfgmenu = wx.Menu()
-        addcfgmenu = cfgmenu.Append
-        self.menuitem["showcfgs"] = addcfgmenu(wx.ID_ANY, _("Show all configurations"))
-        self.menuitem["reset"] = addcfgmenu(wx.ID_ANY, _("Reset all configs"))
-        self.menubar.Append(cfgmenu, _("&Config"))
+        self.menubar.AddMenu(_("&Configs"), [
+            (wx.ID_ANY, _("Show all configurations"), None, self.ShowCfgs, None),
+            (wx.ID_ANY, _("Reset all configs"), None, self.ResetCfgs, None),
+        ])
 
         ## Help
-        helpmenu = wx.Menu()
-        self.menuitem["about"] = helpmenu.Append(wx.ID_ABOUT)
-        self.menuitem["help"] = helpmenu.Append(wx.ID_HELP)
-        self.menubar.Append(helpmenu, _("&Help"))
-
+        self.menubar.AddMenu(_("&Help"), [
+            (wx.ID_ABOUT, None, None, self.ShowAbout, None),
+            (wx.ID_HELP, None, None, lambda evt: webbrowser.open_new_tab("https://lebao3105.gitbook.io/texteditor_doc"), None)
+        ])
         self.SetMenuBar(self.menubar)
-
-    ## Callbacks
-    def Binder(self):
-        self.menucommand = {
-            self.menuitem["newtab"]: lambda evt: self.notebook.AddTab(),
-            self.menuitem["open"]: lambda evt: (
-                self.notebook.fileops.openfile_dlg(),
-                self.notebook.OnPageChanged(evt),
-            ),
-            self.menuitem["opendir"]: lambda evt: self.OpenDir(),
-            self.menuitem["closeall"]: lambda evt: (
-                self.notebook.DeleteAllPages(),
-                self.notebook.AddTab(),
-            ),
-            self.menuitem[
-                "save"
-            ]: lambda evt: self.notebook.fileops.savefile_dlg(),
-            self.menuitem[
-                "saveas"
-            ]: lambda evt: self.notebook.fileops.saveas(),
-            self.menuitem["copy"]: lambda evt: self.notebook.text_editor.Copy(),
-            self.menuitem["paste"]: lambda evt: self.notebook.text_editor.Paste(),
-            self.menuitem["cut"]: lambda evt: self.notebook.text_editor.Cut(),
-            self.menuitem["autosv"]: lambda evt: self.notebook.autosv.askwind(),
-            self.menuitem["zoomin"]: lambda evt: self.notebook.text_editor.ZoomIn(),
-            self.menuitem["zoomout"]: lambda evt: self.notebook.text_editor.ZoomOut(),
-            self.menuitem["selall"]: lambda evt: self.notebook.text_editor.SelectAll(),
-            self.menuitem["showcfgs"]: lambda evt: self.ShowCfgs(),
-            self.menuitem["reset"]: lambda evt: self.ResetCfgs(),
-            self.menuitem["about"]: lambda evt: self.ShowAbout(),
-            self.menuitem["help"]: lambda evt: webbrowser.open_new_tab(
-                "https://lebao3105.gitbook.io/texteditor_doc"
-            ),
-        }
-
-        if global_settings.get_setting("extensions.cmd", "enable") in cfg.yes_value or [True]:
-            self.menucommand[self.menuitem["cmd"]] = lambda evt: self.OpenCmd()
-
-        self.Bind(wx.EVT_MENU, self.OnClose, self.exitItem)
-        
-        for item in self.menucommand:
-            self.Bind(wx.EVT_MENU, self.menucommand[item], item)
 
     def OnClose(self, evt):
         if hasattr(self.notebook.autosv, "fm"):
@@ -159,7 +115,7 @@ class MainFrame(wx.Frame):
             self.notebook.autosv.shown = False
         evt.Skip()
 
-    def OpenDir(self):
+    def OpenDir(self, evt):
         ask = wx.DirDialog(
             self,
             _("Select a folder to start"),
@@ -186,13 +142,13 @@ class MainFrame(wx.Frame):
         if self.islogwindopen == True:
             return
 
-        logwind = LogsWindow(log.logs)
+        logwind = LogsWindow(log.logs, self)
         logwind.fm.Bind(wx.EVT_CLOSE, onwindowclose)
 
         logwind.Show()
         self.islogwindopen = True
 
-    def OpenCmd(self):
+    def OpenCmd(self, evt):
         wind = wx.Frame(self)
         wind.SetTitle(_("Command Window"))
         wind.SetSize((600, 400))
@@ -201,12 +157,12 @@ class MainFrame(wx.Frame):
         notebook.setstatus = True
         wind.Show()
 
-    def ShowCfgs(self):
+    def ShowCfgs(self, evt):
         if not self.notebook.text_editor.IsEmpty():
             self.notebook.AddTab()
         self.notebook.fileops.openfile(get_config.file)
 
-    def ResetCfgs(self):
+    def ResetCfgs(self, evt):
         ask = wx.MessageDialog(
             None,
             _("Are you sure want to reset all configurations?"),
@@ -215,9 +171,12 @@ class MainFrame(wx.Frame):
         ).ShowModal()
         if ask == wx.ID_YES:
             if cfg.reset():
+                currst = self.StatusBar.GetStatusText()
                 self.SetStatusText(_("Restored all default app configurations."))
+                time.sleep(1)
+                self.SetStatusText(currst)
 
-    def ShowAbout(self):
+    def ShowAbout(self, evt):
         wxver = wx.__version__
         pyver = platform.python_version()
         ostype = platform.system() if platform.system() != "" or None else _("Unknown")
@@ -269,7 +228,7 @@ class LogsWindow:
         * label1, label2 : Message text
         * text : Log object
 
-        Press F5 to refresh the log window (not tested.)
+        Press F5 to refresh the log window.
         """
 
         self._curridx: int = 0
@@ -284,30 +243,10 @@ class LogsWindow:
         self.label1 = wx.StaticText(
             panel, wx.ID_ANY, _("No new message collected."), style=wx.TE_READONLY
         )
-        self.label1.SetFont(
-            wx.Font(
-                14,
-                wx.FONTFAMILY_DEFAULT,
-                wx.FONTSTYLE_NORMAL,
-                wx.FONTWEIGHT_BOLD,
-                0,
-                "",
-            )
-        )
         sizer.Add(self.label1, 0, wx.ALIGN_CENTER_HORIZONTAL | wx.ALL, 52, wx.EXPAND)
 
         self.label2 = wx.StaticText(
             panel, wx.ID_ANY, _("Press F5 to refresh."), style=wx.TE_READONLY
-        )
-        self.label2.SetFont(
-            wx.Font(
-                12,
-                wx.FONTFAMILY_DEFAULT,
-                wx.FONTSTYLE_NORMAL,
-                wx.FONTWEIGHT_NORMAL,
-                1,
-                "",
-            )
         )
         sizer.Add(self.label2, 0, wx.ALIGN_CENTER_HORIZONTAL | wx.ALL, 0, wx.EXPAND)
 
@@ -318,6 +257,14 @@ class LogsWindow:
 
         for item in [self.label1, self.label2, self.fm]:
             cfg.configure(item)
+
+        self.label1.SetFont(
+            cfg._get_font().MakeBold()
+        )
+
+        self.label1.SetFont(
+            cfg._get_font().MakeUnderlined()
+        )
         
         panel.SetSizerAndFit(sizer)
         self.fm.Bind(wx.EVT_CHAR_HOOK, self.onkeypressed)
@@ -329,6 +276,7 @@ class LogsWindow:
         key = evt.GetKeyCode()
         if key == wx.WXK_F5:
             self.refresh()
+            print('hello')
         else:
             evt.Skip()
 
