@@ -1,0 +1,312 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<resource xmlns="http://www.wxwidgets.org/wxxrc" version="2.5.3.0">
+	<object class="wxWizard" name="Preferences">
+		<style>wxDEFAULT_DIALOG_STYLE</style>
+		<title>Setup textworker</title>
+		<centered>1</centered>
+		<object class="wxWizardPageSimple" name="WelcomeScreen">
+			<object class="wxBoxSizer">
+				<orient>wxVERTICAL</orient>
+				<object class="sizeritem">
+					<option>0</option>
+					<flag>wxALL|wxEXPAND</flag>
+					<border>5</border>
+					<object class="wxStaticText" name="m_staticText1">
+						<label>Welcome</label>
+						<wrap>-1</wrap>
+					</object>
+				</object>
+				<object class="sizeritem">
+					<option>0</option>
+					<flag>wxALL</flag>
+					<border>5</border>
+					<object class="wxStaticText" name="m_staticText2">
+						<label>Welcome to textworker 1.6! Go through this window so that you can setup and ready to use the application.</label>
+						<wrap>-1</wrap>
+					</object>
+				</object>
+			</object>
+		</object>
+		<object class="wxWizardPageSimple" name="FontSetup">
+			<object class="wxBoxSizer">
+				<orient>wxVERTICAL</orient>
+				<object class="sizeritem">
+					<option>0</option>
+					<flag>wxALL|wxEXPAND</flag>
+					<border>5</border>
+					<object class="wxStaticText" name="m_staticText3">
+						<label>Setup the font</label>
+						<wrap>-1</wrap>
+					</object>
+				</object>
+				<object class="sizeritem">
+					<option>0</option>
+					<flag>wxALL</flag>
+					<border>5</border>
+					<object class="wxStaticText" name="m_staticText4">
+						<label>Choose a good font so that you can read the text easily.</label>
+						<wrap>-1</wrap>
+					</object>
+				</object>
+				<object class="sizeritem">
+					<option>0</option>
+					<flag>wxALL</flag>
+					<border>5</border>
+					<object class="wxFontPickerCtrl" name="m_fontPicker1">
+						<!-- <value>
+							<size>9</size>
+							<style>normal</style>
+							<weight>normal</weight>
+							<underlined>0</underlined>
+							<face>Arial</face>
+						</value> -->
+						<style>wxFNTP_DEFAULT_STYLE</style>
+					</object>
+				</object>
+				<object class="sizeritem">
+					<option>0</option>
+					<flag>wxALL</flag>
+					<border>5</border>
+					<object class="wxStaticText" name="m_staticText5">
+						<label>Preview:</label>
+						<wrap>-1</wrap>
+					</object>
+				</object>
+				<object class="sizeritem">
+					<option>0</option>
+					<flag>wxALIGN_CENTER|wxALL</flag>
+					<border>5</border>
+					<object class="wxStaticText" name="m_staticText6">
+						<label>The quick fox jums over the lazy dog.</label>
+						<wrap>-1</wrap>
+					</object>
+				</object>
+			</object>
+		</object>
+		<object class="wxWizardPageSimple" name="ColorSetup">
+			<object class="wxBoxSizer">
+				<orient>wxVERTICAL</orient>
+				<object class="sizeritem">
+					<option>0</option>
+					<flag>wxALL</flag>
+					<border>5</border>
+					<object class="wxStaticText" name="m_staticText7">
+						<label>Personalize your application!</label>
+						<wrap>-1</wrap>
+					</object>
+				</object>
+				<object class="sizeritem">
+					<option>0</option>
+					<flag>wxALL</flag>
+					<border>5</border>
+					<object class="wxStaticText" name="m_staticText8">
+						<label>What about configuring the application theme, including the editor font color? See below 👀</label>
+						<wrap>-1</wrap>
+					</object>
+				</object>
+				<object class="sizeritem">
+					<option>0</option>
+					<flag>wxALL</flag>
+					<border>5</border>
+					<object class="wxStaticText" name="m_staticText9">
+						<label>Font color</label>
+						<wrap>-1</wrap>
+					</object>
+				</object>
+				<object class="sizeritem">
+					<option>0</option>
+					<flag>wxALL</flag>
+					<border>5</border>
+					<object class="wxChoice" name="m_choice1">
+						<selection>0</selection>
+						<content>
+							<item>Default</item>
+							<item>Green</item>
+							<item>Red</item>
+							<item>Custom</item>
+						</content>
+					</object>
+				</object>
+				<object class="sizeritem">
+					<option>0</option>
+					<flag>wxALL</flag>
+					<border>5</border>
+					<object class="wxColourPickerCtrl" name="m_colourPicker1">
+						<value>#000000</value>
+						<style>wxCLRP_DEFAULT_STYLE|wxCLRP_SHOW_LABEL|wxCLRP_USE_TEXTCTRL</style>
+						<enabled>0</enabled>
+					</object>
+				</object>
+				<object class="sizeritem">
+					<option>0</option>
+					<flag>wxALL</flag>
+					<border>5</border>
+					<object class="wxStaticText" name="m_staticText10">
+						<label>Application theme</label>
+						<wrap>-1</wrap>
+					</object>
+				</object>
+				<object class="sizeritem">
+					<option>0</option>
+					<flag>wxALL</flag>
+					<border>5</border>
+					<object class="wxChoice" name="m_choice2">
+						<selection>0</selection>
+						<content>
+							<item>Light</item>
+							<item>Dark</item>
+							<item>Automatic</item>
+						</content>
+					</object>
+				</object>
+				<object class="spacer">
+					<option>1</option>
+					<flag>wxEXPAND</flag>
+					<border>5</border>
+					<size>0,0</size>
+				</object>
+				<object class="sizeritem">
+					<option>0</option>
+					<flag>wxALIGN_CENTER|wxALL</flag>
+					<border>5</border>
+					<object class="wxStaticText" name="m_staticText11">
+						<hidden>1</hidden>
+						<label>Note that you will need:\n* Windows 10 or later\n* macOS X 10.14 (Mojave) or later\n* Other Unix OSes with GTK3+\nto use this feature.</label>
+						<wrap>-1</wrap>
+					</object>
+				</object>
+			</object>
+		</object>
+		<object class="wxWizardPageSimple" name="Terminal">
+			<object class="wxBoxSizer">
+				<orient>wxVERTICAL</orient>
+				<object class="sizeritem">
+					<option>0</option>
+					<flag>wxALL</flag>
+					<border>5</border>
+					<object class="wxStaticText" name="m_staticText12">
+						<label>Command Window</label>
+						<wrap>-1</wrap>
+					</object>
+				</object>
+				<object class="sizeritem">
+					<option>0</option>
+					<flag>wxALL</flag>
+					<border>5</border>
+					<object class="wxStaticText" name="m_staticText13">
+						<label>Command Window, like Windows&apos;s CMD or Linux shells, allows you to run commands and capture their outputs. Currently does not recieve any user input when a command starts and not done yet.</label>
+						<wrap>1</wrap>
+					</object>
+				</object>
+				<object class="sizeritem">
+					<option>0</option>
+					<flag>wxALL</flag>
+					<border>5</border>
+					<object class="wxStaticBitmap" name="m_bitmap1">
+						<bitmap />
+					</object>
+				</object>
+			</object>
+		</object>
+		<object class="wxWizardPageSimple" name="Logs">
+			<object class="wxBoxSizer">
+				<orient>wxVERTICAL</orient>
+				<object class="sizeritem">
+					<option>0</option>
+					<flag>wxALL</flag>
+					<border>5</border>
+					<object class="wxStaticText" name="m_staticText14">
+						<label>Capture, and track the bugs</label>
+						<wrap>-1</wrap>
+					</object>
+				</object>
+				<object class="sizeritem">
+					<option>0</option>
+					<flag>wxALL</flag>
+					<border>5</border>
+					<object class="wxStaticText" name="m_staticText15">
+						<label>See something unexpected or broken? Here, the Log window is here and let you watch the process of works inside the application. If something wrong, you can get the traceback then report it to me.</label>
+						<wrap>-1</wrap>
+					</object>
+				</object>
+				<object class="sizeritem">
+					<option>0</option>
+					<flag>wxALL</flag>
+					<border>5</border>
+					<object class="wxStaticBitmap" name="m_bitmap2">
+						<bitmap />
+					</object>
+				</object>
+				<object class="spacer">
+					<option>1</option>
+					<flag>wxEXPAND</flag>
+					<border>5</border>
+					<size>0,0</size>
+				</object>
+				<object class="sizeritem">
+					<option>0</option>
+					<flag>wxALIGN_CENTER|wxALL</flag>
+					<border>5</border>
+					<object class="wxStaticText" name="m_staticText16">
+						<label>Note: You can run the app from Terminal to see all app logs.\nThe log file defaults to be located in &lt;your home folder&gt;/.logs/texteditor.log.</label>
+						<wrap>-1</wrap>
+					</object>
+				</object>
+			</object>
+		</object>
+		<object class="wxWizardPageSimple" name="ConfigFile">
+			<object class="wxBoxSizer">
+				<orient>wxVERTICAL</orient>
+				<object class="sizeritem">
+					<option>0</option>
+					<flag>wxALL</flag>
+					<border>5</border>
+					<object class="wxStaticText" name="m_staticText17">
+						<label>Freely enchant the power of the editor.</label>
+						<wrap>-1</wrap>
+					</object>
+				</object>
+				<object class="sizeritem">
+					<option>0</option>
+					<flag>wxALL</flag>
+					<border>5</border>
+					<object class="wxStaticText" name="m_staticText18">
+						<label>Change configurations via GUI or a configuration file!</label>
+						<wrap>-1</wrap>
+					</object>
+				</object>
+				<object class="sizeritem">
+					<option>0</option>
+					<flag>wxALL</flag>
+					<border>5</border>
+					<object class="wxStaticBitmap" name="m_bitmap3">
+						<bitmap />
+					</object>
+				</object>
+			</object>
+		</object>
+		<object class="wxWizardPageSimple" name="Finish">
+			<object class="wxBoxSizer">
+				<orient>wxVERTICAL</orient>
+				<object class="sizeritem">
+					<option>0</option>
+					<flag>wxALL</flag>
+					<border>5</border>
+					<object class="wxStaticText" name="m_staticText19">
+						<label>Finish</label>
+						<wrap>-1</wrap>
+					</object>
+				</object>
+				<object class="sizeritem">
+					<option>0</option>
+					<flag>wxALL</flag>
+					<border>5</border>
+					<object class="wxStaticText" name="m_staticText20">
+						<label>Everything is set now. Thank you for using Textworker! Restart the application to take effect.</label>
+						<wrap>-1</wrap>
+					</object>
+				</object>
+			</object>
+		</object>
+	</object>
+</resource>

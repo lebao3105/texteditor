@@ -7,7 +7,7 @@ import wx.adv
 import wx.stc
 
 from .textwidget import TextWidget
-from .generic import global_settings, log, MenuBar
+from .generic import global_settings, log, MenuBar, SettingsWindow
 from .tabs import Tabber
 from .backend import get_config, is_development_build
 from .extensions import cmd, multiview
@@ -30,6 +30,7 @@ class MainFrame(wx.Frame):
         self.notebook = Tabber(self, wx.ID_ANY, style=wx.EXPAND)
         self.menuitem = {}
         self.sidebar = multiview.MultiViewer(self)
+        self.wiz = SettingsWindow(self)
         self.islogwindopen : bool = False
         self._StatusBar()
 
@@ -97,6 +98,7 @@ class MainFrame(wx.Frame):
         self.menubar.AddMenu(_("&Configs"), [
             (wx.ID_ANY, _("Show all configurations"), None, self.ShowCfgs, None),
             (wx.ID_ANY, _("Reset all configs"), None, self.ResetCfgs, None),
+            (wx.ID_ANY, _("Run Setup"), None, lambda evt: self.wiz.Run(True), None)
         ])
 
         ## Help
