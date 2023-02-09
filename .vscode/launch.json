@@ -4,7 +4,7 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Run texteditor with no other arguments",
+            "name": "Run texteditor only",
             "type": "python",
             "request": "launch",
             "module": "texteditor",
@@ -12,10 +12,26 @@
             "justMyCode": true
         },
         {
-            "name": "Open README.md",
+            "name": "Open README.md (tk)",
             "type": "python",
             "request": "launch",
             "module": "texteditor",
+            "console": "internalConsole",
+            "args": ["README.md"],
+            "justMyCode": true
+        },{
+            "name": "Run textworker only",
+            "type": "python",
+            "request": "launch",
+            "module": "textworker",
+            "console": "internalConsole",
+            "justMyCode": true
+        },
+        {
+            "name": "Open README.md (tk)",
+            "type": "python",
+            "request": "launch",
+            "module": "textworker",
             "console": "internalConsole",
             "args": ["README.md"],
             "justMyCode": true
