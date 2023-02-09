@@ -11,7 +11,7 @@ FONTWT = {
 }
 
 # Font style
-FONTST = {"normal": wx.FONTSTYLE_NORMAL, "italic": wx.ITALIC_FONT}
+FONTST = {"normal": wx.FONTSTYLE_NORMAL, "italic": wx.FONTSTYLE_ITALIC}
 
 # Font size
 FONTSZ = {

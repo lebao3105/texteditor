@@ -40,12 +40,12 @@ class Tabber(wx.aui.AuiNotebook):
         self.fileops = file_operations.FileOperations(
             self, self.AddTab, self.SetTitle, self.Parent
         )
-        self.autosv = autosave.AutoSave(lambda: self.fileops.savefile_dlg(), self.Parent)
+        self.autosv = autosave.AutoSave(lambda evt: self.fileops.savefile_dlg(evt), self.Parent)
 
         self.Bind(wx.aui.EVT_AUINOTEBOOK_PAGE_CHANGED, self.OnPageChanged)
         self.Bind(wx.aui.EVT_AUINOTEBOOK_PAGE_CLOSED, self.OnPageClose)
 
-        threading.Thread(target=self.SyncFileEdit(), daemon=True).start()
+        threading.Thread(target=lambda: self.SyncFileEdit(), daemon=True).start()
 
     def AddTab(self, evt=None, tabname=None):
         """Add a new tab.
@@ -73,7 +73,8 @@ class Tabber(wx.aui.AuiNotebook):
         self.SetTitle("Textworker - %s" % _tabname)
 
     def SetTitle(self, title=""):
-        return self.Parent.SetTitle(title)
+        if hasattr(self.Parent, "SetTitle"):
+            return self.Parent.SetTitle(title)
 
     def OnPageChanged(self, evt):
         tabname = self.GetPageText(evt.GetSelection())
@@ -88,5 +89,4 @@ class Tabber(wx.aui.AuiNotebook):
     def SyncFileEdit(self):
         if self.text_editor.IsModified():
             print('edited')
-            self.SetPageText(self.GetCurrentPage(), 'test')
-        
+            #self.SetPageText(self.GetSelection(), 'test')
