@@ -1,5 +1,8 @@
+import io
 import pathlib
+import re
 import wx
+import wx.xml
 import wx.xrc
 import wx.adv
 
@@ -88,11 +91,25 @@ class MenuBar(wx.MenuBar):
 global_settings = AppSettings()
 log = logger.Logger()
 
+def txtLocalize(match_obj):
+    return _(match_obj.group(1))
+
 class SettingsWindow:
 
     def __init__(self, parent):
-        # Call out the resource file
-        self.Res = wx.xrc.XmlResource(str(currdir / "ui" / "preferences.xrc"))
+        # Setup translation
+        # Cre: https://wiki.wxpython.org/XRCAndI18N
+        file = str(currdir / "ui" / "preferences.xrc")
+        with open(file) as f:
+            xrc_data = f.read()
+
+        xrc_data = re.sub('_\([\'"](.*?)[\'"]\)', txtLocalize, xrc_data)
+        xrc_data = xrc_data.encode('utf8')
+
+        # Call out the resource file, with translated strings
+        xmlload = wx.xml.XmlDocument(io.BytesIO(xrc_data))
+        self.Res = wx.xrc.XmlResource()
+        self.Res.LoadDocument(xmlload)
 
         # Load initial items
         self.Frame = self.Res.LoadObject(parent, "Preferences", "wxWizard")
