@@ -1,0 +1,227 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR Le Bao Nguyen <nopublicemail@hotmail.com>
+# This file is distributed under the same license as the me.lebao3105.textworker package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: me.lebao3105.textworker 1.6.alpha1\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-02-10 21:30+0700\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: textworker/backend/file_operations.py:31
+#, python-format
+msgid "Saving file %s..."
+msgstr ""
+
+#: textworker/backend/file_operations.py:33
+#, python-format
+msgid "%s saved."
+msgstr ""
+
+#: textworker/backend/file_operations.py:43
+msgid "Error occured"
+msgstr ""
+
+#: textworker/backend/file_operations.py:44
+#, python-format
+msgid "Error occured while opening file %s"
+msgstr ""
+
+#: textworker/backend/file_operations.py:53
+#, python-format
+msgid "Opening file %s"
+msgstr ""
+
+#: textworker/backend/file_operations.py:76
+msgid "Save file"
+msgstr ""
+
+#: textworker/backend/file_operations.py:89
+msgid ""
+"It seems that the file you're trying to open is in another tab.\n"
+"\n"
+"Load anyway? (to a new tab)"
+msgstr ""
+
+#: textworker/backend/file_operations.py:92
+msgid "Infomation"
+msgstr ""
+
+#: textworker/backend/file_operations.py:105
+msgid "Open a file"
+msgstr ""
+
+#: textworker/extensions/autosave.py:63
+msgid "Autosave config"
+msgstr ""
+
+#: textworker/extensions/autosave.py:69
+msgid "Save this value"
+msgstr ""
+
+#: textworker/extensions/autosave.py:70
+msgid "Start"
+msgstr ""
+
+#: textworker/extensions/cmd.py:31
+msgid "Read only"
+msgstr ""
+
+#: textworker/extensions/cmd.py:181
+msgid "Missing root variable for CommandWindow"
+msgstr ""
+
+#: textworker/extensions/cmd.py:182
+msgid "Please close the command window by any other way."
+msgstr ""
+
+#: textworker/extensions/cmd.py:226
+msgid "Command exited with code {}"
+msgstr ""
+
+#: textworker/extensions/multiview.py:39
+msgid "Close the current (open) tab"
+msgstr ""
+
+#: textworker/extensions/multiview.py:41
+msgid "Disable this (open) tab"
+msgstr ""
+
+#: textworker/extensions/multiview.py:43
+msgid "Close the side bar"
+msgstr ""
+
+#: textworker/mainwindow.py:50
+msgid "Messages"
+msgstr ""
+
+#: textworker/mainwindow.py:61
+msgid "&File"
+msgstr ""
+
+#: textworker/mainwindow.py:64
+msgid "Open directory\tCtrl+Shift+D"
+msgstr ""
+
+#: textworker/mainwindow.py:65
+msgid "Close all tabs"
+msgstr ""
+
+#: textworker/mainwindow.py:68
+msgid "Save as...\tCtrl+Shift+S"
+msgstr ""
+
+#: textworker/mainwindow.py:70
+msgid "Quit\tAlt+F4"
+msgstr ""
+
+#: textworker/mainwindow.py:74 textworker/mainwindow.py:85
+msgid "&Edit"
+msgstr ""
+
+#: textworker/mainwindow.py:80
+msgid "Delete\tDelete"
+msgstr ""
+
+#: textworker/mainwindow.py:82
+msgid "Auto save"
+msgstr ""
+
+#: textworker/mainwindow.py:82
+msgid "Configure auto-saving file function"
+msgstr ""
+
+#: textworker/mainwindow.py:87
+msgid "Command prompt"
+msgstr ""
+
+#: textworker/mainwindow.py:91
+msgid "&View"
+msgstr ""
+
+#: textworker/mainwindow.py:92
+msgid "Zoom it\tCtrl++"
+msgstr ""
+
+#: textworker/mainwindow.py:93
+msgid "Zoom out\tCtrl+-"
+msgstr ""
+
+#: textworker/mainwindow.py:94
+msgid "Word wrap"
+msgstr ""
+
+#: textworker/mainwindow.py:98
+msgid "&Configs"
+msgstr ""
+
+#: textworker/mainwindow.py:99
+msgid "Show all configurations"
+msgstr ""
+
+#: textworker/mainwindow.py:100
+msgid "Reset all configs"
+msgstr ""
+
+#: textworker/mainwindow.py:101
+msgid "Run Setup"
+msgstr ""
+
+#: textworker/mainwindow.py:105
+msgid "&Help"
+msgstr ""
+
+#: textworker/mainwindow.py:123
+msgid "Select a folder to start"
+msgstr ""
+
+#: textworker/mainwindow.py:155
+msgid "Command Window"
+msgstr ""
+
+#: textworker/mainwindow.py:170
+msgid "Are you sure want to reset all configurations?"
+msgstr ""
+
+#: textworker/mainwindow.py:171
+msgid "Confirm configs reset"
+msgstr ""
+
+#: textworker/mainwindow.py:177
+msgid "Restored all default app configurations."
+msgstr ""
+
+#: textworker/mainwindow.py:184
+msgid "Unknown"
+msgstr ""
+
+#: textworker/mainwindow.py:186
+msgid ""
+"        A simple, cross-platform text editor.\n"
+"        Branch: {\"DEV\" if is_development_build() == True else \"STABLE\"}\n"
+"        wxPython version: {wxver}\n"
+"        Python verison: {pyver}\n"
+"        OS type: {ostype}\n"
+"        "
+msgstr ""
+
+#: textworker/mainwindow.py:246 textworker/mainwindow.py:294
+msgid "No new message collected."
+msgstr ""
+
+#: textworker/mainwindow.py:251 textworker/mainwindow.py:295
+msgid "Press F5 to refresh."
+msgstr ""
+
+#: textworker/tabs.py:58
+msgid "New file"
+msgstr ""
