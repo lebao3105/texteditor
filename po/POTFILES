@@ -1,6 +1,7 @@
-texteditor/mainwindow.py
-texteditor/tabs.py
-texteditor/extensions/autosave.py
-texteditor/extensions/cmd.py
-texteditor/extensions/finding.py
-texteditor/backend/file_operations.py
+textworker/backend/file_operations.py
+textworker/extensions/autosave.py
+textworker/extensions/cmd.py
+textworker/extensions/multiview.py
+textworker/mainwindow.py
+textworker/tabs.py
+# textworker/ui/preferences.xrc
