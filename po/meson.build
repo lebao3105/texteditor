@@ -3,5 +3,7 @@ i18n.gettext(
     args: [
         '--copyright-holder=Le Bao Nguyen <nopublicemail@hotmail.com>',
         '--package-version=@0@'.format(meson.project_version()),
+        '-C',
+        '--language=python'
     ]
 )

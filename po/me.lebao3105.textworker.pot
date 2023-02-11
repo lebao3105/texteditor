@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: me.lebao3105.textworker 1.6.alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-02-10 21:30+0700\n"
+"POT-Creation-Date: 2023-02-11 18:04+0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -184,7 +184,7 @@ msgstr ""
 msgid "Select a folder to start"
 msgstr ""
 
-#: textworker/mainwindow.py:155
+#: textworker/mainwindow.py:155 po/preferences.pot:21
 msgid "Command Window"
 msgstr ""
 
@@ -224,4 +224,136 @@ msgstr ""
 
 #: textworker/tabs.py:58
 msgid "New file"
+msgstr ""
+
+#: po/preferences.pot:1
+msgid "Setup textworker"
+msgstr ""
+
+#: po/preferences.pot:2
+msgid "Welcome"
+msgstr ""
+
+#: po/preferences.pot:3
+msgid ""
+"Welcome to textworker 1.6! Go through this window so that you can setup and "
+"ready to use the application."
+msgstr ""
+
+#: po/preferences.pot:4
+msgid "Setup the font"
+msgstr ""
+
+#: po/preferences.pot:5
+msgid "Choose a good font so that you can read the text easily."
+msgstr ""
+
+#: po/preferences.pot:6
+msgid "Preview:"
+msgstr ""
+
+#: po/preferences.pot:7
+msgid "The quick fox jums over the lazy dog."
+msgstr ""
+
+#: po/preferences.pot:8
+msgid "Personalize your application!"
+msgstr ""
+
+#: po/preferences.pot:9
+msgid ""
+"What about configuring the application theme, including the editor font "
+"color? See below ??"
+msgstr ""
+
+#: po/preferences.pot:10
+msgid "Font color"
+msgstr ""
+
+#: po/preferences.pot:11
+msgid "Default"
+msgstr ""
+
+#: po/preferences.pot:12
+msgid "Green"
+msgstr ""
+
+#: po/preferences.pot:13
+msgid "Red"
+msgstr ""
+
+#: po/preferences.pot:14
+msgid "Custom"
+msgstr ""
+
+#: po/preferences.pot:15
+msgid "#000000"
+msgstr ""
+
+#: po/preferences.pot:16
+msgid "Application theme"
+msgstr ""
+
+#: po/preferences.pot:17
+msgid "Light"
+msgstr ""
+
+#: po/preferences.pot:18
+msgid "Dark"
+msgstr ""
+
+#: po/preferences.pot:19
+msgid "Automatic"
+msgstr ""
+
+#: po/preferences.pot:20
+msgid ""
+"Note that you will need:\n"
+"* Windows 10 or later\n"
+"* macOS X 10.14 (Mojave) or later\n"
+"* Other Unix OSes with GTK3+\n"
+"to use this feature."
+msgstr ""
+
+#: po/preferences.pot:22
+msgid ""
+"Command Window, like Windows's CMD or Linux shells, allows you to run "
+"commands and capture their outputs. Currently does not recieve any user "
+"input when a command starts and not done yet."
+msgstr ""
+
+#: po/preferences.pot:23
+msgid "Capture, and track the bugs"
+msgstr ""
+
+#: po/preferences.pot:24
+msgid ""
+"See something unexpected or broken? Here, the Log window is here and let you "
+"watch the process of works inside the application. If something wrong, you "
+"can get the traceback then report it to me."
+msgstr ""
+
+#: po/preferences.pot:25
+msgid ""
+"Note: You can run the app from Terminal to see all app logs.\n"
+"The log file defaults to be located in <your home folder>/.logs/texteditor."
+"log."
+msgstr ""
+
+#: po/preferences.pot:26
+msgid "Freely enchant the power of the editor."
+msgstr ""
+
+#: po/preferences.pot:27
+msgid "Change configurations via GUI or a configuration file!"
+msgstr ""
+
+#: po/preferences.pot:28
+msgid "Finish"
+msgstr ""
+
+#: po/preferences.pot:29
+msgid ""
+"Everything is set now. Thank you for using Textworker! Restart the "
+"application to take effect."
 msgstr ""

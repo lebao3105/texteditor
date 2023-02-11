@@ -4,4 +4,4 @@ textworker/extensions/cmd.py
 textworker/extensions/multiview.py
 textworker/mainwindow.py
 textworker/tabs.py
-# textworker/ui/preferences.xrc
+po/preferences.pot
