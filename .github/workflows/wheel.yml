@@ -25,7 +25,7 @@ jobs:
           sudo apt update
           sudo add-apt-repository universe -y
           sudo apt install gettext meson ninja-build -y
-          sudo apt install libsdl2-dev -y
+          sudo apt install libsdl2-dev libgtk3-dev -y
           pip3 install attrdict3 requests build wheel
           pip3 install wxpython
           pip3 install -r requirements.txt
