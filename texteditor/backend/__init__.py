@@ -4,13 +4,14 @@ import packaging.version
 __version__ = "1.4.1"
 
 
-def require_version(version: str, ctype):
+def require_version(version: str, ctype: str):
     """Requires texteditor version for an object.
 
     Supported comparison types (ctype):\n
     >=, ==, =<, >, <
     :raises Exception if the app version is not satisfied required version
     :raises ValueError if ctype uses a invalid comparison type
+    :returns True if the check succeed
     """
 
     def raise_err():
@@ -21,18 +22,26 @@ def require_version(version: str, ctype):
             )
         )
 
-    currver = packaging.version.parse(__version__)
-    reqver = packaging.version.parse(version)
+    # print(ctype)
+    currver = packaging.version.parse(__version__).base_version
+    reqver = packaging.version.parse(version).base_version
+    # print(currver, reqver)
     caller = inspect.getmodule(inspect.stack()[1][0]).__name__
     if ctype == ">=" or ">":
         if reqver > currver:
             raise_err()
+        else:
+            return True
     elif ctype == "==":
         if reqver != currver:
             raise_err()
+        else:
+            return True
     elif ctype == "=<" or "<":
         if reqver < currver:
             raise_err()
+        else:
+            return True
     else:
         raise ValueError("Unknown comparison type.")
 

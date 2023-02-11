@@ -2,8 +2,6 @@
 * Python 3.8+
 * Pip3 (comes with Python)
 * Tkinter (if you don't use wip/wx branch)
-* wxPython (if you use wip/wx branch, install wxPython's requirements also)
-* Packages specified in [requirements.txt](requirements.txt) via pip
 * Gettext (optional) to generate translations
 * Meson and ninja (installable via pip) (optional) to install the project
 * Build (install via pip) (optional) to build and install the project (after the installation pip will recognize texteditor as a Python package)

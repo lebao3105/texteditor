@@ -15,8 +15,8 @@ from .views import about
 class MainWindow(Tk):
     """The main application class."""
 
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
 
         # Configure some required menu items callback
         self.callbacks = {

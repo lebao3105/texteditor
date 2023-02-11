@@ -13,7 +13,7 @@ if sys.platform == "win32":
 else:
     searchdir = os.environ["HOME"] + "/Documents"
 
-texteditor.backend.require_version("1.4a0", ">=")
+texteditor.backend.require_version("1.4a", ">=")
 # texteditor.backend.require_version("1.6a", "<") # It doesn't work! Why?
 
 

@@ -9,7 +9,7 @@ import tkinter.ttk as ttk
 import traceback
 from texteditor.backend import get_config, textwidget
 
-texteditor.backend.require_version("1.4b0", "=<")
+texteditor.backend.require_version("1.4b0", ">=")
 
 
 class Logger:

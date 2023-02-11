@@ -6,10 +6,8 @@ import threading
 from tkinter import END, BooleanVar, TclError, Toplevel, messagebox
 from texteditor.backend import get_config, textwidget
 
-arr = []
-
 texteditor.backend.require_version("1.4a", ">=")
-# texteditor.backend.require_version("1.6a", "<")
+# texteditor.backend.require_version("1.6a", "=<")
 
 
 class cmd(textwidget.TextWidget):
@@ -35,8 +33,6 @@ class cmd(textwidget.TextWidget):
         append = self.insert
 
         if command.startswith("exit"):
-            for pid in arr:
-                pid.kill
             print("Closed Console Window.")
             self.parent.destroy()  # Destroy the Toplevel widget
 
@@ -73,9 +69,7 @@ class cmd(textwidget.TextWidget):
             )
             cmd = get_config.GetConfig.getvalue("cmd", "defconsole")
 
-            threading.Thread(
-                target=lambda: self.runcommand(cmd, noout=True), daemon=True
-            ).start()
+            threading.Thread(target=lambda: self.runcommand(cmd, noout=True)).start()
 
         elif command.startswith("cd "):
             try:
@@ -91,12 +85,11 @@ class cmd(textwidget.TextWidget):
     def runcommand(self, cmd: str, noout: bool = None):
         self.result = subprocess.Popen(
             cmd,
-            shell=True,  # preexec_fn=os.setsid,
+            shell=True,
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
         )
         output, error = self.result.communicate()
-        arr.append(self.result)
         try:
             self.insert("end", output)
             self.insert("end", error)

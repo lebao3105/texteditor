@@ -49,11 +49,11 @@ def __filenotfound(filepath):
 
 def start_app(argv=None):
     if not argv:  # For __main__
-        argv = sys.argv
+        argv = sys.argv[1:]
     root = mainwindow.MainWindow()
     n = len(argv)
 
-    if n - 1 > 0:
+    if n > 0:
 
         if os.path.isfile(argv[1]):
             root.notebook.fileops.openfile(argv[1])
