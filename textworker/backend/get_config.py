@@ -27,7 +27,11 @@ else:
 cfg = {}
 
 cfg["interface"] = {"color": "light", "autocolor": "yes", "textcolor": "default"}
-cfg["interface.tabs"] = {"move_tabs": "yes", "middle_close": "no", "close_on_all_tabs": "no"}
+cfg["interface.tabs"] = {
+    "move_tabs": "yes",
+    "middle_close": "no",
+    "close_on_all_tabs": "no",
+}
 
 cfg["interface.font"] = {
     "style": "normal",
@@ -50,7 +54,11 @@ class ConfigurationError(Exception):
         if not msg:
             msg = "*UNKNOW ERROR*"
         else:
-            msg = "[{}->{}] : {}".format(section, "(None)" if option == "" else option, "No Message" if msg == "" else msg)
+            msg = "[{}->{}] : {}".format(
+                section,
+                "(None)" if option == "" else option,
+                "No Message" if msg == "" else msg,
+            )
         full = prefix + msg
         super().__init__(full, *args)
 
@@ -125,10 +133,10 @@ class GetConfig(configparser.ConfigParser):
             return True
 
     # Options
-    def getkey(self, section, option, needed:bool = False):
+    def getkey(self, section, option, needed: bool = False):
         """
         Try to get the value of an option under the spectified section.
-        
+
         If the option does not exist and needed parameter is set to True,
         GetConfig will add that option automatically with the value based on
         its previously initialized backup configs.
@@ -141,7 +149,9 @@ class GetConfig(configparser.ConfigParser):
             if needed == True:
                 self.set(section, option, self.cfg[section][option])
             else:
-                raise ConfigurationError(section, option, "No option found ({})".format(option))
+                raise ConfigurationError(
+                    section, option, "No option found ({})".format(option)
+                )
         except configparser.NoSectionError:
             if needed == True:
                 self.add_section(section)
@@ -198,7 +208,6 @@ class GetConfig(configparser.ConfigParser):
             size_ = int(size)
 
         return wx.Font(size_, wx.FONTFAMILY_DEFAULT, style_, weight_, 0, family)
-    
 
     def _get_color(self):
         def _get_sys_mode():

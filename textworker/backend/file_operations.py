@@ -13,14 +13,13 @@ else:
 
 
 class FileOperations:
-
     def __init__(self, notebook, newtabfn, settitle=None, statusbar=None):
         self.files = []
         self.notebook = notebook
         self.newtabfn = newtabfn
         self.statusbar = statusbar if statusbar is not None else None
         self.settitle = settitle
-        self.dummyfm = wx.Frame() # Dummy frame for dialogs
+        self.dummyfm = wx.Frame()  # Dummy frame for dialogs
 
     def tabname(self):
         return self.notebook.GetPageText(self.notebook.GetSelection())

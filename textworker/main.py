@@ -45,6 +45,6 @@ def start_app():
                     f = open(argv[i], "w")
                     nb.fileops.openfile(argv[i])
                     del f
-                    
+
     fm.Show()
     root.MainLoop()

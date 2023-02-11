@@ -8,6 +8,7 @@ MIN_15 = MIN_1 * 15  # 900 secs
 MIN_20 = MIN_15 + MIN_1 * 5  # 1200 secs
 MIN_30 = MIN_15 * 2  # 1800 secs
 
+
 class AutoSave:
     cmbitems = [
         "30 seconds",
@@ -40,9 +41,12 @@ class AutoSave:
 
         self.timer = wx.Timer(parent)
         if self.enabled in global_settings.cfg.yes_value or [True]:
-            self.timer.Start(self.get(global_settings.cfg.getkey("extensions.autosave", "time")) * 1000)
+            self.timer.Start(
+                self.get(global_settings.cfg.getkey("extensions.autosave", "time"))
+                * 1000
+            )
             parent.Bind(wx.EVT_TIMER, lambda evt: self.savefn(), self.timer)
-            #savefn()
+            # savefn()
 
     def askwind(self):
         def getvalue(evt):
@@ -51,7 +55,7 @@ class AutoSave:
                 if self.enabled in global_settings.cfg.no_value or [False]:
                     global_settings.cfg.set("extensions.autosave", "enable", "yes")
                 self.saveconfig(cmb.GetValue())
-                
+
             self.savefn()
             self.timer.Start(self.get(cmb.GetValue()) * 1000)
             self.parent.Bind(wx.EVT_TIMER, lambda evt: self.savefn(), self.timer)

@@ -13,7 +13,7 @@
 					<border>5</border>
 					<object class="wxStaticText" name="m_staticText1">
 						<label>Welcome</label>
-						<wrap>-1</wrap>
+						<wrap>0</wrap>
 					</object>
 				</object>
 				<object class="sizeritem">
@@ -22,7 +22,7 @@
 					<border>5</border>
 					<object class="wxStaticText" name="m_staticText2">
 						<label>Welcome to textworker 1.6! Go through this window so that you can setup and ready to use the application.</label>
-						<wrap>-1</wrap>
+						<wrap>0</wrap>
 					</object>
 				</object>
 			</object>
@@ -36,7 +36,7 @@
 					<border>5</border>
 					<object class="wxStaticText" name="m_staticText3">
 						<label>Setup the font</label>
-						<wrap>-1</wrap>
+						<wrap>0</wrap>
 					</object>
 				</object>
 				<object class="sizeritem">
@@ -45,7 +45,7 @@
 					<border>5</border>
 					<object class="wxStaticText" name="m_staticText4">
 						<label>Choose a good font so that you can read the text easily.</label>
-						<wrap>-1</wrap>
+						<wrap>0</wrap>
 					</object>
 				</object>
 				<object class="sizeritem">
@@ -53,13 +53,6 @@
 					<flag>wxALL</flag>
 					<border>5</border>
 					<object class="wxFontPickerCtrl" name="m_fontPicker1">
-						<!-- <value>
-							<size>9</size>
-							<style>normal</style>
-							<weight>normal</weight>
-							<underlined>0</underlined>
-							<face>Arial</face>
-						</value> -->
 						<style>wxFNTP_DEFAULT_STYLE</style>
 					</object>
 				</object>
@@ -69,7 +62,7 @@
 					<border>5</border>
 					<object class="wxStaticText" name="m_staticText5">
 						<label>Preview:</label>
-						<wrap>-1</wrap>
+						<wrap>0</wrap>
 					</object>
 				</object>
 				<object class="sizeritem">
@@ -78,7 +71,7 @@
 					<border>5</border>
 					<object class="wxStaticText" name="m_staticText6">
 						<label>The quick fox jums over the lazy dog.</label>
-						<wrap>-1</wrap>
+						<wrap>0</wrap>
 					</object>
 				</object>
 			</object>
@@ -92,7 +85,7 @@
 					<border>5</border>
 					<object class="wxStaticText" name="m_staticText7">
 						<label>Personalize your application!</label>
-						<wrap>-1</wrap>
+						<wrap>0</wrap>
 					</object>
 				</object>
 				<object class="sizeritem">
@@ -100,8 +93,8 @@
 					<flag>wxALL</flag>
 					<border>5</border>
 					<object class="wxStaticText" name="m_staticText8">
-						<label>What about configuring the application theme, including the editor font color? See below 👀</label>
-						<wrap>-1</wrap>
+						<label>What about configuring the application theme, including the editor font color? See below ??</label>
+						<wrap>0</wrap>
 					</object>
 				</object>
 				<object class="sizeritem">
@@ -110,7 +103,7 @@
 					<border>5</border>
 					<object class="wxStaticText" name="m_staticText9">
 						<label>Font color</label>
-						<wrap>-1</wrap>
+						<wrap>0</wrap>
 					</object>
 				</object>
 				<object class="sizeritem">
@@ -143,7 +136,7 @@
 					<border>5</border>
 					<object class="wxStaticText" name="m_staticText10">
 						<label>Application theme</label>
-						<wrap>-1</wrap>
+						<wrap>0</wrap>
 					</object>
 				</object>
 				<object class="sizeritem">
@@ -172,7 +165,7 @@
 					<object class="wxStaticText" name="m_staticText11">
 						<hidden>1</hidden>
 						<label>Note that you will need:\n* Windows 10 or later\n* macOS X 10.14 (Mojave) or later\n* Other Unix OSes with GTK3+\nto use this feature.</label>
-						<wrap>-1</wrap>
+						<wrap>0</wrap>
 					</object>
 				</object>
 			</object>
@@ -186,7 +179,7 @@
 					<border>5</border>
 					<object class="wxStaticText" name="m_staticText12">
 						<label>Command Window</label>
-						<wrap>-1</wrap>
+						<wrap>0</wrap>
 					</object>
 				</object>
 				<object class="sizeritem">
@@ -217,7 +210,7 @@
 					<border>5</border>
 					<object class="wxStaticText" name="m_staticText14">
 						<label>Capture, and track the bugs</label>
-						<wrap>-1</wrap>
+						<wrap>0</wrap>
 					</object>
 				</object>
 				<object class="sizeritem">
@@ -226,7 +219,7 @@
 					<border>5</border>
 					<object class="wxStaticText" name="m_staticText15">
 						<label>See something unexpected or broken? Here, the Log window is here and let you watch the process of works inside the application. If something wrong, you can get the traceback then report it to me.</label>
-						<wrap>-1</wrap>
+						<wrap>0</wrap>
 					</object>
 				</object>
 				<object class="sizeritem">
@@ -249,7 +242,7 @@
 					<border>5</border>
 					<object class="wxStaticText" name="m_staticText16">
 						<label>Note: You can run the app from Terminal to see all app logs.\nThe log file defaults to be located in &lt;your home folder&gt;/.logs/texteditor.log.</label>
-						<wrap>-1</wrap>
+						<wrap>0</wrap>
 					</object>
 				</object>
 			</object>
@@ -263,7 +256,7 @@
 					<border>5</border>
 					<object class="wxStaticText" name="m_staticText17">
 						<label>Freely enchant the power of the editor.</label>
-						<wrap>-1</wrap>
+						<wrap>0</wrap>
 					</object>
 				</object>
 				<object class="sizeritem">
@@ -272,7 +265,7 @@
 					<border>5</border>
 					<object class="wxStaticText" name="m_staticText18">
 						<label>Change configurations via GUI or a configuration file!</label>
-						<wrap>-1</wrap>
+						<wrap>0</wrap>
 					</object>
 				</object>
 				<object class="sizeritem">
@@ -294,7 +287,7 @@
 					<border>5</border>
 					<object class="wxStaticText" name="m_staticText19">
 						<label>Finish</label>
-						<wrap>-1</wrap>
+						<wrap>0</wrap>
 					</object>
 				</object>
 				<object class="sizeritem">
@@ -303,7 +296,7 @@
 					<border>5</border>
 					<object class="wxStaticText" name="m_staticText20">
 						<label>Everything is set now. Thank you for using Textworker! Restart the application to take effect.</label>
-						<wrap>-1</wrap>
+						<wrap>0</wrap>
 					</object>
 				</object>
 			</object>

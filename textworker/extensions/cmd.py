@@ -83,7 +83,11 @@ class Tabb(Tabber):
 
         timer = wx.Timer(self)
         timer.Start()
-        self.Bind(wx.EVT_TIMER, lambda evt: self.SetPageText(self.GetSelection(), os.getcwd()), timer)
+        self.Bind(
+            wx.EVT_TIMER,
+            lambda evt: self.SetPageText(self.GetSelection(), os.getcwd()),
+            timer,
+        )
 
         self.AddPage(textw, newtabname, select=True)
         self.text_editor = textw
@@ -138,7 +142,7 @@ class Shell:
         if self.statusobj != None:
             self.statusobj.SetStatusText(os.getcwd())
 
-    def showprompt(self, intro:bool=False, godown:bool=True):
+    def showprompt(self, intro: bool = False, godown: bool = True):
         if intro == True:
             self.parent.AddText(self.intro)
         if godown == True:
@@ -169,7 +173,7 @@ class Shell:
         elif cmd.startswith("clear"):
             self.parent.ClearAll()
             self.showprompt(godown=False)
-        
+
         elif cmd.startswith("cls"):
             self.parent.ClearAll()
             self.showprompt(godown=False)
@@ -188,10 +192,17 @@ class Shell:
             self.showprompt()
 
         elif cmd.startswith("alias --system "):  # Use the system alias command
-            threading.Thread(target=lambda: self.runcommand("alias {}".format(cmd.removeprefix("alias --system "))), daemon=True).start()
+            threading.Thread(
+                target=lambda: self.runcommand(
+                    "alias {}".format(cmd.removeprefix("alias --system "))
+                ),
+                daemon=True,
+            ).start()
 
         elif cmd.startswith("runterm"):
-            threading.Thread(target=lambda: self.runcommand(self.runterm), daemon=True).start()
+            threading.Thread(
+                target=lambda: self.runcommand(self.runterm), daemon=True
+            ).start()
 
         elif cmd.startswith("help"):
             self.parent.AddText(self.__doc__)
@@ -206,15 +217,18 @@ class Shell:
     def runcommand(self, input: str):
         if input in self.aliases:
             input = self.aliases[input]
-        
+
         result = subprocess.Popen(
-            input, stderr=subprocess.PIPE, stdout=subprocess.PIPE, shell=True,
+            input,
+            stderr=subprocess.PIPE,
+            stdout=subprocess.PIPE,
+            shell=True,
         )
         self.parent.AddText("\n")
 
         for item in result.communicate():
             # https://stackoverflow.com/questions/606191/
-            self.parent.AddText(item.decode('utf-8'))
+            self.parent.AddText(item.decode("utf-8"))
 
         result.wait()
         self.exitcode = result.returncode

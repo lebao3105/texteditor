@@ -9,9 +9,6 @@ project(
     license: 'GPL-3.0+'
 )
 
-message('Note: Please make sure that you have dependencies installed before you build this project.')
-message('Read https://github.com/lebao3105/texteditor/blob/main/BuildAndRun.md for more infomation.')
-message('Note: Only Python 3.8+ is supported here.')
 
 # Import modules
 i18n = import('i18n')
@@ -44,3 +41,7 @@ if target_machine.system() != 'windows'
         update_desktop_database: true
     )
 endif
+
+message('Note: Please make sure that you have dependencies installed before you build this project.')
+message('Read https://github.com/lebao3105/texteditor/blob/main/BuildAndRun.md for more infomation.')
+message('Note: Only Python 3.8+ is supported here.')

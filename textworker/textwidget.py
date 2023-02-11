@@ -1,6 +1,7 @@
 import wx.stc
 from .generic import global_settings
 
+
 class TextWidget(wx.stc.StyledTextCtrl):
     rcmenu: bool = True
 
@@ -23,7 +24,7 @@ class TextWidget(wx.stc.StyledTextCtrl):
 
         self.Bind(wx.stc.EVT_STC_MODIFIED, self.OnKeyPress)
 
-    def EnableLineCount(self, set:bool):
+    def EnableLineCount(self, set: bool):
         if set == True:
             self.SetMarginType(1, wx.stc.STC_MARGIN_NUMBER)
             self.SetMarginMask(1, 0)
@@ -70,7 +71,7 @@ class TextWidget(wx.stc.StyledTextCtrl):
                 redo: lambda evt: self.Redo(),
                 delete: lambda evt: self.DeleteBack(),
                 selectall: lambda evt: self.SelectAll(),
-                readonly: lambda evt: self.SetEditable(not self.IsEditable())
+                readonly: lambda evt: self.SetEditable(not self.IsEditable()),
             }
 
             cut.Enable(self.CanCut())

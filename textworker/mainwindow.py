@@ -15,10 +15,12 @@ from .extensions import cmd, multiview
 # https://stackoverflow.com/a/27872625
 if platform.system() == "Windows":
     import ctypes
-    myappid = u'me.lebao3105.texteditor' # arbitrary string
+
+    myappid = "me.lebao3105.texteditor"  # arbitrary string
     ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(myappid)
 
 cfg = global_settings.cfg
+
 
 class MainFrame(wx.Frame):
     def __init__(self, *args, **kwds):
@@ -31,7 +33,7 @@ class MainFrame(wx.Frame):
         self.menuitem = {}
         self.sidebar = multiview.MultiViewer(self)
         self.wiz = SettingsWindow(self)
-        self.islogwindopen : bool = False
+        self.islogwindopen: bool = False
         self._StatusBar()
 
         tabname = self.notebook.GetPageText(self.notebook.GetSelection())
@@ -46,9 +48,7 @@ class MainFrame(wx.Frame):
         self.CreateStatusBar(2)
         w1 = self.StatusBar.Size[0] - 50
         self.StatusBar.SetStatusWidths([w1, -1])
-        righttext = wx.StaticText(
-            self.StatusBar, wx.ID_ANY, label=_("Messages")
-        )
+        righttext = wx.StaticText(self.StatusBar, wx.ID_ANY, label=_("Messages"))
         righttext.SetPosition((w1 + 2, 2))
         righttext.Bind(wx.EVT_LEFT_DOWN, self.OpenLogWind)
 
@@ -58,54 +58,154 @@ class MainFrame(wx.Frame):
         self.menubar.SetParent(self)
 
         ## File
-        self.menubar.AddMenu(_("&File"), [
-            (wx.ID_NEW, None, None, self.notebook.AddTab, None),
-            (wx.ID_OPEN, None, None, self.notebook.fileops.openfile_dlg, None),
-            (wx.ID_ANY, _("Open directory\tCtrl+Shift+D"), None, self.OpenDir, None),
-            (wx.ID_ANY, _("Close all tabs"), None, lambda evt: (self.notebook.DeleteAllPages(), self.notebook.AddTab()), None),
-            (None, None, None, None, None), # Separator
-            (wx.ID_SAVE, None, None, self.notebook.fileops.savefile_dlg, None),
-            (wx.ID_SAVEAS, _("Save as...\tCtrl+Shift+S"), None, self.notebook.fileops.saveas, None),
-            (None, None, None, None, None),
-            (wx.ID_EXIT, _("Quit\tAlt+F4"), None, self.OnClose, None)
-        ])
+        self.menubar.AddMenu(
+            _("&File"),
+            [
+                (wx.ID_NEW, None, None, self.notebook.AddTab, None),
+                (wx.ID_OPEN, None, None, self.notebook.fileops.openfile_dlg, None),
+                (
+                    wx.ID_ANY,
+                    _("Open directory\tCtrl+Shift+D"),
+                    None,
+                    self.OpenDir,
+                    None,
+                ),
+                (
+                    wx.ID_ANY,
+                    _("Close all tabs"),
+                    None,
+                    lambda evt: (
+                        self.notebook.DeleteAllPages(),
+                        self.notebook.AddTab(),
+                    ),
+                    None,
+                ),
+                (None, None, None, None, None),  # Separator
+                (wx.ID_SAVE, None, None, self.notebook.fileops.savefile_dlg, None),
+                (
+                    wx.ID_SAVEAS,
+                    _("Save as...\tCtrl+Shift+S"),
+                    None,
+                    self.notebook.fileops.saveas,
+                    None,
+                ),
+                (None, None, None, None, None),
+                (wx.ID_EXIT, _("Quit\tAlt+F4"), None, self.OnClose, None),
+            ],
+        )
 
         ## Edit
-        self.menubar.AddMenu(_("&Edit"), [
-            (wx.ID_COPY, None, None, lambda evt: self.notebook.text_editor.Copy, None),
-            (wx.ID_PASTE, None, None, lambda evt: self.notebook.text_editor.Paste, None),
-            (wx.ID_CUT, None, None, lambda evt: self.notebook.text_editor.Cut, None),
-            (None, None, None, None, None),
-            (wx.ID_SELECTALL, None, None, lambda evt: self.notebook.text_editor.SelectAll, None),
-            (wx.ID_DELETE, _("Delete\tDelete"), None, lambda evt: self.notebook.text_editor.DeleteBack, None),
-            (None, None, None, None, None),
-            (wx.ID_ANY, _("Auto save"), _("Configure auto-saving file function"), lambda evt: self.notebook.autosv.askwind, None),
-        ])
+        self.menubar.AddMenu(
+            _("&Edit"),
+            [
+                (
+                    wx.ID_COPY,
+                    None,
+                    None,
+                    lambda evt: self.notebook.text_editor.Copy,
+                    None,
+                ),
+                (
+                    wx.ID_PASTE,
+                    None,
+                    None,
+                    lambda evt: self.notebook.text_editor.Paste,
+                    None,
+                ),
+                (
+                    wx.ID_CUT,
+                    None,
+                    None,
+                    lambda evt: self.notebook.text_editor.Cut,
+                    None,
+                ),
+                (None, None, None, None, None),
+                (
+                    wx.ID_SELECTALL,
+                    None,
+                    None,
+                    lambda evt: self.notebook.text_editor.SelectAll,
+                    None,
+                ),
+                (
+                    wx.ID_DELETE,
+                    _("Delete\tDelete"),
+                    None,
+                    lambda evt: self.notebook.text_editor.DeleteBack,
+                    None,
+                ),
+                (None, None, None, None, None),
+                (
+                    wx.ID_ANY,
+                    _("Auto save"),
+                    _("Configure auto-saving file function"),
+                    lambda evt: self.notebook.autosv.askwind,
+                    None,
+                ),
+            ],
+        )
         for menu, name in self.menubar.GetMenus():
             if name == _("&Edit"):
-                if global_settings.get_setting("extensions.cmd", "enable") in cfg.yes_value or [True]:
+                if global_settings.get_setting(
+                    "extensions.cmd", "enable"
+                ) in cfg.yes_value or [True]:
                     item = menu.Append(wx.ID_ANY, _("Command prompt"))
                     self.Bind(wx.EVT_MENU, self.OpenCmd, item)
 
         ## View
-        self.menubar.AddMenu(_("&View"), [
-            (wx.ID_ZOOM_IN, _("Zoom it\tCtrl++"), None, lambda evt: self.notebook.text_editor.ZoomIn, None),
-            (wx.ID_ZOOM_OUT, _("Zoom out\tCtrl+-"), None, lambda evt: self.notebook.text_editor.ZoomIn, None),
-            (wx.ID_ANY, _("Word wrap"), None, lambda evt: print("not implemented yet"), wx.ITEM_CHECK), # Not completed
-        ])
+        self.menubar.AddMenu(
+            _("&View"),
+            [
+                (
+                    wx.ID_ZOOM_IN,
+                    _("Zoom it\tCtrl++"),
+                    None,
+                    lambda evt: self.notebook.text_editor.ZoomIn,
+                    None,
+                ),
+                (
+                    wx.ID_ZOOM_OUT,
+                    _("Zoom out\tCtrl+-"),
+                    None,
+                    lambda evt: self.notebook.text_editor.ZoomIn,
+                    None,
+                ),
+                (
+                    wx.ID_ANY,
+                    _("Word wrap"),
+                    None,
+                    lambda evt: print("not implemented yet"),
+                    wx.ITEM_CHECK,
+                ),  # Not completed
+            ],
+        )
 
         ## Configs
-        self.menubar.AddMenu(_("&Configs"), [
-            (wx.ID_ANY, _("Show all configurations"), None, self.ShowCfgs, None),
-            (wx.ID_ANY, _("Reset all configs"), None, self.ResetCfgs, None),
-            (wx.ID_ANY, _("Run Setup"), None, lambda evt: self.wiz.Run(True), None)
-        ])
+        self.menubar.AddMenu(
+            _("&Configs"),
+            [
+                (wx.ID_ANY, _("Show all configurations"), None, self.ShowCfgs, None),
+                (wx.ID_ANY, _("Reset all configs"), None, self.ResetCfgs, None),
+                (wx.ID_ANY, _("Run Setup"), None, lambda evt: self.wiz.Run, None),
+            ],
+        )
 
         ## Help
-        self.menubar.AddMenu(_("&Help"), [
-            (wx.ID_ABOUT, None, None, self.ShowAbout, None),
-            (wx.ID_HELP, None, None, lambda evt: webbrowser.open_new_tab("https://lebao3105.gitbook.io/texteditor_doc"), None)
-        ])
+        self.menubar.AddMenu(
+            _("&Help"),
+            [
+                (wx.ID_ABOUT, None, None, self.ShowAbout, None),
+                (
+                    wx.ID_HELP,
+                    None,
+                    None,
+                    lambda evt: webbrowser.open_new_tab(
+                        "https://lebao3105.gitbook.io/texteditor_doc"
+                    ),
+                    None,
+                ),
+            ],
+        )
         self.SetMenuBar(self.menubar)
 
     def OnClose(self, evt):
@@ -126,16 +226,16 @@ class MainFrame(wx.Frame):
             selected_dir = ask.GetPath()
         else:
             return
-        
+
         dirs = wx.GenericDirCtrl(self.sidebar.tabs, -1, selected_dir)
         dirs.Bind(
             wx.EVT_DIRCTRL_FILEACTIVATED,
-            lambda evt: self.notebook.fileops.openfile(dirs.GetFilePath())
+            lambda evt: self.notebook.fileops.openfile(dirs.GetFilePath()),
         )
         dirs.Show()
         self.sidebar.RegisterTab(selected_dir, dirs)
         self.sidebar.Show()
-    
+
     def OpenLogWind(self, evt):
         def onwindowclose(evt):
             self.islogwindopen = False
@@ -183,7 +283,7 @@ class MainFrame(wx.Frame):
         pyver = platform.python_version()
         ostype = platform.system() if platform.system() != "" or None else _("Unknown")
         msg = _(
-        f"""\
+            f"""\
         A simple, cross-platform text editor.
         Branch: {"DEV" if is_development_build() == True else "STABLE"}
         wxPython version: {wxver}
@@ -191,8 +291,7 @@ class MainFrame(wx.Frame):
         OS type: {ostype}
         """
         )
-        license = \
-        """
+        license = """
         This program is free software: you can redistribute it and/or modify
         it under the terms of the GNU General Public License as published by
         the Free Software Foundation, either version 3 of the License, or
@@ -260,14 +359,8 @@ class LogsWindow:
         for item in [self.label1, self.label2, self.fm]:
             cfg.configure(item)
 
-        self.label1.SetFont(
-            cfg._get_font().MakeBold()
-        )
+        self.label1.SetFont(cfg._get_font().MakeBold().MakeUnderlined())
 
-        self.label1.SetFont(
-            cfg._get_font().MakeUnderlined()
-        )
-        
         panel.SetSizerAndFit(sizer)
         self.fm.Bind(wx.EVT_CHAR_HOOK, self.onkeypressed)
         self.refresh()
@@ -278,7 +371,7 @@ class LogsWindow:
         key = evt.GetKeyCode()
         if key == wx.WXK_F5:
             self.refresh()
-            print('hello')
+            print("hello")
         else:
             evt.Skip()
 

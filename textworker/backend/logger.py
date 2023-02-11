@@ -14,7 +14,7 @@ if sys.platform == "win32":
     logfile_ = __dir + "\\.logs\\texteditor.log"
 else:
     logfile_ = __dir + "/.logs/texteditor.log"
-        
+
 
 class Logger:
     format_date = "%m-%d-%Y"  # Month day year
@@ -50,7 +50,7 @@ class Logger:
                 self.usable = True
         else:
             self.usable = True
-    
+
     def printtext(self, title, msg=None, traceback=None):
         """Create a log message with time+date, write it to the log file
         and show it to the console."""
@@ -69,7 +69,7 @@ class Logger:
         full = default + " %s" % message
         if self.usable == True:
             with open(self.log_file, mode="a") as f:
-                f.write("\n"+full)
+                f.write("\n" + full)
         self.logs.append(full)
         print(full)
 
@@ -98,4 +98,3 @@ class Logger:
                 None, message=msg, caption=title, style=wx.OK | wx.ICON_WARNING
             ).ShowModal()
         return self.printtext(title, msg if msg is not None else "")
-
