@@ -5,9 +5,6 @@ project(
     license: 'GPL-3.0+'
 )
 
-message('Note: Please make sure that you have dependencies installed before building this project.')
-message('Note: Only Python3.7+ is supported here.')
-
 # Import modules
 i18n = import('i18n')
 python = import('python')
@@ -39,3 +36,6 @@ if target_machine.system() != 'windows'
         update_desktop_database: true
     )
 endif
+
+message('Note: Please make sure that you have dependencies installed before building this project.')
+message('Note: Only Python3.8+ is supported here.')

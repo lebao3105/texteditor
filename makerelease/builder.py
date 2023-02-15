@@ -22,7 +22,7 @@ print(miscs.headertext("texteditor Python package build script"))
 def checkreq():
     global FOUND_NREQ
     global CHECKREQ_NOT_IN_FLAG
-    
+
     print(miscs.boldtext("Checking for requirements..."))
     print(
         miscs.warntext(
@@ -45,7 +45,7 @@ def checkreq():
             FOUND_NREQ = True
         else:
             del build
-    
+
     if MESON_FLAG is True:
 
         if shutil.which("meson") is None:
@@ -169,7 +169,8 @@ def clean_():
     except:
         return
 
-def run_command(command:str):
+
+def run_command(command: str):
     result = subprocess.Popen(
         command,
         shell=True,
@@ -182,15 +183,24 @@ def run_command(command:str):
     print(miscs.boldtext("Errors if have: "), err)
     result.wait()
 
+
 def main():
     args = sys.argv[1:]
     argc = len(args)
 
-    argtouse = ["--use-meson", "--no-checkreq", "--help", "help", "checkreq", "build", "install"]
+    argtouse = [
+        "--use-meson",
+        "--no-checkreq",
+        "--help",
+        "help",
+        "checkreq",
+        "build",
+        "install",
+    ]
     argused = args
     cbargs = []
     cbargs += argtouse, argused
-    
+
     if argc > 0:
         seen = set([x for x in cbargs if cbargs.count(x) > 1])
         for item in seen:
