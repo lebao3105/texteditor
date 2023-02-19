@@ -1,29 +1,36 @@
 import configparser
 import darkdetect
 import os
+import packaging.version
+import pathlib
 import sys
 import sv_ttk
-import texteditor.backend as backend
 import threading
-from tkinter import TclError, font, messagebox
-from texteditor.backend import constants, logger
 
-backend.require_version("1.4a", ">=")
+from tkinter import TclError, font, messagebox
+from texteditor.backend import (
+    constants,
+    logger,
+    require_version,
+    __version__,
+    is_development_build,
+)
+
+require_version("1.4a", ">=")
 # backend.require_version("1.6a", "<") # Why the heck require_version stops at ctype == ">=" or ">" ?
 
 
-# File & Directory management
+# The location of the configuration file
+# In older versions, it is stored in <home folder>/.config/texteditor
+# In 1.4, there are 2 files for branch stable and dev - config(_dev).ini.
+# and it can be overwriten by other version - especially wip/wx builds.
+# Now I store the configs under a subfolder for specific versions (NOT builds yet).
 if sys.platform == "win32":
     dird = os.environ["USERPROFILE"] + "\\.config\\texteditor\\"
     defconsole = "cmd"
 else:
     dird = os.environ["HOME"] + "/.config/texteditor/"
-    defconsole = "xterm"
-
-if backend.is_development_build():
-    file = dird + "configs_dev.ini"
-else:
-    file = dird + "configs.ini"
+    defconsole = os.environ["TERM"]
 
 
 def createdir(dirname):
@@ -36,80 +43,100 @@ def createdir(dirname):
 createdir(dird.removesuffix("texteditor"))
 createdir(dird)
 
-if not os.path.isfile(file):
-    f = open(file, mode="w")
-    del f
+appver = packaging.version.parse(__version__)
+createdir(dird + appver.base_version)
+
+# Not all configs on dev builds are complete.
+file = dird + appver.base_version
+if is_development_build():
+    file = str(pathlib.Path(file) / "configs_dev.ini")
+else:
+    file = str(pathlib.Path(file) / "configs.ini")
+
+# print(file)
+
 # --- #
 
-cfg = configparser.ConfigParser()
-log = logger.Logger("texteditor.backend.get_config")
+# Init.
+log = logger.GenericLogs()
 
-# Default variables.
-cfg["global"] = {
-    "color": "light",
-    "sub_color": "default",
-    "autocolor": "yes",
-    "font": "default",
-    "font_size": "12",
+cfg = {
+    "global": {
+        "color": "light",
+        "sub_color": "default",
+        "autocolor": "yes",
+        "font": "default",
+        "font_size": "12",
+    },
+    "cmd": {"defconsole": defconsole, "isenabled": "yes"},
+    "filemgr": {"autosave": "yes", "autosave-time": "120"},
 }
 
-cfg["cmd"] = {"defconsole": defconsole, "isenabled": "yes"}
-
-cfg["filemgr"] = {"autosave": "yes", "autosave-time": "120"}
-
-bck = {}
-for key in cfg:
-    bck[key] = cfg[key]
+# --- #
 
 
-class GetConfig:
-    """Changes Tkinter/TTK widget configurations from the configuration file."""
+class GetConfig(configparser.ConfigParser):
+    def __init__(self, cfgs: dict[str, str], filepath: str, **kwds):
+        """
+        Changes Tkinter/TTK widget configurations from a configuration file.
+        :param cfgs (dict): Default configurations
+        :param filepath (str): File path
+        :param default_section (str): Default section on the configuration file (default is the first child of cfgs)
+        :param **kwds (dict): Other options - they will be passed to configparser.ConfigParser.
+        """
+        kwds["default_section"] = kwds.get("default_section", list(cfgs.keys())[0])
 
-    def __init__(self, parent=None, action: str = None):
-        """parent: Widget to use\n
-        action:str=None: |\n
-        --> config : Configure the widget\n
-        --> reset : Reset the configuration file\n
-        If you use config, you must include parent also."""
+        self.backup = {}
+        self.backup2 = {}
+        print('here')
+        super().__init__(**kwds)
 
-        if parent is None or "":
-            if action == "reset":
-                self.reset()
+        for key in cfgs:
+            self.backup[key] = cfgs[key]
+            # self[key] = cfgs[key]
 
-        if action is not None or "":
-            if action == "config":
-                self.configure(parent)
-            elif action == "reset":
-                self.reset()
+        self.readf(filepath)
+        self.filepath = filepath
+            
+    def readf(self, file, encoding: str | None = None):
+        print('reached there')
+        if os.path.isfile(file):
+            self.read(file, encoding)
+        else:
+            print('here too')
+            with open(file, mode="w") as f:
+                self.write(f)
+                print('good!')
+                self.read(file, encoding)
+                print('omg!')
+            del f
 
-    @staticmethod
-    def reset():
-        if not bck:
-            log.throwerr(
-                "Error: Unable to reset configration file",
-                "Backed up variables not found",
-                noexp=True,
-            )
-            return False
+    def backupvalue(self, values: dict):
+        for key in values:
+            self.backup2[key] = self[key]
+
+    def reset(self, restore_backup: bool = False):
         try:
-            for key in bck:
-                cfg[key] = bck[key]
-            os.remove(file)
-            with open(file, "w") as f:
-                cfg.write(f)
-        except OSError as e:
-            messagebox.showerror(
-                GetConfig._("Error occured while writing contents to the file"),
-                GetConfig._("Details: %s") % str(e),
-            )
-            log.throwerr("Error: Unable to reset configuration file")
-            return
-        finally:
-            log.throwinf("Reset texteditor configuration file - completed.")
-            return True
+            os.remove(self.filepath)
+        except OSError:
+            log.ConfigurationError(_("Unable to delete the configuration file"))
+        else:
+            self.read_dict(self.backup)
+            if restore_backup:
+                if not self.backup2:
+                    log.throwwarn(
+                        _("Configuration warning"),
+                        _("Backed-up user options not found"),
+                    )
+                else:
+                    for key in self.backup2:
+                        self[key] = self.backup2[key]
 
-    @staticmethod
-    def checkclass(widget):
+            with open(self.filepath, "w") as f:
+                self.write(f)
+                log.throwinf(_("Success"), _("Restored all configurations."))
+
+    def checkclass(self, widget):
         wind = ["Tk", "Frame", "TopLevel"]
         text = ["Label", "Text"]
         ttk_widgets = ["TCombobox", "Button"]
@@ -120,34 +147,27 @@ class GetConfig:
         for it2 in ttk_widgets:
             wind.append(it2)
 
-        class_name = widget.winfo_class()
+        class_name = type(widget).__name__
         if class_name in (wind or cfg.sections()):
             return class_name
         else:
             return False
 
-    @staticmethod
-    def configure(widget):
-        """Configures the selected widget.
-        This function is used for texteditor with
-        _checkfont, so please make your own function."""
-        classname = GetConfig.checkclass(widget)
-        colormger = AutoColor(widget)
-        if classname is not False:
-            if classname not in ["Tk", "Frame", "TopLevel", "Button"]:
-                font_type, font_size = GetConfig._checkfont(GetConfig)
-                if font_type and font_size is not None:
-                    widget.configure(font=(font_type, int(font_size)))
-            colormger.changecolor()
+    def getvalue(self, section: str, name: str):
+        if not section in self.sections():
+            return log.ConfigurationError("Section %s not found" % section)
+        elif not self[section][name]:
+            return log.ConfigurationError("Option [%s->%s] not found" % section, name)
+        else:
+            return self.get(section, name)
 
-    @staticmethod
-    def change_config(section: str, option: str, value: str | int, event=None):
-        cfg.set(section, option, str(value))
+    def change_config(self, section: str, option: str, value: str | int):
+        self.set(section, option, str(value))
         with open(file, "w") as filed:
             try:
-                cfg.write(filed)
+                self.write(filed)
             except:
-                log.throwerr(
+                log.ConfigurationError(
                     "Unable to write new configuration! (make %s->%s use %s)" % section,
                     option,
                     value,
@@ -156,6 +176,14 @@ class GetConfig:
             finally:
                 log.throwinf("Changed texteditor configuration.")
                 return True
+
+    @property
+    def checkfont(self):
+        return self._checkfont()
+
+    @checkfont.setter
+    def checkfont(self, func):
+        self._checkfont = func
 
     def _checkfont(self):
         # Get values
@@ -192,91 +220,82 @@ class GetConfig:
 
         return font_type, font_size
 
-    @staticmethod
-    def getvalue(section: str, name: str):
-        if not section in cfg.sections():
-            raise log.throwerr("Configuration section %s not found" % section)
-        elif not cfg[section][name]:
-            raise log.throwerr("Configuration [%s->%s] not found" % section, name)
+    @property
+    def get_color(self):
+        return self._get_color()
+
+    @get_color.setter
+    def get_color(self, func):
+        self._get_color = func
+
+    def _get_color(self):
+        """
+        Get UI color.
+        * background color: [global][color]
+        * font color: [global][sub_color]
+        * autocolor: [global][autocolor]
+        :return tuple[str, str, bool] : (background color, font color, autocolor mode)
+        """
+        color = self.getvalue("global", "color")
+        fontcolor = self.getvalue("global", "sub_color")
+        autocolor = self.getvalue("global", "autocolor")
+        colormode_auto: bool = False
+
+        colors = {"light": constants.LIGHT_BG, "dark": constants.DARK_BG}
+
+        fontcolors = {"green": constants.GREEN_TEXT, "red": constants.RED_TEXT}
+
+        reserve_colors = {"light": constants.DARK_BG, "dark": constants.LIGHT_BG}
+
+        # Default colors will be based on the system color
+        colors["default"] = colors[darkdetect.theme().lower()]
+        fontcolors["default"] = reserve_colors[darkdetect.theme().lower()]
+
+        if autocolor == "yes":
+            colormode_auto = True
         else:
-            return cfg.get(section, name)
+            colormode_auto = False
 
-
-class AutoColor:
-    """Color manager for texteditor."""
-
-    def __init__(self, parent):
-        self.parent = parent
-
-        self.start = GetConfig.getvalue("global", "autocolor")
-        self.autocolor = self.start
-
-        self.bg = GetConfig.getvalue("global", "color")
-        self.fg = GetConfig.getvalue("global", "sub_color")
-
-        self.colors = {"light": str(constants.DARK_BG), "dark": str(constants.LIGHT_BG)}
-
-        if self.bg == "default":
-            self.bg = "light"
-
-        if self.fg == "default":
-            self.fg = "dark"
-
-    def startasync(self):
-        if self.start is True:
-            # Automatically changes the theme if
-            # the system theme is CHANGED
-            self.t = threading.Thread(
-                target=darkdetect.listener, args=self.setcolor, daemon=True
-            )
-            self.t.start()
-            self.setcolor(darkdetect.theme())
-            return
+        # ConfigParser, in somehow called our properties and raise KeyError while
+        # The configs are not parsed. That's why we have this.
+        # Also for some case the values really does not exist.
+        if color and fontcolor and colormode_auto:
+            return colors[color], fontcolors[fontcolor], colormode_auto
         else:
-            self.start = True
+            return colors["default"], fontcolors["default"], False
 
-    def stopasync(self):
-        if hasattr(self, "t"):
-            del self.t
+    def configure(self, widget, childs_too: bool = False):
+        """
+        Configures (a) (Themed-) Tkinter widget.
+        TODO: AutoColor.
+        :param widget : Target widget to theme it
+        :param childs_too (bool=False) : Is this function can also apply configs to the widget's
+            childrens? Default to False to avoid TCLError, which occurs on invalid configuration v.v..
+        """
 
-    def changecolor(self):
-        if self.start is True:
-            self.startasync()
-            # return
-        else:
-            self.setcolor()
+        def _configure(target):
+            classname = self.checkclass(target)
+            font_type, font_size = self._checkfont()
+            color, fontcolor, automode = self._get_color()
 
-    def setcolor(self, color: str = None):
-        fg = self.__checkcolor(str(darkdetect.theme()).lower())
-        if color is not None:
-            sv_ttk.set_theme(color.lower())
-        else:
-            if self.autocolor == "yes":
-                sv_ttk.set_theme(str(darkdetect.theme()).lower())
-            else:
-                theme = self.bg
-                fg = self.colors[self.fg]
-                sv_ttk.set_theme(theme)
+            if classname not in ["Tk", "Frame", "TopLevel", "Button"]:
+                if font_type and font_size != None:
+                    target.configure(font=(font_type, int(font_size)))
+                if automode == True:
+                    threading.Thread(
+                        target=darkdetect.listener,
+                        args=lambda output: _configure(target),
+                        daemon=True,
+                    ).start()
+                sv_ttk.set_theme(darkdetect.theme().lower())
+                try:
+                    target.configure(fg=fontcolor)
+                    target.configure(bg=color)
+                except TclError:
+                    target.configure(foreground=fontcolor)
+                    target.configure(background=color)
 
-        # Set the foreground
-        try:
-            self.parent.configure(fg=fg)
-        except TclError:
-            self.parent.configure(foreground=fg)
-
-    def __checkcolor(self, bg: str | None = None):
-        if not bg:
-            bg = self.bg
-        fg = self.fg
-        if bg == "dark":
-            if fg == "default":
-                fg2 = constants.LIGHT_BG
-            elif fg == "Green":
-                fg2 = constants.GREEN_TEXT
-            elif fg == "Red":
-                fg2 = constants.RED_TEXT
-            else:
-                fg2 = constants.LIGHT_BG
-        else:
-            fg2 = constants.DARK_BG
-        return fg2
+        if childs_too == True:
+            for child in widget.winfo_children():
+                _configure(child)
+        _configure(widget)

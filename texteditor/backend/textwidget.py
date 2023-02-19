@@ -57,7 +57,7 @@ class TextWidget(Text):
 
         # Do some customization
         self.configure(wrap="word")
-        get_config.GetConfig.configure(self)
+        # get_config.GetConfig.configure(self)
 
     # Place scrollbars
     def _place_scrollbar(self):
