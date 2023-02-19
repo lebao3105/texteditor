@@ -3,10 +3,10 @@ import locale
 import os.path
 import pathlib
 import sys
-import tkinter.messagebox as msgbox
 
-from . import mainwindow
+# from . import mainwindow
 from .backend import __version__ as version, is_development_build
+from tkinter import messagebox as msgbox
 
 currdir = pathlib.Path(__file__).parent
 __version__ = version

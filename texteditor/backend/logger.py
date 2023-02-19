@@ -12,13 +12,15 @@ from texteditor.backend import get_config, textwidget
 texteditor.backend.require_version("1.4b0", ">=")
 
 
-class Logger:
+class Logger(object):
     format_date = "%m-%d-%Y"  # Month day year
     format_time = "%H:%M:%S"  # Hour min sec
-    __dir = os.environ["USERPROFILE"] if sys.platform == "win32" else os.environ["HOME"]
+
     if sys.platform == "win32":
+        __dir = os.environ["USERPROFILE"]
         logfile = __dir + "\\.logs\\texteditor.log"
     else:
+        __dir = os.environ["HOME"]
         logfile = __dir + "/.logs/texteditor.log"
 
     def __init__(self, fmt_date=None, fmt_time=None, logfile=None):
@@ -34,22 +36,20 @@ class Logger:
             self.format_time = fmt_time
         if logfile is not None:
             self.logfile = logfile
-        self.obj = inspect.getmodule(inspect.stack()[1][0]).__name__
 
-        if not os.path.isfile(self.logfile):
-            try:
-                open(self.logfile, mode="w")
-            except:
-                self.usable = False
-                self.throwerr(
-                    "Error occured: (open log file)", "Please contact the developer."
-                )
-            else:
-                self.usable = True
+        try:
+            open(self.logfile, mode="a")
+        except OSError:
+            self.usable = False
+            self.throwerr(
+                "Error occured: (open log file)", "Please contact the developer."
+            )
         else:
+            # Don't write test log to files (temporary?)
             self.usable = True
 
-    def printtext(self, title, msg=None, traceback=None):
+    def printtext(self, title, msg=None, traceback=None) -> str:
+        self.obj = inspect.getmodule(inspect.stack()[1][0]).__name__
         ## Date time
         now = datetime.datetime.now()
         date = now.strftime(self.format_date)
@@ -68,8 +68,9 @@ class Logger:
                 f.write("\n")
                 f.write(full)
         print(full)
+        return full
 
-    def throwerr(self, title, noexp: bool = None, msg=None):
+    def throwerr(self, title, noexp: bool = False, msg=None):
         """Throws an exception message with its traceback and a custom message."""
         if noexp is True:
             traceback_msg = ""
@@ -83,6 +84,37 @@ class Logger:
     def throwwarn(self, title, msg=None):
         return self.printtext(title, msg if msg is not None else "")
 
+
+class GenericLogs(Logger):
+    """
+    A class built on top of the Logger class, but this has
+    some extra functions to specific errors.
+    """
+
+    def FileIOError(self, msg:str):
+        """
+        :param msg (str): Error message
+
+        Throws an File I/O exception.
+        """
+        return self.throwerr(_("File I/O Error"), msg=msg)
+
+    def ConfigurationError(self, msg:str):
+        """
+        :param msg (str): Error message
+
+        Throws an configuration file parser error.
+        """
+        return self.throwerr(_("Configuration Error"), msg=msg)
+    
+    def GUIError(self, title:str, msg:str):
+        """
+        :param msg (str): Error message
+
+        Throws an error occured from GUI app.
+        """
+        return self.throwerr(_("GUI App error"), msg=msg)
+    
 
 class StatusBar(ttk.Frame):
     def __init__(self, parent, pack: bool = False, **kwargs):
@@ -103,9 +135,9 @@ class StatusBar(ttk.Frame):
         self.lefttext.pack(side="left")
         self.righttext.pack(side="right")
 
-        get_config.GetConfig.configure(self)
-        get_config.GetConfig.configure(self.lefttext)
-        get_config.GetConfig.configure(self.righttext)
+        # get_config.GetConfig.configure(self)
+        # get_config.GetConfig.configure(self.lefttext)
+        # get_config.GetConfig.configure(self.righttext)
 
         self.keypress()
         self.writeleftmessage(_("No new message."), nowrite=True)
@@ -146,8 +178,8 @@ class StatusBar(ttk.Frame):
                 label1.config(font=(label1["font"], 14))
                 mss.bind("<F5>", lambda event: refresh(replace=True))
 
-                get_config.GetConfig(label1, "config")
-                get_config.GetConfig(label2, "config")
+                # get_config.GetConfig(label1, "config")
+                # get_config.GetConfig(label2, "config")
 
                 alllogs.forget()
                 yscroll.forget()
@@ -217,20 +249,23 @@ class LoggerWithStatusbar(Logger):
         else:
             self.statusbar = StatusBar(parent, pack)
 
-    def throwerr(self, title, noexp: bool = None, msg=None):
-        super().throwerr(title, noexp, msg)
+    def throwerr(self, title, noexp: bool = False, msg=""):
+        msg = super().throwerr(title, noexp, msg)
         if self.showlog is True:
             self.statusbar.writeleftmessage(title)
-        self.statusbar.logs.append(title)
+        self.statusbar.logs.append(msg)
+        return msg
 
-    def throwinf(self, title, msg=None):
-        super().throwinf(title, msg)
+    def throwinf(self, title, msg=""):
+        msg = super().throwinf(title, msg)
         if self.showlog is True:
             self.statusbar.writeleftmessage(title)
-        self.statusbar.logs.append(title)
+        self.statusbar.logs.append(msg)
+        return msg
 
-    def throwwarn(self, title, msg=None):
-        super().throwwarn(title, msg)
+    def throwwarn(self, title, msg=""):
+        msg = super().throwwarn(title, msg)
         if self.showlog is True:
             self.statusbar.writeleftmessage(title)
-        self.statusbar.logs.append(title)
+        self.statusbar.logs.append(msg)
+        return msg
