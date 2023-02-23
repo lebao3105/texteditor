@@ -39,14 +39,23 @@ class AppSettings(object):
         with open(self.file, "w") as f:
             self.cfg.write(f)
 
-    def register_section(self, section_name, options: dict):
-        """Register a new section on the configuration file."""
+    def register_section(self, section_name, options: dict, write: bool=False):
+        """
+        Registers a new section on the configuration file.
+        """
         self.cfg.add_section(section_name)
-        self.cfg[section_name] = options
+        for option in options:
+            self.cfg.set(section_name, option, options[option])
+        if write:
+            self.cfg.write(open(self.file, "w"))
 
-    def unregister_section(self, section_name):
-        """Unregister a section on the configuration file."""
-        return self.cfg.remove_section(section_name)
+    def unregister_section(self, section_name, write: bool=False):
+        """
+        Unregisters a section on the configuration file.
+        """
+        self.cfg.remove_section(section_name)
+        if write:
+            self.cfg.write(open(self.file, "w"))
 
 
 class MenuBar(wx.MenuBar):
@@ -55,7 +64,8 @@ class MenuBar(wx.MenuBar):
         return
 
     def AddMenu(self, name, items: list):
-        """Add a new menu entry.
+        """
+        Adds a new menu entry.
         Menu items use the following format:
         ```
         [   # Must be a list
