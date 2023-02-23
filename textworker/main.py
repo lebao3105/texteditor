@@ -4,6 +4,7 @@ import wx
 
 from . import mainwindow
 
+
 # Start
 def _file_not_found(filename):
     return wx.MessageDialog(
@@ -35,7 +36,6 @@ def start_app():
                 del f
 
         for i in range(2, argc + 1):
-
             if os.path.isfile(argv[i]):
                 nb.AddTab()
                 nb.fileops.openfile(argv[i])

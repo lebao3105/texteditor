@@ -40,7 +40,7 @@ class AutoSave:
         self.parent = parent
 
         self.timer = wx.Timer(parent)
-        if self.enabled in global_settings.cfg.yes_value or [True]:
+        if self.enabled in global_settings.cfg.yes_values or [True]:
             self.timer.Start(
                 self.get(global_settings.cfg.getkey("extensions.autosave", "time"))
                 * 1000
@@ -52,7 +52,7 @@ class AutoSave:
         def getvalue(evt):
             nonlocal check_btn, cmb
             if check_btn.GetValue() == True:
-                if self.enabled in global_settings.cfg.no_value or [False]:
+                if self.enabled in global_settings.cfg.no_values or [False]:
                     global_settings.cfg.set("extensions.autosave", "enable", "yes")
                 self.saveconfig(cmb.GetValue())
 

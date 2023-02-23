@@ -1,6 +1,7 @@
 import threading
 import wx
 import wx.aui
+import wx.stc
 
 from .backend import file_operations
 from .extensions import autosave
@@ -25,13 +26,13 @@ class Tabber(wx.aui.AuiNotebook):
             "interface.tabs", "close_on_all_tabs"
         )
 
-        if movetabs in global_settings.cfg.yes_value or [True]:
+        if movetabs == True:
             kwds["style"] |= wx.aui.AUI_NB_TAB_MOVE
 
-        if middle_close in global_settings.cfg.yes_value or [True]:
+        if middle_close == True:
             kwds["style"] |= wx.aui.AUI_NB_MIDDLE_CLICK_CLOSE
 
-        if close_on_all_tabs in global_settings.cfg.yes_value or [True]:
+        if close_on_all_tabs == True:
             kwds["style"] |= wx.aui.AUI_NB_CLOSE_ON_ALL_TABS
         else:
             kwds["style"] |= wx.aui.AUI_NB_CLOSE_ON_ACTIVE_TAB
@@ -71,10 +72,10 @@ class Tabber(wx.aui.AuiNotebook):
 
         textw = self.text_editor
         global_settings.cfg.setcolorfunc(
-            "textw", textw, "StyleSetBackground", wx.stc.STC_STYLE_DEFAULT
+            "textw", textw.StyleSetBackground, wx.stc.STC_STYLE_DEFAULT
         )
         global_settings.cfg.setfontcfunc(
-            "textw", textw, "StyleSetForeground", wx.stc.STC_STYLE_DEFAULT
+            "textw", textw.StyleSetForeground, wx.stc.STC_STYLE_DEFAULT
         )
         global_settings.cfg.configure(textw)
 

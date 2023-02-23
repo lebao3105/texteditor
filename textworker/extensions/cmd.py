@@ -1,3 +1,4 @@
+import getpass
 import os
 import subprocess
 import threading
@@ -6,8 +7,9 @@ import wx.stc
 
 from ..tabs import *
 from ..backend import get_config, logger
+from ..generic import global_settings
 
-cfg = get_config.GetConfig(get_config.cfg, get_config.file, default_section="interface")
+cfg = global_settings.cfg
 
 
 class CommandWidget(TextWidget):
@@ -72,8 +74,8 @@ class Tabb(Tabber):
         textw.shell.root = self.Parent
         self.Parent.SetStatusText(os.getcwd())
 
-        cfg.setcolorfunc("textw", textw, "StyleSetBackground", wx.stc.STC_STYLE_DEFAULT)
-        cfg.setfontcfunc("textw", textw, "StyleSetForeground", wx.stc.STC_STYLE_DEFAULT)
+        cfg.setcolorfunc("textw", textw.StyleSetBackground, wx.stc.STC_STYLE_DEFAULT)
+        cfg.setfontcfunc("textw", textw.StyleSetForeground, wx.stc.STC_STYLE_DEFAULT)
         cfg.configure(textw)
 
         if tabname == "":
@@ -127,7 +129,7 @@ class Shell:
     After you run a command, scroll down and place the mouse cursor to the next of the last prompt.
     """
 
-    prompt = "(User: {}) Shell> ".format(os.getlogin())
+    prompt = "(User: {}) Shell> ".format(getpass.getuser())
     intro = "Enter a command to start." "\nThis cant send input to any program.\n"
     aliases: dict = {}
     exitcode: int = 0

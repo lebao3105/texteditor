@@ -24,7 +24,7 @@ class AppSettings(object):
         cfg: dict = get_config.cfg,
         file: str = get_config.file,
         default_section: str = (item[0] for item, item2 in get_config.cfg.items()),
-        **kwds
+        **kwds,
     ):
         self.cfg = get_config.GetConfig(
             cfg, file, default_section=default_section, **kwds

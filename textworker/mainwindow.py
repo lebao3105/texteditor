@@ -148,7 +148,7 @@ class MainFrame(wx.Frame):
             if name == _("&Edit"):
                 if global_settings.get_setting(
                     "extensions.cmd", "enable"
-                ) in cfg.yes_value or [True]:
+                ) in cfg.yes_values or [True]:
                     item = menu.Append(wx.ID_ANY, _("Command prompt"))
                     self.Bind(wx.EVT_MENU, self.OpenCmd, item)
 
@@ -272,6 +272,11 @@ class MainFrame(wx.Frame):
             wx.YES_NO | wx.ICON_WARNING,
         ).ShowModal()
         if ask == wx.ID_YES:
+            for section in cfg.sections():
+                for elm in cfg[section]:
+                    print(cfg[section], elm)
+                    arr = {cfg[section], elm}
+                    print(arr)
             if cfg.reset():
                 currst = self.StatusBar.GetStatusText()
                 self.SetStatusText(_("Restored all default app configurations."))
