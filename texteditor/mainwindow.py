@@ -1,7 +1,6 @@
-# Import modules
 import os
-import webbrowser
 import pygubu
+import webbrowser
 import tkinter.messagebox as msgbox
 from tkinter import *
 
@@ -13,7 +12,6 @@ from .views import about
 
 
 class MainWindow(Tk):
-    """The main application class."""
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
