@@ -15,7 +15,7 @@ Read documents online: https://lebao3105.gitbook.io/texteditor_doc.
 * Fast
 * Dark mode + Text colors support
 * Configuration file support
-* Autosave
+* Auto save documents
 * Command window where you can run external commands (except Console apps which require your inputs)
 
 > This project is mirrored to [GitLab.](https://gitlab.com/lebao3105/texteditor_tk)
