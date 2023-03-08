@@ -4,12 +4,11 @@
     # Add fixes and implement missing features in older Tkinter versions.
     - Building:
         * (Meson) install icons in a better way
-        * (Pack) use py2exe.freeze
+        * (Pack) use py2exe.freeze (Cancelled - use pyinstaller instead)
     - Toplevel folder (textworker)
         * (Tabs) finish what it needs
         * (Mainwindow) finish folder view (skipped)
     - textworker.backend
-        * (File_operations) implement file comparison (not ready yet) and fix function names (completed)
         * (Get_config) autocolor (completed)
     - textworker.extensions
         * Move autosave & cmd to use wxPython.

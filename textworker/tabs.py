@@ -44,11 +44,13 @@ class Tabber(wx.aui.AuiNotebook):
         self.setstatus: bool = False
 
         self.AddTab()
-        self.fileops = file_operations.FileOperations(
-            self, self.AddTab, self.SetTitle, self.Parent
-        )
+
+        self.fileops = file_operations.FileOperators()
+        self.fileops.AddTab = self.AddTab()
+        self.fileops.Editor = self.text_editor
+        
         self.autosv = autosave.AutoSave(
-            lambda evt: self.fileops.savefile_dlg(evt), self.Parent
+            self.fileops.Save(self.GetPageText(self.GetSelection())), self.Parent
         )
 
         self.Bind(wx.aui.EVT_AUINOTEBOOK_PAGE_CHANGED, self.OnPageChanged)

@@ -20,10 +20,10 @@ def start_app():
     argv = sys.argv
     argc = len(argv) - 1
 
-    root = wx.App(0)
+    root = wx.App()
     fm = mainwindow.MainFrame(None)
-    root.SetTopWindow(fm)
-    root.SetExitOnFrameDelete(True)
+    # root.SetTopWindow(fm)
+    # root.SetExitOnFrameDelete(True)
 
     if argc > 0:
         nb = fm.notebook

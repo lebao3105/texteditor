@@ -62,7 +62,7 @@ class MainFrame(wx.Frame):
             _("&File"),
             [
                 (wx.ID_NEW, None, None, self.notebook.AddTab, None),
-                (wx.ID_OPEN, None, None, self.notebook.fileops.openfile_dlg, None),
+                (wx.ID_OPEN, None, None, self.notebook.fileops.OpenDialog, None),
                 (
                     wx.ID_ANY,
                     _("Open directory\tCtrl+Shift+D"),
@@ -81,12 +81,12 @@ class MainFrame(wx.Frame):
                     None,
                 ),
                 (None, None, None, None, None),  # Separator
-                (wx.ID_SAVE, None, None, self.notebook.fileops.savefile_dlg, None),
+                (wx.ID_SAVE, None, None, self.notebook.fileops.Save, None),
                 (
                     wx.ID_SAVEAS,
                     _("Save as...\tCtrl+Shift+S"),
                     None,
-                    self.notebook.fileops.saveas,
+                    self.notebook.fileops.SaveAs,
                     None,
                 ),
                 (None, None, None, None, None),
@@ -232,6 +232,7 @@ class MainFrame(wx.Frame):
             wx.EVT_DIRCTRL_FILEACTIVATED,
             lambda evt: self.notebook.fileops.openfile(dirs.GetFilePath()),
         )
+        dirs.SetDefaultPath(selected_dir)
         dirs.Show()
         self.sidebar.RegisterTab(selected_dir, dirs)
         self.sidebar.Show()

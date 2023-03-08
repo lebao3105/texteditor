@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "textworker"
-version = "1.6a1"
+version = "1.6a2"
 requires-python = ">=3.8"
 description = "A simple, cross-platform text editor."
 readme = "README.md"

@@ -23,7 +23,7 @@ class AppSettings(object):
         self,
         cfg: dict = get_config.cfg,
         file: str = get_config.file,
-        default_section: str = (item[0] for item, item2 in get_config.cfg.items()),
+        default_section: str = (item[0] for item in get_config.cfg),
         **kwds,
     ):
         self.cfg = get_config.GetConfig(
@@ -31,8 +31,8 @@ class AppSettings(object):
         )
         self.file = file
 
-    def get_setting(self, sectionname, option, needed: bool = False):
-        return self.cfg.getkey(sectionname, option, needed)
+    def get_setting(self, *args, **kwds):
+        return self.cfg.getkey(*args, **kwds)
 
     def set_setting(self, section, option, value):
         self.cfg.set(section, option, value)
@@ -102,28 +102,65 @@ global_settings = AppSettings()
 log = logger.Logger()
 
 
-def txtLocalize(match_obj):
-    return _(match_obj.group(1))
+class XMLBuilder:
+    """
+    Class to read and build interfaces from a XML file.
+    Use this class by call it as a varible, or make a sub-class.
+    """
+    _Parent = None
+    _ = None
 
-
-class SettingsWindow:
-    def __init__(self, parent):
+    def __init__(self, Parent, FilePath: str, _=None):
+        self.Parent = Parent
+        self._ = _
+        
         # Setup translation
         # Cre: https://wiki.wxpython.org/XRCAndI18N
-        file = str(currdir / "ui" / "preferences.xrc")
-        with open(file, encoding="utf8") as f:
+        ## Initial load
+        with open(FilePath, encoding="utf-8") as f:
             xrc_data = f.read()
-
-        xrc_data = re.sub("_\(['\"](.*?)['\"]\)", txtLocalize, xrc_data)
+        
+        ## Replace texts with translated ones
+        xrc_data = re.sub("_\(['\"](.*?)['\"]\)", self.txtLocalize, xrc_data)
         xrc_data = xrc_data.encode("utf8")
-
+        
         # Call out the resource file, with translated strings
         xmlload = wx.xml.XmlDocument(io.BytesIO(xrc_data))
         self.Res = wx.xrc.XmlResource()
         self.Res.LoadDocument(xmlload)
+    
+    def txtLocalize(self, match_obj):
+        if self._ == None:
+            import gettext
+            self._ = gettext.gettext
+        return self._(match_obj.group(1))
+    
+    @property
+    def Parent(self):
+        return self._Parent
+    
+    @Parent.setter
+    def Parent(self, object):
+        self._Parent = object
+
+    @property
+    def _(self):
+        return self._
+    
+    @_.setter
+    def Parent(self, object):
+        self._ = object
+
+    def loadObject(self, objectname, objecttype):
+        return self.Res.LoadObject(self.Parent, objectname, objecttype)
+
+class SettingsWindow(XMLBuilder):
+
+    def __init__(self, Parent):
+        super().__init__(Parent, str(currdir / "ui" / "preferences.xrc"), _)
 
         # Load initial items
-        self.Frame = self.Res.LoadObject(parent, "Preferences", "wxWizard")
+        self.Frame = self.loadObject(Parent, "Preferences", "wxWizard")
         self.Page1 = wx.xrc.XRCCTRL(self.Frame, "WelcomeScreen")
         self.Frame.SetPageSize((595, 424))
 
@@ -218,3 +255,6 @@ class SettingsWindow:
     def Run(self):
         self.Frame.RunWizard(self.Page1)
         self.Frame.Destroy()
+
+
+    

@@ -1,3 +1,4 @@
+import wx
 import wx.stc
 from .generic import global_settings
 
@@ -8,6 +9,9 @@ class TextWidget(wx.stc.StyledTextCtrl):
     def __init__(self, id, line_number: bool = True, **kwds):
         kwds["style"] = kwds.get("style", 0) | wx.stc.STC_STYLE_DEFAULT
         super().__init__(id, **kwds)
+        dt = DNDTarget(self)
+        self.SetDropTarget(dt)
+
         if self.rcmenu == True:
             self.Bind(wx.EVT_RIGHT_DOWN, self.OpenMenu)
 
@@ -60,8 +64,9 @@ class TextWidget(wx.stc.StyledTextCtrl):
             redo = menu.Append(wx.ID_REDO)
             delete = menu.Append(wx.ID_DELETE)
             selectall = menu.Append(wx.ID_SELECTALL)
-            menu.AppendSeparator()
-            readonly = menu.Append(wx.ID_ANY, _("Read only"))
+            # menu.AppendSeparator()
+            # readonly = wx.MenuItem(menu, wx.ID_ANY, _("Read only"), kind=wx.ITEM_CHECK)
+            # menu.Append(readonly)
 
             commands = {
                 cut: lambda evt: self.Cut(),
@@ -71,7 +76,7 @@ class TextWidget(wx.stc.StyledTextCtrl):
                 redo: lambda evt: self.Redo(),
                 delete: lambda evt: self.DeleteBack(),
                 selectall: lambda evt: self.SelectAll(),
-                readonly: lambda evt: self.SetEditable(not self.IsEditable()),
+                # readonly: lambda evt: self.SetEditable(not self.IsEditable()),
             }
 
             cut.Enable(self.CanCut())
@@ -79,9 +84,9 @@ class TextWidget(wx.stc.StyledTextCtrl):
             paste.Enable(self.CanPaste())
             undo.Enable(self.CanUndo())
             redo.Enable(self.CanRedo())
-            readonly.Enable(True)
+            # readonly.Enable(True)
 
-            menu.Check(readonly, False)
+            # readonly.Check(False)
 
             for item in [delete, selectall]:
                 if self.GetValue() != "":
@@ -102,3 +107,21 @@ class TextWidget(wx.stc.StyledTextCtrl):
 
         def RightClickMenu(self, pt):
             raise NotImplementedError
+
+class DNDTarget(wx.FileDropTarget, wx.TextDropTarget):
+    
+    def __init__(self, textctrl):
+        super().__init__()
+        self.Target = textctrl
+    
+    def OnDropText(self, x, y, data):
+        self.Target.WriteText(data)
+        return True
+    
+    def OnDragOver(self, x, y, defResult):
+        return wx.DragCopy
+    
+    def OnDropFiles(self, x, y, filenames):
+        if len(filenames) > 0:
+            self.Target.LoadFile(filenames)
+        return True

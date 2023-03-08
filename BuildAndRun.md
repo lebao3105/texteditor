@@ -9,69 +9,40 @@ GTK3 development files + pkgconfig and C/C++ compilers (Linux)
 
 ## Notes
 * We assume that you have cloned this project repository and on the cloned folder.
-* You can use my builder script on [makerelease.](makerelease)
 
-## Steps
-1. Install dependencies first, always:
-> On Linux use pip3 instead of the pip command below.
+## Install dependencies
 ```bash
 $ pip install attrdict3
-$ pip install -r requirements.txt
+$ pip install configparser darkdetect pillow packaging wxpython # This will take minutes!
 ```
 
-2. (Optional) Generate translation
+## Run (and install)
+### With pip (to install textworker)
 ```bash
-$ meson build
-$ ninja -C build me.lebao3105.textworker-pot
-$ # If you don't see any file that have your language translation,
-$ # please add your language code into po/LINGUAS or run the command
-$ # below and duplicate any generated .po file and rename it
-$ # your language code!
+$ pip install textworker
+```
+
+### With git (run from source)
+1. Clone the source code, use ```wip/wx``` branch, then "cd" to the cloned folder.
+2. Make translation (optional, gettext and meson required):
+```bash
+$ meson build # --prefix=<dir> # Use this to set the install prefix
+$ ninja -C build me.lebao3105.textworker-pot # Use for translators, to get new & untranslated strings
 $ ninja -C build me.lebao3105.textworker-update-po
-$ # Update your translation...
-$ # Now compile all translations
 $ ninja -C build me.lebao3105.textworker-gmo
-$ cp -r build/po/* po/
 ```
 
-3. Install!
-
-a. Using build module
+Run:
 ```bash
-$ pip install build wheel
-$ rm -rf dist build # Remove generated files, if have
-$ python3 -m build
-$ pip install dist/<file name>.whl --force-reinstall
+$ python -m textworker [file]
 ```
 
-Or just use pip (still need build & wheel installed):
+With pip installation you can use:
 ```bash
-$ pip install .
+$ textworker [file]
 ```
 
-b. Using meson
+If you use meson (run ```ninja -C build install``` to install), run:
 ```bash
-$ pip install meson ninja
-$ meson build # Use --prefix=<dir> to change the installation location
-$ ninja -C build
-$ ninja -C build install # On Linux sudo may required
-```
-
-4. Run
-a. Don't install using meson
-```bash
-$ python3 -m textworker
-```
-
-b. Install using meson
-```bash
-$ me.lebao3105.textworker
-```
-
-On Windows:
-```cmd
-REM Default install
-> C:\bin\me.lebao3105.textworker
-REM Custom install prefix
-> <install prefix>\bin\me.lebao3105.textworker
+$ <install_prefix>/bin/me.lebao3105.textworker [file]
 ```
