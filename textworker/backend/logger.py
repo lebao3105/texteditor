@@ -2,12 +2,8 @@ import datetime
 import inspect
 import os
 import sys
-import textworker.backend
-import textworker.textwidget as textwidget
 import traceback
 import wx
-
-textworker.backend.require_version("1.6a", ">=")
 
 __dir = os.environ["USERPROFILE"] if sys.platform == "win32" else os.environ["HOME"]
 if sys.platform == "win32":

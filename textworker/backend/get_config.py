@@ -7,9 +7,14 @@ import platform
 import wx
 
 from PIL import ImageColor
-from . import constants, require_version, is_development_build
+from . import constants, is_development_build
 
-require_version("1.6a", ">=")
+__all__ = [
+    'defconsole',
+    'file',
+    'ConfigurationError',
+    'GetConfig'
+]
 
 # Configuration file
 if platform.system() == "Windows":
@@ -27,9 +32,8 @@ else:
 # Default configs
 cfg = {}
 
+## Interface
 cfg["interface"] = {"color": "light", "autocolor": "yes", "textcolor": "default"}
-
-cfg["interface.editor"] = {"indentation": "tabs", "size": "4"}
 
 cfg["interface.tabs"] = {
     "move_tabs": "yes",
@@ -44,9 +48,18 @@ cfg["interface.font"] = {
     "size": "normal",
 }
 
-cfg["extensions.cmd"] = {"enable": "yes", "console": defconsole}
+## Editor
+cfg["editor"] = {
+    "indentation": "tabs",
+    "size": "4",
+    "autosave": "yes",
+    "autosave_time": "120",
+    "searchdir": ""
+}
 
-cfg["extensions.autosave"] = {"enable": "no", "time": "120"}
+## Extensions
+cfg["extensions.cmd"] = {"enable": "yes", "console": defconsole}
+# cfg["extensions.autosave"] = {"enable": "no", "time": "120"}
 cfg["extensions.multiview"] = {"notebook_location": "bottom"}
 
 
@@ -165,7 +178,7 @@ class GetConfig(configparser.ConfigParser):
                     self.backups[key][subelm] = self[key][subelm]
                     return self.backups
 
-    def getkey(self, section, option, needed: bool = False, restore: bool = False):
+    def getkey(self, section, option, needed: bool = False, restore: bool = False, noraiseexp: bool = False) -> str|bool:
         """
         Try to get the value of an option under the spectified section.
 
@@ -174,13 +187,19 @@ class GetConfig(configparser.ConfigParser):
         its previously initialized configs. If restore parameter is set to True,
         GetConfig will use the backed up option, if possible.
 
+        If you don't want to see exceptions raised and just need False (when something went wrong),
+        set noraiseexp to True.
+
         Otherwise it will check for the value's alias, then return the value.
         """
         if not section in self.sections():
             if needed == True:
                 self.add_section(section)
             else:
-                raise ConfigurationError(section, msg="Section not found: %s" % section)
+                if noraiseexp != True:
+                    raise ConfigurationError(section, msg="Section not found: %s" % section)
+                else:
+                    return False
 
         if not option in self[section]:
             if needed == True:
@@ -195,9 +214,12 @@ class GetConfig(configparser.ConfigParser):
                 else:
                     self.set(section, option, self[section][option])
             else:
-                raise ConfigurationError(
-                    section, option, "Option not found: %s" % option
-                )
+                if noraiseexp != True:
+                    raise ConfigurationError(
+                        section, option, "Option not found: %s" % option
+                    )
+                else:
+                    return False
 
         if needed == True:
             self.write(open(self.__file, "w"))
