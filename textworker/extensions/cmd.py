@@ -5,7 +5,7 @@ import threading
 import wx
 import wx.stc
 
-from ..tabs import *
+from ..tabs import Tabber, TextWidget
 from ..backend import get_config, logger
 from ..generic import global_settings
 
