@@ -8,6 +8,7 @@ import gettext
 import locale
 import os.path
 import pathlib
+import sys
 
 from . import main
 from .backend import is_development_build, require_version, __version__ as version
@@ -16,13 +17,13 @@ require_version("1.6a0")
 
 __version__ = version
 currdir = pathlib.Path(__file__).parent
+sys.path.append(str(currdir / ".." / "libtextworker"))
 
 try:
-    from textworker.defs import LOCALE_DIR, ICON_DIR
+    from textworker.defs import LOCALE_DIR, ICON_DIR # type: ignore
 except ImportError:
     LOCALE_DIR = currdir / "po"
     ICON_DIR = currdir / "icons"
-    UIRC_DIR = currdir / "ui"
 
 if not os.path.isdir(LOCALE_DIR):
     LOCALE_DIR = currdir / ".." / "po"

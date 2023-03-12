@@ -2,8 +2,7 @@ import os.path
 import sys
 import wx
 
-from . import mainwindow
-
+from .mainwindow import MainFrame
 
 # Start
 def _file_not_found(filename):
@@ -21,9 +20,9 @@ def start_app():
     argc = len(argv) - 1
 
     root = wx.App()
-    fm = mainwindow.MainFrame(None)
-    # root.SetTopWindow(fm)
-    # root.SetExitOnFrameDelete(True)
+    fm = MainFrame(None)
+    root.SetTopWindow(fm)
+    root.SetExitOnFrameDelete(True)
 
     if argc > 0:
         nb = fm.notebook

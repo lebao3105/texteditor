@@ -1,4 +1,3 @@
 if __name__ == "__main__":
-    import textworker
-
-    del textworker
+    import textworker.main
+    textworker.main.start_app()

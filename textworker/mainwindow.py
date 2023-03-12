@@ -7,10 +7,12 @@ import wx.adv
 import wx.stc
 
 from .textwidget import TextWidget
-from .generic import global_settings, log, MenuBar, SettingsWindow
+from .generic import global_settings, log, SettingsWindow
 from .tabs import Tabber
 from .backend import get_config, is_development_build
 from .extensions import cmd, multiview
+
+from libtextworker.interface.wx.miscs import MenuBar
 
 # https://stackoverflow.com/a/27872625
 if platform.system() == "Windows":
@@ -209,12 +211,12 @@ class MainFrame(wx.Frame):
         self.SetMenuBar(self.menubar)
 
     def OnClose(self, evt):
-        if hasattr(self.notebook.autosv, "fm"):
-            try:
-                self.notebook.autosv.fm.Close()
-            except RuntimeError:
-                pass
-            self.notebook.autosv.shown = False
+        # if hasattr(self.notebook.autosv, "fm"):
+        #     try:
+        #         self.notebook.autosv.fm.Close()
+        #     except RuntimeError:
+        #         pass
+        #     self.notebook.autosv.shown = False
         evt.Skip()
 
     def OpenDir(self, evt):

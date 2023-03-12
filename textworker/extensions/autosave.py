@@ -35,7 +35,7 @@ class AutoSave(XMLBuilder):
         MIN_30,
     ]
 
-    enabled = global_settings.get_setting("extensions.autosave", "enable")
+    enabled = global_settings.get_setting("editor", "autosave")
     shown = False
 
     def __init__(self, Parent):
@@ -47,3 +47,15 @@ class AutoSave(XMLBuilder):
 
         self.Dialog.ShowModal()
         self.shown = True
+    
+    @property
+    def Function(self):
+        return self._Function
+    
+    @Function.setter
+    def Function(self, fn):
+        self._Function = fn
+    
+    @Function.deleter
+    def Function(self, fn):
+        self._Function = None

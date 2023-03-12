@@ -23,8 +23,6 @@ class FileOperators:
     _AddTab = None
     HasContent: bool = False
     Files = []
-
-    def __init__(self): ...
     
     @property
     def Editor(self):

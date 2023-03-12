@@ -18,10 +18,10 @@ __all__ = [
 
 # Configuration file
 if platform.system() == "Windows":
-    dir_to_use = os.environ["USERPROFILE"] + "\\.config\\texteditor\\"
+    dir_to_use = os.environ["USERPROFILE"] + "\\.config\\textworker\\"
     defconsole = "cmd"
 else:
-    dir_to_use = os.environ["HOME"] + "/.config/texteditor/"
+    dir_to_use = os.environ["HOME"] + "/.config/textworker/"
     defconsole = "xterm"
 
 if is_development_build():
@@ -53,8 +53,7 @@ cfg["editor"] = {
     "indentation": "tabs",
     "size": "4",
     "autosave": "yes",
-    "autosave_time": "120",
-    "searchdir": ""
+    "autosave_time": "120"
 }
 
 ## Extensions
