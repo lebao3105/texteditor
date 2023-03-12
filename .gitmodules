@@ -1,0 +1,3 @@
+[submodule "libtextworker"]
+	path = libtextworker
+	url = https://github.com/lebao3105/libtextworker.git

@@ -1,6 +1,4 @@
 {
-    // Use IntelliSense to learn about possible attributes.
-    // Hover to view descriptions of existing attributes.
     "version": "0.2.0",
     "configurations": [
         {
@@ -17,9 +15,12 @@
             "request": "launch",
             "module": "texteditor",
             "console": "internalConsole",
-            "args": ["README.md"],
+            "args": [
+                "README.md"
+            ],
             "justMyCode": true
-        },{
+        },
+        {
             "name": "Run textworker only",
             "type": "python",
             "request": "launch",
@@ -33,7 +34,9 @@
             "request": "launch",
             "module": "textworker",
             "console": "internalConsole",
-            "args": ["README.md"],
+            "args": [
+                "README.md"
+            ],
             "justMyCode": true
         }
     ]

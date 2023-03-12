@@ -29,4 +29,4 @@ dependencies = [
 package-dir = {"textworker" = "textworker"}
 
 [project.gui-scripts]
-textworker = "textworker:start_app"
+textworker = "textworker.main:start_app"

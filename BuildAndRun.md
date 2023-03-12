@@ -23,7 +23,12 @@ $ pip install textworker
 ```
 
 ### With git (run from source)
-1. Clone the source code, use ```wip/wx``` branch, then "cd" to the cloned folder.
+1. Clone the source code:
+```bash
+$ git clone https://github.com/lebao3105/texteditor.git -b wip/wx textworker
+$ cd textworker
+$ git submodule update --init --recursive --remote
+```
 2. Make translation (optional, gettext and meson required):
 ```bash
 $ meson build # --prefix=<dir> # Use this to set the install prefix
