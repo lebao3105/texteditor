@@ -10,14 +10,13 @@ import os.path
 import pathlib
 import sys
 
-from . import main
-from .backend import is_development_build, require_version, __version__ as version
-
-require_version("1.6a0")
-
-__version__ = version
 currdir = pathlib.Path(__file__).parent
 sys.path.append(str(currdir / ".." / "libtextworker"))
+
+from .backend import is_development_build, require_version, __version__ as version
+
+require_version("1.6a2")
+__version__ = version
 
 try:
     from textworker.defs import LOCALE_DIR, ICON_DIR # type: ignore
@@ -41,6 +40,4 @@ else:
     icon = str(ICON_DIR / "textworker.png")
 # --- ---
 
-start_app = main.start_app()
-start_app()
 del LOCALE_DIR, ICON_DIR

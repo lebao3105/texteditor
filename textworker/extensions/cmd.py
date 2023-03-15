@@ -6,7 +6,7 @@ import wx
 import wx.stc
 
 from ..tabs import Tabber, TextWidget
-from ..backend import get_config, logger
+from ..backend import logger
 from ..generic import global_settings
 
 cfg = global_settings.cfg
@@ -135,7 +135,7 @@ class Shell:
     exitcode: int = 0
     statusobj = None
     root = None  # Frame, Panel...
-    runterm = get_config.defconsole
+    runterm = "xterm"
 
     def __init__(self, parent, statusobj=None):
         self.parent = parent

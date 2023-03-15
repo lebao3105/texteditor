@@ -9,7 +9,7 @@ import wx.stc
 from .textwidget import TextWidget
 from .generic import global_settings, log, SettingsWindow
 from .tabs import Tabber
-from .backend import get_config, is_development_build
+from .backend import is_development_build, configpath
 from .extensions import cmd, multiview
 
 from libtextworker.interface.wx.miscs import MenuBar
@@ -263,9 +263,9 @@ class MainFrame(wx.Frame):
         wind.Show()
 
     def ShowCfgs(self, evt):
-        if not self.notebook.text_editor.IsEmpty():
+        if not self.notebook.text_editor.IsModified():
             self.notebook.AddTab()
-        self.notebook.fileops.openfile(get_config.file)
+        self.notebook.fileops.openfile(configpath)
 
     def ResetCfgs(self, evt):
         ask = wx.MessageDialog(

@@ -1,4 +1,5 @@
 import pathlib
+import platform
 import wx
 import wx.xml
 import wx.xrc
@@ -7,9 +8,46 @@ import wx.adv
 currdir = pathlib.Path(__file__).parent
 UIRC_DIR = str(currdir / "ui")
 
-from .backend import get_config, logger
+from .backend import logger, configpath
+from libtextworker import get_config
+from libtextworker.general import CraftItems
 from libtextworker.interface.wx.miscs import XMLBuilder
 
+# Default configs
+cfg = {}
+
+## Interface
+cfg["interface"] = {"color": "light", "autocolor": "yes", "textcolor": "default"}
+
+cfg["interface.tabs"] = {
+    "move_tabs": "yes",
+    "middle_close": "no",
+    "close_on_all_tabs": "no",
+}
+
+cfg["interface.font"] = {
+    "style": "normal",
+    "weight": "normal",
+    "family": "default",
+    "size": "normal",
+}
+
+## Editor
+cfg["editor"] = {
+    "indentation": "tabs",
+    "size": "4",
+    "autosave": "yes",
+    "autosave_time": "120"
+}
+
+## Extensions
+cfg["extensions.cmd"] = {"enable": "yes", "console": "xterm" if platform.system() != "Windows" else "cmd"}
+# cfg["extensions.autosave"] = {"enable": "no", "time": "120"}
+cfg["extensions.multiview"] = {"notebook_location": "bottom"}
+
+## ----- ##
+
+# Classes
 class Error(Exception):
     def __init__(self, objname: str, title: str, msg: str, *args: object):
         fullmsg = "Object {} error: ({}) {}".format(objname, title, msg)
@@ -20,9 +58,9 @@ class Error(Exception):
 class AppSettings(object):
     def __init__(
         self,
-        cfg: dict = get_config.cfg,
-        file: str = get_config.file,
-        default_section: str = (item[0] for item in get_config.cfg),
+        cfg: dict = cfg,
+        file: str = configpath,
+        default_section: str = (item[0] for item in cfg),
         **kwds,
     ):
         self.cfg = get_config.GetConfig(
@@ -63,7 +101,7 @@ log = logger.Logger()
 class SettingsWindow(XMLBuilder):
 
     def __init__(self, Parent):
-        super().__init__(Parent, str(UIRC_DIR / "preferences.xrc"), _)
+        super().__init__(Parent, CraftItems(UIRC_DIR, "preferences.xrc"), _)
 
         # Load initial items
         self.Frame = self.loadObject("Preferences", "wxWizard")

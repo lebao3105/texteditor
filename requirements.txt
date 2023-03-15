@@ -3,3 +3,4 @@ darkdetect
 pillow
 packaging
 wxpython
+-e git+https://github.com/lebao3105/libtextworker.git#egg=libtextworker

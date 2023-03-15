@@ -1,51 +1,20 @@
 import wx
 import wx.stc
+
 from .generic import global_settings
+from libtextworker.interface.wx import editor
 
-
-class TextWidget(wx.stc.StyledTextCtrl):
+class TextWidget(editor.StyledTextControl):
     rcmenu: bool = True
 
-    def __init__(self, id, line_number: bool = True, **kwds):
+    def __init__(self, line_number: bool = True, **kwds):
         kwds["style"] = kwds.get("style", 0) | wx.stc.STC_STYLE_DEFAULT
-        super().__init__(id, **kwds)
+        super().__init__(line_number, **kwds)
         dt = DNDTarget(self)
         self.SetDropTarget(dt)
 
         if self.rcmenu == True:
             self.Bind(wx.EVT_RIGHT_DOWN, self.OpenMenu)
-
-        if line_number == True:
-            self.EnableLineCount(True)
-        else:
-            self.EnableLineCount(False)
-
-        bg, fg = global_settings.cfg._get_color()
-        bg = "#" + "%02x%02x%02x" % bg
-        fg = "#" + "%02x%02x%02x" % fg
-        self.StyleSetSpec(0, "fore:{},back:{}".format(fg, bg))
-        self.StyleSetSpec(wx.stc.STC_STYLE_LINENUMBER, "fore:{},back:{}".format(fg, bg))
-
-        self.Bind(wx.stc.EVT_STC_MODIFIED, self.OnKeyPress)
-
-    def EnableLineCount(self, set: bool):
-        if set == True:
-            self.SetMarginType(1, wx.stc.STC_MARGIN_NUMBER)
-            self.SetMarginMask(1, 0)
-            self.SetMarginWidth(1, 20)
-        else:
-            self.SetMarginWidth(1, 0)
-
-    def OnKeyPress(self, evt):
-        if evt:
-            pos = evt.GetPosition()
-            length = evt.GetLength()
-        else:
-            pos = 0
-            length = self.GetLength()
-        self.StartStyling(pos)
-        self.SetStyling(length, 0)
-        evt.Skip()
 
     if rcmenu == True:
 

@@ -1,4 +1,5 @@
 import inspect
+import os
 import packaging.version
 
 __version__ = "1.6a2"
@@ -62,3 +63,6 @@ def parse_version(version: str):
 
 def is_development_build():
     return packaging.version.parse(__version__).is_prerelease
+
+# Config file path, default configs moved to /generic
+configpath = os.path.expanduser("~/.config/textworker/configs{}.ini".format("" if not is_development_build() else "_dev"))

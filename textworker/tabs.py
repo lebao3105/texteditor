@@ -72,16 +72,6 @@ class Tabber(wx.aui.AuiNotebook):
             _tabname = tabname
 
         self.AddPage(self.text_editor, _tabname, select=True)
-
-        textw = self.text_editor
-        global_settings.cfg.setcolorfunc(
-            "textw", textw.StyleSetBackground, wx.stc.STC_STYLE_DEFAULT
-        )
-        global_settings.cfg.setfontcfunc(
-            "textw", textw.StyleSetForeground, wx.stc.STC_STYLE_DEFAULT
-        )
-        global_settings.cfg.configure(textw)
-
         self.SetTitle("Textworker - %s" % _tabname)
 
     def SetTitle(self, title=""):
