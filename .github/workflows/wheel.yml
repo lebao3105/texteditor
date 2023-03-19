@@ -25,7 +25,7 @@ jobs:
           sudo add-apt-repository universe -y
           sudo apt update
           sudo apt install gettext meson ninja-build -y
-          sudo apt install libsdl2-dev libgtk3-dev -y
+          sudo apt install libsdl2-dev libgtk-3-dev -y
           pip3 install attrdict3 requests build wheel
           pip3 install -f https://extras.wxpython.org/wxPython4/extras/linux/gtk3/ubuntu-22.04/wxPython-4.2.0-cp310-cp310-linux_x86_64.whl
           pip3 install -r requirements.txt
