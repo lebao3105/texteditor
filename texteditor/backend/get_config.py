@@ -1,7 +1,6 @@
 import configparser
 import darkdetect
 import os
-import packaging.version
 import pathlib
 import sys
 import sv_ttk
@@ -20,44 +19,22 @@ require_version("1.4a", ">=")
 # backend.require_version("1.6a", "<") # Why the heck require_version stops at ctype == ">=" or ">" ?
 
 
-# The location of the configuration file
-# In older versions, it is stored in <home folder>/.config/texteditor
-# In 1.4, there are 2 files for branch stable and dev - config(_dev).ini.
-# and it can be overwriten by other version - especially wip/wx builds.
-# Now I store the configs under a subfolder for specific versions (NOT builds yet).
+# Init.
 if sys.platform == "win32":
-    dird = os.environ["USERPROFILE"] + "\\.config\\texteditor\\"
     defconsole = "cmd"
 else:
-    dird = os.environ["HOME"] + "/.config/texteditor/"
     defconsole = os.environ["TERM"]
 
+dird = os.path.expanduser("~/.config/texteditor")
+try:
+    os.mkdir(dird)
+except FileExistsError:
+    pass
 
-def createdir(dirname):
-    if not os.path.exists(dirname):
-        return os.mkdir(dirname)
-    else:
-        return "break"
-
-
-createdir(dird.removesuffix("texteditor"))
-createdir(dird)
-
-appver = packaging.version.parse(__version__)
-createdir(dird + appver.base_version)
-
-# Not all configs on dev builds are complete.
-file = dird + appver.base_version
-if is_development_build():
-    file = str(pathlib.Path(file) / "configs_dev.ini")
-else:
-    file = str(pathlib.Path(file) / "configs.ini")
-
-# print(file)
-
-# --- #
-
-# Init.
+file = str(
+    pathlib.Path(dird)
+    / "configs{}.ini".format("_dev" if is_development_build() else "")
+)
 log = logger.GenericLogs()
 
 cfg = {
@@ -88,27 +65,22 @@ class GetConfig(configparser.ConfigParser):
 
         self.backup = {}
         self.backup2 = {}
-        print('here')
         super().__init__(**kwds)
 
         for key in cfgs:
             self.backup[key] = cfgs[key]
-            # self[key] = cfgs[key]
+            self[key] = cfgs[key]
 
         self.readf(filepath)
         self.filepath = filepath
-            
+
     def readf(self, file, encoding: str | None = None):
-        print('reached there')
         if os.path.isfile(file):
             self.read(file, encoding)
         else:
-            print('here too')
             with open(file, mode="w") as f:
                 self.write(f)
-                print('good!')
                 self.read(file, encoding)
-                print('omg!')
             del f
 
     def backupvalue(self, values: dict):

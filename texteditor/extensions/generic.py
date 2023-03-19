@@ -1,9 +1,11 @@
 import os
 import os.path
 import pathlib
+import platform
+import shutil
 import sys
 
-from ..backend import get_config, logger, is_development_build
+from ..backend import get_config, logger
 
 
 class Setter(object):
@@ -27,63 +29,26 @@ class Setter(object):
         * If you don't specify any file path here, the class will use texteditor's config file by default.
         """
         self._filename: str
-        self._filepath: str
-        print(whatdir, file)
+        self._filepath: str = os.path.expanduser(
+            "~/.config/texteditor/extensions"
+        )  # Although this Tk version is going to be gone away...
 
         if file == False:
             self._filename = get_config.file
         else:
             self._filename = file
-        
+
         if whatdir == False:
-            self._filepath = get_config.dird + get_config.appver.base_version
+            self._filepath = get_config.dird
         else:
             self._filepath = whatdir
-        
+
         if self._filename == get_config.file:
             self.cfg = get_config.GetConfig(configs, self._filename)
         else:
-            self.cfg = get_config.GetConfig(configs, str(pathlib.Path(self._filepath) / self._filename))
-
-    # Properties
-    @property
-    def filename(self):
-        return self._filename
-
-    @filename.setter
-    def filename(self, value):
-        self.filename = value
-
-    @filename.deleter
-    def filename(self):
-        del self.filename, self._filename
-
-    @property
-    def filepath(self):
-        return self._filepath
-
-    @filepath.setter
-    def filepath(self, value):
-        self.filepath = value
-
-    @filepath.deleter
-    def filepath(self):
-        del self.filepath, self._filepath
-
-    @property
-    def default_filepath(self):
-        if sys.platform == "win32":
-            return os.environ["USERPROFILE"] + "\\.config\\texteditor\\extensions"
-        else:
-            return os.environ["HOME"] + "/.config/texteditor/extensions"
-
-    @default_filepath.setter
-    def default_filepath(self, value):
-        self.default_filepath = value
-
-    @default_filepath.deleter
-    def default_filepath(self):
-        del self.filepath
+            self.cfg = get_config.GetConfig(
+                configs, str(pathlib.Path(self._filepath) / self._filename)
+            )
 
     # GetConfig shortcuts
     def call(self, section, option):
@@ -94,6 +59,57 @@ class Setter(object):
 
 
 log = logger.GenericLogs()
-global_settings = Setter(
-    configs=get_config.cfg
-)
+global_settings = Setter(configs=get_config.cfg)
+separator = "/" if platform.system() != "Windows" else "\\"
+
+
+def CreateDirectory(path: str, subdirs: list[str] = []):
+    """
+    Create a directory with sub directories.
+    """
+    if not os.path.isdir(path):
+        os.mkdir(path)
+    if subdirs:
+        for folder in subdirs:
+            folder = CraftDir(path, folder)
+            if not os.path.isdir(folder):
+                os.mkdir(folder)
+
+
+def CraftDir(path: str, subdir: str) -> str:
+    return str(pathlib.Path(path) / subdir)
+
+
+def CraftDirWithFile(path: str, filename: str) -> str:
+    return str(pathlib.Path(path) / filename)
+
+
+def WalkCreation(directory: str):
+    """
+    I don't know how to describe this function.
+    :raises Exception: Directory creation failed
+    """
+    directory = os.path.normpath(directory)
+    splits = directory.split(separator)
+    firstdir = splits[0]
+    for item in range(1, len(splits)):
+        firstdir += separator + splits[item]
+        if not os.path.isdir(firstdir):
+            os.mkdir(firstdir)
+
+
+def GetCurrentDir(file: str, aspathobj: bool = False):
+    result = pathlib.Path(file).parent
+    if aspathobj:
+        return result
+    return result.__str__()
+
+
+def ResetEveryConfig():
+    """
+    Reset every configurations under ~/.config/textworker to default.
+    Will close the app after completed.
+    """
+    shutil.rmtree(os.path.expanduser("~/.config/texteditor"), ignore_errors=True)
+    CreateDirectory(os.path.expanduser("~/.config/texteditor"))
+    sys.exit()

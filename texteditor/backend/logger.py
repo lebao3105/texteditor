@@ -7,7 +7,7 @@ import texteditor
 import texteditor.backend
 import tkinter.ttk as ttk
 import traceback
-from texteditor.backend import get_config, textwidget
+from texteditor.backend import textwidget
 
 texteditor.backend.require_version("1.4b0", ">=")
 
@@ -91,30 +91,30 @@ class GenericLogs(Logger):
     some extra functions to specific errors.
     """
 
-    def FileIOError(self, msg:str):
+    def FileIOError(self, msg: str):
         """
         :param msg (str): Error message
 
         Throws an File I/O exception.
         """
-        return self.throwerr(_("File I/O Error"), msg=msg)
+        return self.throwerr("File I/O Error", msg=msg)
 
-    def ConfigurationError(self, msg:str):
+    def ConfigurationError(self, msg: str):
         """
         :param msg (str): Error message
 
         Throws an configuration file parser error.
         """
-        return self.throwerr(_("Configuration Error"), msg=msg)
-    
-    def GUIError(self, title:str, msg:str):
+        return self.throwerr("Configuration Error", msg=msg)
+
+    def GUIError(self, title: str, msg: str):
         """
         :param msg (str): Error message
 
         Throws an error occured from GUI app.
         """
-        return self.throwerr(_("GUI App error"), msg=msg)
-    
+        return self.throwerr("GUI App error", msg=msg)
+
 
 class StatusBar(ttk.Frame):
     def __init__(self, parent, pack: bool = False, **kwargs):

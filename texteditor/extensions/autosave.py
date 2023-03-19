@@ -1,9 +1,9 @@
-import texteditor
 import tkinter.messagebox as msb
 from tkinter import BooleanVar, Label, StringVar, Toplevel
 from tkinter.ttk import Button, Checkbutton, Combobox
 
-from ..backend import get_config, logger
+from ..backend import logger
+from .generic import global_settings
 
 # Minutes to seconds
 MIN_05 = 30  # 30 secs
@@ -30,10 +30,10 @@ class AutoSave:
     """
 
     forceEnable: bool = False
-    useTime: float = float(get_config.GetConfig.getvalue("filemgr", "autosave-time"))
+    useTime: float = float(global_settings.call("filemgr", "autosave-time"))
 
     def __init__(self, master, savefile_fn):
-        self.autosave = get_config.GetConfig.getvalue("filemgr", "autosave")
+        self.autosave = global_settings.call("filemgr", "autosave")
         self.__check()
         self.parent = master
         self.savecommand = savefile_fn
@@ -93,10 +93,7 @@ class AutoSave:
         cancelbtn.pack(padx=40)
         label2.pack(fill="x")
 
-        get_config.GetConfig(askwin, "config")
-        get_config.GetConfig(label, "config")
-        get_config.GetConfig(label2, "config")
-        get_config.GetConfig(cb, "config")
+        global_settings.cfg.configure(askwin, True)
 
     def __converter(self, time: float):
         switch = {
@@ -125,9 +122,7 @@ class AutoSave:
             self.config(timetouse)
 
         if st is True:
-            get_config.GetConfig.change_config(
-                "filemgr", "autosave-time", str(self.useTime)
-            )
+            global_settings.set("filemgr", "autosave-time", str(self.useTime))
         self.askwin.destroy()
         self.start()
 

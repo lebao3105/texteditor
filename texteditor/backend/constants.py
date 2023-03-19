@@ -6,10 +6,3 @@ DARK_BG = "#1c1c1c"
 LIGHT_BG = "#ffffff"
 GREEN_TEXT = "#00ff00"
 RED_TEXT = "#ff0000"
-
-# About & Help window size
-# Wight = width + height
-DEFAULT_OTHERS_WIGHT = 250
-
-# Opened files
-FILES_ARR = []

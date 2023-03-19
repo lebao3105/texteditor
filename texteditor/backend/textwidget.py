@@ -19,7 +19,7 @@ class TextWidget(Text):
         useScrollbars: bool = None,
         enableStatusBar: bool = None,
         unRedo: bool = False,
-        **kwds
+        **kwds,
     ):
         """Customized Tkinter Text widget with a basic right-click menu.
         :param parent : Where to place this widget

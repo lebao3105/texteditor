@@ -13,15 +13,14 @@ class TabsViewer(Notebook):
         else:
             self.newtablabel = newtablabel
 
-        self.fileops = file_operations.FileOperations(
-            notebook=self,
-            newtabfn=lambda: self.add_tab(idx="default"),
-        )
+        self.fileops = file_operations.FileOperations()
 
         # Add an initial tab
         self.add_tab()
-        self.fileops.textw = self.parent.text_editor
-        self.fileops.statusbar = self.parent.text_editor.statusbar
+
+        self.fileops.Editor = self.parent.text_editor
+        self.fileops.NewTabFunc = self.add_tab
+        self.fileops.NewTabFunc_Args = {"idx": "default"}
 
         # A tab but it's used to add a new tab
         # Idea from StackOverflow.. I don't know there was something like this
@@ -100,12 +99,12 @@ class TabsViewer(Notebook):
         self.parent.text_editor.addMenucmd(
             label=_("Save"),
             acc="Ctrl+S",
-            fn=lambda: self.fileops.savefile_,
+            fn=lambda: self.fileops.SaveFileEvent,
         )
         self.parent.text_editor.addMenucmd(
             label=_("Save as"),
             acc="Ctrl+Shift+S",
-            fn=self.fileops.saveas,
+            fn=self.fileops.SaveAs,
         )
         self.parent.text_editor.bind("<KeyRelease>", self.__bindkey)
         self.parent.text_editor.pack(expand=True, fill="both")

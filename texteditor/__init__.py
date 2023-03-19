@@ -1,14 +1,14 @@
 import gettext
 import locale
-import os.path
-import pathlib
+import os
 import sys
 
-# from . import mainwindow
+from . import mainwindow
 from .backend import __version__ as version, is_development_build
+from .extensions.generic import GetCurrentDir
 from tkinter import messagebox as msgbox
 
-currdir = pathlib.Path(__file__).parent
+currdir = GetCurrentDir(__file__, True)
 __version__ = version
 
 # Icon
@@ -23,7 +23,7 @@ LOCALE_DIR = "@LOCALE_DIR@"
 MESONTOUCH = "@MESONTOUCH@"
 LOCALE_DIR = currdir / "po"
 
-if MESONTOUCH != True:
+if MESONTOUCH != "True":
     if LOCALE_DIR == "@LOCALEDIR@":
         LOCALE_DIR = currdir / "po"
 
@@ -35,6 +35,7 @@ gettext.bindtextdomain("me.lebao3105.texteditor", LOCALE_DIR)
 gettext.textdomain("me.lebao3105.texteditor")
 gettext.install("me.lebao3105.texteditor")
 # --- ---
+
 
 # Startup functions
 def __filenotfound(filepath):
@@ -54,7 +55,6 @@ def start_app(argv=None):
     n = len(argv)
 
     if n > 0:
-
         if os.path.isfile(argv[1]):
             root.notebook.fileops.openfile(argv[1])
         else:

@@ -2,7 +2,7 @@ import inspect
 import packaging.version
 
 __version__ = "1.5.a0"
-TEST : bool = False
+TEST: bool = False
 
 
 def require_version(version: str, ctype: str):
