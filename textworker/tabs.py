@@ -9,6 +9,7 @@ from .generic import global_settings
 
 from libtextworker.interface.wx.editor import StyledTextControl
 
+
 class Tabber(wx.aui.AuiNotebook):
     def __init__(self, *args, **kwds):
         kwds["style"] = (
@@ -46,18 +47,15 @@ class Tabber(wx.aui.AuiNotebook):
         self.AddTab()
 
         self.fileops = file_operations.FileOperators()
-        self.fileops.AddTab = getattr(self, "AddTab")
+        self.fileops.NewTabFunc = self.AddTab
         self.fileops.Editor = self.text_editor
-        
-        # self.autosv = autosave.AutoSave(
-        #     self.Parent
-        # )
-        # self.autosv.Function = self.fileops.Save(self.GetPageText(self.GetSelection()))
+
+        self.autosv = autosave.AutoSave(self.Parent)
+        self.autosv.Function = self.fileops.Save
+        self.autosv.Function_args = self.GetPageText(self.GetSelection())
 
         self.Bind(wx.aui.EVT_AUINOTEBOOK_PAGE_CHANGED, self.OnPageChanged)
         self.Bind(wx.aui.EVT_AUINOTEBOOK_PAGE_CLOSED, self.OnPageClose)
-
-        threading.Thread(target=lambda: self.SyncFileEdit(), daemon=True).start()
 
     def AddTab(self, evt=None, tabname=None):
         """
@@ -65,8 +63,11 @@ class Tabber(wx.aui.AuiNotebook):
         If tabname is not specified, use texteditor's new tab label.
         """
 
-        self.text_editor = StyledTextControl(parent=self, style=wx.TE_MULTILINE | wx.EXPAND)
+        self.text_editor = StyledTextControl(
+            parent=self, style=wx.TE_MULTILINE | wx.EXPAND
+        )
         self.text_editor.SetZoom(3)
+        self.text_editor.FileLoaded: str = ""
 
         if tabname is None:
             _tabname = _("New file")
@@ -84,13 +85,12 @@ class Tabber(wx.aui.AuiNotebook):
         tabname = self.GetPageText(evt.GetSelection())
         if self.setstatus is True:
             self.Parent.SetStatusText(tabname)
-        self.SetTitle("Textworker - %s" % tabname)
+        self.SetTitle(tabname)
 
     def OnPageClose(self, evt):
         if self.GetPageCount() == 0:
             self.AddTab()
 
-    def SyncFileEdit(self):
-        if self.text_editor.IsModified():
-            print("edited")
-            # self.SetPageText(self.GetSelection(), 'test')
+    def OpenFile(self, filepath: str):
+        self.fileops.Load(filepath)
+        self.SetPageText(self.GetSelection(), filepath)

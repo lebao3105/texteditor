@@ -4,6 +4,7 @@ import packaging.version
 
 __version__ = "1.6a2"
 
+
 def require_version(version: str):
     """
     Requires texteditor version for an object (minium version).
@@ -21,6 +22,7 @@ def require_version(version: str):
         )
     else:
         return True
+
 
 def require_exact_version(version: str):
     """
@@ -40,6 +42,7 @@ def require_exact_version(version: str):
     else:
         return True
 
+
 def require_lower_version(version: str):
     """
     Requires a texteditor version (lower than required).
@@ -58,11 +61,18 @@ def require_lower_version(version: str):
     else:
         return True
 
+
 def parse_version(version: str):
     return packaging.version.parse(version)
+
 
 def is_development_build():
     return packaging.version.parse(__version__).is_prerelease
 
+
 # Config file path, default configs moved to /generic
-configpath = os.path.expanduser("~/.config/textworker/configs{}.ini".format("" if not is_development_build() else "_dev"))
+configpath = os.path.expanduser(
+    "~/.config/textworker/configs{}.ini".format(
+        "" if not is_development_build() else "_dev"
+    )
+)

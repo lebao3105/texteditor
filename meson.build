@@ -1,5 +1,5 @@
 project(
-    'me.lebao3105.textworker',
+    'textworker',
     version: '1.6.alpha2',
     meson_version: '>= 0.59.0',
     default_options: [

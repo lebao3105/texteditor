@@ -19,13 +19,13 @@ run_conf.set('PYTHON', py_inst.path())
 run_conf.set('pkgdatadir', moduledir)
 
 if target_machine.system() == 'windows'
-    out = '@0@.pyw'.format(meson.project_name())
+    out = 'me.lebao3105.textworker.pyw'
 else
-    out = '@0@'.format(meson.project_name())
+    out = 'me.lebao3105.textworker'
 endif
 
 configure_file(
-    input: '@0@.in'.format(meson.project_name()),
+    input: 'me.lebao3105.textworker.in',
     output: out,
     configuration: run_conf,
     install: true,
@@ -36,6 +36,7 @@ toplv_sources = [
     '__init__.py',
     '__main__.py',
     'generic.py',
+    'main.py',
     'mainwindow.py',
     'tabs.py'
 ]

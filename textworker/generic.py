@@ -25,16 +25,15 @@ cfg["interface.tabs"] = {
 }
 
 ## Editor
-cfg["editor"] = {
-    "autosave": "yes",
-    "autosave_time": "120"
-}
+cfg["editor"] = {"autosave": "yes", "autosave_time": "120"}
 
 ## Extensions
-cfg["extensions.cmd"] = {"enable": "yes", "console": "xterm" if platform.system() != "Windows" else "cmd"}
+cfg["extensions.cmd"] = {
+    "enable": "yes",
+    "console": "xterm" if platform.system() != "Windows" else "cmd",
+}
 cfg["extensions.multiview"] = {"notebook_location": "bottom"}
 
-## ----- ##
 
 # Classes
 class Error(Exception):
@@ -65,7 +64,7 @@ class AppSettings(object):
         with open(self.file, "w") as f:
             self.cfg.write(f)
 
-    def register_section(self, section_name, options: dict, write: bool=False):
+    def register_section(self, section_name, options: dict, write: bool = False):
         """
         Registers a new section on the configuration file.
         """
@@ -75,19 +74,20 @@ class AppSettings(object):
         if write:
             self.cfg.write(open(self.file, "w"))
 
-    def unregister_section(self, section_name, write: bool=False):
+    def unregister_section(self, section_name, write: bool = False):
         """
         Unregisters a section on the configuration file.
         """
         self.cfg.remove_section(section_name)
         if write:
             self.cfg.write(open(self.file, "w"))
-    
+
+
 global_settings = AppSettings()
 clrcall = clrmgr
 
-class SettingsWindow(XMLBuilder):
 
+class SettingsWindow(XMLBuilder):
     def __init__(self, Parent):
         super().__init__(Parent, CraftItems(UIRC_DIR, "preferences.xrc"), _)
 
@@ -187,6 +187,3 @@ class SettingsWindow(XMLBuilder):
     def Run(self, evt):
         self.Frame.RunWizard(self.Page1)
         self.Frame.Destroy()
-
-
-    

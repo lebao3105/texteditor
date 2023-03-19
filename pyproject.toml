@@ -20,6 +20,7 @@ classifiers = [
 dependencies = [
     "configparser",
     "darkdetect",
+    "libtextworker @ git+https://github.com/lebao3105/libtextworker.git",
     "packaging",
     "pillow",
     "wxpython",

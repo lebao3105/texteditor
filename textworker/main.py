@@ -4,6 +4,7 @@ import wx
 
 from .mainwindow import MainFrame
 
+
 def _file_not_found(filename):
     return wx.MessageDialog(
         None,
