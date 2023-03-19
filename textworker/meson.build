@@ -37,8 +37,7 @@ toplv_sources = [
     '__main__.py',
     'generic.py',
     'mainwindow.py',
-    'tabs.py',
-    'textwidget.py'
+    'tabs.py'
 ]
 
 install_data(

@@ -8,41 +8,30 @@ import wx.adv
 currdir = pathlib.Path(__file__).parent
 UIRC_DIR = str(currdir / "ui")
 
-from .backend import logger, configpath
+from .backend import configpath
 from libtextworker import get_config
-from libtextworker.general import CraftItems
+from libtextworker.general import CraftItems, logger
+from libtextworker.interface import clrmgr
 from libtextworker.interface.wx.miscs import XMLBuilder
 
 # Default configs
 cfg = {}
 
 ## Interface
-cfg["interface"] = {"color": "light", "autocolor": "yes", "textcolor": "default"}
-
 cfg["interface.tabs"] = {
     "move_tabs": "yes",
     "middle_close": "no",
     "close_on_all_tabs": "no",
 }
 
-cfg["interface.font"] = {
-    "style": "normal",
-    "weight": "normal",
-    "family": "default",
-    "size": "normal",
-}
-
 ## Editor
 cfg["editor"] = {
-    "indentation": "tabs",
-    "size": "4",
     "autosave": "yes",
     "autosave_time": "120"
 }
 
 ## Extensions
 cfg["extensions.cmd"] = {"enable": "yes", "console": "xterm" if platform.system() != "Windows" else "cmd"}
-# cfg["extensions.autosave"] = {"enable": "no", "time": "120"}
 cfg["extensions.multiview"] = {"notebook_location": "bottom"}
 
 ## ----- ##
@@ -51,7 +40,7 @@ cfg["extensions.multiview"] = {"notebook_location": "bottom"}
 class Error(Exception):
     def __init__(self, objname: str, title: str, msg: str, *args: object):
         fullmsg = "Object {} error: ({}) {}".format(objname, title, msg)
-        log.throwerr(title, True, msg)
+        logger.throwerr(title, True, msg)
         super().__init__(fullmsg, *args)
 
 
@@ -93,10 +82,9 @@ class AppSettings(object):
         self.cfg.remove_section(section_name)
         if write:
             self.cfg.write(open(self.file, "w"))
-
-
+    
 global_settings = AppSettings()
-log = logger.Logger()
+clrcall = clrmgr
 
 class SettingsWindow(XMLBuilder):
 
@@ -119,9 +107,9 @@ class SettingsWindow(XMLBuilder):
 
         # Font
         self.Font = wx.xrc.XRCCTRL(self.Frame, "m_fontPicker1")
-        self.Font.SetSelectedFont(global_settings.cfg._get_font())
+        self.Font.SetSelectedFont(clrcall.GetFont)
         self.TextPreview = wx.xrc.XRCCTRL(self.Frame, "m_staticText6")
-        global_settings.cfg.configure(self.TextPreview)
+        # global_settings.cfg.configure(self.TextPreview)
 
         # Color choices
         self.FontColorChoices = wx.xrc.XRCCTRL(self.Frame, "m_choice1")
@@ -196,7 +184,7 @@ class SettingsWindow(XMLBuilder):
         elif selected_item == _("Automatic"):
             return global_settings.set_setting("interface", "autocolor", "yes")
 
-    def Run(self):
+    def Run(self, evt):
         self.Frame.RunWizard(self.Page1)
         self.Frame.Destroy()
 

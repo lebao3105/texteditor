@@ -1,18 +1,20 @@
+import logging
 import platform
-import time
 import textworker
 import webbrowser
 import wx
 import wx.adv
 import wx.stc
 
-from .textwidget import TextWidget
-from .generic import global_settings, log, SettingsWindow
+from .generic import global_settings, SettingsWindow
 from .tabs import Tabber
 from .backend import is_development_build, configpath
 from .extensions import cmd, multiview
 
-from libtextworker.interface.wx.miscs import MenuBar
+from libtextworker.general import ResetEveryConfig
+from libtextworker.interface.wx.about import AboutDialog
+from libtextworker.interface.wx.miscs import CreateMenu
+
 
 # https://stackoverflow.com/a/27872625
 if platform.system() == "Windows":
@@ -23,45 +25,58 @@ if platform.system() == "Windows":
 
 cfg = global_settings.cfg
 
-
 class MainFrame(wx.Frame):
+
     def __init__(self, *args, **kwds):
         kwds["style"] = kwds.get("style", 0) | wx.DEFAULT_FRAME_STYLE
         wx.Frame.__init__(self, *args, **kwds)
+
         self.SetSize((820, 685))
         self.SetIcon(wx.Icon(textworker.icon))
 
-        self.notebook = Tabber(self, wx.ID_ANY, style=wx.EXPAND)
-        self.menuitem = {}
+        self.SetupStatusBar()
+        self.SetupEditor()
+        self.SetupLogger()
+
         self.sidebar = multiview.MultiViewer(self)
         self.wiz = SettingsWindow(self)
-        self.islogwindopen: bool = False
-        self._StatusBar()
-
-        tabname = self.notebook.GetPageText(self.notebook.GetSelection())
-        self.SetTitle("Texteditor - %s" % tabname)
-        self.SetStatusText(tabname)
 
         self.Bind(wx.EVT_CLOSE, self.OnClose)
+
         self.PlaceMenu()
         self.Layout()
+    
+    """
+    Setup basic components.
+    """
+    def SetupLogger(self):
+        self.logwindow = wx.Frame(self, title=_("Logs"))
+        self.logwindow.logs = wx.TextCtrl(self.logwindow, style=wx.TE_MULTILINE | wx.TE_READONLY | wx.HSCROLL | wx.VSCROLL)
+        self.logwindow.Layout()
 
-    def _StatusBar(self):
+    def SetupEditor(self):
+        self.notebook = Tabber(self, style=wx.EXPAND)
+        tabname = self.notebook.GetPageText(self.notebook.GetSelection())
+        self.SetTitle(tabname)
+        self.SetStatusText(tabname)
+
+    def SetupStatusBar(self):
         self.CreateStatusBar(2)
-        w1 = self.StatusBar.Size[0] - 50
-        self.StatusBar.SetStatusWidths([w1, -1])
-        righttext = wx.StaticText(self.StatusBar, wx.ID_ANY, label=_("Messages"))
-        righttext.SetPosition((w1 + 2, 2))
-        righttext.Bind(wx.EVT_LEFT_DOWN, self.OpenLogWind)
+        righttext_width = self.StatusBar.Size[0] - 50
+        self.StatusBar.SetStatusWidths([righttext_width, -1])
+
+        self.messages_text = wx.StaticText(self.StatusBar, wx.ID_ANY, label=_("Messages"))
+        self.messages_text.SetPosition((righttext_width + 2, 2))
+        self.messages_text.Bind(wx.EVT_LEFT_DOWN, self.ShowLogWindow)
+        
+        del righttext_width
 
     def PlaceMenu(self):
-        # Menu Bar
-        self.menubar = MenuBar()
-        self.menubar.SetParent(self)
+        self.menubar = wx.MenuBar()
 
         ## File
-        self.menubar.AddMenu(
-            _("&File"),
+        filemenu = CreateMenu(
+            self,
             [
                 (wx.ID_NEW, None, None, self.notebook.AddTab, None),
                 (wx.ID_OPEN, None, None, self.notebook.fileops.OpenDialog, None),
@@ -97,8 +112,8 @@ class MainFrame(wx.Frame):
         )
 
         ## Edit
-        self.menubar.AddMenu(
-            _("&Edit"),
+        editmenu = CreateMenu(
+            self,
             [
                 (
                     wx.ID_COPY,
@@ -155,8 +170,8 @@ class MainFrame(wx.Frame):
                     self.Bind(wx.EVT_MENU, self.OpenCmd, item)
 
         ## View
-        self.menubar.AddMenu(
-            _("&View"),
+        viewmenu = CreateMenu(
+            self,
             [
                 (
                     wx.ID_ZOOM_IN,
@@ -183,18 +198,18 @@ class MainFrame(wx.Frame):
         )
 
         ## Configs
-        self.menubar.AddMenu(
-            _("&Configs"),
+        configsmenu = CreateMenu(
+            self,
             [
                 (wx.ID_ANY, _("Show all configurations"), None, self.ShowCfgs, None),
                 (wx.ID_ANY, _("Reset all configs"), None, self.ResetCfgs, None),
-                (wx.ID_ANY, _("Run Setup"), None, lambda evt: self.wiz.Run, None),
+                (wx.ID_ANY, _("Run Setup"), None, self.wiz.Run, None),
             ],
         )
 
         ## Help
-        self.menubar.AddMenu(
-            _("&Help"),
+        helpmenu = CreateMenu(
+            self,
             [
                 (wx.ID_ABOUT, None, None, self.ShowAbout, None),
                 (
@@ -207,9 +222,27 @@ class MainFrame(wx.Frame):
                     None,
                 ),
             ],
-        )
+            )
+        
+        self.menubar.Append(filemenu, _("&File"))
+        self.menubar.Append(editmenu, _("&Edit"))
+        self.menubar.Append(viewmenu, _("&View"))
+        self.menubar.Append(configsmenu, _("&Configs"))
+        self.menubar.Append(helpmenu, _("&Help"))
         self.SetMenuBar(self.menubar)
-
+    
+    """
+    Logging
+    """
+    def SetMessageText(self, msg: str):
+        self.messages_text.SetLabel(msg)
+        self.logwindow.logs.WriteText(msg+"\n")
+        wx.CallLater(5000, self.messages_text.SetLabel, _("Got new message(s)!"))
+        wx.CallLater(10000, self.messages_text.SetLabel, _("Messages"))
+    
+    """
+    Event callbacks
+    """
     def OnClose(self, evt):
         # if hasattr(self.notebook.autosv, "fm"):
         #     try:
@@ -232,26 +265,12 @@ class MainFrame(wx.Frame):
         dirs = wx.GenericDirCtrl(self.sidebar.tabs, -1, selected_dir)
         dirs.Bind(
             wx.EVT_DIRCTRL_FILEACTIVATED,
-            lambda evt: self.notebook.fileops.openfile(dirs.GetFilePath()),
+            lambda evt: self.notebook.fileops.Load(dirs.GetFilePath()),
         )
         dirs.SetDefaultPath(selected_dir)
         dirs.Show()
         self.sidebar.RegisterTab(selected_dir, dirs)
         self.sidebar.Show()
-
-    def OpenLogWind(self, evt):
-        def onwindowclose(evt):
-            self.islogwindopen = False
-            logwind.fm.Destroy()
-
-        if self.islogwindopen == True:
-            return
-
-        logwind = LogsWindow(log.logs, self)
-        logwind.fm.Bind(wx.EVT_CLOSE, onwindowclose)
-
-        logwind.Show()
-        self.islogwindopen = True
 
     def OpenCmd(self, evt):
         wind = wx.Frame(self)
@@ -265,26 +284,20 @@ class MainFrame(wx.Frame):
     def ShowCfgs(self, evt):
         if not self.notebook.text_editor.IsModified():
             self.notebook.AddTab()
-        self.notebook.fileops.openfile(configpath)
+        self.notebook.fileops.Load(configpath)
 
     def ResetCfgs(self, evt):
         ask = wx.MessageDialog(
             None,
-            _("Are you sure want to reset all configurations?"),
+            _("Are you sure want to reset all configurations? There is no way to BACK! The app will close after the operation."),
             _("Confirm configs reset"),
             wx.YES_NO | wx.ICON_WARNING,
         ).ShowModal()
         if ask == wx.ID_YES:
-            for section in cfg.sections():
-                for elm in cfg[section]:
-                    print(cfg[section], elm)
-                    arr = {cfg[section], elm}
-                    print(arr)
-            if cfg.reset():
-                currst = self.StatusBar.GetStatusText()
-                self.SetStatusText(_("Restored all default app configurations."))
-                time.sleep(1)
-                self.SetStatusText(currst)
+            return ResetEveryConfig()
+                
+    def ShowLogWindow(self, evt):
+        return self.logwindow.Show()
 
     def ShowAbout(self, evt):
         wxver = wx.__version__
@@ -299,103 +312,15 @@ class MainFrame(wx.Frame):
         OS type: {ostype}
         """
         )
-        license = """
-        This program is free software: you can redistribute it and/or modify
-        it under the terms of the GNU General Public License as published by
-        the Free Software Foundation, either version 3 of the License, or
-        (at your option) any later version.
+        aboutdlg = AboutDialog()
+        aboutdlg.Parent = self
+        aboutdlg.SetName("TextWorker")
+        aboutdlg.SetVersion(textworker.__version__)
+        aboutdlg.SetIcon(wx.Icon(textworker.icon))
+        aboutdlg.SetDescription(msg)
+        aboutdlg.SetCopyright("(C) 2022-2023 Le Bao Nguyen")
+        aboutdlg.SetWebSite("https://github.com/lebao3105/texteditor")
+        aboutdlg.SetLicense("GPL3_short")
+        aboutdlg.infos.AddDeveloper("Le Bao Nguyen")
+        return aboutdlg.ShowBox()
 
-        This program is distributed in the hope that it will be useful,
-        but WITHOUT ANY WARRANTY; without even the implied warranty of
-        MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-        GNU General Public License for more details.
-
-        You should have received a copy of the GNU General Public License   
-        along with this program.  If not, see <https://www.gnu.org/licenses/>.
-        """
-
-        aboutinf = wx.adv.AboutDialogInfo()
-        aboutinf.SetName("TextWorker")
-        aboutinf.SetVersion(textworker.__version__)
-        aboutinf.SetIcon(wx.Icon(textworker.icon))
-        aboutinf.SetDescription(msg)
-        aboutinf.SetCopyright("(C) 2022-2023 Le Bao Nguyen")
-        aboutinf.SetWebSite("https://github.com/lebao3105/texteditor")
-        aboutinf.SetLicence(license)
-        aboutinf.AddDeveloper("Le Bao Nguyen")
-        return wx.adv.AboutBox(aboutinf)
-
-
-class LogsWindow:
-    def __init__(self, logs: list[str], parent=None):
-        """Logs window - use wx.Frame
-        :param logs (list) : All logs
-        :param parent=None : Parent of the frame
-
-        Objects:
-        * fm : Main frame
-        * label1, label2 : Message text
-        * text : Log object
-
-        Press F5 to refresh the log window.
-        """
-
-        self._curridx: int = 0
-        self._istexthere: bool = False
-        self.logs = logs
-
-        self.fm = wx.Frame(parent, title="Logs")
-
-        panel = wx.Panel(self.fm, wx.ID_ANY)
-        sizer = wx.BoxSizer(wx.VERTICAL)
-
-        self.label1 = wx.StaticText(
-            panel, wx.ID_ANY, _("No new message collected."), style=wx.TE_READONLY
-        )
-        sizer.Add(self.label1, 0, wx.ALIGN_CENTER_HORIZONTAL | wx.ALL, 52, wx.EXPAND)
-
-        self.label2 = wx.StaticText(
-            panel, wx.ID_ANY, _("Press F5 to refresh."), style=wx.TE_READONLY
-        )
-        sizer.Add(self.label2, 0, wx.ALIGN_CENTER_HORIZONTAL | wx.ALL, 0, wx.EXPAND)
-
-        self.text = TextWidget(
-            panel, -1, style=wx.TE_MULTILINE | wx.TE_READONLY | wx.EXPAND
-        )
-        self.text.Hide()
-
-        for item in [self.label1, self.label2, self.fm]:
-            cfg.configure(item)
-
-        self.label1.SetFont(cfg._get_font().MakeBold().MakeUnderlined())
-
-        panel.SetSizerAndFit(sizer)
-        self.fm.Bind(wx.EVT_CHAR_HOOK, self.onkeypressed)
-        self.refresh()
-
-        self.fm.Layout()
-
-    def onkeypressed(self, evt):
-        key = evt.GetKeyCode()
-        if key == wx.WXK_F5:
-            self.refresh()
-            print("hello")
-        else:
-            evt.Skip()
-
-    def refresh(self):
-        if self._istexthere == False and self.logs:
-            self.text.Show()
-            for i in range(self._curridx, len(self.logs)):
-                self.text.AppendText(self.logs[i] + "\n")
-            self._curridx = len(self.logs)
-            self._istexthere = True
-        else:
-            self.text.Hide()
-            self.label1.SetLabelText(_("No new message collected."))
-            self.label2.SetLabelText(_("Press F5 to refresh."))
-            self._istexthere = False
-
-    def Show(self, show: bool = True):
-        """Show the window."""
-        return self.fm.Show(show)

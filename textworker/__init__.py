@@ -13,6 +13,7 @@ import sys
 currdir = pathlib.Path(__file__).parent
 sys.path.append(str(currdir / ".." / "libtextworker"))
 
+from libtextworker.general import CraftItems
 from .backend import is_development_build, require_version, __version__ as version
 
 require_version("1.6a2")
@@ -35,9 +36,9 @@ gettext.install("me.lebao3105.textworker")
 
 # Icon
 if is_development_build() == True:
-    icon = str(ICON_DIR / "textworker.Devel.png")
+    icon = CraftItems(ICON_DIR, "textworker.Devel.png")
 else:
-    icon = str(ICON_DIR / "textworker.png")
+    icon = CraftItems(ICON_DIR, "textworker.png")
 # --- ---
 
 del LOCALE_DIR, ICON_DIR

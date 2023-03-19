@@ -6,8 +6,8 @@ import wx.stc
 from .backend import file_operations
 from .extensions import autosave
 from .generic import global_settings
-from .textwidget import TextWidget
 
+from libtextworker.interface.wx.editor import StyledTextControl
 
 class Tabber(wx.aui.AuiNotebook):
     def __init__(self, *args, **kwds):
@@ -60,10 +60,12 @@ class Tabber(wx.aui.AuiNotebook):
         threading.Thread(target=lambda: self.SyncFileEdit(), daemon=True).start()
 
     def AddTab(self, evt=None, tabname=None):
-        """Add a new tab.
-        If tabname is not specified, use texteditor's new tab label."""
+        """
+        Add a new tab.
+        If tabname is not specified, use texteditor's new tab label.
+        """
 
-        self.text_editor = TextWidget(self, style=wx.TE_MULTILINE | wx.EXPAND)
+        self.text_editor = StyledTextControl(parent=self, style=wx.TE_MULTILINE | wx.EXPAND)
         self.text_editor.SetZoom(3)
 
         if tabname is None:
@@ -72,7 +74,7 @@ class Tabber(wx.aui.AuiNotebook):
             _tabname = tabname
 
         self.AddPage(self.text_editor, _tabname, select=True)
-        self.SetTitle("Textworker - %s" % _tabname)
+        self.SetTitle(_tabname)
 
     def SetTitle(self, title=""):
         if hasattr(self.Parent, "SetTitle"):

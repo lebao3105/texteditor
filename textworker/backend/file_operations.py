@@ -2,8 +2,7 @@ import os
 import sys
 import wx
 
-from ..generic import global_settings, log
-
+from ..generic import global_settings
 config = global_settings.cfg
 searchdir = config.getkey("editor", "searchdir", noraiseexp=True, restore=True)
 autosave = config.getkey("editor", "autosave", noraiseexp=True, restore=True) or config.getkey("extensions.autosave", "enable", noraiseexp=True)
@@ -65,7 +64,7 @@ class FileOperators:
             return self.Save(dlg.GetPath())
         
     def Load(self, FilePath: str) -> bool:
-        if not self.Editor.IsModified():
+        if self.Editor.IsModified():
             ask = wx.MessageBox(
                 _(
                     f"""The editor has not been saved yet.\n

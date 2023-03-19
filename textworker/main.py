@@ -4,7 +4,6 @@ import wx
 
 from .mainwindow import MainFrame
 
-# Start
 def _file_not_found(filename):
     return wx.MessageDialog(
         None,
@@ -19,10 +18,8 @@ def start_app():
     argv = sys.argv
     argc = len(argv) - 1
 
-    root = wx.App()
+    app = wx.App()
     fm = MainFrame(None)
-    root.SetTopWindow(fm)
-    root.SetExitOnFrameDelete(True)
 
     if argc > 0:
         nb = fm.notebook
@@ -45,5 +42,8 @@ def start_app():
                     nb.fileops.openfile(argv[i])
                     del f
 
+    app.SetTopWindow(fm)
+    app.SetExitOnFrameDelete(True)
+
     fm.Show()
-    root.MainLoop()
+    app.MainLoop()

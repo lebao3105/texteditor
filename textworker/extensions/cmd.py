@@ -5,22 +5,19 @@ import threading
 import wx
 import wx.stc
 
-from ..tabs import Tabber, TextWidget
-from ..backend import logger
-from ..generic import global_settings
+from ..tabs import Tabber
 
-cfg = global_settings.cfg
+from libtextworker.interface.wx.editor import StyledTextControl
 
-
-class CommandWidget(TextWidget):
+class CommandWidget(StyledTextControl):
     """
     A terminal widget for wxPython.
     But it doesn't embed any shell to it like wx.py.shell, this is just a text widget with a prompt
     that the user can enter command in it and get the result.
     """
 
-    def __init__(self, id, **kwds):
-        super().__init__(id, line_number=False, **kwds)
+    def __init__(self, id=wx.ID_ANY, **kw):
+        super().__init__(id, **kw)
         self.shell = Shell(self)
         self.shell.showprompt(True)
 
@@ -61,22 +58,16 @@ class CommandWidget(TextWidget):
 
 
 class Tabb(Tabber):
-    def __init__(self, *args, **kwds):
-        super().__init__(*args, **kwds)
 
     def AddTab(self, evt=None, tabname: str = ""):
         """
         Create a new Terminal tab.
         Will use "Terminal" for the tab label if tabname is not specified.
         """
-        textw = CommandWidget(self, style=wx.TE_MULTILINE)
+        textw = CommandWidget(parent=self, style=wx.TE_MULTILINE)
         textw.shell.statusobj = self.Parent
         textw.shell.root = self.Parent
         self.Parent.SetStatusText(os.getcwd())
-
-        cfg.setcolorfunc("textw", textw.StyleSetBackground, wx.stc.STC_STYLE_DEFAULT)
-        cfg.setfontcfunc("textw", textw.StyleSetForeground, wx.stc.STC_STYLE_DEFAULT)
-        cfg.configure(textw)
 
         if tabname == "":
             newtabname = "Terminal"
