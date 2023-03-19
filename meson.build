@@ -9,7 +9,6 @@ project(
     license: 'GPL-3.0+'
 )
 
-
 # Import modules
 i18n = import('i18n')
 python = import('python')
@@ -22,7 +21,7 @@ if not py_inst.found()
 endif
 
 if not py_inst.language_version().version_compare('>= 3.8')
-    error('Only Python 3.8 and higher is supported.')
+    error('Only Python 3.8 or higher is supported.')
 endif
 
 # Dirs
@@ -30,6 +29,7 @@ prefix = get_option('prefix')
 localedir = join_paths(prefix, get_option('localedir'))
 moduledir = join_paths(prefix, get_option('datadir'), meson.project_name())
 
+subproject('libtextworker')
 subdir('po')
 subdir('textworker')
 

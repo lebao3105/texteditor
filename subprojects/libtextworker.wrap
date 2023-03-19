@@ -1,0 +1,4 @@
+[wrap-git]
+url = https://github.com/lebao3105/libtextworker.git
+revision = head
+depth = 1
