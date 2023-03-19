@@ -14,10 +14,7 @@ FOUND_NREQ = False  # Found not-solved dependency
 BUILD_FLAG = True
 MESON_FLAG = False
 
-if sys.platform == "win32":
-    pycmd = "python"
-else:
-    pycmd = "python3"
+pycmd = sys.executable
 
 print(miscs.headertext("texteditor Python package build script"))
 
@@ -25,6 +22,7 @@ print(miscs.headertext("texteditor Python package build script"))
 def checkreq():
     global FOUND_NREQ
     global CHECKREQ_NOT_IN_FLAG
+
     print(miscs.boldtext("Checking for requirements..."))
     print(
         miscs.warntext(
@@ -32,6 +30,7 @@ def checkreq():
         )
     )
     print("Use help flag to see all requirements.")
+
     # Python version
     if sys.version_info.major < 3 or sys.version_info.minor < 8:
         print(miscs.failtext("Python version 3.8 or higher is required."))
@@ -44,7 +43,11 @@ def checkreq():
         except ImportError:
             print(miscs.failtext("'Build' module not found"))
             FOUND_NREQ = True
+        else:
+            del build
+
     if MESON_FLAG is True:
+
         if shutil.which("meson") is None:
             print(miscs.failtext("Meson program not found"))
         try:
@@ -52,6 +55,8 @@ def checkreq():
         except ImportError:
             print(miscs.failtext("'Meson' module not found"))
             FOUND_NREQ = True
+        else:
+            del mesonbuild
 
     if CHECKREQ_NOT_IN_FLAG is True:
         if FOUND_NREQ is True:
@@ -77,7 +82,7 @@ def checkflag(arg: str):
     if arg == "--no-checkreq":
         CHECKREQ_FLAG = False
 
-    if arg == "help":
+    if arg == "--help" or "help":
         help()
     if arg == "checkreq":
         CHECKREQ_NOT_IN_FLAG = False
@@ -119,17 +124,7 @@ def build_(noexit: bool = True):
     if MESON_FLAG is True:
         command = "meson build --reconfigure"
         pass
-    result = subprocess.Popen(
-        command,
-        shell=True,
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
-        universal_newlines=True,
-    )
-    out, err = result.communicate()
-    print(out)
-    print(miscs.boldtext("Errors if have: "), err)
-    result.wait()
+    run_command(command)
     os.chdir("makerelease")
     if noexit == False:
         exit()
@@ -162,17 +157,7 @@ def install_():
     if MESON_FLAG is True:
         command = "ninja -C build install"
         pass
-    result = subprocess.Popen(
-        command,
-        shell=True,
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
-        universal_newlines=True,
-    )
-    out, err = result.communicate()
-    print(out)
-    print(miscs.boldtext("Errors if have: "), err)
-    result.wait()
+    run_command(command)
     os.chdir("makerelease")
     exit()
 
@@ -185,14 +170,41 @@ def clean_():
         return
 
 
+def run_command(command: str):
+    result = subprocess.Popen(
+        command,
+        shell=True,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        universal_newlines=True,
+    )
+    out, err = result.communicate()
+    print(out)
+    print(miscs.boldtext("Errors if have: "), err)
+    result.wait()
+
+
 def main():
-    args = sys.argv
+    args = sys.argv[1:]
     argc = len(args)
+
+    argtouse = [
+        "--use-meson",
+        "--no-checkreq",
+        "--help",
+        "help",
+        "checkreq",
+        "build",
+        "install",
+    ]
+    argused = args
+    cbargs = []
+    cbargs += argtouse, argused
+
     if argc > 0:
-        for i in range(1, argc):
-            checkflag(args[i])
-    elif argc == 0:
-        help()
+        seen = set([x for x in cbargs if cbargs.count(x) > 1])
+        for item in seen:
+            checkflag(item)
 
 
 if __name__ == "__main__":

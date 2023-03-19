@@ -19,7 +19,7 @@ else:
 # --- ---
 
 # Translation
-LOCALE_DIR = "@LOCALE_DIR@"
+LOCALE_DIR = "@LOCALEDIR@"
 MESONTOUCH = "@MESONTOUCH@"
 LOCALE_DIR = currdir / "po"
 
