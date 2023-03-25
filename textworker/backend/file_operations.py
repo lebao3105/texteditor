@@ -3,7 +3,9 @@ import threading
 import typing
 import wx
 
+from typing import Any, Callable
 from ..generic import global_settings
+
 config = global_settings.cfg
 searchdir = config.getkey("editor", "searchdir", noraiseexp=True, restore=True, getbool=False)
 autosave = config.getkey("editor", "autosave", noraiseexp=True, restore=True) or config.getkey("extensions.autosave", "enable", noraiseexp=True)

@@ -1,4 +1,6 @@
-_("Auto-save documents config");
+_("Auto-saving document configure");
+_("Time format: minutes");
+_("Changes are automatically applied.");
 _("Save this permanently");
 _("Setup textworker");
 _("Welcome");

@@ -11,17 +11,12 @@ class MultiViewer(wx.Frame):
         location = global_settings.cfg.getkey(
             "extensions.multiview", "notebook_location", needed=True
         )
-        if location == "bottom":
-            nbside = wx.NB_BOTTOM
-        elif location == "left":
-            nbside = wx.NB_LEFT
-        elif location == "right":
-            nbside = wx.NB_RIGHT
-        elif location == "default" or "top":
-            nbside = wx.NB_DEFAULT | wx.NB_TOP
+        nbside = getattr(wx, "NB_{}".format(location.upper()))
 
         self.tabs = wx.Notebook(self, -1, style=nbside)
         self.tabs.Bind(wx.EVT_RIGHT_DOWN, self._RightClickTab)
+
+        self.Bind(wx.EVT_CLOSE, self.OnClose)
 
     def RegisterTab(self, tabname: str, content) -> bool:
         """
@@ -53,3 +48,6 @@ class MultiViewer(wx.Frame):
             menu.Bind(wx.EVT_MENU, handler, item)
         self.tabs.PopupMenu(menu, evt.GetPosition())
         menu.Destroy()
+
+    def OnClose(self, evt):
+        return self.Hide()

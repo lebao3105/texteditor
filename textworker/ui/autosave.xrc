@@ -2,7 +2,8 @@
 <resource xmlns="http://www.wxwidgets.org/wxxrc" version="2.5.3.0">
 	<object class="wxDialog" name="AutoSaveDialog">
 		<style>wxDEFAULT_DIALOG_STYLE</style>
-		<title></title>
+		<size>356,242</size>
+		<title>Auto-saving document configure</title>
 		<centered>1</centered>
 		<object class="wxBoxSizer">
 			<orient>wxVERTICAL</orient>
@@ -17,9 +18,8 @@
 						<style>normal</style>
 						<weight>bold</weight>
 						<underlined>0</underlined>
-						<!-- <face>Arial</face> -->
 					</font>
-					<label>Auto-save documents config</label>
+					<label>Time format: minutes</label>
 					<wrap>-1</wrap>
 				</object>
 			</object>
@@ -28,9 +28,18 @@
 				<flag>wxALL</flag>
 				<border>5</border>
 				<object class="wxComboBox" name="m_comboBox1">
-					<style>wxCB_DROPDOWN|wxTE_PROCESS_ENTER</style>
-					<value />
+					<style>wxCB_DROPDOWN|wxCB_READONLY|wxTE_PROCESS_ENTER</style>
+					<value></value>
 					<content />
+				</object>
+			</object>
+			<object class="sizeritem">
+				<option>0</option>
+				<flag>wxALL</flag>
+				<border>5</border>
+				<object class="wxStaticText" name="m_staticText2">
+					<label>Changes are automatically applied.</label>
+					<wrap>-1</wrap>
 				</object>
 			</object>
 			<object class="sizeritem">

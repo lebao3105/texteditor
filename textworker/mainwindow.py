@@ -1,4 +1,3 @@
-import logging
 import platform
 import textworker
 import webbrowser
@@ -8,6 +7,7 @@ import wx.stc
 
 from .generic import global_settings, SettingsWindow
 from .tabs import Tabber
+from .backend import is_development_build
 from .backend import is_development_build
 from .extensions import cmd, multiview
 
@@ -44,12 +44,18 @@ class MainFrame(wx.Frame):
         self.PlaceMenu()
         self.Layout()
 
+
     """
     Setup basic components.
     """
 
+
     def SetupLogger(self):
         self.logwindow = wx.Frame(self, title=_("Logs"))
+        self.logwindow.logs = wx.TextCtrl(
+            self.logwindow,
+            style=wx.TE_MULTILINE | wx.TE_READONLY | wx.HSCROLL | wx.VSCROLL,
+        )
         self.logwindow.logs = wx.TextCtrl(
             self.logwindow,
             style=wx.TE_MULTILINE | wx.TE_READONLY | wx.HSCROLL | wx.VSCROLL,
@@ -70,8 +76,12 @@ class MainFrame(wx.Frame):
         self.messages_text = wx.StaticText(
             self.StatusBar, wx.ID_ANY, label=_("Messages")
         )
+        self.messages_text = wx.StaticText(
+            self.StatusBar, wx.ID_ANY, label=_("Messages")
+        )
         self.messages_text.SetPosition((righttext_width + 2, 2))
         self.messages_text.Bind(wx.EVT_LEFT_DOWN, self.ShowLogWindow)
+
 
         del righttext_width
 
@@ -83,6 +93,7 @@ class MainFrame(wx.Frame):
             self,
             [
                 (wx.ID_NEW, None, None, self.notebook.AddTab, None),
+                (wx.ID_OPEN, None, None, self.OpenFile, None),
                 (wx.ID_OPEN, None, None, self.OpenFile, None),
                 (
                     wx.ID_ANY,
@@ -103,14 +114,17 @@ class MainFrame(wx.Frame):
                 ),
                 (None, None, None, None, None),  # Separator
                 (wx.ID_SAVE, None, None, self.SaveFile, None),
+                (wx.ID_SAVE, None, None, self.SaveFile, None),
                 (
                     wx.ID_SAVEAS,
                     _("Save as...\tCtrl+Shift+S"),
                     None,
                     self.SaveAs,
+                    self.SaveAs,
                     None,
                 ),
                 (None, None, None, None, None),
+                (wx.ID_EXIT, _("Quit\tAlt+F4"), None, self.Close, None),
                 (wx.ID_EXIT, _("Quit\tAlt+F4"), None, self.Close, None),
             ],
         )
@@ -124,6 +138,7 @@ class MainFrame(wx.Frame):
                     None,
                     None,
                     lambda evt: self.TextEditOps(evt, "copy"),
+                    lambda evt: self.TextEditOps(evt, "copy"),
                     None,
                 ),
                 (
@@ -131,12 +146,14 @@ class MainFrame(wx.Frame):
                     None,
                     None,
                     lambda evt: self.TextEditOps(evt, "paste"),
+                    lambda evt: self.TextEditOps(evt, "paste"),
                     None,
                 ),
                 (
                     wx.ID_CUT,
                     None,
                     None,
+                    lambda evt: self.TextEditOps(evt, "cut"),
                     lambda evt: self.TextEditOps(evt, "cut"),
                     None,
                 ),
@@ -146,12 +163,14 @@ class MainFrame(wx.Frame):
                     None,
                     None,
                     lambda evt: self.TextEditOps(evt, "selall"),
+                    lambda evt: self.TextEditOps(evt, "selall"),
                     None,
                 ),
                 (
                     wx.ID_DELETE,
                     _("Delete\tDelete"),
                     None,
+                    lambda evt: self.TextEditOps(evt, "delback"),
                     lambda evt: self.TextEditOps(evt, "delback"),
                     None,
                 ),
@@ -160,6 +179,7 @@ class MainFrame(wx.Frame):
                     wx.ID_ANY,
                     _("Auto save"),
                     _("Configure auto-saving file function"),
+                    lambda evt: self.notebook.autosv.ConfigWindow(),
                     lambda evt: self.notebook.autosv.ConfigWindow(),
                     None,
                 ),
@@ -180,7 +200,9 @@ class MainFrame(wx.Frame):
                 (
                     wx.ID_ZOOM_IN,
                     _("Zoom in\tCtrl++"),
+                    _("Zoom in\tCtrl++"),
                     None,
+                    lambda evt: self.ZoomEditor(evt, "zoomin"),
                     lambda evt: self.ZoomEditor(evt, "zoomin"),
                     None,
                 ),
@@ -188,6 +210,7 @@ class MainFrame(wx.Frame):
                     wx.ID_ZOOM_OUT,
                     _("Zoom out\tCtrl+-"),
                     None,
+                    lambda evt: self.ZoomEditor(evt, "zoomout"),
                     lambda evt: self.ZoomEditor(evt, "zoomout"),
                     None,
                 ),
@@ -231,15 +254,19 @@ class MainFrame(wx.Frame):
         self.menubar.Append(helpmenu, _("&Help"))
         self.SetMenuBar(self.menubar)
 
+
     """
     Logging
     """
 
+
     def SetMessageText(self, msg: str):
         self.messages_text.SetLabel(msg)
         self.logwindow.logs.WriteText(msg + "\n")
+        self.logwindow.logs.WriteText(msg + "\n")
         wx.CallLater(5000, self.messages_text.SetLabel, _("Got new message(s)!"))
         wx.CallLater(10000, self.messages_text.SetLabel, _("Messages"))
+
 
     """
     Event callbacks
@@ -288,10 +315,26 @@ class MainFrame(wx.Frame):
         dirs.Show()
         self.sidebar.RegisterTab(os.path.expanduser("~/.config/textworker"), dirs)
         self.sidebar.Show()
+        # return self.notebook.OpenFile(configpath)
+        import os
+
+        dirs = wx.GenericDirCtrl(
+            self.sidebar.tabs, -1, os.path.expanduser("~/.config/textworker")
+        )
+        dirs.Bind(
+            wx.EVT_DIRCTRL_FILEACTIVATED,
+            lambda evt: self.notebook.fileops.Load(dirs.GetFilePath()),
+        )
+        dirs.Show()
+        self.sidebar.RegisterTab(os.path.expanduser("~/.config/textworker"), dirs)
+        self.sidebar.Show()
 
     def ResetCfgs(self, evt):
         ask = wx.MessageDialog(
             None,
+            _(
+                "Are you sure want to reset all configurations? There is no way to BACK! The app will close after the operation."
+            ),
             _(
                 "Are you sure want to reset all configurations? There is no way to BACK! The app will close after the operation."
             ),
@@ -300,6 +343,7 @@ class MainFrame(wx.Frame):
         ).ShowModal()
         if ask == wx.ID_YES:
             return ResetEveryConfig()
+
 
     def ShowLogWindow(self, evt):
         return self.logwindow.Show()
@@ -329,6 +373,41 @@ class MainFrame(wx.Frame):
         aboutdlg.infos.AddDeveloper("Le Bao Nguyen")
         return aboutdlg.ShowBox()
 
+    """
+    Still event callbacks, but "lambda evt" does not work
+    * but not all of them, "Close all tabs" is an example *
+    """
+
+    def OpenFile(self, evt) -> bool:
+        return self.notebook.fileops.OpenDialog()
+
+    def SaveFile(self, evt) -> bool:
+        return self.notebook.fileops.Save(
+            self.notebook.GetPageText(self.notebook.GetSelection())
+        )
+
+    def SaveAs(self, evt) -> bool:
+        return self.notebook.fileops.SaveAs
+
+    def Close(self, evt, force=False):
+        return super().Close(force)
+
+    # Text edit
+    def TextEditOps(self, evt, action: str):
+        acts = {
+            "copy": self.notebook.text_editor.Copy(),
+            "paste": self.notebook.text_editor.Paste(),
+            "cut": self.notebook.text_editor.Cut(),
+            "selall": self.notebook.text_editor.SelectAll(),
+            "delback": self.notebook.text_editor.DeleteBack(),
+        }
+        return acts.get(action)
+
+    def ZoomEditor(self, evt, i: str):
+        if i == "zoomin":
+            return self.notebook.text_editor.ZoomIn()
+        elif i == "zoomout":
+            return self.notebook.text_editor.ZoomOut()
     """
     Still event callbacks, but "lambda evt" does not work
     * but not all of them, "Close all tabs" is an example *

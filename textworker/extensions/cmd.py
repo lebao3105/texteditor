@@ -9,6 +9,7 @@ from ..tabs import Tabber
 
 from libtextworker.interface.wx.editor import StyledTextControl
 
+
 class CommandWidget(StyledTextControl):
     """
     A terminal widget for wxPython.
@@ -58,7 +59,6 @@ class CommandWidget(StyledTextControl):
 
 
 class Tabb(Tabber):
-
     def AddTab(self, evt=None, tabname: str = ""):
         """
         Create a new Terminal tab.

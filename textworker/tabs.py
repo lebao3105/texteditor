@@ -8,6 +8,7 @@ from .generic import global_settings
 
 from libtextworker.interface.wx.editor import StyledTextControl
 
+
 class Tabber(wx.aui.AuiNotebook):
     def __init__(self, *args, **kwds):
         kwds["style"] = (
@@ -68,8 +69,11 @@ class Tabber(wx.aui.AuiNotebook):
         If tabname is not specified, use texteditor's new tab label.
         """
 
-        self.text_editor = StyledTextControl(parent=self, style=wx.TE_MULTILINE | wx.EXPAND)
+        self.text_editor = StyledTextControl(
+            parent=self, style=wx.TE_MULTILINE | wx.EXPAND
+        )
         self.text_editor.SetZoom(3)
+        self.text_editor.FileLoaded: str = ""
 
         if tabname is None:
             _tabname = _("New file")
@@ -90,6 +94,7 @@ class Tabber(wx.aui.AuiNotebook):
         tabname = self.GetPageText(evt.GetSelection())
         if self.setstatus is True:
             self.Parent.SetStatusText(tabname)
+        self.SetTitle(tabname)
         self.SetTitle(tabname)
 
     def OnPageClose(self, evt):

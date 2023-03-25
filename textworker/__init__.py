@@ -20,7 +20,7 @@ require_version("1.6a2")
 __version__ = version
 
 try:
-    from textworker.defs import LOCALE_DIR, ICON_DIR # type: ignore
+    from textworker.defs import LOCALE_DIR, ICON_DIR  # type: ignore
 except ImportError:
     LOCALE_DIR = currdir / "po"
     ICON_DIR = currdir / "icons"
