@@ -1,4 +1,3 @@
-import threading
 import wx
 import wx.aui
 import wx.stc
@@ -45,9 +44,15 @@ class Tabber(wx.aui.AuiNotebook):
 
         self.AddTab()
 
-        self.fileops = file_operations.FileOperators()
-        self.fileops.AddTab = getattr(self, "AddTab")
-        self.fileops.Editor = self.text_editor
+        self.fileops = file_operations.MultiEditorsSupport(
+            self,
+            {
+                "AddTab": self.AddTab,
+                "Editor": self.text_editor,
+                "IndependentAutoSave": True
+            }
+        )
+        # self.fileops.AddTab = getattr(self, "AddTab")
         
         # self.autosv = autosave.AutoSave(
         #     self.Parent
@@ -56,8 +61,6 @@ class Tabber(wx.aui.AuiNotebook):
 
         self.Bind(wx.aui.EVT_AUINOTEBOOK_PAGE_CHANGED, self.OnPageChanged)
         self.Bind(wx.aui.EVT_AUINOTEBOOK_PAGE_CLOSED, self.OnPageClose)
-
-        threading.Thread(target=lambda: self.SyncFileEdit(), daemon=True).start()
 
     def AddTab(self, evt=None, tabname=None):
         """
@@ -77,6 +80,9 @@ class Tabber(wx.aui.AuiNotebook):
         self.SetTitle(_tabname)
 
     def SetTitle(self, title=""):
+        """
+        Set the title of the parent widget, if able.
+        """
         if hasattr(self.Parent, "SetTitle"):
             return self.Parent.SetTitle(title)
 
@@ -84,13 +90,21 @@ class Tabber(wx.aui.AuiNotebook):
         tabname = self.GetPageText(evt.GetSelection())
         if self.setstatus is True:
             self.Parent.SetStatusText(tabname)
-        self.SetTitle("Textworker - %s" % tabname)
+        self.SetTitle(tabname)
 
     def OnPageClose(self, evt):
-        if self.GetPageCount() == 0:
-            self.AddTab()
 
-    def SyncFileEdit(self):
-        if self.text_editor.IsModified():
-            print("edited")
-            # self.SetPageText(self.GetSelection(), 'test')
+        def repoen(event):
+            nonlocal btn
+            btn.Hide()
+            self.Show(True)
+
+        if self.GetPageCount() == 0:
+            if global_settings.get_setting("fun", "empty_page_on_last_tab_close") in [True, "yes"]:
+                self.Hide()
+            if not hasattr(self.Parent, "AddChild"):
+                return self.Show(True)
+            
+            btn = wx.Button(self.Parent, label=_("Show again"))
+            self.Parent.Bind(wx.EVT_BUTTON, repoen, btn)
+            self.AddTab()

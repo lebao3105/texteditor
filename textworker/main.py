@@ -2,8 +2,6 @@ import os.path
 import sys
 import wx
 
-from .mainwindow import MainFrame
-
 def _file_not_found(filename):
     return wx.MessageDialog(
         None,
@@ -14,11 +12,12 @@ def _file_not_found(filename):
 
 
 def start_app():
-    """Start the application."""
-    argv = sys.argv
-    argc = len(argv) - 1
+    argv = sys.argv[1:]
+    argc = len(argv)
 
     app = wx.App()
+
+    from .mainwindow import MainFrame
     fm = MainFrame(None)
 
     if argc > 0:

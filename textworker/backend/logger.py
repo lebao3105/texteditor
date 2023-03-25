@@ -19,9 +19,9 @@ class Logger:
 
     def __init__(self, fmt_date=None, fmt_time=None, logfile: str | None = None):
         """Logging unit of texteditor.
-        :param fmt_date=None : Date format
-        :param fmt_time=None : Time format
-        :param logfile=None : Log file
+        @param fmt_date=None : Date format
+        @param fmt_time=None : Time format
+        @param logfile=None : Log file
 
         If logfile is not specified, logger will use texteditor's
         default log path.

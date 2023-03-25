@@ -1,101 +1,78 @@
 import os
-import sys
+import threading
+import typing
 import wx
 
 from ..generic import global_settings
 config = global_settings.cfg
-searchdir = config.getkey("editor", "searchdir", noraiseexp=True, restore=True)
+searchdir = config.getkey("editor", "searchdir", noraiseexp=True, restore=True, getbool=False)
 autosave = config.getkey("editor", "autosave", noraiseexp=True, restore=True) or config.getkey("extensions.autosave", "enable", noraiseexp=True)
 
-if searchdir == "" or False:
-    if sys.platform == "win32":
-        searchdir = os.environ["USERPROFILE"] + "\\Documents"
-    else:
-        searchdir = os.environ["HOME"] + "/Documents"
+if searchdir == "" or isinstance(searchdir, bool):
+    searchdir = os.path.expanduser("~/Documents")
 
-__all__ = [
-    'FileOperations'
-]
+class FileOperations:
 
-class FileOperators:
-    _Editor = None
-    _AddTab = None
-    HasContent: bool = False
-    Files = []
-    
-    @property
-    def Editor(self):
-        return self._Editor
-    
-    @Editor.setter
-    def Editor(self, textw):
-        self._Editor = textw
+    # Functions
+    Editor : typing.Any
+    SaveFn : typing.Callable
+    LoadFn : typing.Callable
+    IsModifiedFn : typing.Callable
 
-    @property
-    def AddTab(self):
-        return self._AddTab
-    
-    @AddTab.setter
-    def AddTab(self, func):
-        self._AddTab = func
+    # Booleans
+    IsModified : bool = False
 
-    def IsEditorModified(self) -> bool:
-        self.HasContent = self.Editor.IsModified()
-        return self.HasContent
+    def DynamicEditorChanges(self):
+        def subfn():
+            self.IsModified = self.IsModifiedFn()
 
-    def Save(self, FilePath: str) -> bool:
-        self.IsEditorModified()
-        if self.HasContent:
-            self.HasContent = self.Editor.SaveFile(FilePath)
-        else:
-            self.HasContent = self.SaveAs()
-        return self.HasContent
-    
-    def SaveAs(self) -> bool:
-        dlg = wx.FileDialog(
-            wx.Frame(),
-            _("Save file as"),
-            searchdir,
-            style=wx.FD_SAVE | wx.FD_OVERWRITE_PROMPT
+        self.thread = threading.Thread(
+            target=subfn(),
+            daemon=True
         )
-        if dlg.ShowModal() == wx.ID_CANCEL:
-            return False
-        else:
-            return self.Save(dlg.GetPath())
-        
-    def Load(self, FilePath: str) -> bool:
-        if self.Editor.IsModified():
-            ask = wx.MessageBox(
-                _(
-                    f"""The editor has not been saved yet.\n
-                    Override (No), Load to a new tab (Yes), or Cancel.
-                    """
-                ),
-                _("Unsaved document"),
-                style=wx.YES_NO | wx.CANCEL | wx.ICON_WARNING
-            )
-
-            if ask == wx.NO:
-                self.Editor.ClearAll()
-            elif ask == wx.YES:
-                self.AddTab()
-            elif ask == wx.CANCEL:
-                return False
-
-        if self.Editor.LoadFile(FilePath):
-            self.HasContent = True
-        else:
-            self.HasContent = False
-        return self.HasContent
+        self.thread.run()
     
-    def OpenDialog(self) -> bool:
-        dlg = wx.FileDialog(
-            wx.Frame(),
-            _("Open a file"),
-            searchdir,
-            style=wx.FD_OPEN | wx.FD_FILE_MUST_EXIST
-        )
-        if dlg.ShowModal() == wx.ID_CANCEL:
-            return False
-        else:
-            self.Load(dlg.GetPath())
+    def StopThreading(self):
+        if self.thread:
+            del self.thread
+
+class MultiEditorsSupport(FileOperations):
+    """
+    Class to provide wx.*Book* support for editors.
+    """
+    tabs : typing.Any | wx.Notebook
+
+    configs = {
+        "AddTab": typing.Callable,
+        "Editor": typing.Any,
+        "IndependentAutoSave": True
+    }
+
+    file_dialog = wx.FileDialog(
+        None, defaultDir=searchdir
+    )
+
+    message = wx.MessageDialog(
+        None, ""
+    )
+
+    def __init__(self, Tabber: typing.Any | wx.Notebook, configs: dict[str,typing.Any]):
+        self.tabs = Tabber
+        self.configs = configs
+
+        self.Editor = self.configs["Editor"]
+        self.LoadFn = self.Editor.LoadFile
+        self.SaveFn = self.Editor.SaveFile
+        self.IsModifiedFn = self.Editor.IsModified
+    
+    def AskToOpen(self, evt=None):
+        self.file_dialog.SetName(_("Open a file"))
+        result = self.file_dialog.ShowModal()
+        if result == wx.ID_OK:
+            self.LoadFn(self.file_dialog.GetPath())
+    
+    def AskToSave(self, evt=None):
+        self.file_dialog.SetName(_("Save this to..."))
+        result = self.file_dialog.ShowModal()
+        if result == wx.ID_OK:
+            self.SaveFn(self.file_dialog.GetPath())

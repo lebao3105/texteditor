@@ -1,7 +1,7 @@
 branch = get_option('branch')
 
 if branch == 'stable'
-    icon = ('@0@.svg').format(meson.project_name())
+    icon = ('@0@.svg').format('me.lebao3105.textworker')
 else
     icon = ('@0@.svg').format('me.lebao3105.textworker.Devel')
 endif

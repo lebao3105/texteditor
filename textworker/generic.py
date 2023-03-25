@@ -34,13 +34,15 @@ cfg["editor"] = {
 cfg["extensions.cmd"] = {"enable": "yes", "console": "xterm" if platform.system() != "Windows" else "cmd"}
 cfg["extensions.multiview"] = {"notebook_location": "bottom"}
 
-## ----- ##
+## Funs:)
+## *actually this is like browser flags, use this to test some unique features*
+cfg["fun"] = {"empty_page_on_last_tab_close": "yes"}
 
 # Classes
 class Error(Exception):
     def __init__(self, objname: str, title: str, msg: str, *args: object):
         fullmsg = "Object {} error: ({}) {}".format(objname, title, msg)
-        logger.throwerr(title, True, msg)
+        logger.exception(title+":"+msg) # Is it?
         super().__init__(fullmsg, *args)
 
 

@@ -26,8 +26,8 @@ class MultiViewer(wx.Frame):
     def RegisterTab(self, tabname: str, content) -> bool:
         """
         Ask for add a new section to the side bar.
-        :param tabname:str: Name of the section (used for the new tab name)
-        :param content: Section content (must be a wxPython object). Don't forget to Show() it!
+        @param tabname:str: Name of the section (used for the new tab name)
+        @param content: Section content (must be a wxPython object). Don't forget to Show() it!
         :return: The result of the new section creation
         """
         return self.tabs.AddPage(content, tabname, True)
