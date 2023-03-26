@@ -2,7 +2,14 @@ import os.path
 import sys
 import wx
 
+ignore_not_exists: bool = False
+create_new: bool = False
+
 def _file_not_found(filename):
+    if ignore_not_exists:
+        return wx.ID_CANCEL
+    if create_new == True:
+        return wx.ID_YES
     return wx.MessageDialog(
         None,
         message=_("Cannot find file name %s - create it?") % filename,
@@ -11,38 +18,31 @@ def _file_not_found(filename):
     ).ShowModal()
 
 
-def start_app():
-    argv = sys.argv[1:]
-    argc = len(argv)
-
+def start_app(files: list[str]):
     app = wx.App()
 
     from .mainwindow import MainFrame
     fm = MainFrame(None)
 
-    if argc > 0:
+    if len(files) >= 1:
         nb = fm.notebook
-        if os.path.isfile(argv[1]):
-            nb.fileops.openfile(argv[1])
+        if os.path.isfile(files[0]):
+            nb.text_editor.LoadFile(files[0])
         else:
-            if _file_not_found(argv[1]) == wx.ID_YES:
-                f = open(argv[1], mode="w")
-                nb.fileops.openfile(argv[1])
-                del f
-
-        for i in range(2, argc + 1):
-            if os.path.isfile(argv[i]):
+            if _file_not_found(files[0]) == wx.ID_YES:
+                open(files[0], "w")
+                nb.text_editor.LoadFile(files[0])
+        
+        for i in range(1, len(files)):
+            if os.path.isfile(files[i]):
                 nb.AddTab()
-                nb.fileops.openfile(argv[i])
+                nb.text_editor.LoadFile(files[i])
             else:
-                if _file_not_found(argv[i]) == wx.ID_YES:
+                if _file_not_found(files[i]) == wx.ID_YES:
                     nb.AddTab()
-                    f = open(argv[i], "w")
-                    nb.fileops.openfile(argv[i])
-                    del f
+                    open(files[i], "w")
+                    nb.text_editor.LoadFile(files[i])
 
     app.SetTopWindow(fm)
-    app.SetExitOnFrameDelete(True)
-
     fm.Show()
     app.MainLoop()
