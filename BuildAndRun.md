@@ -2,13 +2,9 @@
 ```
 python 3.8+ with pip and its development codes
 gettext (optional)
-meson and ninja (optional)
 Microsoft Visual C++ (Windows)
 GTK3 development files + pkgconfig and C/C++ compilers (Linux)
 ```
-
-## Notes
-* We assume that you have cloned this project repository and on the cloned folder.
 
 ## Install dependencies
 ```bash
@@ -16,38 +12,41 @@ $ pip install attrdict3
 $ pip install configparser darkdetect pillow packaging wxpython # This will take minutes!
 ```
 
-## Run (and install)
-### With pip (to install textworker)
+## Clone this repo
 ```bash
-$ pip install textworker
-```
-
-### With git (run from source)
-1. Clone the source code:
-```bash
-$ git clone https://github.com/lebao3105/texteditor.git -b wip/wx textworker
+$ git clone https://git[hub/lab].com/lebao3105/texteditor.git -b wip/wx textworker
 $ cd textworker
-$ git submodule update --init --recursive --remote
-```
-2. Make translation (optional, gettext and meson required):
-```bash
-$ meson build # --prefix=<dir> # Use this to set the install prefix
-$ ninja -C build me.lebao3105.textworker-pot # Use for translators, to get new & untranslated strings
-$ ninja -C build me.lebao3105.textworker-update-po
-$ ninja -C build me.lebao3105.textworker-gmo
 ```
 
-Run:
+## Run
+1. Get submodules:
 ```bash
-$ python -m textworker [file]
+$ git submodule update --init --recursive
 ```
 
-With pip installation you can use:
+2. Install dependencies from Pypi:
 ```bash
-$ textworker [file]
+$ pip install attrdict3
+$ pip install -r requirements.txt
 ```
 
-If you use meson (run ```ninja -C build install``` to install), run:
+3. Run!:
 ```bash
-$ <install_prefix>/bin/me.lebao3105.textworker [file]
+$ [python] -m textworker [file]
 ```
+
+## Build/install
+1. With ```builder.py```:
+```bash
+$ [python] builder.py [options]
+```
+
+Options are:
+* build - outputs will be created under the ```dist/``` folder.
+* install - install the project
+* maketrans - make translations, will copy the results into the source code folder
+* clean - clean everything - FileExistsError will be ignored!
+
+2. Run commands yourself
+a. Build: ```[python] -m pip install build wheel && [python] -m build```
+b. Install: ```[python] -m pip install .```

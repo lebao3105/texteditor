@@ -1,7 +1,3 @@
-_("Auto-saving document configure");
-_("Time format: minutes");
-_("Changes are automatically applied.");
-_("Save this permanently");
 _("Setup textworker");
 _("Welcome");
 _("Welcome to textworker 1.6! Go through this window so that you can setup and ready to use the application.");

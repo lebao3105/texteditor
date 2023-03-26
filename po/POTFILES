@@ -1,7 +1,5 @@
-textworker/backend/file_operations.py
-textworker/extensions/autosave.py
-textworker/extensions/cmd.py
 textworker/extensions/multiview.py
 textworker/mainwindow.py
 textworker/tabs.py
+po/autosave.pot
 po/preferences.pot

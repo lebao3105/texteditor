@@ -1,2 +1,4 @@
-include textworker/icons/*.png
-include po/*/*/*.mo
+recursive-include textworker/po *.mo
+recursive-include textworker *.png
+recursive-include textworker *.py
+recursive-include textworker *.xrc

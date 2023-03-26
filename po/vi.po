@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-02-11 18:04+0700\n"
+"POT-Creation-Date: 2023-03-26 16:35+0700\n"
 "PO-Revision-Date: 2023-02-10 21:52+0700\n"
 "Last-Translator: LeBaoNguyen (lebao3105)\n"
 "Language-Team: \n"
@@ -17,204 +17,138 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Poedit 3.2.2\n"
 
-#: textworker/backend/file_operations.py:31
-#, python-format
-msgid "Saving file %s..."
-msgstr "Đang lưu tệp %s..."
-
-#: textworker/backend/file_operations.py:33
-#, python-format
-msgid "%s saved."
-msgstr "Đã lưu %s."
-
-#: textworker/backend/file_operations.py:43
-msgid "Error occured"
-msgstr "Có lỗi xảy ra"
-
-#: textworker/backend/file_operations.py:44
-#, python-format
-msgid "Error occured while opening file %s"
-msgstr "Có lỗi xảy ra khi ghi nội dung vào tệp %s"
-
-#: textworker/backend/file_operations.py:53
-#, python-format
-msgid "Opening file %s"
-msgstr "Đang mở tệp %s"
-
-#: textworker/backend/file_operations.py:76
-msgid "Save file"
-msgstr "Lưu tệp"
-
-#: textworker/backend/file_operations.py:89
-#, fuzzy
-msgid ""
-"It seems that the file you're trying to open is in another tab.\n"
-"\n"
-"Load anyway? (to a new tab)"
-msgstr ""
-"Có vẻ như tệp bạn đang cố mở nằm trong một tab khác.\n"
-"\n"
-"Vẫn tải? (sang tab mới)"
-
-#: textworker/backend/file_operations.py:92
-msgid "Infomation"
-msgstr "Thông tin"
-
-#: textworker/backend/file_operations.py:105
-msgid "Open a file"
-msgstr "Mở một tệp"
-
-#: textworker/extensions/autosave.py:63
-msgid "Autosave config"
-msgstr "Cài đặt tự động lưu"
-
-#: textworker/extensions/autosave.py:69
-msgid "Save this value"
-msgstr "Lưu giá trị này"
-
-#: textworker/extensions/autosave.py:70
-msgid "Start"
-msgstr "Bắt đầu"
-
-#: textworker/extensions/cmd.py:31
-msgid "Read only"
-msgstr "Chỉ đọc"
-
-#: textworker/extensions/cmd.py:181
-msgid "Missing root variable for CommandWindow"
-msgstr "Thiếu biến \"root\" cho Cửa sổ lệnh"
-
-#: textworker/extensions/cmd.py:182
-msgid "Please close the command window by any other way."
-msgstr "Hãy đóng cửa sổ theo cách khác."
-
-#: textworker/extensions/cmd.py:226
-msgid "Command exited with code {}"
-msgstr "Lệnh thoát với code {}"
-
-#: textworker/extensions/multiview.py:39
+#: textworker/extensions/multiview.py:38
 msgid "Close the current (open) tab"
 msgstr "Đóng tab đang mở"
 
-#: textworker/extensions/multiview.py:41
+#: textworker/extensions/multiview.py:42
 msgid "Disable this (open) tab"
 msgstr ""
 
-#: textworker/extensions/multiview.py:43
+#: textworker/extensions/multiview.py:45
 msgid "Close the side bar"
 msgstr "Đóng side bar"
 
-#: textworker/mainwindow.py:50
+#: textworker/mainwindow.py:53
+msgid "Logs"
+msgstr ""
+
+#: textworker/mainwindow.py:72 textworker/mainwindow.py:250
 msgid "Messages"
 msgstr "Thông báo"
 
-#: textworker/mainwindow.py:61
-msgid "&File"
-msgstr "&Tệp"
-
-#: textworker/mainwindow.py:64
+#: textworker/mainwindow.py:90
 msgid "Open directory\tCtrl+Shift+D"
 msgstr "Mở thư mục\tCtrl+Shift+D"
 
-#: textworker/mainwindow.py:65
+#: textworker/mainwindow.py:97
 msgid "Close all tabs"
 msgstr "Đóng tất cả tab"
 
-#: textworker/mainwindow.py:68
+#: textworker/mainwindow.py:109
 msgid "Save as...\tCtrl+Shift+S"
 msgstr "Lưu như...\tCtrl+Shift+S"
 
-#: textworker/mainwindow.py:70
+#: textworker/mainwindow.py:115
 msgid "Quit\tAlt+F4"
 msgstr "Thoát\tAlt+F4"
 
-#: textworker/mainwindow.py:74 textworker/mainwindow.py:85
-msgid "&Edit"
-msgstr "&Chỉnh sửa"
-
-#: textworker/mainwindow.py:80
+#: textworker/mainwindow.py:154
 msgid "Delete\tDelete"
 msgstr ""
 
-#: textworker/mainwindow.py:82
+#: textworker/mainwindow.py:162
 msgid "Auto save"
 msgstr "Tự động lưu"
 
-#: textworker/mainwindow.py:82
+#: textworker/mainwindow.py:163
 msgid "Configure auto-saving file function"
 msgstr "Cài đặt tính năng lưu tự động"
 
-#: textworker/mainwindow.py:87
-msgid "Command prompt"
-msgstr ""
-
-#: textworker/mainwindow.py:91
-msgid "&View"
-msgstr "&Xem"
-
-#: textworker/mainwindow.py:92
-msgid "Zoom it\tCtrl++"
+#: textworker/mainwindow.py:176
+#, fuzzy
+msgid "Zoom in\tCtrl++"
 msgstr "Phóng to\tCtrl++"
 
-#: textworker/mainwindow.py:93
+#: textworker/mainwindow.py:183
 msgid "Zoom out\tCtrl+-"
 msgstr "Thu nhỏ\tCtrl+-"
 
-#: textworker/mainwindow.py:94
-msgid "Word wrap"
-msgstr "Ngắt dòng"
+#: textworker/mainwindow.py:190
+msgid "Wrap by word"
+msgstr ""
 
-#: textworker/mainwindow.py:98
-msgid "&Configs"
-msgstr "&Cài đặt"
-
-#: textworker/mainwindow.py:99
+#: textworker/mainwindow.py:202
 msgid "Show all configurations"
 msgstr "Cài đặt tự động lưu"
 
-#: textworker/mainwindow.py:100
+#: textworker/mainwindow.py:203
 msgid "Reset all configs"
 msgstr "Reset tất cả cài đặt"
 
-#: textworker/mainwindow.py:101
+#: textworker/mainwindow.py:204
 msgid "Run Setup"
 msgstr "Chạy Setup"
 
-#: textworker/mainwindow.py:105
+#: textworker/mainwindow.py:224
+msgid "Source code"
+msgstr ""
+
+#: textworker/mainwindow.py:225
+msgid "View the app source code online."
+msgstr ""
+
+#: textworker/mainwindow.py:234
+msgid "&File"
+msgstr "&Tệp"
+
+#: textworker/mainwindow.py:235
+msgid "&Edit"
+msgstr "&Chỉnh sửa"
+
+#: textworker/mainwindow.py:236
+msgid "&View"
+msgstr "&Xem"
+
+#: textworker/mainwindow.py:237
+msgid "&Configs"
+msgstr "&Cài đặt"
+
+#: textworker/mainwindow.py:238
 msgid "&Help"
 msgstr "Trợ &giúp"
 
-#: textworker/mainwindow.py:123
+#: textworker/mainwindow.py:249
+msgid "Got new message(s)!"
+msgstr ""
+
+#: textworker/mainwindow.py:259
 msgid "Select a folder to start"
 msgstr "Mở một thư mục để bắt đầu"
 
-#: textworker/mainwindow.py:155 po/preferences.pot:21
-msgid "Command Window"
-msgstr "Cửa sổ lệnh"
+#: textworker/mainwindow.py:295 textworker/mainwindow.py:298
+msgid ""
+"Are you sure want to reset all configurations? There is no way to BACK! The "
+"app will close after the operation."
+msgstr ""
 
-#: textworker/mainwindow.py:170
-msgid "Are you sure want to reset all configurations?"
-msgstr "Bạn có chắc muốn hoàn lại tất cả cài đặt?"
-
-#: textworker/mainwindow.py:171
+#: textworker/mainwindow.py:300
 msgid "Confirm configs reset"
 msgstr "Xác nhận làm lại cài đặt"
 
-#: textworker/mainwindow.py:177
-msgid "Restored all default app configurations."
-msgstr "Đã hoàn lại tất cả cài đặt ứng dụng."
-
-#: textworker/mainwindow.py:184
+#: textworker/mainwindow.py:312
 msgid "Unknown"
 msgstr "Không xác định"
 
-#: textworker/mainwindow.py:186
+#: textworker/mainwindow.py:314
+#, fuzzy
 msgid ""
+"\n"
 "        A simple, cross-platform text editor.\n"
-"        Branch: {\"DEV\" if is_development_build() == True else \"STABLE\"}\n"
-"        wxPython version: {wxver}\n"
-"        Python verison: {pyver}\n"
-"        OS type: {ostype}\n"
+"        Branch: {}\n"
+"        wxPython version: {}\n"
+"        Python verison: {}\n"
+"        OS type: {}\n"
 "        "
 msgstr ""
 "texteditor 1.6 Alpha (bản wx)\n"
@@ -224,17 +158,32 @@ msgstr ""
 "Phiên bản Python: {pyver}\n"
 "Loại hệ điều hành: {ostype}"
 
-#: textworker/mainwindow.py:246 textworker/mainwindow.py:294
-msgid "No new message collected."
-msgstr "Không có tin nhắn mới."
-
-#: textworker/mainwindow.py:251 textworker/mainwindow.py:295
-msgid "Press F5 to refresh."
-msgstr "Bấm F5 để làm mới."
-
-#: textworker/tabs.py:58
+#: textworker/tabs.py:78
 msgid "New file"
 msgstr "Tập tin mới"
+
+#: textworker/tabs.py:114
+#, fuzzy
+msgid "Show again"
+msgstr "Cài đặt tự động lưu"
+
+#: po/autosave.pot:1
+#, fuzzy
+msgid "Auto-saving document configure"
+msgstr "Cài đặt tự động lưu"
+
+#: po/autosave.pot:2
+msgid "Time format: minutes"
+msgstr ""
+
+#: po/autosave.pot:3
+msgid "Changes are automatically applied."
+msgstr ""
+
+#: po/autosave.pot:4
+#, fuzzy
+msgid "Save this permanently"
+msgstr "Lưu giá trị này"
 
 #: po/preferences.pot:1
 msgid "Setup textworker"
@@ -325,6 +274,10 @@ msgid ""
 "to use this feature."
 msgstr ""
 
+#: po/preferences.pot:21
+msgid "Command Window"
+msgstr "Cửa sổ lệnh"
+
 #: po/preferences.pot:22
 msgid ""
 "Command Window, like Windows's CMD or Linux shells, allows you to run "
@@ -367,81 +320,3 @@ msgid ""
 "Everything is set now. Thank you for using Textworker! Restart the "
 "application to take effect."
 msgstr ""
-
-#, fuzzy, python-format
-#~ msgid "Texteditor - %s"
-#~ msgstr "Trình chỉnh sửa văn bản - %s"
-
-#~ msgid "New\tCtrl-N"
-#~ msgstr "Tạo mới\tCtrl-N"
-
-#, fuzzy
-#~ msgid "Open\tCtrl-O"
-#~ msgstr "Tạo mới\tCtrl-O"
-
-#, fuzzy
-#~ msgid "Save\tCtrl-S"
-#~ msgstr "Lưu\tCtrl-S"
-
-#~ msgid "Copy\tCtrl-C"
-#~ msgstr "Sao chép\tCtrl-C"
-
-#~ msgid "Paste\tCtrl-V"
-#~ msgstr "Dán\tCtrl-V"
-
-#, fuzzy
-#~ msgid "Select All\tCtrl-A"
-#~ msgstr "Chọn tất cả\tCtrl-A"
-
-#~ msgid "About this app"
-#~ msgstr "Về chương trình này"
-
-#~ msgid "Undo\tCtrl-Z"
-#~ msgstr "Hoàn tác\tCtrl-Z"
-
-#~ msgid "Redo\tCtrl-Y"
-#~ msgstr "Làm lại\tCtrl-Y"
-
-#~ msgid "Available commands:\n"
-#~ msgstr "Cac lenh co san:\n"
-
-#~ msgid "exit: Close this box\n"
-#~ msgstr "exit: Dong System Shell\n"
-
-#~ msgid "help: Show this message\n"
-#~ msgstr "help: Hien thi hop nay\n"
-
-#~ msgid "clear: Clear this box\n"
-#~ msgstr "clear: Lam trong box nay\n"
-
-#~ msgid ""
-#~ "term: Open terminal (not this one) - don't run this if you are running "
-#~ "this application from console!\n"
-#~ msgstr "term: Mo mot trinh dong lenh (khong phai cai nay)\n"
-
-#~ msgid ""
-#~ "Running CONSOLE application which requires user input is not recommended "
-#~ "yet.\n"
-#~ msgstr "Chay cac chuong trinh dong lenh khong duoc khuyen nghi.\n"
-
-#~ msgid "You won't get anything.\n"
-#~ msgstr "Ban se khong nhan duoc gi ca.\n"
-
-#~ msgid ""
-#~ "This will open console defined by defconsole value in configuration file. "
-#~ "Please don't run any shell!"
-#~ msgstr ""
-#~ "No se mo chuong trinh duoc dat trong defconsole tu file cai dat. Dung "
-#~ "dung shell!"
-
-#~ msgid "No such a directory like that"
-#~ msgstr "Không có thư mục nào như vậy"
-
-#~ msgid "Find something here..."
-#~ msgstr "Tìm cái gì đó ở đây..."
-
-#~ msgid "Find"
-#~ msgstr "Tìm"
-
-#~ msgid "Replace"
-#~ msgstr "Thay thế"
