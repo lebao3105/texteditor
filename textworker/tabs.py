@@ -50,15 +50,14 @@ class Tabber(wx.aui.AuiNotebook):
             {
                 "AddTab": self.AddTab,
                 "Editor": self.text_editor,
-                "IndependentAutoSave": True
-            }
+                "IndependentAutoSave": True,
+            },
         )
-        # self.fileops.AddTab = getattr(self, "AddTab")
-        
-        # self.autosv = autosave.AutoSave(
-        #     self.Parent
-        # )
-        # self.autosv.Function = self.fileops.Save(self.GetPageText(self.GetSelection()))
+        self.fileops.AddTab = getattr(self, "AddTab")
+
+        self.autosv = autosave.AutoSave(self.Parent)
+        self.autosv.Function = self.fileops.Save
+        self.autosv.Function_args = self.GetPageText(self.GetSelection())
 
         self.Bind(wx.aui.EVT_AUINOTEBOOK_PAGE_CHANGED, self.OnPageChanged)
         self.Bind(wx.aui.EVT_AUINOTEBOOK_PAGE_CLOSED, self.OnPageClose)
@@ -85,7 +84,7 @@ class Tabber(wx.aui.AuiNotebook):
 
     def SetTitle(self, title=""):
         """
-        Set the title of the parent widget, if able.
+        Set the title of the parent widget, if possible.
         """
         if hasattr(self.Parent, "SetTitle"):
             return self.Parent.SetTitle(title)
@@ -98,18 +97,20 @@ class Tabber(wx.aui.AuiNotebook):
         self.SetTitle(tabname)
 
     def OnPageClose(self, evt):
-
         def repoen(event):
             nonlocal btn
             btn.Hide()
             self.Show(True)
 
         if self.GetPageCount() == 0:
-            if global_settings.get_setting("fun", "empty_page_on_last_tab_close") in [True, "yes"]:
+            if global_settings.get_setting("fun", "empty_page_on_last_tab_close") in [
+                True,
+                "yes",
+            ]:
                 self.Hide()
             if not hasattr(self.Parent, "AddChild"):
                 return self.Show(True)
-            
+
             btn = wx.Button(self.Parent, label=_("Show again"))
             self.Parent.Bind(wx.EVT_BUTTON, repoen, btn)
             self.AddTab()

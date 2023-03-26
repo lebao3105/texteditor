@@ -1,20 +1,20 @@
+import logging
 import platform
-import textworker
 import webbrowser
+
 import wx
 import wx.adv
 import wx.stc
 
-from .generic import global_settings, SettingsWindow
-from .tabs import Tabber
-from .backend import is_development_build
-from .backend import is_development_build
-from .extensions import cmd, multiview
-
+import textworker
 from libtextworker.general import ResetEveryConfig
 from libtextworker.interface.wx.about import AboutDialog
 from libtextworker.interface.wx.miscs import CreateMenu
+from libtextworker.versioning import *
 
+from .extensions import multiview
+from .generic import SettingsWindow, global_settings
+from .tabs import Tabber
 
 # https://stackoverflow.com/a/27872625
 if platform.system() == "Windows":
@@ -24,7 +24,8 @@ if platform.system() == "Windows":
     ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(myappid)
 
 cfg = global_settings.cfg
-logger = logging.getlogger("textworker")
+logger = logging.getLogger("textworker")
+
 
 class MainFrame(wx.Frame):
     def __init__(self, *args, **kwds):
@@ -44,18 +45,12 @@ class MainFrame(wx.Frame):
         self.PlaceMenu()
         self.Layout()
 
-
     """
     Setup basic components.
     """
 
-
     def SetupLogger(self):
         self.logwindow = wx.Frame(self, title=_("Logs"))
-        self.logwindow.logs = wx.TextCtrl(
-            self.logwindow,
-            style=wx.TE_MULTILINE | wx.TE_READONLY | wx.HSCROLL | wx.VSCROLL,
-        )
         self.logwindow.logs = wx.TextCtrl(
             self.logwindow,
             style=wx.TE_MULTILINE | wx.TE_READONLY | wx.HSCROLL | wx.VSCROLL,
@@ -76,12 +71,8 @@ class MainFrame(wx.Frame):
         self.messages_text = wx.StaticText(
             self.StatusBar, wx.ID_ANY, label=_("Messages")
         )
-        self.messages_text = wx.StaticText(
-            self.StatusBar, wx.ID_ANY, label=_("Messages")
-        )
         self.messages_text.SetPosition((righttext_width + 2, 2))
         self.messages_text.Bind(wx.EVT_LEFT_DOWN, self.ShowLogWindow)
-
 
         del righttext_width
 
@@ -93,7 +84,6 @@ class MainFrame(wx.Frame):
             self,
             [
                 (wx.ID_NEW, None, None, self.notebook.AddTab, None),
-                (wx.ID_OPEN, None, None, self.OpenFile, None),
                 (wx.ID_OPEN, None, None, self.OpenFile, None),
                 (
                     wx.ID_ANY,
@@ -114,18 +104,15 @@ class MainFrame(wx.Frame):
                 ),
                 (None, None, None, None, None),  # Separator
                 (wx.ID_SAVE, None, None, self.SaveFile, None),
-                (wx.ID_SAVE, None, None, self.SaveFile, None),
                 (
                     wx.ID_SAVEAS,
                     _("Save as...\tCtrl+Shift+S"),
                     None,
                     self.SaveAs,
-                    self.SaveAs,
                     None,
                 ),
                 (None, None, None, None, None),
-                (wx.ID_EXIT, _("Quit\tAlt+F4"), None, self.Close, None),
-                (wx.ID_EXIT, _("Quit\tAlt+F4"), None, self.Close, None),
+                (wx.ID_EXIT, _("Quit\tAlt+F4"), None, lambda evt: self.Close, None),
             ],
         )
 
@@ -138,7 +125,6 @@ class MainFrame(wx.Frame):
                     None,
                     None,
                     lambda evt: self.TextEditOps(evt, "copy"),
-                    lambda evt: self.TextEditOps(evt, "copy"),
                     None,
                 ),
                 (
@@ -146,14 +132,12 @@ class MainFrame(wx.Frame):
                     None,
                     None,
                     lambda evt: self.TextEditOps(evt, "paste"),
-                    lambda evt: self.TextEditOps(evt, "paste"),
                     None,
                 ),
                 (
                     wx.ID_CUT,
                     None,
                     None,
-                    lambda evt: self.TextEditOps(evt, "cut"),
                     lambda evt: self.TextEditOps(evt, "cut"),
                     None,
                 ),
@@ -163,14 +147,12 @@ class MainFrame(wx.Frame):
                     None,
                     None,
                     lambda evt: self.TextEditOps(evt, "selall"),
-                    lambda evt: self.TextEditOps(evt, "selall"),
                     None,
                 ),
                 (
                     wx.ID_DELETE,
                     _("Delete\tDelete"),
                     None,
-                    lambda evt: self.TextEditOps(evt, "delback"),
                     lambda evt: self.TextEditOps(evt, "delback"),
                     None,
                 ),
@@ -179,19 +161,11 @@ class MainFrame(wx.Frame):
                     wx.ID_ANY,
                     _("Auto save"),
                     _("Configure auto-saving file function"),
-                    lambda evt: self.notebook.autosv.ConfigWindow(),
-                    lambda evt: self.notebook.autosv.ConfigWindow(),
+                    self.notebook.autosv.Config,
                     None,
                 ),
             ],
         )
-        for menu, name in self.menubar.GetMenus():
-            if name == _("&Edit"):
-                if global_settings.get_setting(
-                    "extensions.cmd", "enable"
-                ) in cfg.yes_values or [True]:
-                    item = menu.Append(wx.ID_ANY, _("Command prompt"))
-                    self.Bind(wx.EVT_MENU, self.OpenCmd, item)
 
         ## View
         viewmenu = CreateMenu(
@@ -200,9 +174,7 @@ class MainFrame(wx.Frame):
                 (
                     wx.ID_ZOOM_IN,
                     _("Zoom in\tCtrl++"),
-                    _("Zoom in\tCtrl++"),
                     None,
-                    lambda evt: self.ZoomEditor(evt, "zoomin"),
                     lambda evt: self.ZoomEditor(evt, "zoomin"),
                     None,
                 ),
@@ -211,14 +183,17 @@ class MainFrame(wx.Frame):
                     _("Zoom out\tCtrl+-"),
                     None,
                     lambda evt: self.ZoomEditor(evt, "zoomout"),
-                    lambda evt: self.ZoomEditor(evt, "zoomout"),
                     None,
                 ),
             ],
         )
-        wrap = wx.MenuItem(viewmenu, text=_("Wrap by word"), kind=wx.ITEM_CHECK)
+        wrap = wx.MenuItem(viewmenu, wx.ID_ANY, _("Wrap by word"), kind=wx.ITEM_CHECK)
         viewmenu.Append(wrap)
-        self.Bind(wx.EVT_MENU, lambda evt: self.notebook.text_editor.SetWrapMode(wrap.IsChecked()), wrap)
+        self.Bind(
+            wx.EVT_MENU,
+            lambda evt: self.notebook.text_editor.SetWrapMode(wrap.IsChecked()),
+            wrap,
+        )
 
         ## Configs
         configsmenu = CreateMenu(
@@ -244,6 +219,15 @@ class MainFrame(wx.Frame):
                     ),
                     None,
                 ),
+                (
+                    None,
+                    _("Source code"),
+                    _("View the app source code online."),
+                    lambda evt: webbrowser.open_new_tab(
+                        "https://github.com/lebao3105/texteditor"
+                    ),
+                    None,
+                ),
             ],
         )
 
@@ -254,11 +238,9 @@ class MainFrame(wx.Frame):
         self.menubar.Append(helpmenu, _("&Help"))
         self.SetMenuBar(self.menubar)
 
-
     """
     Logging
     """
-
 
     def SetMessageText(self, msg: str):
         self.messages_text.SetLabel(msg)
@@ -266,7 +248,6 @@ class MainFrame(wx.Frame):
         self.logwindow.logs.WriteText(msg + "\n")
         wx.CallLater(5000, self.messages_text.SetLabel, _("Got new message(s)!"))
         wx.CallLater(10000, self.messages_text.SetLabel, _("Messages"))
-
 
     """
     Event callbacks
@@ -292,38 +273,16 @@ class MainFrame(wx.Frame):
         self.sidebar.RegisterTab(selected_dir, dirs)
         self.sidebar.Show()
 
-    def OpenCmd(self, evt):
-        wind = wx.Frame(self)
-        wind.SetTitle(_("Command Window"))
-        wind.SetSize((600, 400))
-        wind.CreateStatusBar(2)
-        notebook = cmd.Tabb(wind)
-        notebook.setstatus = True
-        wind.Show()
-
     def ShowCfgs(self, evt):
-        # return self.notebook.OpenFile(configpath)
         import os
 
         dirs = wx.GenericDirCtrl(
-            self.sidebar.tabs, -1, os.path.expanduser("~/.config/textworker")
+            self.sidebar.tabs, -1, os.path.expanduser("~/.config/textworker"),
+            style=wx.DIRCTRL_DEFAULT_STYLE | wx.DIRCTRL_EDIT_LABELS
         )
         dirs.Bind(
             wx.EVT_DIRCTRL_FILEACTIVATED,
-            lambda evt: self.notebook.fileops.Load(dirs.GetFilePath()),
-        )
-        dirs.Show()
-        self.sidebar.RegisterTab(os.path.expanduser("~/.config/textworker"), dirs)
-        self.sidebar.Show()
-        # return self.notebook.OpenFile(configpath)
-        import os
-
-        dirs = wx.GenericDirCtrl(
-            self.sidebar.tabs, -1, os.path.expanduser("~/.config/textworker")
-        )
-        dirs.Bind(
-            wx.EVT_DIRCTRL_FILEACTIVATED,
-            lambda evt: self.notebook.fileops.Load(dirs.GetFilePath()),
+            lambda evt: self.notebook.fileops.LoadFn(dirs.GetFilePath()),
         )
         dirs.Show()
         self.sidebar.RegisterTab(os.path.expanduser("~/.config/textworker"), dirs)
@@ -344,7 +303,6 @@ class MainFrame(wx.Frame):
         if ask == wx.ID_YES:
             return ResetEveryConfig()
 
-
     def ShowLogWindow(self, evt):
         return self.logwindow.Show()
 
@@ -353,13 +311,18 @@ class MainFrame(wx.Frame):
         pyver = platform.python_version()
         ostype = platform.system() if platform.system() != "" or None else _("Unknown")
         msg = _(
-            f"""\
+            """
         A simple, cross-platform text editor.
-        Branch: {"DEV" if is_development_build() == True else "STABLE"}
-        wxPython version: {wxver}
-        Python verison: {pyver}
-        OS type: {ostype}
-        """
+        Branch: {}
+        wxPython version: {}
+        Python verison: {}
+        OS type: {}
+        """.format(
+                "DEV" if is_development_version_from_project("textworker") == True else "STABLE",
+                wxver,
+                pyver,
+                ostype,
+            )
         )
         aboutdlg = AboutDialog()
         aboutdlg.Parent = self
@@ -371,6 +334,7 @@ class MainFrame(wx.Frame):
         aboutdlg.SetWebSite("https://github.com/lebao3105/texteditor")
         aboutdlg.SetLicense("GPL3_short")
         aboutdlg.infos.AddDeveloper("Le Bao Nguyen")
+        aboutdlg.infos.AddDocWriter("Le Bao Nguyen")
         return aboutdlg.ShowBox()
 
     """
@@ -379,7 +343,7 @@ class MainFrame(wx.Frame):
     """
 
     def OpenFile(self, evt) -> bool:
-        return self.notebook.fileops.OpenDialog()
+        return self.notebook.fileops.AskToOpen()
 
     def SaveFile(self, evt) -> bool:
         return self.notebook.fileops.Save(
@@ -408,6 +372,7 @@ class MainFrame(wx.Frame):
             return self.notebook.text_editor.ZoomIn()
         elif i == "zoomout":
             return self.notebook.text_editor.ZoomOut()
+
     """
     Still event callbacks, but "lambda evt" does not work
     * but not all of them, "Close all tabs" is an example *

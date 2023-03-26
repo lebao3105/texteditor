@@ -13,8 +13,22 @@ MIN_15 = MIN_1 * 15  # 900 secs
 MIN_20 = MIN_15 + MIN_1 * 5  # 1200 secs
 MIN_30 = MIN_15 * 2  # 1800 secs
 
+# Configs
+enabled = global_settings.get_setting(
+    "editor", "autosave", noraiseexp=True, restore=True
+)
+if not enabled:
+    enabled = global_settings.get_setting("extensions.autosave", "enable", noraiseexp=True, resotre=False)
 
-class AutoSave(XMLBuilder):
+time = global_settings.get_setting(
+    "editor", "autosave_time", noraiseexp=True, restore=True
+)
+if not int(time):
+    time = global_settings.get_setting("extensions.autosave", "time", noraiseexp=True, restore=False)
+    if not int(time):
+        time = MIN_05
+
+class AutoSaveConfig(XMLBuilder):
     timealiases = {
         "30 seconds": MIN_05,
         "1 minute": MIN_1,
@@ -25,12 +39,8 @@ class AutoSave(XMLBuilder):
         "20 minutes": MIN_20,
         "30 minutes": MIN_30,
     }
-
-    enabled = global_settings.get_setting("editor", "autosave")
+    enabled = enabled
     shown = False
-
-    Function: Callable
-    Function_args: Any
 
     def __init__(self, Parent):
         super().__init__(
@@ -53,16 +63,37 @@ class AutoSave(XMLBuilder):
             global_settings.set_setting(
                 "editor", "autosave_time", self.timealiases[choice]
             )
-        self.Configure(self.timealiases[choice])
-
-    def Configure(self, time: str in timealiases):
-        self.thread = threading.Thread(target=self._Run(time), daemon=True)
-        self.thread.start()
-        return
-
-    def _Run(self, time: str):
-        wx.CallLater(int(time) * 1000, self.Function, self.Function_args)
 
     def ConfigWindow(self):
+        def onDlgClose(evt):
+            self.shown = False
+            evt.Skip()
+
         self.Dialog.ShowModal()
+        self.Dialog.Bind(wx.EVT_CLOSE, onDlgClose)
         self.shown = True
+
+class AutoSave:
+    """
+    Auto-save support for wxPython editors.
+    """
+    Function: Callable
+    Function_args: Any
+
+    def __init__(self, editor):
+        """
+        Constructor of the class.
+        @param editor: wxPython editable editor
+        """
+        self.cfg = AutoSaveConfig(editor.Parent)
+
+        if enabled in global_settings.cfg.no_values or [False]:
+            return
+        else:
+            pass
+    
+    def Start(self, time: str=time):
+        return wx.CallAfter(int(time) * 1000, self.Function, **self.Function_args)
+    
+    def Config(self, evt=None):
+        return self.cfg.ConfigWindow()

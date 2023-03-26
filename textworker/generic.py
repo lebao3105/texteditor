@@ -1,3 +1,4 @@
+import os
 import pathlib
 import platform
 import wx
@@ -8,11 +9,18 @@ import wx.adv
 currdir = pathlib.Path(__file__).parent
 UIRC_DIR = str(currdir / "ui")
 
-from .backend import configpath
 from libtextworker import get_config
+from libtextworker.versioning import *
 from libtextworker.general import CraftItems, logger
-from libtextworker.interface import clrmgr
+from libtextworker.interface.wx import clrmgr
 from libtextworker.interface.wx.miscs import XMLBuilder
+
+# Config file path
+configpath = os.path.expanduser(
+    "~/.config/textworker/configs{}.ini".format(
+        "" if not is_development_version_from_project("textworker") else "_dev"
+    )
+)
 
 # Default configs
 cfg = {}
@@ -28,21 +36,18 @@ cfg["interface.tabs"] = {
 cfg["editor"] = {"autosave": "yes", "autosave_time": "120"}
 
 ## Extensions
-cfg["extensions.cmd"] = {
-    "enable": "yes",
-    "console": "xterm" if platform.system() != "Windows" else "cmd",
-}
 cfg["extensions.multiview"] = {"notebook_location": "bottom"}
 
 ## Funs:)
 ## *actually this is like browser flags, use this to test some unique features*
 cfg["fun"] = {"empty_page_on_last_tab_close": "yes"}
 
+
 # Classes
 class Error(Exception):
     def __init__(self, objname: str, title: str, msg: str, *args: object):
         fullmsg = "Object {} error: ({}) {}".format(objname, title, msg)
-        logger.exception(title+":"+msg) # Is it?
+        logger.exception(title + ":" + msg)  # Is it?
         super().__init__(fullmsg, *args)
 
 

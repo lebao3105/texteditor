@@ -1,5 +1,0 @@
-option('branch',
-    type:'combo',
-    choices:['stable', 'dev'],
-    value: 'dev',
-)
