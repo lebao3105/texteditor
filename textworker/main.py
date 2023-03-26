@@ -5,6 +5,7 @@ import wx
 ignore_not_exists: bool = False
 create_new: bool = False
 
+
 def _file_not_found(filename):
     if ignore_not_exists:
         return wx.ID_CANCEL
@@ -22,6 +23,7 @@ def start_app(files: list[str]):
     app = wx.App()
 
     from .mainwindow import MainFrame
+
     fm = MainFrame(None)
 
     if len(files) >= 1:
@@ -32,7 +34,7 @@ def start_app(files: list[str]):
             if _file_not_found(files[0]) == wx.ID_YES:
                 open(files[0], "w")
                 nb.text_editor.LoadFile(files[0])
-        
+
         for i in range(1, len(files)):
             if os.path.isfile(files[i]):
                 nb.AddTab()

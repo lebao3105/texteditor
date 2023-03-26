@@ -18,15 +18,20 @@ enabled = global_settings.get_setting(
     "editor", "autosave", noraiseexp=True, restore=True
 )
 if not enabled:
-    enabled = global_settings.get_setting("extensions.autosave", "enable", noraiseexp=True, resotre=False)
+    enabled = global_settings.get_setting(
+        "extensions.autosave", "enable", noraiseexp=True, resotre=False
+    )
 
 time = global_settings.get_setting(
     "editor", "autosave_time", noraiseexp=True, restore=True
 )
 if not int(time):
-    time = global_settings.get_setting("extensions.autosave", "time", noraiseexp=True, restore=False)
+    time = global_settings.get_setting(
+        "extensions.autosave", "time", noraiseexp=True, restore=False
+    )
     if not int(time):
         time = MIN_05
+
 
 class AutoSaveConfig(XMLBuilder):
     timealiases = {
@@ -73,10 +78,12 @@ class AutoSaveConfig(XMLBuilder):
         self.Dialog.Bind(wx.EVT_CLOSE, onDlgClose)
         self.shown = True
 
+
 class AutoSave:
     """
     Auto-save support for wxPython editors.
     """
+
     Function: Callable
     Function_args: Any
 
@@ -91,9 +98,9 @@ class AutoSave:
             return
         else:
             pass
-    
-    def Start(self, time: str=time):
+
+    def Start(self, time: str = time):
         return wx.CallAfter(int(time) * 1000, self.Function, **self.Function_args)
-    
+
     def Config(self, evt=None):
         return self.cfg.ConfigWindow()

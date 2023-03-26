@@ -277,8 +277,10 @@ class MainFrame(wx.Frame):
         import os
 
         dirs = wx.GenericDirCtrl(
-            self.sidebar.tabs, -1, os.path.expanduser("~/.config/textworker"),
-            style=wx.DIRCTRL_DEFAULT_STYLE | wx.DIRCTRL_EDIT_LABELS
+            self.sidebar.tabs,
+            -1,
+            os.path.expanduser("~/.config/textworker"),
+            style=wx.DIRCTRL_DEFAULT_STYLE | wx.DIRCTRL_EDIT_LABELS,
         )
         dirs.Bind(
             wx.EVT_DIRCTRL_FILEACTIVATED,
@@ -318,7 +320,9 @@ class MainFrame(wx.Frame):
         Python verison: {}
         OS type: {}
         """.format(
-                "DEV" if is_development_version_from_project("textworker") == True else "STABLE",
+                "DEV"
+                if is_development_version_from_project("textworker") == True
+                else "STABLE",
                 wxver,
                 pyver,
                 ostype,
