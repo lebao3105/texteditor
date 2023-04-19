@@ -3,7 +3,6 @@ import pygubu
 import texteditor
 from tkinter import Toplevel
 from tkinter.ttk import *
-from texteditor.backend import get_config
 
 PROJECT_PATH = pathlib.Path(__file__).parent
 PROJECT_UI = PROJECT_PATH / "about.ui"
@@ -37,17 +36,7 @@ class AboutDialog(Toplevel):
         button2 = builder.get_object("button2", self)
         button3 = builder.get_object("button3", self)
 
-        self.version.configure(text=_("Version {}".format(texteditor.version)))
-
-        for item in [
-            self.appname,
-            self.version,
-            self.mainfm,
-            button1,
-            button2,
-            button3,
-        ]:
-            get_config.GetConfig(item, "config")
+        self.version.configure(text=_("Version {}".format(texteditor.__version__)))
 
         builder.connect_callbacks(self)
 
@@ -72,9 +61,6 @@ class AboutDialog(Toplevel):
             bottomfm, text=_("Go back"), command=lambda: self.goback(newfm, bottomfm)
         )
         rightbtn = Button(bottomfm, text=_("Close"), command=lambda: self.quit())
-
-        for item in [labelfm, leftbtn, rightbtn]:
-            get_config.GetConfig(item, "config")
 
         labelfm.pack(expand=True, fill="both")
         newfm.pack(expand=True, fill="both")

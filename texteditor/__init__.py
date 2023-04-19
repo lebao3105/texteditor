@@ -1,31 +1,28 @@
 import gettext
 import locale
 import os
+import pathlib
 import sys
-
-from . import mainwindow
-from .backend import __version__ as version, is_development_build
-from .extensions.generic import GetCurrentDir
 from tkinter import messagebox as msgbox
 
-currdir = GetCurrentDir(__file__, True)
-__version__ = version
+sys.path.append(str(pathlib.Path(__file__).parent / ".." / "libtextworker"))
+from libtextworker.general import GetCurrentDir
+from libtextworker.versioning import is_development_version
 
-# Icon
-if is_development_build():
+from . import mainwindow
+from .backend import configs
+
+currdir = GetCurrentDir(__file__, True)
+__version__ = "1.5a0"
+
+
+if is_development_version(__version__):
     icon = currdir / "icons" / "texteditor.Devel.png"
 else:
     icon = currdir / "icons" / "texteditor.png"
-# --- ---
 
-# Translation
-LOCALE_DIR = "@LOCALEDIR@"
-MESONTOUCH = "@MESONTOUCH@"
+
 LOCALE_DIR = currdir / "po"
-
-if MESONTOUCH != "True":
-    if LOCALE_DIR == "@LOCALEDIR@":
-        LOCALE_DIR = currdir / "po"
 
 if not os.path.isdir(LOCALE_DIR):
     LOCALE_DIR = currdir / ".." / "po"
@@ -34,18 +31,13 @@ locale.setlocale(locale.LC_ALL, None)
 gettext.bindtextdomain("me.lebao3105.texteditor", LOCALE_DIR)
 gettext.textdomain("me.lebao3105.texteditor")
 gettext.install("me.lebao3105.texteditor")
-# --- ---
 
 
 # Startup functions
 def __filenotfound(filepath):
-    ask = msgbox.askyesno(
+    return msgbox.askyesno(
         _("File not found"), _("Cannot find the file %s - create it?" % str(filepath))
     )
-    if ask:
-        return "add_tab"
-    else:
-        return "cancel"
 
 
 def start_app(argv=None):
@@ -58,7 +50,7 @@ def start_app(argv=None):
         if os.path.isfile(argv[1]):
             root.notebook.fileops.openfile(argv[1])
         else:
-            if __filenotfound(argv[1]) == "add_tab":
+            if __filenotfound(argv[1]):
                 f = open(argv[1], mode="w")
                 root.notebook.fileops.openfile(argv[1])
                 del f
@@ -67,7 +59,7 @@ def start_app(argv=None):
             if os.path.isfile(argv[i]):
                 root.add_tab()
                 root.notebook.fileops.openfile(argv[i])
-            elif __filenotfound(argv[i]) == "add_tab":
+            elif __filenotfound(argv[i]):
                 f = open(argv[i], mode="w")
                 root.add_tab()
                 root.notebook.fileops.openfile(argv[i])

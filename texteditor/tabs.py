@@ -1,7 +1,8 @@
 from tkinter import Frame, Menu, END
 from tkinter.messagebox import askyesnocancel
 from tkinter.ttk import Notebook, Scrollbar
-from texteditor.backend import constants, file_operations, textwidget
+from texteditor.backend import constants, file_operations
+from libtextworker.interface.tk.editor import TextWidget
 
 
 class TabsViewer(Notebook):
@@ -76,13 +77,7 @@ class TabsViewer(Notebook):
             self.add(textframe, text=newtab_name)
 
         # Add contents
-        self.parent.text_editor = textwidget.TextWidget(
-            parent=textframe,
-            useMenu=True,
-            useScrollbars=False,
-            enableStatusBar=True,
-            unRedo=True,
-        )
+        self.parent.text_editor = TextWidget(textframe)
 
         ## Scroll bars
         xbar = Scrollbar(
@@ -114,9 +109,7 @@ class TabsViewer(Notebook):
         self.parent.text_editor.focus()
 
         if self.parent.winfo_class() == "Tk" or "TopLevel":
-            window_title = _("Text Editor") + " - "
-            self.titletext = window_title + newtab_name
-            self.parent.title(self.titletext)
+            self.parent.title(newtab_name)
 
     def __bindkey(self, event=None):
         textw = self.parent.text_editor
@@ -125,7 +118,7 @@ class TabsViewer(Notebook):
         if not tabname.endswith(" *"):
             self.tab("current", text=tabname + " *")
             if self.parent.winfo_class() == "Tk" or "TopLevel":
-                self.parent.title(_("Text Editor") + " - " + tabname + " *")
+                self.parent.title(tabname + " *")
 
     def close_tab(self, event=None):
         # This function won't work if the first tab is not selected
@@ -154,7 +147,7 @@ class TabsViewer(Notebook):
         if tabname == "+":
             self.add_tab(idx=(len(self.tabs())))
         if self.parent.winfo_class() == "Tk":
-            self.parent.title(_("Text Editor") + " - " + tabname)
+            self.parent.title(tabname)
 
     def duplicate_tab(self, event=None):
         content = self.parent.text_editor.get(1.0, END)
@@ -175,5 +168,5 @@ class TabsViewer(Notebook):
             with open(filename, "r") as f:
                 print("Opening file: ", filename)
                 self.parent.text_editor.insert(1.0, f.read())
-                self.parent.title(_("Text editor") + " - " + filename)
+                self.parent.title(filename)
                 self.tab("current", text=filename)

@@ -2,7 +2,7 @@ import tkinter.messagebox as msb
 from tkinter import BooleanVar, Label, StringVar, Toplevel
 from tkinter.ttk import Button, Checkbutton, Combobox
 
-from ..backend import logger
+import logging
 from .generic import global_settings
 
 # Minutes to seconds
@@ -12,8 +12,7 @@ MIN_15 = MIN_1 * 15  # 900 secs
 MIN_20 = MIN_15 + MIN_1 * 5  # 1200 secs
 MIN_30 = MIN_15 * 2  # 1800 secs
 
-log = logger.Logger("texteditor.extensions.autosave")
-
+log = logging.getLogger("textworker")
 # texteditor.backend.require_version("1.6a", "<")
 
 
@@ -30,10 +29,10 @@ class AutoSave:
     """
 
     forceEnable: bool = False
-    useTime: float = float(global_settings.call("filemgr", "autosave-time"))
+    useTime: float = float(global_settings.call("editor", "autosave_time"))
 
     def __init__(self, master, savefile_fn):
-        self.autosave = global_settings.call("filemgr", "autosave")
+        self.autosave = global_settings.call("editor", "autosave")
         self.__check()
         self.parent = master
         self.savecommand = savefile_fn
@@ -122,7 +121,7 @@ class AutoSave:
             self.config(timetouse)
 
         if st is True:
-            global_settings.set("filemgr", "autosave-time", str(self.useTime))
+            global_settings.set("editor", "autosave_time", str(self.useTime))
         self.askwin.destroy()
         self.start()
 

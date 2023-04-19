@@ -1,3 +1,4 @@
+import logging
 import os
 import pygubu
 import webbrowser
@@ -7,10 +8,10 @@ from tkinter import *
 import texteditor
 from .tabs import TabsViewer
 from .extensions import autosave, cmd, finding, generic
-from .backend import logger, get_config
 from .views import about
 
 global_settings = generic.global_settings
+logger = logging.getLogger("textworker")
 
 
 class MainWindow(Tk):
@@ -36,7 +37,7 @@ class MainWindow(Tk):
         self.autosv = autosave.AutoSave(
             self, savefile_fn=lambda: self.notebook.fileops.SaveFileEvent()
         )
-        self.log = logger.LoggerWithStatusbar(self.text_editor.statusbar, showlog=True)
+        self.log = logger
 
         # Set icon
         if os.path.isfile(texteditor.icon):
@@ -54,7 +55,7 @@ class MainWindow(Tk):
 
         # Auto change color
         self.autocolor = BooleanVar()
-        if global_settings.call("global", "autocolor") == "yes":
+        if global_settings.clrmgr.getkey("color", "autocolor") == "yes":
             self.autocolor.set(True)
         else:
             self.autocolor.set(False)
@@ -90,13 +91,13 @@ class MainWindow(Tk):
 
         ## Add "code-only" menu items
         addeditcmd = self.menu2.add_command
-        if global_settings.call("filemgr", "autosave") == "yes":
+        if global_settings.call("editor", "autosave") == "yes":
             addeditcmd(
                 label=_("Autosave"),
                 command=lambda: self.autosv.openpopup(),
             )
 
-        if global_settings.call("cmd", "isenabled") == "yes":
+        if global_settings.call("cmd", "enable") == "yes":
             self.menu2.add_separator()
             addeditcmd(
                 label=_("Open System Shell"),
@@ -132,7 +133,7 @@ class MainWindow(Tk):
     def add_event(self):
         bindcfg = self.bind
         bindcfg("<Control-n>", lambda event: self.add_tab(self))
-        if global_settings.call("cmd", "isenabled") == "yes":
+        if global_settings.call("cmd", "enable") == "yes":
             bindcfg("<Control-t>", lambda event: cmd.showcmd(self))
         bindcfg("<Control-f>", lambda event: finding.Finder(self, "find"))
         bindcfg("<Control-r>", lambda event: finding.Finder(self, ""))
@@ -156,9 +157,9 @@ class MainWindow(Tk):
                         "Unable to reset configuration file: Backed up default variables not found"
                     ),
                 )
-                self.text_editor.statusbar.writeleftmessage(
-                    _("Error: Unable to reset all configurations!")
-                )
+                # self.text_editor.statusbar.writeleftmessage(
+                #     _("Error: Unable to reset all configurations!")
+                # )
                 return
             else:
                 msgbox.showinfo(
@@ -167,22 +168,23 @@ class MainWindow(Tk):
                         "Resetted texteditor configurations.\nRestart the application to take effect."
                     ),
                 )
-                self.text_editor.statusbar.writeleftmessage(
-                    _("Resetted all configurations. Restart the app to take effect.")
-                )
+                # self.text_editor.statusbar.writeleftmessage(
+                #     _("Resetted all configurations. Restart the app to take effect.")
+                # )
 
     def opencfg(self, event=None):
         self.add_tab()
-        self.notebook.fileops.LoadFile(get_config.file)
+        # self.notebook.fileops.LoadFile(get_config.file)
 
     def aboutdlg(self, event=None):
         return about.AboutDialog(self).run()
 
     def get_color(self):
-        if global_settings.call("global", "color") == "dark":
+        if global_settings.clrmgr.getkey("color", "background") == "dark":
             self.lb = "light"
         else:
             self.lb = "dark"
+        global_settings.clrmgr.configure(self, True)
 
     def change_color(self, event=None):
         if self.autocolor.get() == True:
@@ -198,9 +200,9 @@ class MainWindow(Tk):
                 pass
             else:
                 return
-        global_settings.set("global", "color", self.lb)
+        global_settings.clrmgr.set("color", "background", self.lb)
+        global_settings.clrmgr.update()
         self.get_color()
-        global_settings.cfg.configure(self.text_editor)
 
     def add_tab(self, event=None):
         return self.notebook.add_tab(idx="default")

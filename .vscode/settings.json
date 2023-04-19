@@ -1,7 +1,7 @@
 {
-    "mesonbuild.configureOnOpen": false,
     "python.analysis.extraPaths": [
-        "./texteditor"
+        "./texteditor",
+        "./libtextworker"
     ],
     "python.formatting.provider": "black",
     "python.testing.pytestArgs": [

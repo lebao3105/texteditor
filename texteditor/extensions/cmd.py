@@ -4,17 +4,18 @@ import texteditor.backend
 import threading
 
 from tkinter import END, BooleanVar, TclError, Toplevel, messagebox
-from texteditor.backend import get_config, textwidget
+from .generic import global_settings
+
+from libtextworker.interface.tk.editor import TextWidget
 
 texteditor.backend.require_version("1.4a", ">=")
 # texteditor.backend.require_version("1.6a", "=<")
 
 
-class cmd(textwidget.TextWidget):
+class cmd(TextWidget):
     useWrap = True
 
     def __init__(self, master, **kw):
-        kw["enableStatusBar"] = kw.get("enableStatusBar", 0) | True
         super().__init__(master, **kw)
         self.parent = master
         self.bind("<Return>", self.checkcmds)
@@ -67,7 +68,7 @@ class cmd(textwidget.TextWidget):
                     "This will open console defined by defconsole value in configuration file. Please don't run any shell!"
                 ),
             )
-            cmd = get_config.GetConfig.getvalue("cmd", "defconsole")
+            cmd = global_settings.call("cmd", "defconsole")
 
             threading.Thread(target=lambda: self.runcommand(cmd, noout=True)).start()
 

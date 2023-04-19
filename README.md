@@ -8,7 +8,8 @@
 
 Texteditor is a text editor written in Python using Tkinter interface.
 
-Read documents online: https://lebao3105.gitbook.io/texteditor_doc.
+Read documents online: https://lebao3105.gitbook.io/texteditor_doc
+Read the app API online: https://lebao3105.github.io/libtextworker
 
 ## Features
 * Tabs support
@@ -18,12 +19,14 @@ Read documents online: https://lebao3105.gitbook.io/texteditor_doc.
 * Auto save documents
 * Command window where you can run external commands (except Console apps which require your inputs)
 
-> This project is mirrored to [GitLab.](https://gitlab.com/lebao3105/texteditor_tk)
+> This project is available on [GitLab.](https://gitlab.com/lebao3105/texteditor_tk)
 
 ## Running
-Before continue, make sure that you have Python 3.8 or higher installed with pip and Tkinter. If you use wxPython version, you don't need Tkinter, but you need wxPython installed via pip.
+Make sure you have Python 3.8 or higher with pip and Tkinter (not from Pypi), installed.
 
-Read [this file][buildmd] for the full instructions.
+Install dependencies: ```pip install -r requirements.txt```
+Run: ```python3 -m texteditor [args]```
+Install: ```pip install -e .```
 
 ## Future of this program
 * 1.5 **may be** the final version of texteditor (now is textworker) uses Tkinter interface. This release will come with a lot of code fixes and cleans. I hope there are also features defined in [TODO](TODO) too.
