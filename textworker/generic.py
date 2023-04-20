@@ -26,10 +26,15 @@ configpath = os.path.expanduser(
 cfg = {}
 
 ## Interface
+cfg["interface"] = {
+    "theme": "default",
+    "path": "themes"
+}
+
 cfg["interface.tabs"] = {
     "move_tabs": "yes",
     "middle_close": "no",
-    "close_on_all_tabs": "no",
+    "close_on_no_tab": "no",
 }
 
 ## Editor
@@ -138,6 +143,7 @@ class SettingsWindow(XMLBuilder):
             ),
         )
         self.AppTheme.Bind(wx.EVT_CHOICE, self.SetTheme)
+        clrcall.configure(self.Page1, True)
 
     def SelectFont(self, evt):
         selected_font = self.Font.GetSelectedFont()

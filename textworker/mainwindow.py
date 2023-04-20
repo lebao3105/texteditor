@@ -184,7 +184,7 @@ class MainFrame(wx.Frame):
                     None,
                     lambda evt: self.ZoomEditor(evt, "zoomout"),
                     None,
-                ),
+                )
             ],
         )
         wrap = wx.MenuItem(viewmenu, wx.ID_ANY, _("Wrap by word"), kind=wx.ITEM_CHECK)
@@ -193,6 +193,14 @@ class MainFrame(wx.Frame):
             wx.EVT_MENU,
             lambda evt: self.notebook.text_editor.SetWrapMode(wrap.IsChecked()),
             wrap,
+        )
+
+        tabgd = wx.MenuItem(viewmenu, wx.ID_ANY, _("Show/hide tab guides (checked = on)"), kind=wx.ITEM_CHECK)
+        viewmenu.Append(tabgd)
+        self.Bind(
+            wx.EVT_MENU,
+            lambda evt: self.notebook.text_editor.SetIndentationGuides(False),
+            tabgd
         )
 
         ## Configs
@@ -351,10 +359,7 @@ class MainFrame(wx.Frame):
         )
 
     def SaveAs(self, evt) -> bool:
-        return self.notebook.fileops.SaveAs
-
-    def Close(self, evt, force=False):
-        return super().Close(force)
+        return self.notebook.fileops.AskToSave()
 
     # Text edit
     def TextEditOps(self, evt, action: str):
@@ -379,7 +384,7 @@ class MainFrame(wx.Frame):
     """
 
     def OpenFile(self, evt) -> bool:
-        return self.notebook.fileops.OpenDialog()
+        return self.notebook.fileops.AskToOpen()
 
     def SaveFile(self, evt) -> bool:
         return self.notebook.fileops.Save(
@@ -387,10 +392,7 @@ class MainFrame(wx.Frame):
         )
 
     def SaveAs(self, evt) -> bool:
-        return self.notebook.fileops.SaveAs
-
-    def Close(self, evt, force=False):
-        return super().Close(force)
+        return self.notebook.fileops.AskToSave()
 
     # Text edit
     def TextEditOps(self, evt, action: str):

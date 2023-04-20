@@ -48,5 +48,5 @@ Options are:
 * clean - clean everything - FileExistsError will be ignored!
 
 2. Run commands yourself
-a. Build: ```[python] -m pip install build wheel && [python] -m build```
-b. Install: ```[python] -m pip install .```
+a. Build: ```pip install build wheel``` then ```[python] -m build```
+b. Install: ```pip install -e .```

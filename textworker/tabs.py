@@ -23,7 +23,7 @@ class Tabber(wx.aui.AuiNotebook):
         movetabs = global_settings.get_setting("interface.tabs", "move_tabs")
         middle_close = global_settings.get_setting("interface.tabs", "middle_close")
         close_on_all_tabs = global_settings.get_setting(
-            "interface.tabs", "close_on_all_tabs"
+            "interface.tabs", "close_on_no_tab"
         )
 
         if movetabs == True:

@@ -13,10 +13,12 @@ import sys
 currdir = pathlib.Path(__file__).parent
 sys.path.append(str(currdir / ".." / "libtextworker"))
 
+from libtextworker._importer import test_import
 from libtextworker.general import CraftItems
 from libtextworker.versioning import *
 
-require("libtextworker", "0.1.0")
+require("libtextworker", "0.1.2")
+test_import("wx")
 __version__ = "1.6a2"
 
 LOCALE_DIR = currdir / "po"
