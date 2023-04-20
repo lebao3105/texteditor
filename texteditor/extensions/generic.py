@@ -5,13 +5,13 @@ import os
 from libtextworker import THEMES_DIR
 from libtextworker.get_config import GetConfig
 from libtextworker.interface.tk import ColorManager, default_configs
-from libtextworker.versioning import is_development_version
+from libtextworker.versioning import is_development_version_from_project
 
 __all__ = ["CONFIGS_PATH", "Setter", "log", "global_settings"]
 
 CONFIGS_PATH = os.path.expanduser(
     "~/.config/textworker/configs{}.ini".format(
-        "_dev" if is_development_version("1.5a0") else ""  # Temporary
+        "_dev" if is_development_version_from_project("texteditor") else ""  # Temporary
     )
 )
 configs = {

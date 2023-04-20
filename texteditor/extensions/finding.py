@@ -1,8 +1,6 @@
-import texteditor.backend
 from tkinter import END, StringVar
 from tkinter.ttk import Button, Entry, Frame, Label
-
-# texteditor.backend.require_version("1.6a", "<")
+from .generic import global_settings
 
 
 class Finder(Frame):
@@ -17,6 +15,7 @@ class Finder(Frame):
         self.placewidgets()
         self.pack()
         parent.findbox = self
+        global_settings.clrmgr.configure(self, True)
 
     def placewidgets(self):
         # Title first

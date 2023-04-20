@@ -7,20 +7,15 @@ from tkinter import messagebox as msgbox
 
 sys.path.append(str(pathlib.Path(__file__).parent / ".." / "libtextworker"))
 from libtextworker.general import GetCurrentDir
-from libtextworker.versioning import is_development_version
-
-from . import mainwindow
-from .backend import configs
+from libtextworker.versioning import is_development_version_from_project
 
 currdir = GetCurrentDir(__file__, True)
 __version__ = "1.5a0"
 
-
-if is_development_version(__version__):
+if is_development_version_from_project("texteditor"):
     icon = currdir / "icons" / "texteditor.Devel.png"
 else:
     icon = currdir / "icons" / "texteditor.png"
-
 
 LOCALE_DIR = currdir / "po"
 
@@ -32,6 +27,9 @@ gettext.bindtextdomain("me.lebao3105.texteditor", LOCALE_DIR)
 gettext.textdomain("me.lebao3105.texteditor")
 gettext.install("me.lebao3105.texteditor")
 
+from . import mainwindow
+from .backend import configs
+
 
 # Startup functions
 def __filenotfound(filepath):
@@ -41,8 +39,7 @@ def __filenotfound(filepath):
 
 
 def start_app(argv=None):
-    if not argv:  # For __main__
-        argv = sys.argv[1:]
+    argv = sys.argv[1:]
     root = mainwindow.MainWindow()
     n = len(argv)
 

@@ -92,7 +92,7 @@ class AutoSave:
         cancelbtn.pack(padx=40)
         label2.pack(fill="x")
 
-        global_settings.cfg.configure(askwin, True)
+        global_settings.clrmgr.configure(askwin, True)
 
     def __converter(self, time: float):
         switch = {

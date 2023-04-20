@@ -3,6 +3,7 @@ from tkinter.messagebox import askyesnocancel
 from tkinter.ttk import Notebook, Scrollbar
 from texteditor.backend import constants, file_operations
 from libtextworker.interface.tk.editor import TextWidget
+from libtextworker.interface.tk.miscs import CreateMenu
 
 
 class TabsViewer(Notebook):
@@ -32,22 +33,31 @@ class TabsViewer(Notebook):
         self.tabname = self.tab(self.select(), "text")
 
         # Now, make a right-click menu
-        self.right_click_menu = Menu(self, tearoff=0)
-        self.right_click_menu.add_command(
-            label=_("New tab"),
-            command=lambda: self.add_tab(idx="default"),
-            accelerator="Ctrl+N",
-        )
-        self.right_click_menu.add_command(
-            label=_("Close the current opening tab"),
-            command=lambda: self.close_tab(self),
-        )
-        self.right_click_menu.add_command(
-            label=_("Duplicate the current opening tab"),
-            command=lambda: self.duplicate_tab(self),
-        )
-        self.right_click_menu.add_command(
-            label=_("Reopen the file"), command=lambda: self.reopenfile(self)
+        self.right_click_menu = CreateMenu(
+            [
+                (
+                    _("New tab"),
+                    "Ctrl+N",
+                    lambda: self.add_tab(idx="default"),
+                    None,
+                    None,
+                ),
+                (
+                    _("Close the current tab"),
+                    "",
+                    lambda: self.close_tab(self),
+                    None,
+                    None,
+                ),
+                (
+                    _("Duplicate the current opening tab"),
+                    "",
+                    self.duplicate_tab,
+                    None,
+                    None,
+                ),
+                (_("Reopen the file"), "", lambda: self.reopenfile(self), None, None),
+            ]
         )
         self.bind(
             "<Button-3>",
@@ -78,16 +88,6 @@ class TabsViewer(Notebook):
 
         # Add contents
         self.parent.text_editor = TextWidget(textframe)
-
-        ## Scroll bars
-        xbar = Scrollbar(
-            textframe, orient="horizontal", command=self.parent.text_editor.xview
-        )
-        ybar = Scrollbar(
-            textframe, orient="vertical", command=self.parent.text_editor.yview
-        )
-        xbar.pack(side="bottom", fill="x")
-        ybar.pack(side="right", fill="y")
 
         ## Right-click menu
         self.parent.text_editor.addMenusepr()

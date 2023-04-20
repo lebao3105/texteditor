@@ -33,10 +33,6 @@ class MainWindow(Tk):
             "aboutdlg": lambda: self.aboutdlg(),
         }
 
-        self.notebook = TabsViewer(self, do_place=True)
-        self.autosv = autosave.AutoSave(
-            self, savefile_fn=lambda: self.notebook.fileops.SaveFileEvent()
-        )
         self.log = logger
 
         # Set icon
@@ -59,8 +55,6 @@ class MainWindow(Tk):
             self.autocolor.set(True)
         else:
             self.autocolor.set(False)
-
-        # self.autocolormode = get_config.AutoColor(self)
 
         # Window size
         self.geometry("810x610")
@@ -106,8 +100,7 @@ class MainWindow(Tk):
             )
         self.menu3.add_checkbutton(
             label=_("Autocolor mode"),
-            # command=lambda: self.autocolor_mode(),
-            command=lambda: (print("Not ready")),
+            command=lambda: self.autocolor_mode(),
             variable=self.autocolor,
         )
         self.menu3.add_checkbutton(
@@ -128,6 +121,11 @@ class MainWindow(Tk):
         self.callbacks["savefile"] = lambda: self.notebook.fileops.SaveFileEvent()
         self.callbacks["savefileas"] = lambda: self.notebook.fileops.SaveAs()
         builder.connect_callbacks(self.callbacks)
+
+        self.notebook = TabsViewer(self, do_place=True)
+        self.autosv = autosave.AutoSave(
+            self, savefile_fn=lambda: self.notebook.fileops.SaveFileEvent()
+        )
 
     # Binding commands to the application
     def add_event(self):
@@ -193,11 +191,11 @@ class MainWindow(Tk):
                 _(
                     """\
                 Changing the application color requires the autocolor function to be turned off.
-                Turn off autocolor then change the application color (permanently)?
+                Don't worry, this change is only for this session.
                 """
                 ),
             ):
-                pass
+                self.autocolor_mode()
             else:
                 return
         global_settings.clrmgr.set("color", "background", self.lb)
@@ -207,15 +205,17 @@ class MainWindow(Tk):
     def add_tab(self, event=None):
         return self.notebook.add_tab(idx="default")
 
-    # def autocolor_mode(self, event=None):
-    #     get_config.autocolormode = self.autocolor.get()
-    #     if self.autocolor.get() == False:
-    #         self.autocolormode.stopasync()
-    #         self.text_editor.statusbar.writeleftmessage(_("Stopped autocolor service."))
-    #         self.menu3.entryconfig(2, state="disabled")
-    #     else:
-    #         self.autocolormode.startasync()
-    #         self.text_editor.statusbar.writeleftmessage(_("Started autocolor service."))
-    #         self.menu3.entryconfig(2, state="normal")
-    #     get_config.GetConfig.configure(self.text_editor)
-    #     self.get_color()
+    def autocolor_mode(self, event=None, permanent: bool = False):
+        toggle = self.autocolor.get()
+        if toggle == True:
+            del global_settings.clrmgr.threads
+            if permanent:
+                global_settings.clrmgr.set("color", "autocolor", "no")
+                global_settings.clrmgr.update()
+        elif toggle == False:
+            print("turned 2")
+            global_settings.clrmgr.threads = {}
+            if permanent:
+                global_settings.clrmgr.set("color", "autocolor", "yes")
+                global_settings.clrmgr.update()
+        self.get_color()
