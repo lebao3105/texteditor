@@ -1,9 +1,9 @@
 import os.path
-import sys
 import wx
 
 ignore_not_exists: bool = False
 create_new: bool = False
+
 
 def _file_not_found(filename):
     if ignore_not_exists:
@@ -18,10 +18,11 @@ def _file_not_found(filename):
     ).ShowModal()
 
 
-def start_app(files: list[str]):
-    app = wx.App()
+def start_app(files: list[str], directory: str | None = None):
+    app = wx.App(0)
 
     from .mainwindow import MainFrame
+
     fm = MainFrame(None)
 
     if len(files) >= 1:
@@ -32,7 +33,7 @@ def start_app(files: list[str]):
             if _file_not_found(files[0]) == wx.ID_YES:
                 open(files[0], "w")
                 nb.text_editor.LoadFile(files[0])
-        
+
         for i in range(1, len(files)):
             if os.path.isfile(files[i]):
                 nb.AddTab()
@@ -42,6 +43,27 @@ def start_app(files: list[str]):
                     nb.AddTab()
                     open(files[i], "w")
                     nb.text_editor.LoadFile(files[i])
+
+    if directory != None:
+
+        def final_():
+            open_dir = wx.GenericDirCtrl(fm.sidebar.tabs, -1, directory)
+            open_dir.Bind(
+                wx.EVT_DIRCTRL_FILEACTIVATED,
+                lambda evt: fm.notebook.fileops.LoadFn(open_dir.GetFilePath()),
+            )
+            open_dir.SetDefaultPath(directory)
+            open_dir.Show(True)
+            fm.sidebar.RegisterTab(directory, open_dir)
+            fm.sidebar.Show(True)
+
+        if os.path.isdir(directory):
+            final_()
+        else:
+            directory = os.path.realpath(os.path.curdir + "/" + directory)
+            if os.path.isdir(directory):
+                final_()
+            wx.MessageBox(f"Directory {directory} not found!", "Error", parent=fm)
 
     app.SetTopWindow(fm)
     fm.Show()
