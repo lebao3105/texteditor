@@ -1,19 +1,22 @@
+import json
+import logging
 import os
-import pathlib
-import platform
 import wx
 import wx.xml
 import wx.xrc
 import wx.adv
 
-currdir = pathlib.Path(__file__).parent
-UIRC_DIR = str(currdir / "ui")
-
-from libtextworker import get_config
+from libtextworker import get_config, THEMES_DIR, EDITOR_DIR
 from libtextworker.versioning import *
-from libtextworker.general import CraftItems, logger
-from libtextworker.interface.wx import clrmgr
+from libtextworker.general import CraftItems, GetCurrentDir
+from libtextworker.interface.manager import default_configs
+from libtextworker.interface.wx import ColorManager
+from libtextworker.interface.wx.constants import FONTST, FONTWT
 from libtextworker.interface.wx.miscs import XMLBuilder
+
+currdir = GetCurrentDir(__file__, True)
+UIRC_DIR = str(currdir / "ui")
+logger = logging.getLogger("textworker")
 
 # Config file path
 configpath = os.path.expanduser(
@@ -23,29 +26,78 @@ configpath = os.path.expanduser(
 )
 
 # Default configs
-cfg = {}
 
-## Interface
-cfg["interface"] = {
-    "theme": "default",
-    "path": "themes"
-}
+## Early work.
+## Because there is no sub-sections support here, so...
+## Maybe switch to toml? Or not?
+cfg = """
+[config-paths]
+    [config-paths.ui]
+        theme = default
+        path = unchanged
+    [config-paths.editor]
+        name = default
+        path = unchanged
 
-cfg["interface.tabs"] = {
-    "move_tabs": "yes",
-    "middle_close": "no",
-    "close_on_no_tab": "no",
-}
+[editor]
+    [editor.autosave]
+        enable = yes
+        time = 120
+    [editor.tabs]
+        move_tabs = yes
+        middle_close = yes
+        close_on_no_tab = no ; Close the program on last tab close - will override fun->allow_restore_notebook
 
-## Editor
-cfg["editor"] = {"autosave": "yes", "autosave_time": "120"}
 
-## Extensions
-cfg["extensions.multiview"] = {"notebook_location": "bottom"}
+[extensions]
+    [extensions.textwkr.multiview]
+        notebook_location = bottom
 
-## Funs:)
-## *actually this is like browser flags, use this to test some unique features*
-cfg["fun"] = {"empty_page_on_last_tab_close": "yes"}
+[fun]
+allow_restore_notebook = yes
+"""
+
+# App settings
+global_settings = get_config.GetConfig(cfg, file=configpath)
+global_settings.set_setting = global_settings.set
+global_settings.get_setting = global_settings.getkey
+
+# Move old configs, if any
+# (Compare with versions =< 1.6a2)
+moves = json.loads(open(CraftItems(GetCurrentDir(__file__), "merges.json"), "r").read())
+
+global_settings.move(moves)
+
+# Find theme resource
+_theme = global_settings["config-paths.ui"]["theme"]
+_theme_path = global_settings["config-paths.ui"]["path"]
+
+if _theme_path and _theme:
+    _theme += ".ini"
+    if _theme_path != "unchanged" and "none":
+        _theme_load = CraftItems(_theme_path, _theme)
+    else:
+        _theme_load = CraftItems(THEMES_DIR, _theme)
+else:
+    _theme_load = CraftItems(THEMES_DIR, "default.ini")
+
+clrcall = ColorManager(default_configs, _theme_load)
+
+# Editor config
+_editor_config_name = global_settings["config-paths.editor"]["name"]
+_editor_config_path = global_settings["config-paths.editor"]["path"]
+
+if _editor_config_name and _editor_config_path:
+    _editor_config_name += ".ini"
+    if _editor_config_name == "default":
+        _editor_config_name = "editor"
+
+    if _editor_config_path != "unchanged":
+        _editor_config_load = CraftItems(_editor_config_path, _editor_config_name)
+    else:
+        _editor_config_load = CraftItems(EDITOR_DIR, _editor_config_name)
+else:
+    _editor_config_load = CraftItems(EDITOR_DIR, "editor.ini")
 
 
 # Classes
@@ -54,50 +106,6 @@ class Error(Exception):
         fullmsg = "Object {} error: ({}) {}".format(objname, title, msg)
         logger.exception(title + ":" + msg)  # Is it?
         super().__init__(fullmsg, *args)
-
-
-class AppSettings(object):
-    def __init__(
-        self,
-        cfg: dict = cfg,
-        file: str = configpath,
-        default_section: str = (item[0] for item in cfg),
-        **kwds,
-    ):
-        self.cfg = get_config.GetConfig(
-            cfg, file, default_section=default_section, **kwds
-        )
-        self.file = file
-
-    def get_setting(self, *args, **kwds):
-        return self.cfg.getkey(*args, **kwds)
-
-    def set_setting(self, section, option, value):
-        self.cfg.set(section, option, value)
-        with open(self.file, "w") as f:
-            self.cfg.write(f)
-
-    def register_section(self, section_name, options: dict, write: bool = False):
-        """
-        Registers a new section on the configuration file.
-        """
-        self.cfg.add_section(section_name)
-        for option in options:
-            self.cfg.set(section_name, option, options[option])
-        if write:
-            self.cfg.write(open(self.file, "w"))
-
-    def unregister_section(self, section_name, write: bool = False):
-        """
-        Unregisters a section on the configuration file.
-        """
-        self.cfg.remove_section(section_name)
-        if write:
-            self.cfg.write(open(self.file, "w"))
-
-
-global_settings = AppSettings()
-clrcall = clrmgr
 
 
 class SettingsWindow(XMLBuilder):
@@ -122,7 +130,7 @@ class SettingsWindow(XMLBuilder):
         self.Font = wx.xrc.XRCCTRL(self.Frame, "m_fontPicker1")
         self.Font.SetSelectedFont(clrcall.GetFont)
         self.TextPreview = wx.xrc.XRCCTRL(self.Frame, "m_staticText6")
-        # global_settings.cfg.configure(self.TextPreview)
+        clrcall.configure(self.TextPreview)
 
         # Color choices
         self.FontColorChoices = wx.xrc.XRCCTRL(self.Frame, "m_choice1")
@@ -135,7 +143,7 @@ class SettingsWindow(XMLBuilder):
         self.ColorPicker.Bind(
             wx.EVT_COLOURPICKER_CHANGED,
             lambda evt: (
-                global_settings.set_setting(
+                clrcall.set_and_update(
                     "interface",
                     "textcolor",
                     evt.GetColour().GetAsString(wx.C2S_HTML_SYNTAX),
@@ -153,38 +161,27 @@ class SettingsWindow(XMLBuilder):
         family = selected_font.GetFaceName()
         weight = selected_font.GetWeight()
 
-        styles = {
-            wx.FONTSTYLE_NORMAL: "normal",
-            wx.FONTSTYLE_ITALIC: "italic",
-        }
+        styles = {val: key for key, val in FONTST}
+        weights = {val: key for key, val in FONTWT}
 
-        weights = {
-            wx.FONTWEIGHT_LIGHT: "light",
-            wx.FONTWEIGHT_NORMAL: "normal",
-            wx.FONTWEIGHT_SEMIBOLD: "semibold",
-            wx.FONTWEIGHT_BOLD: "bold",
-            wx.FONTWEIGHT_EXTRALIGHT: "maxlight",
-            wx.FONTWEIGHT_EXTRABOLD: "maxbold",
-        }
-
-        global_settings.set_setting(
+        clrcall.set(
             "interface", "textcolor", selected_color.GetAsString(wx.C2S_HTML_SYNTAX)
         )
-        global_settings.set_setting("interface.font", "weight", weights[weight])
-        global_settings.set_setting("interface.font", "style", styles[style])
-        global_settings.set_setting("interface.font", "family", family)
-
+        clrcall.set("interface.font", "weight", weights[weight])
+        clrcall.set("interface.font", "style", styles[style])
+        clrcall.set("interface.font", "family", family)
+        clrcall.update()
         self.TextPreview.SetFont(selected_font)
 
     def SetFontColor(self, evt):
         selected_item = self.FontColorChoices.GetStringSelection()
         self.ColorPicker.Enable(False)
         if selected_item == _("Default"):
-            return global_settings.set_setting("interface", "textcolor", "default")
+            return clrcall.set_and_update("interface", "textcolor", "default")
         elif selected_item == _("Red"):
-            return global_settings.set_setting("interface", "textcolor", "red")
+            return clrcall.set_and_update("interface", "textcolor", "red")
         elif selected_item == _("Green"):
-            return global_settings.set_setting("interface", "textcolor", "green")
+            return clrcall.set_and_update("interface", "textcolor", "green")
         elif selected_item == _("Custom"):
             self.ColorPicker.Enable()
             return
@@ -192,11 +189,11 @@ class SettingsWindow(XMLBuilder):
     def SetTheme(self, evt):
         selected_item = self.AppTheme.GetStringSelection()
         if selected_item == _("Dark"):
-            return global_settings.set_setting("interface", "color", "dark")
+            return clrcall.set_and_update("interface", "color", "dark")
         elif selected_item == _("Light"):
-            return global_settings.set_setting("interface", "color", "light")
+            return clrcall.set_and_update("interface", "color", "light")
         elif selected_item == _("Automatic"):
-            return global_settings.set_setting("interface", "autocolor", "yes")
+            return clrcall.set_and_update("interface", "autocolor", "yes")
 
     def Run(self, evt):
         self.Frame.RunWizard(self.Page1)
