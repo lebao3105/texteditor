@@ -6,13 +6,15 @@ import wx
 import wx.adv
 import wx.stc
 
-import textworker
+from libtextworker import __version__ as libver
 from libtextworker.general import ResetEveryConfig
 from libtextworker.interface.wx.about import AboutDialog
 from libtextworker.interface.wx.miscs import CreateMenu
 from libtextworker.versioning import *
+from textworker import __version__ as appver
+from textworker import icon
 
-from .extensions import multiview
+from .extensions import autosave, multiview
 from .generic import SettingsWindow, global_settings
 from .tabs import Tabber
 
@@ -23,7 +25,7 @@ if platform.system() == "Windows":
     myappid = "me.lebao3105.texteditor"  # arbitrary string
     ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(myappid)
 
-cfg = global_settings.cfg
+cfg = global_settings
 logger = logging.getLogger("textworker")
 
 
@@ -33,7 +35,7 @@ class MainFrame(wx.Frame):
         wx.Frame.__init__(self, *args, **kwds)
 
         self.SetSize((820, 685))
-        self.SetIcon(wx.Icon(textworker.icon))
+        self.SetIcon(wx.Icon(icon))
 
         self.SetupStatusBar()
         self.SetupEditor()
@@ -41,9 +43,12 @@ class MainFrame(wx.Frame):
 
         self.sidebar = multiview.MultiViewer(self)
         self.wiz = SettingsWindow(self)
+        self.autosv_cfg = autosave.AutoSaveConfig(self)
 
         self.PlaceMenu()
         self.Layout()
+
+        self.Bind(wx.EVT_CLOSE, self.OnClose)
 
     """
     Setup basic components.
@@ -56,6 +61,7 @@ class MainFrame(wx.Frame):
             style=wx.TE_MULTILINE | wx.TE_READONLY | wx.HSCROLL | wx.VSCROLL,
         )
         self.logwindow.Layout()
+        self.logwindow.Bind(wx.EVT_CLOSE, lambda evt: self.logwindow.Hide())
 
     def SetupEditor(self):
         self.notebook = Tabber(self, style=wx.EXPAND)
@@ -161,7 +167,7 @@ class MainFrame(wx.Frame):
                     wx.ID_ANY,
                     _("Auto save"),
                     _("Configure auto-saving file function"),
-                    self.notebook.autosv.Config,
+                    lambda evt: self.autosv_cfg.ConfigWindow(),
                     None,
                 ),
             ],
@@ -184,7 +190,7 @@ class MainFrame(wx.Frame):
                     None,
                     lambda evt: self.ZoomEditor(evt, "zoomout"),
                     None,
-                )
+                ),
             ],
         )
         wrap = wx.MenuItem(viewmenu, wx.ID_ANY, _("Wrap by word"), kind=wx.ITEM_CHECK)
@@ -195,12 +201,21 @@ class MainFrame(wx.Frame):
             wrap,
         )
 
-        tabgd = wx.MenuItem(viewmenu, wx.ID_ANY, _("Show/hide tab guides (checked = on)"), kind=wx.ITEM_CHECK)
+        tabgd = wx.MenuItem(
+            viewmenu,
+            wx.ID_ANY,
+            _("Show tab guides"),
+            kind=wx.ITEM_CHECK,
+        )
         viewmenu.Append(tabgd)
+        if self.notebook.text_editor.GetIndentationGuides():
+            tabgd.Check()
         self.Bind(
             wx.EVT_MENU,
-            lambda evt: self.notebook.text_editor.SetIndentationGuides(False),
-            tabgd
+            lambda evt: (
+                self.notebook.text_editor.SetIndentationGuides(tabgd.IsChecked())
+            ),
+            tabgd,
         )
 
         ## Configs
@@ -219,9 +234,9 @@ class MainFrame(wx.Frame):
             [
                 (wx.ID_ABOUT, None, None, self.ShowAbout, None),
                 (
-                    wx.ID_HELP,
                     None,
-                    None,
+                    _("Documentation"),
+                    _("Read app documents online."),
                     lambda evt: webbrowser.open_new_tab(
                         "https://lebao3105.gitbook.io/texteditor_doc"
                     ),
@@ -229,10 +244,17 @@ class MainFrame(wx.Frame):
                 ),
                 (
                     None,
+                    _("System specs"),
+                    _("Show system specs found - helpful for bug reports or questions"),
+                    self.SysInf_Show,
+                    None,
+                ),
+                (
+                    None,
                     _("Source code"),
                     _("View the app source code online."),
                     lambda evt: webbrowser.open_new_tab(
-                        "https://github.com/lebao3105/texteditor"
+                        "https://github.com/lebao3105/texteditor/tree/wip/wx"
                     ),
                     None,
                 ),
@@ -261,20 +283,28 @@ class MainFrame(wx.Frame):
     Event callbacks
     """
 
-    def OpenDir(self, evt):
-        ask = wx.DirDialog(
-            self,
-            _("Select a folder to start"),
-        )
-        if ask.ShowModal() == wx.ID_OK:
-            selected_dir = ask.GetPath()
+    def OpenDir(self, evt, path: str = ""):
+        if not path:
+            ask = wx.DirDialog(
+                self,
+                _("Select a folder to start"),
+            )
+            if ask.ShowModal() == wx.ID_OK:
+                selected_dir = ask.GetPath()
+            else:
+                return
         else:
-            return
+            selected_dir = path
 
-        dirs = wx.GenericDirCtrl(self.sidebar.tabs, -1, selected_dir)
+        dirs = wx.GenericDirCtrl(
+            self.sidebar.tabs,
+            -1,
+            selected_dir,
+            style=wx.DIRCTRL_3D_INTERNAL | wx.DIRCTRL_EDIT_LABELS,
+        )
         dirs.Bind(
             wx.EVT_DIRCTRL_FILEACTIVATED,
-            lambda evt: self.notebook.fileops.Load(dirs.GetFilePath()),
+            lambda evt: self.notebook.fileops.OpenFile(dirs.GetFilePath()),
         )
         dirs.SetDefaultPath(selected_dir)
         dirs.Show()
@@ -284,66 +314,61 @@ class MainFrame(wx.Frame):
     def ShowCfgs(self, evt):
         import os
 
-        dirs = wx.GenericDirCtrl(
-            self.sidebar.tabs, -1, os.path.expanduser("~/.config/textworker"),
-            style=wx.DIRCTRL_DEFAULT_STYLE | wx.DIRCTRL_EDIT_LABELS
-        )
-        dirs.Bind(
-            wx.EVT_DIRCTRL_FILEACTIVATED,
-            lambda evt: self.notebook.fileops.LoadFn(dirs.GetFilePath()),
-        )
-        dirs.Show()
-        self.sidebar.RegisterTab(os.path.expanduser("~/.config/textworker"), dirs)
-        self.sidebar.Show()
+        return self.OpenDir(None, os.path.expanduser("~/.config/textworker"))
 
     def ResetCfgs(self, evt):
         ask = wx.MessageDialog(
-            None,
+            self,
             _(
-                "Are you sure want to reset all configurations? There is no way to BACK! The app will close after the operation."
-            ),
-            _(
-                "Are you sure want to reset all configurations? There is no way to BACK! The app will close after the operation."
+                "Are you sure want to reset all configurations? There is no way BACK! The app will close after the operation."
             ),
             _("Confirm configs reset"),
             wx.YES_NO | wx.ICON_WARNING,
         ).ShowModal()
         if ask == wx.ID_YES:
-            return ResetEveryConfig()
+            ResetEveryConfig()
+            self.SetMessageText(_("Done resetting all configs."))
 
     def ShowLogWindow(self, evt):
-        return self.logwindow.Show()
+        if not self.logwindow.IsActive():
+            return self.logwindow.SetFocus()
+        else:
+            return self.logwindow.Show()
 
     def ShowAbout(self, evt):
-        wxver = wx.__version__
-        pyver = platform.python_version()
-        ostype = platform.system() if platform.system() != "" or None else _("Unknown")
-        msg = _(
-            """
-        A simple, cross-platform text editor.
-        Branch: {}
-        wxPython version: {}
-        Python verison: {}
-        OS type: {}
-        """.format(
-                "DEV" if is_development_version_from_project("textworker") == True else "STABLE",
-                wxver,
-                pyver,
-                ostype,
-            )
-        )
         aboutdlg = AboutDialog()
-        aboutdlg.Parent = self
         aboutdlg.SetName("TextWorker")
-        aboutdlg.SetVersion(textworker.__version__)
-        aboutdlg.SetIcon(wx.Icon(textworker.icon))
-        aboutdlg.SetDescription(msg)
+        aboutdlg.SetVersion(appver)
+        aboutdlg.SetIcon(wx.Icon(icon))
+        aboutdlg.SetDescription(_("A simplified text editor."))
         aboutdlg.SetCopyright("(C) 2022-2023 Le Bao Nguyen")
         aboutdlg.SetWebSite("https://github.com/lebao3105/texteditor")
         aboutdlg.SetLicense("GPL3_short")
         aboutdlg.infos.AddDeveloper("Le Bao Nguyen")
         aboutdlg.infos.AddDocWriter("Le Bao Nguyen")
         return aboutdlg.ShowBox()
+
+    def SysInf_Show(self, evt):
+        ostype = platform.system() if platform.system() != "" or None else _("Unknown")
+        msg = _(
+            f"""
+        Textworker version {appver}
+        Branch: {"DEV" if is_development_version(appver) else "STABLE"}
+        libtextworker verison {libver}
+        wxPython version: {wx.__version__}
+        Python verison: {platform.python_version()}
+        OS type: {ostype}
+        OS version {platform.version()}
+        Machine architecture: {platform.machine()}
+        """
+        )
+        newdlg = wx.Dialog(self, title=_("System specs"))
+        wx.StaticText(newdlg, label=msg)
+        newdlg.ShowModal()
+
+    def OnClose(self, evt):
+        evt.Skip()
+        wx.GetApp().ExitMainLoop()
 
     """
     Still event callbacks, but "lambda evt" does not work
@@ -354,7 +379,7 @@ class MainFrame(wx.Frame):
         return self.notebook.fileops.AskToOpen()
 
     def SaveFile(self, evt) -> bool:
-        return self.notebook.fileops.Save(
+        return self.notebook.fileops.SaveFile(
             self.notebook.GetPageText(self.notebook.GetSelection())
         )
 
