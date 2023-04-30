@@ -2,11 +2,10 @@ import wx
 import wx.aui
 import wx.stc
 
-from .backend import file_operations
-from .extensions import autosave
-from .generic import global_settings
-
 from libtextworker.interface.wx.editor import StyledTextControl
+
+from . import file_operations
+from .generic import _editor_config_load, global_settings
 
 
 class Tabber(wx.aui.AuiNotebook):
@@ -20,10 +19,10 @@ class Tabber(wx.aui.AuiNotebook):
         # AUI_NB_CLOSE_ON_ALL_TABS : Close button on all tabs (disabled by default)
         # AUI_NB_MIDDLE_CLICK_CLOSE : Use middle click to close tabs
         # AUI_NB_TAB_MOVE : Move tab
-        movetabs = global_settings.get_setting("interface.tabs", "move_tabs")
-        middle_close = global_settings.get_setting("interface.tabs", "middle_close")
+        movetabs = global_settings.get_setting("editor.tabs", "move_tabs")
+        middle_close = global_settings.get_setting("editor.tabs", "middle_close")
         close_on_all_tabs = global_settings.get_setting(
-            "interface.tabs", "close_on_no_tab"
+            "editor.tabs", "close_on_no_tab"
         )
 
         if movetabs == True:
@@ -45,47 +44,31 @@ class Tabber(wx.aui.AuiNotebook):
 
         self.AddTab()
 
-        self.fileops = file_operations.MultiEditorsSupport(
+        self.fileops = file_operations.FileOperations(
             self,
             {
                 "AddTab": self.AddTab,
-                "Editor": self.text_editor,
                 "IndependentAutoSave": True,
+                "SetTabName": True,
+                "SetWindowTitle": True,
             },
         )
-        self.fileops.AddTab = getattr(self, "AddTab")
-
-        self.autosv = autosave.AutoSave(self.Parent)
-        self.autosv.Function = self.fileops.Save
-        self.autosv.Function_args = self.GetPageText(self.GetSelection())
 
         self.Bind(wx.aui.EVT_AUINOTEBOOK_PAGE_CHANGED, self.OnPageChanged)
         self.Bind(wx.aui.EVT_AUINOTEBOOK_PAGE_CLOSED, self.OnPageClose)
 
-    def AddTab(self, evt=None, tabname=None):
-        """
-        Add a new tab.
-        If tabname is not specified, use texteditor's new tab label.
-        """
-
+    def AddTab(self, evt=None, tabname: str = _("New file")):
         self.text_editor = StyledTextControl(
-            parent=self, style=wx.TE_MULTILINE | wx.EXPAND
+            parent=self, style=wx.TE_MULTILINE | wx.EXPAND | wx.HSCROLL | wx.VSCROLL
         )
+        self.text_editor.EditorInit(_editor_config_load)
         self.text_editor.SetZoom(3)
         self.text_editor.FileLoaded: str = ""
 
-        if tabname is None:
-            _tabname = _("New file")
-        else:
-            _tabname = tabname
-
-        self.AddPage(self.text_editor, _tabname, select=True)
-        self.SetTitle(_tabname)
+        self.AddPage(self.text_editor, tabname, select=True)
+        self.SetTitle(tabname)
 
     def SetTitle(self, title=""):
-        """
-        Set the title of the parent widget, if possible.
-        """
         if hasattr(self.Parent, "SetTitle"):
             return self.Parent.SetTitle(title)
 
@@ -93,7 +76,6 @@ class Tabber(wx.aui.AuiNotebook):
         tabname = self.GetPageText(evt.GetSelection())
         if self.setstatus is True:
             self.Parent.SetStatusText(tabname)
-        self.SetTitle(tabname)
         self.SetTitle(tabname)
 
     def OnPageClose(self, evt):
@@ -103,7 +85,7 @@ class Tabber(wx.aui.AuiNotebook):
             self.Show(True)
 
         if self.GetPageCount() == 0:
-            if global_settings.get_setting("fun", "empty_page_on_last_tab_close") in [
+            if global_settings.get_setting("editor.tabs", "close_on_no_tab") in [
                 True,
                 "yes",
             ]:

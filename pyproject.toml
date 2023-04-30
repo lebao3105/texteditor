@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "textworker"
-version = "1.6a2"
+version = "1.6a3"
 requires-python = ">=3.8"
 description = "A simple, cross-platform text editor."
 readme = "README.md"
@@ -20,7 +20,7 @@ classifiers = [
 dependencies = [
     "configparser",
     "darkdetect",
-    "libtextworker @ git+https://github.com/lebao3105/libtextworker.git",
+    "libtextworker @ ./libtextworker",
     "packaging",
     "pillow",
     "wxpython",
@@ -28,6 +28,11 @@ dependencies = [
 
 [tool.setuptools]
 package-dir = {"textworker" = "textworker"}
+
+[tool.black]
+line-length = 88
+target-version = ['py310']
+include = '\.pyi?$'
 
 [project.gui-scripts]
 textworker = "textworker.main:start_app"

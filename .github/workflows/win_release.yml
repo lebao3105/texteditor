@@ -1,4 +1,4 @@
-name: Build portable builds for Windows (Dev build)
+name: Build portable builds for Windows (Release)
 
 # Controls when the workflow will run
 on:
@@ -32,7 +32,7 @@ jobs:
       - name: Build
         run: |
           py builder.py maketrans
-          pyinstaller --noconfirm --onedir --windowed --icon "textworker/icons/textworker.Devel.png" --name "Textworker" --clean --add-data "textworker/icons/textworker.Devel.png;textworker/icons" --add-data "textworker/icons/textworker.png;textworker/icons"  --add-data "po;textworker/po/" "textworker/__main__.py"
+          pyinstaller --noconfirm --onedir --windowed --icon "textworker/icons/textworker.png" --name "Textworker" --clean --add-data "textworker/icons/textworker.Devel.png;textworker/icons" --add-data "textworker/icons/textworker.png;textworker/icons"  --add-data "po;textworker/po/" "textworker/__main__.py"
       
       - name: Upload artifacts
         uses: actions/upload-artifact@v3

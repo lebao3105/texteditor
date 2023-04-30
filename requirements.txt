@@ -1,5 +1,6 @@
 configparser
 darkdetect
+-e ./libtextworker
 pillow
 packaging
 wxpython

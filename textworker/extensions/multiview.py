@@ -1,5 +1,4 @@
 import wx
-
 from ..generic import global_settings
 
 
@@ -8,8 +7,8 @@ class MultiViewer(wx.Frame):
         kw["style"] = kw.get("style", 0) | wx.DEFAULT_FRAME_STYLE
         super().__init__(*args, **kw)
 
-        location = global_settings.cfg.getkey(
-            "extensions.multiview", "notebook_location", needed=True
+        location = global_settings.getkey(
+            "extensions.textwkr.multiview", "notebook_location", needed=True
         )
         nbside = getattr(wx, "NB_{}".format(location.upper()))
 
@@ -32,10 +31,10 @@ class MultiViewer(wx.Frame):
 
     def _RightClickTab(self, evt):
         menu = wx.Menu()
-        # Note: I don't know what else to add to here:\
+        # P/s: I don't know what else to add here:\
         for label, handler in [
             (
-                _("Close the current (open) tab"),
+                _("Close the current tab"),
                 lambda evt: self.UnregisterTab(self.tabs.GetCurrentPage()),
             ),
             (

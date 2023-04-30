@@ -1,7 +1,8 @@
 ## Welcome to my wxPython port of texteditor (now it's textworker)!
 
 - 1.6:
-    - Fully port the app to use libtextworker (I think it's done)
+    - Fully port the app to use libtextworker (it's done)
     - Fix file_operations (come on...)
     - Setup Window on first launch/update (needs some fixes to be done)
     - Side bar & status bar like VSCode (yeah right)
+    - Use guesslang to "guess" language of the text

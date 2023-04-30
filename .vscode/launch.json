@@ -2,25 +2,6 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Run texteditor only",
-            "type": "python",
-            "request": "launch",
-            "module": "texteditor",
-            "console": "internalConsole",
-            "justMyCode": true
-        },
-        {
-            "name": "Open README.md (tk)",
-            "type": "python",
-            "request": "launch",
-            "module": "texteditor",
-            "console": "internalConsole",
-            "args": [
-                "README.md"
-            ],
-            "justMyCode": true
-        },
-        {
             "name": "Run textworker only",
             "type": "python",
             "request": "launch",
@@ -29,14 +10,20 @@
             "justMyCode": true
         },
         {
-            "name": "Open README.md (tk)",
+            "name": "Open README.md",
             "type": "python",
             "request": "launch",
             "module": "textworker",
             "console": "internalConsole",
-            "args": [
-                "README.md"
-            ],
+            "args": ["README.md"],
+            "justMyCode": true
+        },
+        {
+            "name": "Test parts of the program (pytest)",
+            "type": "python",
+            "request": "launch",
+            "module": "pytest",
+            "args": ["tests/"],
             "justMyCode": true
         }
     ]

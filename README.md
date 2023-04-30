@@ -18,7 +18,4 @@ Stuffs you can do with this editor:
     <img src="textworker/icons/textworker.Devel.png">
 </div>
 
-## Setup
-Read the instruction on [BuildAndRun.md](BuildAndRun.md).
-
 See all app releases [here.](https://github.com/lebao3105/texteditor/releases) You can get wheels from [GitHub actions](https://github.com/lebao3105/texteditor/actions).

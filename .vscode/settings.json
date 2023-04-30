@@ -4,5 +4,5 @@
     "scm.alwaysShowActions": true,
     "python.analysis.extraPaths": [
         "./libtextworker"
-    ],
+    ]
 }

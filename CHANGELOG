@@ -1,0 +1,26 @@
+This is the changelog file for textworker in wip/wx branch.
+
+### 1.6a2 (Git tag 1.6a2 - last commit 467a669)
+This is a complete build, at least it's usable.
+* Fixes:
+- Application auto color (from libtextworker)
+- New configs under interface section
+- Menu items command
+* New/Updated:
+- Updated libtextworker to 0.1.2
+- Turn on/off tab guides
+
+### 1.6a1 (Git tag 1.6.1 - wrong tag) (last commit 51ef790)
+* New:
+- Setup window
+- Class to make the menu bar
+- global_settings variable for the entire application
+* Updated:
+- Moved LogsWindow to textworker.mainwindow
+
+### 1.6a0 (Git tag 1.6 - wrong tag again) (last commit e0dd554)
+The first build of texteditor/textworker with wxPython!
+* New:
+- A version checking system (also available in 1.4+)
+- Lines number margin is now available
+- Folder view! See it in action: https://user-images.githubusercontent.com/77564176/212464179-6138e099-19e9-4cc7-a86b-89f5c253d9a4.png
