@@ -28,13 +28,15 @@ jobs:
           pip3 install attrdict3 requests build wheel
           pip3 install git+https://github.com/wxWidgets/Phoenix
           pip3 install -r requirements.txt
+        working-directory: textworker
       
       - name: Build
         run: |
           python3 -m build
+        working-directory: textworker
       
       - name: Upload artifacts
         uses: actions/upload-artifact@v3
         with:
           name: TextworkerWheel
-          path: dist/
+          path: textworker/dist/

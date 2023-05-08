@@ -31,10 +31,11 @@ jobs:
       
       - name: Build
         run: |
-          pyinstaller --noconfirm --onedir --windowed --icon "textworker/icons/textworker.Devel.png" --name "Textworker" --clean --add-data "textworker/icons/textworker.Devel.png;textworker/icons" --add-data "textworker/icons/textworker.png;textworker/icons"  --add-data "po;po/" "textworker/__main__.py"
+          pyinstaller --noconfirm --onedir --windowed --name "Textworker" --clean --add-data "../icons/textworker.Devel.png;textworker/icons" --add-data "../icons/textworker.png;textworker/icons"  --add-data "po;po/" "textworker/__main__.py"
+        working-directory: textworker
       
       - name: Upload artifacts
         uses: actions/upload-artifact@v3
         with:
           name: TextworkerPortable_Windows
-          path: output/
+          path: textworker/output/
