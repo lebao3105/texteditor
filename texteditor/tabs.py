@@ -1,6 +1,6 @@
-from tkinter import Frame, Menu, END
+from tkinter import Frame, END
 from tkinter.messagebox import askyesnocancel
-from tkinter.ttk import Notebook, Scrollbar
+from tkinter.ttk import Notebook
 from texteditor.backend import constants, file_operations
 from libtextworker.interface.tk.editor import TextWidget
 from libtextworker.interface.tk.miscs import CreateMenu
@@ -38,8 +38,11 @@ class TabsViewer(Notebook):
                 (
                     _("New tab"),
                     "Ctrl+N",
-                    lambda: self.add_tab(idx="default"),
+                    lambda evt: self.add_tab(idx="default"),
                     None,
+                    None,
+                    None,
+                    "normal",
                     None,
                 ),
                 (
@@ -48,6 +51,9 @@ class TabsViewer(Notebook):
                     lambda: self.close_tab(self),
                     None,
                     None,
+                    None,
+                    "normal",
+                    None,
                 ),
                 (
                     _("Duplicate the current opening tab"),
@@ -55,8 +61,20 @@ class TabsViewer(Notebook):
                     self.duplicate_tab,
                     None,
                     None,
+                    None,
+                    "normal",
+                    None,
                 ),
-                (_("Reopen the file"), "", lambda: self.reopenfile(self), None, None),
+                (
+                    _("Reopen the file"),
+                    "",
+                    lambda: self.reopenfile(self),
+                    None,
+                    None,
+                    None,
+                    "normal",
+                    None,
+                ),
             ]
         )
         self.bind(

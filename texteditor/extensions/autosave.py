@@ -3,7 +3,7 @@ from tkinter import BooleanVar, Label, StringVar, Toplevel
 from tkinter.ttk import Button, Checkbutton, Combobox
 
 import logging
-from .generic import global_settings
+from .generic import global_settings, clrcall
 
 # Minutes to seconds
 MIN_05 = 30  # 30 secs
@@ -29,10 +29,10 @@ class AutoSave:
     """
 
     forceEnable: bool = False
-    useTime: float = float(global_settings.call("editor", "autosave_time"))
+    useTime: float = float(global_settings.call("editor.autosave", "time"))
 
     def __init__(self, master, savefile_fn):
-        self.autosave = global_settings.call("editor", "autosave")
+        self.autosave = global_settings.call("editor.autosave", "enable")
         self.__check()
         self.parent = master
         self.savecommand = savefile_fn
@@ -92,7 +92,7 @@ class AutoSave:
         cancelbtn.pack(padx=40)
         label2.pack(fill="x")
 
-        global_settings.clrmgr.configure(askwin, True)
+        clrcall.configure(askwin, True)
 
     def __converter(self, time: float):
         switch = {
@@ -121,7 +121,7 @@ class AutoSave:
             self.config(timetouse)
 
         if st is True:
-            global_settings.set("editor", "autosave_time", str(self.useTime))
+            global_settings.set_and_update("editor.autosave", "time", str(self.useTime))
         self.askwin.destroy()
         self.start()
 

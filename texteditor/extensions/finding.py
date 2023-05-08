@@ -1,6 +1,6 @@
 from tkinter import END, StringVar
 from tkinter.ttk import Button, Entry, Frame, Label
-from .generic import global_settings
+from .generic import clrcall
 
 
 class Finder(Frame):
@@ -15,7 +15,7 @@ class Finder(Frame):
         self.placewidgets()
         self.pack()
         parent.findbox = self
-        global_settings.clrmgr.configure(self, True)
+        clrcall.configure(self, True)
 
     def placewidgets(self):
         # Title first

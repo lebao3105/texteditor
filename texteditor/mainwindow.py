@@ -11,6 +11,7 @@ from .extensions import autosave, cmd, finding, generic
 from .views import about
 
 global_settings = generic.global_settings
+clrcall = generic.clrcall
 logger = logging.getLogger("textworker")
 
 
@@ -51,7 +52,7 @@ class MainWindow(Tk):
 
         # Auto change color
         self.autocolor = BooleanVar()
-        if global_settings.clrmgr.getkey("color", "autocolor") == "yes":
+        if clrcall.getkey("color", "autocolor") == "yes":
             self.autocolor.set(True)
         else:
             self.autocolor.set(False)
@@ -85,13 +86,13 @@ class MainWindow(Tk):
 
         ## Add "code-only" menu items
         addeditcmd = self.menu2.add_command
-        if global_settings.call("editor", "autosave") == "yes":
+        if global_settings.call("editor.autosave", "enable") == "yes":
             addeditcmd(
                 label=_("Autosave"),
                 command=lambda: self.autosv.openpopup(),
             )
 
-        if global_settings.call("cmd", "enable") == "yes":
+        if global_settings.call("extensions.cmd", "enable") == "yes":
             self.menu2.add_separator()
             addeditcmd(
                 label=_("Open System Shell"),
@@ -131,7 +132,7 @@ class MainWindow(Tk):
     def add_event(self):
         bindcfg = self.bind
         bindcfg("<Control-n>", lambda event: self.add_tab(self))
-        if global_settings.call("cmd", "enable") == "yes":
+        if global_settings.call("extensions.cmd", "enable") == "yes":
             bindcfg("<Control-t>", lambda event: cmd.showcmd(self))
         bindcfg("<Control-f>", lambda event: finding.Finder(self, "find"))
         bindcfg("<Control-r>", lambda event: finding.Finder(self, ""))
@@ -178,11 +179,11 @@ class MainWindow(Tk):
         return about.AboutDialog(self).run()
 
     def get_color(self):
-        if global_settings.clrmgr.getkey("color", "background") == "dark":
+        if clrcall.getkey("color", "background") == "dark":
             self.lb = "light"
         else:
             self.lb = "dark"
-        global_settings.clrmgr.configure(self, True)
+        clrcall.configure(self, True)
 
     def change_color(self, event=None):
         if self.autocolor.get() == True:
@@ -198,8 +199,8 @@ class MainWindow(Tk):
                 self.autocolor_mode()
             else:
                 return
-        global_settings.clrmgr.set("color", "background", self.lb)
-        global_settings.clrmgr.update()
+        clrcall.set("color", "background", self.lb)
+        clrcall.update()
         self.get_color()
 
     def add_tab(self, event=None):
@@ -208,14 +209,14 @@ class MainWindow(Tk):
     def autocolor_mode(self, event=None, permanent: bool = False):
         toggle = self.autocolor.get()
         if toggle == True:
-            del global_settings.clrmgr.threads
+            del clrcall.threads
             if permanent:
-                global_settings.clrmgr.set("color", "autocolor", "no")
-                global_settings.clrmgr.update()
+                clrcall.set("color", "autocolor", "no")
+                clrcall.update()
         elif toggle == False:
             print("turned 2")
-            global_settings.clrmgr.threads = {}
+            clrcall.threads = {}
             if permanent:
-                global_settings.clrmgr.set("color", "autocolor", "yes")
-                global_settings.clrmgr.update()
+                clrcall.set("color", "autocolor", "yes")
+                clrcall.update()
         self.get_color()
