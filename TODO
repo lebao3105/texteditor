@@ -20,7 +20,6 @@
 * Folder explorer!
 
 Other things:
-* Implement a debian package?
 * Be able to launch this project from terminal without using ```py -m``` after installed using pip (Done!)
 * Change configurations (It's OK now:))
-* Restructure the application with a separate code api (will start from 1.4+) - we will have a lot of new things!
+* Restructure the application with a separate code api (will start from 1.4+)
