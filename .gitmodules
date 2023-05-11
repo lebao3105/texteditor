@@ -1,4 +1,0 @@
-[submodule "textworker"]
-	path = textworker
-	url = https://github.com/lebao3105/texteditor
-	branch = wip/wx
