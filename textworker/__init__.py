@@ -24,9 +24,8 @@ test_import("wx")
 __version__ = "1.6a3"
 
 
-# Setup translation
 LOCALE_DIR = currdir / "po"
-ICON_DIR = currdir / "icons"
+ICON_DIR = currdir / "data" / "icons"
 
 if not os.path.isdir(LOCALE_DIR):
     LOCALE_DIR = currdir / ".." / "po"
@@ -36,12 +35,17 @@ gettext.bindtextdomain("textworker", LOCALE_DIR)
 gettext.textdomain("textworker")
 gettext.install("textworker")
 
+if not os.path.isdir(ICON_DIR):
+    ICON_DIR = ""
 
-# Icon
 if is_development_version(__version__) == True:
-    icon = CraftItems(ICON_DIR, "textworker.Devel.png")
+    icon = CraftItems(ICON_DIR, "me.lebao3105.textworker.Devel.svg")
 else:
-    icon = CraftItems(ICON_DIR, "textworker.png")
+    icon = CraftItems(ICON_DIR, "me.lebao3105.textworker.svg")
 
 
 del LOCALE_DIR, ICON_DIR
+
+if not os.path.isdir(currdir / "data"):
+    raise Exception("git submodules update is needed! Exiting.")
+    exit(-1)

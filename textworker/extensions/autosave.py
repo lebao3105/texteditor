@@ -19,7 +19,7 @@ enabled = global_settings.get_setting(
 )
 if not enabled:
     enabled = global_settings.get_setting(
-        "extensions.autosave", "enable", noraiseexp=True, resotre=False
+        "extensions.autosave", "enable", noraiseexp=True, restore=False
     )
 
 time = global_settings.get_setting(

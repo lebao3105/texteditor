@@ -1,3 +1,7 @@
 [submodule "libtextworker"]
 	path = libtextworker
 	url = https://github.com/lebao3105/libtextworker.git
+[submodule "textworker/data"]
+	path = textworker/data
+	url = https://github.com/lebao3105/texteditor.git
+	branch = data

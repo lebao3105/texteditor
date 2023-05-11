@@ -29,33 +29,8 @@ configpath = os.path.expanduser(
 
 ## Early work.
 ## Because there is no sub-sections support here, so...
-## Maybe switch to toml? Or not?
-cfg = """
-[config-paths]
-    [config-paths.ui]
-        theme = default
-        path = unchanged
-    [config-paths.editor]
-        name = default
-        path = unchanged
-
-[editor]
-    [editor.autosave]
-        enable = yes
-        time = 120
-    [editor.tabs]
-        move_tabs = yes
-        middle_close = yes
-        close_on_no_tab = no ; Close the program on last tab close - will override fun->allow_restore_notebook
-
-
-[extensions]
-    [extensions.textwkr.multiview]
-        notebook_location = bottom
-
-[fun]
-allow_restore_notebook = yes
-"""
+## Maybe switching to toml? Or not?
+cfg = open(CraftItems(GetCurrentDir(__file__), "data", "appconfig.ini")).read()
 
 # App settings
 global_settings = get_config.GetConfig(cfg, file=configpath)
@@ -64,7 +39,7 @@ global_settings.get_setting = global_settings.getkey
 
 # Move old configs, if any
 # (Compare with versions =< 1.6a2)
-moves = json.loads(open(CraftItems(GetCurrentDir(__file__), "merges.json"), "r").read())
+moves = json.loads(open(CraftItems(GetCurrentDir(__file__), "merges.json")).read())
 
 global_settings.move(moves)
 
