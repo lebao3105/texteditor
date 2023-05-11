@@ -29,8 +29,12 @@ if not int(time):
     time = global_settings.get_setting(
         "extensions.autosave", "time", noraiseexp=True, restore=False
     )
+    time = global_settings.get_setting(
+        "extensions.autosave", "time", noraiseexp=True, restore=False
+    )
     if not int(time):
         time = MIN_05
+
 
 
 class AutoSaveConfig(XMLBuilder):
@@ -100,3 +104,6 @@ class AutoSave:
 
     def Start(self, time: str = time):
         return wx.CallAfter(int(time) * 1000, self.Function, **self.Function_args)
+
+    def Config(self, evt=None):
+        return self.cfg.ConfigWindow()
