@@ -1,4 +1,8 @@
 recursive-include textworker/po *.mo
-recursive-include textworker *.png
-recursive-include textworker *.py
-recursive-include textworker *.xrc
+recursive-include textworker/ui *.xrc
+
+include textworker/images/configs.png
+include textworker/images/logs.png
+include textworker/images/terminal.png
+
+include textworker/data/icons

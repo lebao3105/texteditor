@@ -2,20 +2,15 @@ import wx
 from ..generic import global_settings
 
 
-class MultiViewer(wx.Frame):
-    def __init__(self, *args, **kw):
-        kw["style"] = kw.get("style", 0) | wx.DEFAULT_FRAME_STYLE
-        super().__init__(*args, **kw)
-
+class MultiViewer:
+    def __init__(self, parent):
         location = global_settings.getkey(
             "extensions.textwkr.multiview", "notebook_location", needed=True
         )
         nbside = getattr(wx, "NB_{}".format(location.upper()))
 
-        self.tabs = wx.Notebook(self, -1, style=nbside)
+        self.tabs = wx.Notebook(parent, -1, style=nbside)
         self.tabs.Bind(wx.EVT_RIGHT_DOWN, self._RightClickTab)
-
-        self.Bind(wx.EVT_CLOSE, self.OnClose)
 
     def RegisterTab(self, tabname: str, content) -> bool:
         """
@@ -47,6 +42,3 @@ class MultiViewer(wx.Frame):
             menu.Bind(wx.EVT_MENU, handler, item)
         self.tabs.PopupMenu(menu, evt.GetPosition())
         menu.Destroy()
-
-    def OnClose(self, evt):
-        return self.Hide()

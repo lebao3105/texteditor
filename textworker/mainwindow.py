@@ -6,15 +6,22 @@ import wx
 import wx.adv
 import wx.stc
 
+try:
+    from cairosvg import svg2png
+except ImportError:
+    CAIRO_AVAILABLE = False
+else:
+    CAIRO_AVAILABLE = True
+
 from libtextworker import __version__ as libver
-from libtextworker.general import ResetEveryConfig
+from libtextworker.general import GetCurrentDir, ResetEveryConfig
 from libtextworker.interface.wx.about import AboutDialog
 from libtextworker.interface.wx.miscs import CreateMenu
 from libtextworker.versioning import *
 from textworker import __version__ as appver
 from textworker import icon
 
-from .extensions import autosave, multiview
+from .extensions import autosave, multiview, gitsp
 from .generic import SettingsWindow, global_settings
 from .tabs import Tabber
 
@@ -30,57 +37,48 @@ logger = logging.getLogger("textworker")
 
 
 class MainFrame(wx.Frame):
+
     def __init__(self, *args, **kwds):
-        kwds["style"] = kwds.get("style", 0) | wx.DEFAULT_FRAME_STYLE
         wx.Frame.__init__(self, *args, **kwds)
+        self.SetSize((860, 640))
 
-        self.SetSize((820, 685))
-        self.SetIcon(wx.Icon(icon))
+        if CAIRO_AVAILABLE:
+            svg2png(open(icon, 'r').read(), write_to="./icon.png")
+            self.SetIcon(wx.Icon("./icon.png"))
 
-        self.SetupStatusBar()
-        self.SetupEditor()
-        self.SetupLogger()
+        mainboxer = wx.BoxSizer(wx.VERTICAL)
+        self.SetSizer(mainboxer)
 
-        self.sidebar = multiview.MultiViewer(self)
+        editorbox = wx.SplitterWindow(self)
+
+        self.multiviewer = multiview.MultiViewer(editorbox)
+        self.multiviewer.tabs.Show()
+        self.multiviewer.RegisterTab(
+            "Explorer",
+            wx.GenericDirCtrl(
+                self.multiviewer.tabs, dir="C:\\"
+            )
+        )
+        self.gitsp = gitsp.GitSupportGUI(self.multiviewer.tabs)
+        self.multiviewer.RegisterTab(
+            "Git",
+            self.gitsp.Panel
+        )
+
+        self.notebook = Tabber(editorbox)
+        self.notebook.Show()
+
+        editorbox.SplitVertically(self.multiviewer.tabs, self.notebook, 246)
+
+        mainboxer.Add(editorbox, 1, wx.GROW, 5)
+
         self.wiz = SettingsWindow(self)
         self.autosv_cfg = autosave.AutoSaveConfig(self)
 
+        # self.SetUpLogger()
         self.PlaceMenu()
+
         self.Layout()
-
-        self.Bind(wx.EVT_CLOSE, self.OnClose)
-
-    """
-    Setup basic components.
-    """
-
-    def SetupLogger(self):
-        self.logwindow = wx.Frame(self, title=_("Logs"))
-        self.logwindow.logs = wx.TextCtrl(
-            self.logwindow,
-            style=wx.TE_MULTILINE | wx.TE_READONLY | wx.HSCROLL | wx.VSCROLL,
-        )
-        self.logwindow.Layout()
-        self.logwindow.Bind(wx.EVT_CLOSE, lambda evt: self.logwindow.Hide())
-
-    def SetupEditor(self):
-        self.notebook = Tabber(self, style=wx.EXPAND)
-        tabname = self.notebook.GetPageText(self.notebook.GetSelection())
-        self.SetTitle(tabname)
-        self.SetStatusText(tabname)
-
-    def SetupStatusBar(self):
-        self.CreateStatusBar(2)
-        righttext_width = self.StatusBar.Size[0] - 50
-        self.StatusBar.SetStatusWidths([righttext_width, -1])
-
-        self.messages_text = wx.StaticText(
-            self.StatusBar, wx.ID_ANY, label=_("Messages")
-        )
-        self.messages_text.SetPosition((righttext_width + 2, 2))
-        self.messages_text.Bind(wx.EVT_LEFT_DOWN, self.ShowLogWindow)
-
-        del righttext_width
 
     def PlaceMenu(self):
         self.menubar = wx.MenuBar()
@@ -297,7 +295,7 @@ class MainFrame(wx.Frame):
             selected_dir = path
 
         dirs = wx.GenericDirCtrl(
-            self.sidebar.tabs,
+            self.multiviewer.tabs,
             -1,
             selected_dir,
             style=wx.DIRCTRL_3D_INTERNAL | wx.DIRCTRL_EDIT_LABELS,
@@ -308,8 +306,7 @@ class MainFrame(wx.Frame):
         )
         dirs.SetDefaultPath(selected_dir)
         dirs.Show()
-        self.sidebar.RegisterTab(selected_dir, dirs)
-        self.sidebar.Show()
+        self.multiviewer.RegisterTab(selected_dir, dirs)
 
     def ShowCfgs(self, evt):
         import os
@@ -327,7 +324,7 @@ class MainFrame(wx.Frame):
         ).ShowModal()
         if ask == wx.ID_YES:
             ResetEveryConfig()
-            self.SetMessageText(_("Done resetting all configs."))
+            # self.SetMessageText(_("Done resetting all configs."))
 
     def ShowLogWindow(self, evt):
         if not self.logwindow.IsActive():
@@ -339,7 +336,8 @@ class MainFrame(wx.Frame):
         aboutdlg = AboutDialog()
         aboutdlg.SetName("TextWorker")
         aboutdlg.SetVersion(appver)
-        aboutdlg.SetIcon(wx.Icon(icon))
+        if CAIRO_AVAILABLE:
+            aboutdlg.SetIcon(wx.Icon("./icon.png"))
         aboutdlg.SetDescription(_("A simplified text editor."))
         aboutdlg.SetCopyright("(C) 2022-2023 Le Bao Nguyen")
         aboutdlg.SetWebSite("https://github.com/lebao3105/texteditor")

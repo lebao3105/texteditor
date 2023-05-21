@@ -1,38 +1,23 @@
-[build-system]
-requires = ["setuptools"]
-build-backend = "setuptools.build_meta"
-
-[project]
-name = "textworker"
-version = "1.6a3"
-requires-python = ">=3.8"
-description = "A simple, cross-platform text editor."
-readme = "README.md"
-classifiers = [
-    "Intended Audience :: End Users/Desktop",
-    "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
-    "Operating System :: MacOS :: MacOS X",
-    "Operating System :: Microsoft :: Windows",
-    "Operating System :: POSIX",
-    "Programming Language :: Python",
-    "Topic :: Text Editors",
-]
-dependencies = [
-    "configparser",
-    "darkdetect",
-    "libtextworker @ ./libtextworker",
-    "packaging",
-    "pillow",
-    "wxpython",
-]
-
-[tool.setuptools]
-package-dir = {"textworker" = "textworker"}
-
 [tool.black]
 line-length = 88
 target-version = ['py310']
 include = '\.pyi?$'
 
-[project.gui-scripts]
-textworker = "textworker.main:start_app"
+[tool.poetry]
+name = "textworker"
+version = "1.6a3"
+description = "It's just a text editor"
+authors = ["lebao3105 <bao12345yocoo@gmail.com>"]
+license = "GPL_V3"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.8"
+libtextworker = {path = "libtextworker"}
+Pillow = "^9.5.0"
+wxPython = "^4.2.0"
+cairosvg = {version = "^2.7.0", optional = true}
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
