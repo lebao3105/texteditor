@@ -22,6 +22,7 @@ jobs:
 
       - name: Fetch the latest commit
         run: |
+          git switch wip/wx
           git submodule update --remote
       
       - name: Install dependencies
