@@ -20,6 +20,10 @@ jobs:
         with:
           python-version: '3.x'
       
+      - name: Get the latest commit
+        run: |
+          git submodule update --remote
+
       - name: Install dependencies
         run: |
           git switch main
