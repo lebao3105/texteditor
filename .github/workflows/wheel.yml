@@ -25,16 +25,20 @@ jobs:
           sudo add-apt-repository universe -y
           sudo apt update
           sudo apt install libgtk-3-dev libsdl2-dev -y
-          pip3 install attrdict3 requests build wheel
+          pip3 install attrdict3 requests poetry
           pip3 install git+https://github.com/wxWidgets/Phoenix
           pip3 install -r requirements.txt
         working-directory: textworker
       
       - name: Build
         run: |
-          python3 -m build
+          python3 -m poetry build
         working-directory: textworker
       
+      - name: Test install # Because textworker doesn't get its lib from Pypi, right from the repo instead (submodule)
+        run: |
+          pip3 install dist/$(ls dist/*.whl)
+
       - name: Upload artifacts
         uses: actions/upload-artifact@v3
         with:
