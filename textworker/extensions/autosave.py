@@ -36,7 +36,6 @@ if not int(time):
         time = MIN_05
 
 
-
 class AutoSaveConfig(XMLBuilder):
     timealiases = {
         "30 seconds": MIN_05,

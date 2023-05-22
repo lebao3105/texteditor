@@ -1,4 +1,5 @@
 import logging
+import os
 import platform
 import webbrowser
 
@@ -16,6 +17,7 @@ else:
 from libtextworker import __version__ as libver
 from libtextworker.general import GetCurrentDir, ResetEveryConfig
 from libtextworker.interface.wx.about import AboutDialog
+from libtextworker.interface.wx.dirctrl import PatchedDirCtrl
 from libtextworker.interface.wx.miscs import CreateMenu
 from libtextworker.versioning import *
 from textworker import __version__ as appver
@@ -37,13 +39,12 @@ logger = logging.getLogger("textworker")
 
 
 class MainFrame(wx.Frame):
-
     def __init__(self, *args, **kwds):
         wx.Frame.__init__(self, *args, **kwds)
         self.SetSize((860, 640))
 
         if CAIRO_AVAILABLE:
-            svg2png(open(icon, 'r').read(), write_to="./icon.png")
+            svg2png(open(icon, "r").read(), write_to="./icon.png")
             self.SetIcon(wx.Icon("./icon.png"))
 
         mainboxer = wx.BoxSizer(wx.VERTICAL)
@@ -51,27 +52,32 @@ class MainFrame(wx.Frame):
 
         editorbox = wx.SplitterWindow(self)
 
-        self.multiviewer = multiview.MultiViewer(editorbox)
-        self.multiviewer.tabs.Show()
-        self.multiviewer.RegisterTab(
-            "Explorer",
-            wx.GenericDirCtrl(
-                self.multiviewer.tabs, dir="C:\\"
-            )
-        )
-        self.gitsp = gitsp.GitSupportGUI(self.multiviewer.tabs)
-        self.multiviewer.RegisterTab(
-            "Git",
-            self.gitsp.Panel
-        )
-
+        # Editor
         self.notebook = Tabber(editorbox)
-        self.notebook.Show()
+
+        # Side bar
+        
+        ## Container
+        self.multiviewer = multiview.MultiViewer(editorbox)
+
+        ## Explorer
+        self.dirs = PatchedDirCtrl(self.multiviewer.tabs)
+        self.dirs.SetFolder(os.path.expanduser("~/"), False)
+        self.multiviewer.RegisterTab("Explorer", self.dirs)
+        
+        ## Git
+        self.gitsp = gitsp.GitSupportGUI(self.multiviewer.tabs)
+        self.multiviewer.RegisterTab("Git", self.gitsp.Panel)
+
+
+        ## Always show Explorer on startup
+        self.multiviewer.tabs.SetSelection(0)
 
         editorbox.SplitVertically(self.multiviewer.tabs, self.notebook, 246)
 
         mainboxer.Add(editorbox, 1, wx.GROW, 5)
 
+        # Else things
         self.wiz = SettingsWindow(self)
         self.autosv_cfg = autosave.AutoSaveConfig(self)
 
@@ -294,19 +300,13 @@ class MainFrame(wx.Frame):
         else:
             selected_dir = path
 
-        dirs = wx.GenericDirCtrl(
+        dirs = multiview.PatchedDirCtrl(
             self.multiviewer.tabs,
-            -1,
-            selected_dir,
-            style=wx.DIRCTRL_3D_INTERNAL | wx.DIRCTRL_EDIT_LABELS,
         )
-        dirs.Bind(
-            wx.EVT_DIRCTRL_FILEACTIVATED,
-            lambda evt: self.notebook.fileops.OpenFile(dirs.GetFilePath()),
-        )
-        dirs.SetDefaultPath(selected_dir)
+        dirs.SetFolder(selected_dir)
         dirs.Show()
         self.multiviewer.RegisterTab(selected_dir, dirs)
+        self.gitsp.InitFolder(selected_dir)
 
     def ShowCfgs(self, evt):
         import os
