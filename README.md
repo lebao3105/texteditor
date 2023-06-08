@@ -25,10 +25,8 @@ See all app releases [here.](https://github.com/lebao3105/texteditor/releases) Y
 Requires Python 3.8+.
 
 Additional dependencies may required:
-* Linux: ```libgtk-3-dev``` and ```libsdl2-dev```, plus C++ compiler (g++)
+* Linux: ```libgtk-3-dev``` and ```libsdl2-dev``` plus C++ compiler (g++)
 * Windows: Microsoft Visual C++
-
-> Warning: wxPython does not \*offically* support Python 3.11+ (for now) and self-made builds can be failed - don't waste your time building such a big project like wxPython.
 
 Installable directly from Pypi as the ```textworker``` package.
 
