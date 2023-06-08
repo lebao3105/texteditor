@@ -47,16 +47,12 @@ class GitSupport:
         # Repo status
 
         ## 'git status -z' output format:
-        ## M <modified files> <untracked>??
+        ## M <modified files> <untracked>?? D <deleted files>
         status = status.replace("M ", "")
 
         self.Refresh()  # Clean
 
-        for line in status.split(" "):
-            if not line.endswith("??"):
-                self.Modified += line
-            else:
-                self.New += line.removesuffix("??")
+        print(status)
 
         # Repo branch & remote
         self.Branch["current"] = str(
@@ -123,6 +119,8 @@ class GitSupportGUI(GitSupport):
         bSizer1.Add(self.Header1, 0, wx.ALL, 5)
 
         self.EditedList = wx.ListCtrl(self.Panel, style=wx.LC_AUTOARRANGE | wx.LC_ICON)
+        self.EditedList.InsertColumn(0, "File")
+        self.EditedList.InsertColumn(1, "Type", width=200)
         bSizer1.Add(self.EditedList, 0, wx.ALL, 5)
 
         self.Header2 = wx.StaticText(self.Panel, label="New files")
@@ -169,10 +167,25 @@ class GitSupportGUI(GitSupport):
 
     def InitFolder(self, path: str):
         self.currdir = path
-        if super().InitFolder(path):
-            for string in ["RepoPath", "Header1", "Header2", "EditedList", "NewList"]:
-                getattr(self, string).Show()
-            self.RepoPath.SetLabel("Git repo path: " + os.path.realpath(self.currdir))
+        super().InitFolder(path)
 
-            self.Blank.Hide()
-            self.NewRepoBtn.Hide()
+        for string in ["RepoPath", "Header1", "Header2", "EditedList", "NewList"]:
+            getattr(self, string).Show()
+
+        self.RepoPath.SetLabel("Git repo path: " + os.path.realpath(self.currdir))
+
+        print(self.Modified)
+        for file in self.Modified:
+            item = wx.ListItem()
+            item.SetId(1020)
+            item.SetText(file)
+            self.EditedList.InsertItem(item)
+
+        for file in self.New:
+            item = wx.ListItem()
+            item.SetId(1021)
+            item.SetText(file)
+            self.NewList.InsertItem(item)
+
+        self.Blank.Hide()
+        self.NewRepoBtn.Hide()

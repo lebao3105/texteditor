@@ -5,6 +5,7 @@ import webbrowser
 
 import wx
 import wx.adv
+import wx.html
 import wx.stc
 
 try:
@@ -13,6 +14,13 @@ except ImportError:
     CAIRO_AVAILABLE = False
 else:
     CAIRO_AVAILABLE = True
+
+try:
+    from markdown2 import markdown
+except ImportError:
+    MARKDOWN_AVAILABLE = False
+else:
+    MARKDOWN_AVAILABLE = True
 
 from libtextworker import __version__ as libver
 from libtextworker.general import GetCurrentDir, ResetEveryConfig
@@ -31,7 +39,7 @@ from .tabs import Tabber
 if platform.system() == "Windows":
     import ctypes
 
-    myappid = "me.lebao3105.texteditor"  # arbitrary string
+    myappid = "me.lebao3105.textworker"
     ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(myappid)
 
 cfg = global_settings
@@ -56,19 +64,18 @@ class MainFrame(wx.Frame):
         self.notebook = Tabber(editorbox)
 
         # Side bar
-        
+
         ## Container
         self.multiviewer = multiview.MultiViewer(editorbox)
 
         ## Explorer
         self.dirs = PatchedDirCtrl(self.multiviewer.tabs)
-        self.dirs.SetFolder(os.path.expanduser("~/"), False)
+        self.dirs.Bind(wx.EVT_TREE_ITEM_ACTIVATED, self.OpenFileFromTree)
         self.multiviewer.RegisterTab("Explorer", self.dirs)
-        
+
         ## Git
         self.gitsp = gitsp.GitSupportGUI(self.multiviewer.tabs)
         self.multiviewer.RegisterTab("Git", self.gitsp.Panel)
-
 
         ## Always show Explorer on startup
         self.multiviewer.tabs.SetSelection(0)
@@ -195,6 +202,13 @@ class MainFrame(wx.Frame):
                     lambda evt: self.ZoomEditor(evt, "zoomout"),
                     None,
                 ),
+                (
+                    None,
+                    _("View markdown document"),
+                    None,
+                    lambda evt: self.ShowMarkdown(evt),
+                    None,
+                ),
             ],
         )
         wrap = wx.MenuItem(viewmenu, wx.ID_ANY, _("Wrap by word"), kind=wx.ITEM_CHECK)
@@ -287,6 +301,10 @@ class MainFrame(wx.Frame):
     Event callbacks
     """
 
+    def OnClose(self, evt):
+        evt.Skip()
+        wx.GetApp().ExitMainLoop()
+
     def OpenDir(self, evt, path: str = ""):
         if not path:
             ask = wx.DirDialog(
@@ -300,18 +318,44 @@ class MainFrame(wx.Frame):
         else:
             selected_dir = path
 
-        dirs = multiview.PatchedDirCtrl(
-            self.multiviewer.tabs,
-        )
-        dirs.SetFolder(selected_dir)
-        dirs.Show()
-        self.multiviewer.RegisterTab(selected_dir, dirs)
+        self.dirs.SetFolder(selected_dir)
         self.gitsp.InitFolder(selected_dir)
+
+    def OpenFileFromTree(self, evt):
+        path = self.dirs.GetFullPath()
+        if not os.path.isfile(path):
+            return
+        self.notebook.fileops.OpenFile(path)
 
     def ShowCfgs(self, evt):
         import os
 
         return self.OpenDir(None, os.path.expanduser("~/.config/textworker"))
+
+    def ShowMarkdown(self, evt):
+        if not MARKDOWN_AVAILABLE:
+            wx.MessageBox(
+                _("You need to get markdown2 package from Pypi first!"),
+                _("Extra package required"),
+                parent=self,
+            )
+            return False
+
+        content = markdown(self.notebook.text_editor.GetText())
+        cache = os.path.expanduser("~/.textworker-markdownview")
+
+        def OnClose(evt):
+            os.remove(cache)
+            evt.Skip()
+
+        open(cache, "w").write(content)
+        newwind = wx.html.HtmlWindow(self)
+        newwind.SetRelatedFrame(self, "Markdown view")
+        newwind.SetRelatedStatusBar(0)
+        newwind.SetPage(content)
+        newwind.Bind(wx.EVT_CLOSE, OnClose)
+
+        newwind.Show(True)
 
     def ResetCfgs(self, evt):
         ask = wx.MessageDialog(
@@ -364,10 +408,6 @@ class MainFrame(wx.Frame):
         wx.StaticText(newdlg, label=msg)
         newdlg.ShowModal()
 
-    def OnClose(self, evt):
-        evt.Skip()
-        wx.GetApp().ExitMainLoop()
-
     """
     Still event callbacks, but "lambda evt" does not work
     * but not all of them, "Close all tabs" is an example *
@@ -378,39 +418,6 @@ class MainFrame(wx.Frame):
 
     def SaveFile(self, evt) -> bool:
         return self.notebook.fileops.SaveFile(
-            self.notebook.GetPageText(self.notebook.GetSelection())
-        )
-
-    def SaveAs(self, evt) -> bool:
-        return self.notebook.fileops.AskToSave()
-
-    # Text edit
-    def TextEditOps(self, evt, action: str):
-        acts = {
-            "copy": self.notebook.text_editor.Copy(),
-            "paste": self.notebook.text_editor.Paste(),
-            "cut": self.notebook.text_editor.Cut(),
-            "selall": self.notebook.text_editor.SelectAll(),
-            "delback": self.notebook.text_editor.DeleteBack(),
-        }
-        return acts.get(action)
-
-    def ZoomEditor(self, evt, i: str):
-        if i == "zoomin":
-            return self.notebook.text_editor.ZoomIn()
-        elif i == "zoomout":
-            return self.notebook.text_editor.ZoomOut()
-
-    """
-    Still event callbacks, but "lambda evt" does not work
-    * but not all of them, "Close all tabs" is an example *
-    """
-
-    def OpenFile(self, evt) -> bool:
-        return self.notebook.fileops.AskToOpen()
-
-    def SaveFile(self, evt) -> bool:
-        return self.notebook.fileops.Save(
             self.notebook.GetPageText(self.notebook.GetSelection())
         )
 

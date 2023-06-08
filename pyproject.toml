@@ -17,6 +17,7 @@ libtextworker = {path = "libtextworker"}
 Pillow = "^9.5.0"
 wxPython = "^4.2.0"
 cairosvg = {version = "^2.7.0", optional = true}
+markdown2 = "^2.4.8"
 
 [build-system]
 requires = ["poetry-core"]

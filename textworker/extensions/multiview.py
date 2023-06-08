@@ -1,6 +1,7 @@
 import wx
 from ..generic import global_settings
 
+
 class MultiViewer:
     def __init__(self, parent):
         location = global_settings.getkey(

@@ -4,5 +4,10 @@
     "scm.alwaysShowActions": true,
     "python.analysis.extraPaths": [
         "./libtextworker"
-    ]
+    ],
+    "files.associations": {
+        "*.xrc": "xml",
+        "filesystem": "cpp",
+        "*.tcc": "cpp"
+    }
 }

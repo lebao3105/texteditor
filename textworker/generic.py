@@ -8,7 +8,7 @@ import wx.adv
 
 from libtextworker import get_config, THEMES_DIR, EDITOR_DIR
 from libtextworker.versioning import *
-from libtextworker.general import CraftItems, GetCurrentDir
+from libtextworker.general import CraftItems, CreateDirectory, GetCurrentDir
 from libtextworker.interface.manager import default_configs
 from libtextworker.interface.wx import ColorManager
 from libtextworker.interface.wx.constants import FONTST, FONTWT

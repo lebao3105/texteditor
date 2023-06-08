@@ -212,6 +212,23 @@ type = "directory"
 url = "libtextworker"
 
 [[package]]
+name = "markdown2"
+version = "2.4.8"
+description = "A fast and complete Python implementation of Markdown"
+category = "main"
+optional = false
+python-versions = ">=3.5, <4"
+files = [
+    {file = "markdown2-2.4.8-py2.py3-none-any.whl", hash = "sha256:7d49ca871d3e0e412c65d7d21fcbc13ae897f7876f3e5f14dd4db3b7fbf27f10"},
+    {file = "markdown2-2.4.8.tar.gz", hash = "sha256:90475aca3d9c8e7df6d70c51de5bbbe9edf7fcf6a380bd1044d321500f5445da"},
+]
+
+[package.extras]
+all = ["pygments (>=2.7.3)", "wavedrom"]
+code-syntax-highlighting = ["pygments (>=2.7.3)"]
+wavedrom = ["wavedrom"]
+
+[[package]]
 name = "numpy"
 version = "1.24.3"
 description = "Fundamental package for array computing in Python"
@@ -438,4 +455,4 @@ testing = ["big-O", "flake8 (<5)", "jaraco.functools", "jaraco.itertools", "more
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.8"
-content-hash = "9dfc6fa4fe7b5768aacc8fca3e31a58d461ba1735811c6e7f86e39b84e63272c"
+content-hash = "717962fb9771b49674083a68e369d3dc531a58edf1347278230b7136bc16c6fb"

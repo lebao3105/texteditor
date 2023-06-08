@@ -45,24 +45,11 @@ def start_app(files: list[str], directory: str | None = None):
                     nb.text_editor.LoadFile(files[i])
 
     if directory != None:
-
-        def final_():
-            open_dir = wx.GenericDirCtrl(fm.sidebar.tabs, -1, directory)
-            open_dir.Bind(
-                wx.EVT_DIRCTRL_FILEACTIVATED,
-                lambda evt: fm.notebook.fileops.LoadFn(open_dir.GetFilePath()),
-            )
-            open_dir.SetDefaultPath(directory)
-            open_dir.Show(True)
-            fm.sidebar.RegisterTab(directory, open_dir)
-            fm.sidebar.Show(True)
+        directory = os.path.realpath(os.path.curdir + "/" + directory)
 
         if os.path.isdir(directory):
-            final_()
+            fm.OpenDir(None, directory)
         else:
-            directory = os.path.realpath(os.path.curdir + "/" + directory)
-            if os.path.isdir(directory):
-                final_()
             wx.MessageBox(f"Directory {directory} not found!", "Error", parent=fm)
 
     app.SetTopWindow(fm)
