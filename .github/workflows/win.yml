@@ -1,19 +1,18 @@
 name: Build portable builds for Windows
 
-# Controls when the workflow will run
 on:
-  # Allows you to run this workflow manually from the Actions tab
+  push:
+    tags:
+      - "v[0-9]+.[0-9]+.[0-9]"
+      - "v[0-9]+.[0-9]"
   workflow_dispatch:
 
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
 
   build:
     runs-on: windows-latest
 
-    # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      # Checks-out the repository and setup MS Visual C++
       - uses: actions/checkout@v3
       - uses: ilammy/msvc-dev-cmd@v1
         with:
@@ -21,8 +20,6 @@ jobs:
       
       - name: Setup Python
         uses: actions/setup-python@v4
-        with:
-          python-version: '3.x'
       
       - name: Install dependencies
         run: |
@@ -31,11 +28,13 @@ jobs:
       
       - name: Build
         run: |
-          pyinstaller --noconfirm --onedir --windowed --name "Textworker" --clean --add-data "../icons/textworker.Devel.png;textworker/icons" --add-data "../icons/textworker.png;textworker/icons"  --add-data "po;po/" "textworker/__main__.py"
-        working-directory: textworker
+          pyinstaller --noconfirm --onedir --windowed ^
+            --name "Textworker" --clean ^
+            --add-data "textworker/data;textworker/data" ^
+            --add-data "po;textworker/po/" "textworker/__main__.py"
       
       - name: Upload artifacts
         uses: actions/upload-artifact@v3
         with:
           name: TextworkerPortable_Windows
-          path: textworker/output/
+          path: output/

@@ -1,29 +1,31 @@
 name: Build releases (wheel) (wx version)
 
-# Controls when the workflow will run
 on:
-  # Allows you to run this workflow manually from the Actions tab
+  push:
+    tags:
+      - "v[0-9]+.[0-9]+.[0-9]"
+      - "v[0-9]+.[0-9]"
   workflow_dispatch:
 
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
 
-  build:
+  time_to_run:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.9", "3.10", "3.11"]
 
-    # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       - uses: actions/checkout@v3
       
-      - name: Setup Python
-        uses: actions/setup-python@v4
+      - uses: actions/setup-python@v4
         with:
-          python-version: '3.10'
+          python-version: ${{ matrix.python-version }}
 
-      - name: Fetch the latest commit
+      - name: Fetch submodules
         run: |
           git switch wip/wx
-          git submodule update --remote
+          git submodule update --init --recursive
       
       - name: Install dependencies
         run: |
@@ -35,17 +37,13 @@ jobs:
           pip3 install -r requirements.txt
         working-directory: textworker
       
-      - name: Build
+      - name: Build wheels
         run: |
           python3 -m poetry build
         working-directory: textworker
-      
-      - name: Test install # Because textworker doesn't get its lib from Pypi, right from the repo instead (submodule)
-        run: |
-          pip3 install dist/$(ls dist/*.whl)
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v3
         with:
           name: TextworkerWheel
-          path: textworker/dist/
+          path: dist/
