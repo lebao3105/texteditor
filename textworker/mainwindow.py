@@ -5,7 +5,7 @@ import webbrowser
 
 import wx
 import wx.adv
-import wx.html
+import wx.html2
 import wx.stc
 
 try:
@@ -14,13 +14,6 @@ except ImportError:
     CAIRO_AVAILABLE = False
 else:
     CAIRO_AVAILABLE = True
-
-try:
-    from markdown2 import markdown
-except ImportError:
-    MARKDOWN_AVAILABLE = False
-else:
-    MARKDOWN_AVAILABLE = True
 
 from libtextworker import __version__ as libver
 from libtextworker.general import GetCurrentDir, ResetEveryConfig
@@ -88,7 +81,7 @@ class MainFrame(wx.Frame):
         self.wiz = SettingsWindow(self)
         self.autosv_cfg = autosave.AutoSaveConfig(self)
 
-        # self.SetUpLogger()
+        self.SetUpLogger()
         self.PlaceMenu()
 
         self.Layout()
@@ -290,6 +283,11 @@ class MainFrame(wx.Frame):
     Logging
     """
 
+    def SetUpLogger(self):
+        panel = wx.Panel(self)
+        self.messages_text = wx.StaticText(panel, label=_("Messages"))
+        self.GetSizer().Add(panel, 1, wx.EXPAND, 5)
+
     def SetMessageText(self, msg: str):
         self.messages_text.SetLabel(msg)
         self.logwindow.logs.WriteText(msg + "\n")
@@ -333,7 +331,9 @@ class MainFrame(wx.Frame):
         return self.OpenDir(None, os.path.expanduser("~/.config/textworker"))
 
     def ShowMarkdown(self, evt):
-        if not MARKDOWN_AVAILABLE:
+        try:
+            from markdown2 import markdown
+        except ImportError:
             wx.MessageBox(
                 _("You need to get markdown2 package from Pypi first!"),
                 _("Extra package required"),
@@ -342,19 +342,12 @@ class MainFrame(wx.Frame):
             return False
 
         content = markdown(self.notebook.text_editor.GetText())
-        cache = os.path.expanduser("~/.textworker-markdownview")
 
-        def OnClose(evt):
-            os.remove(cache)
-            evt.Skip()
-
-        open(cache, "w").write(content)
-        newwind = wx.html.HtmlWindow(self)
-        newwind.SetRelatedFrame(self, "Markdown view")
-        newwind.SetRelatedStatusBar(0)
+        wind = wx.Frame(self, title=_("Markdown to HTML"))
+        newwind = wx.html2.WebView(wind)
         newwind.SetPage(content)
-        newwind.Bind(wx.EVT_CLOSE, OnClose)
 
+        wind.Show()
         newwind.Show(True)
 
     def ResetCfgs(self, evt):
