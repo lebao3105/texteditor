@@ -118,7 +118,7 @@ class GitSupportGUI(GitSupport):
 
         bSizer1.Add(self.Header1, 0, wx.ALL, 5)
 
-        self.EditedList = wx.ListCtrl(self.Panel, style=wx.LC_AUTOARRANGE | wx.LC_ICON | wx.LC_REPORT)
+        self.EditedList = wx.ListCtrl(self.Panel, style=wx.LC_AUTOARRANGE | wx.LC_REPORT)
         self.EditedList.InsertColumn(0, "File")
         self.EditedList.InsertColumn(1, "Type", width=200)
         bSizer1.Add(self.EditedList, 0, wx.ALL, 5)
@@ -139,7 +139,7 @@ class GitSupportGUI(GitSupport):
 
         bSizer1.Add(self.Header2, 0, wx.ALL, 5)
 
-        self.NewList = wx.ListCtrl(self.Panel, style=wx.LC_AUTOARRANGE | wx.LC_ICON | wx.LC_REPORT)
+        self.NewList = wx.ListCtrl(self.Panel, style=wx.LC_AUTOARRANGE | wx.LC_REPORT)
         bSizer1.Add(self.NewList, 0, wx.ALL, 5)
 
         self.Panel.SetSizer(bSizer1)
