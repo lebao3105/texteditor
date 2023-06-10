@@ -35,8 +35,9 @@ if platform.system() == "Windows":
     ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(myappid)
 
 cfg = global_settings
-logger.UseGUIToolKit('wx')
+logger.UseGUIToolKit("wx")
 logfmter = LogFormatter()
+
 
 class MainFrame(wx.Frame):
     def __init__(self, *args, **kwds):
@@ -240,7 +241,13 @@ class MainFrame(wx.Frame):
         configsmenu = CreateMenu(
             self,
             [
-                (wx.ID_ANY, _("Show all configurations"), None, lambda evt: self.OpenDir(None, TOPLV_DIR), None),
+                (
+                    wx.ID_ANY,
+                    _("Show all configurations"),
+                    None,
+                    lambda evt: self.OpenDir(None, TOPLV_DIR),
+                    None,
+                ),
                 (wx.ID_ANY, _("Reset all configs"), None, self.ResetCfgs, None),
                 (wx.ID_ANY, _("Run Setup"), None, self.wiz.Run, None),
             ],
@@ -276,13 +283,7 @@ class MainFrame(wx.Frame):
                     ),
                     None,
                 ),
-                (
-                    None,
-                    _("View log"),
-                    None,
-                    lambda evt: self.logwindow.Show(),
-                    None
-                )
+                (None, _("View log"), None, lambda evt: self.logwindow.Show(), None),
             ],
         )
 
