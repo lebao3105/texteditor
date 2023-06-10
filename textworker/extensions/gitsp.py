@@ -18,7 +18,7 @@ class GitSupport:
 
     Remote = []
     Branch = {}  # {current, list}
-    Changes: dict[str, str] = {} # {path, type}
+    Changes: dict[str, str] = {}  # {path, type}
 
     def InitGit(self):
         if not self.GitPath:
@@ -41,7 +41,9 @@ class GitSupport:
             )
             return None
 
-        status = str(subprocess.check_output([self.GitPath, "status", "-z"], encoding='utf-8'))
+        status = str(
+            subprocess.check_output([self.GitPath, "status", "-z"], encoding="utf-8")
+        )
 
         self.IsGitRepo = True
 
@@ -52,7 +54,7 @@ class GitSupport:
         ## M <modified files> ?? <untracked> D <deleted files> T <file type changed> A <added>
         ## R <renamed files> C <copied - if status.renames git config is set to "copies">
         ## U <updated but unmerged>
-        
+
         ## Thanks to GitHub for suggestting me the '-s' parameter:)
         ## Mostly taken from: https://git-scm.com/docs/git-status
 
@@ -86,6 +88,7 @@ class GitSupport:
     def Refresh(self):
         self.Branch = {}
         self.Modified = self.New = self.Remote = []
+
 
 class GitSupportGUI(GitSupport):
     currdir: str = ""
@@ -146,7 +149,9 @@ class GitSupportGUI(GitSupport):
 
         bSizer1.Add(self.Header1, 0, wx.ALL, 5)
 
-        self.EditedList = wx.ListCtrl(self.Panel, style=wx.LC_AUTOARRANGE | wx.LC_REPORT)
+        self.EditedList = wx.ListCtrl(
+            self.Panel, style=wx.LC_AUTOARRANGE | wx.LC_REPORT
+        )
         self.EditedList.InsertColumn(0, "File")
         self.EditedList.InsertColumn(1, "Type", width=200)
         bSizer1.Add(self.EditedList, 0, wx.ALL, 5)
@@ -191,7 +196,9 @@ class GitSupportGUI(GitSupport):
         for file in self.Changes:
             self.EditedList.InsertItem(0, file)
             self.EditedList.SetItem(0, 1, self.Changes[file])
-            self.EditedList.SetItem(list(self.Changes).index(file), 1, self.Changes[file])
+            self.EditedList.SetItem(
+                list(self.Changes).index(file), 1, self.Changes[file]
+            )
 
         self.Blank.Hide()
         self.NewRepoBtn.Hide()

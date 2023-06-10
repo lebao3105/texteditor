@@ -173,3 +173,10 @@ class SettingsWindow(XMLBuilder):
     def Run(self, evt):
         self.Frame.RunWizard(self.Page1)
         self.Frame.Destroy()
+
+
+# TODO: Move to libtextworker
+# wxLog Formatter
+class LogFormatter(wx.LogFormatter):
+    def Format(level, msg, info):
+        return "[%d] %s line %d : %s" % (info.threadId, info.filename, info.line, msg)

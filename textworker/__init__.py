@@ -1,11 +1,3 @@
-"""
-Ahoy, this is textworker 1.6alpha3 - wxPython port of the texteditor/textworker program!
-Working-on features:
-* Command Window (cancelled?)
-* File modification(s) check
-* Sidebar
-* Remake statusbar
-"""
 import gettext
 import locale
 import os.path

@@ -53,16 +53,20 @@ def start_app(files: list[str], directory: str | None = None):
             wx.MessageBox(f"Directory {directory} not found!", "Error", parent=fm)
 
     import sys
-    if sys.platform == 'win32':
+
+    if sys.platform == "win32":
         import ctypes
+
         is_admin = ctypes.windll.shell32.IsUserAnAdmin()
     else:
-        is_admin = (os.getuid() == 0)
-    
+        is_admin = os.getuid() == 0
+
     if is_admin:
         fm.infer.ShowMessage(
-            _("You're running this application as root. Be careful with the file system."),
-            wx.ICON_WARNING
+            _(
+                "You're running this application as root. Be careful with the file system."
+            ),
+            wx.ICON_WARNING,
         )
 
     app.SetTopWindow(fm)
