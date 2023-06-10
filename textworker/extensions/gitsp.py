@@ -16,8 +16,9 @@ class GitSupport:
 
     GitPath = shutil.which("git")
 
-    Modified = New = Remote = []
+    Remote = []
     Branch = {}  # {current, list}
+    Changes: dict[str, str] = {} # {path, type}
 
     def InitGit(self):
         if not self.GitPath:
@@ -40,19 +41,37 @@ class GitSupport:
             )
             return None
 
-        status = str(subprocess.check_output([self.GitPath, "status", "-z"]))
+        status = str(subprocess.check_output([self.GitPath, "status", "-z"], encoding='utf-8'))
 
         self.IsGitRepo = True
 
         # Repo status
 
         ## 'git status -z' output format:
-        ## M <modified files> <untracked>?? D <deleted files>
-        status = status.replace("M ", "")
+
+        ## M <modified files> ?? <untracked> D <deleted files> T <file type changed> A <added>
+        ## R <renamed files> C <copied - if status.renames git config is set to "copies">
+        ## U <updated but unmerged>
+        
+        ## Thanks to GitHub for suggestting me the '-s' parameter:)
+        ## Mostly taken from: https://git-scm.com/docs/git-status
+
+        ## P/s: The code below looks good:v
+        status = status.replace("M ", "<M>")
+        status = status.replace("D ", "<D>")
+        status = status.replace("?? ", "<N>")
+        status = status.replace("T ", "<T>")
+        status = status.replace("A ", "<A>")
+        status = status.replace("R ", "<R>")
+        status = status.replace("C ", "<C>")
+        status = status.replace("U ", "<U>")
 
         self.Refresh()  # Clean
 
-        print(status)
+        for item in status.split():
+            for string in ["A", "C", "D", "M", "N", "R", "T"]:
+                if item.startswith(f"<{string}>"):
+                    self.Changes[item.removeprefix(f"<{string}>")] = string
 
         # Repo branch & remote
         self.Branch["current"] = str(
@@ -67,7 +86,6 @@ class GitSupport:
     def Refresh(self):
         self.Branch = {}
         self.Modified = self.New = self.Remote = []
-
 
 class GitSupportGUI(GitSupport):
     currdir: str = ""
@@ -114,19 +132,7 @@ class GitSupportGUI(GitSupport):
         bSizer1.Add(self.RepoPath, 0, wx.ALL, 5)
 
         self.Header1 = wx.StaticText(self.Panel, label="Existing file changes")
-        self.Header1.Wrap(-1)
-
-        bSizer1.Add(self.Header1, 0, wx.ALL, 5)
-
-        self.EditedList = wx.ListCtrl(self.Panel, style=wx.LC_AUTOARRANGE | wx.LC_REPORT)
-        self.EditedList.InsertColumn(0, "File")
-        self.EditedList.InsertColumn(1, "Type", width=200)
-        bSizer1.Add(self.EditedList, 0, wx.ALL, 5)
-
-        self.Header2 = wx.StaticText(self.Panel, label="New files")
-        self.Header2.Wrap(-1)
-
-        self.Header2.SetFont(
+        self.Header1.SetFont(
             wx.Font(
                 12,
                 wx.FONTFAMILY_SWISS,
@@ -136,16 +142,19 @@ class GitSupportGUI(GitSupport):
                 "Arial",
             )
         )
+        self.Header1.Wrap(-1)
 
-        bSizer1.Add(self.Header2, 0, wx.ALL, 5)
+        bSizer1.Add(self.Header1, 0, wx.ALL, 5)
 
-        self.NewList = wx.ListCtrl(self.Panel, style=wx.LC_AUTOARRANGE | wx.LC_REPORT)
-        bSizer1.Add(self.NewList, 0, wx.ALL, 5)
+        self.EditedList = wx.ListCtrl(self.Panel, style=wx.LC_AUTOARRANGE | wx.LC_REPORT)
+        self.EditedList.InsertColumn(0, "File")
+        self.EditedList.InsertColumn(1, "Type", width=200)
+        bSizer1.Add(self.EditedList, 0, wx.ALL, 5)
 
         self.Panel.SetSizer(bSizer1)
         self.Panel.Layout()
 
-        for string in ["RepoPath", "Header1", "Header2", "EditedList", "NewList"]:
+        for string in ["RepoPath", "Header1", "EditedList"]:
             getattr(self, string).Hide()
 
         if not self.InitGit():
@@ -153,6 +162,10 @@ class GitSupportGUI(GitSupport):
             self.NewRepoBtn.Hide()
 
         self.NewRepoBtn.Bind(wx.EVT_BUTTON, self.NewRepo)
+
+        bSizer1.Layout()
+        self.Panel.Layout()
+        self.Panel.Centre()
 
     def NewRepo(self, evt=None) -> int | None:
         target = self.currdir
@@ -169,23 +182,18 @@ class GitSupportGUI(GitSupport):
         self.currdir = path
         super().InitFolder(path)
 
-        for string in ["RepoPath", "Header1", "Header2", "EditedList", "NewList"]:
+        for string in ["RepoPath", "Header1", "EditedList"]:
             getattr(self, string).Show()
 
         self.RepoPath.SetLabel("Git repo path: " + os.path.realpath(self.currdir))
 
-        print(self.Modified)
-        for file in self.Modified:
-            item = wx.ListItem()
-            item.SetId(1020)
-            item.SetText(file)
-            self.EditedList.InsertItem(item)
-
-        for file in self.New:
-            item = wx.ListItem()
-            item.SetId(1021)
-            item.SetText(file)
-            self.NewList.InsertItem(item)
+        # print(self.Changes)
+        for file in self.Changes:
+            self.EditedList.InsertItem(0, file)
+            self.EditedList.SetItem(0, 1, self.Changes[file])
+            self.EditedList.SetItem(list(self.Changes).index(file), 1, self.Changes[file])
 
         self.Blank.Hide()
         self.NewRepoBtn.Hide()
+
+        self.Panel.Refresh()
