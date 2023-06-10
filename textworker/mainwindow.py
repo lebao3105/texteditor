@@ -15,7 +15,7 @@ else:
     CAIRO_AVAILABLE = True
 
 from libtextworker import __version__ as libver
-from libtextworker.general import GetCurrentDir, ResetEveryConfig, logger
+from libtextworker.general import TOPLV_DIR, ResetEveryConfig, logger
 from libtextworker.interface.wx.about import AboutDialog
 from libtextworker.interface.wx.dirctrl import PatchedDirCtrl
 from libtextworker.interface.wx.miscs import CreateMenu
@@ -24,7 +24,7 @@ from textworker import __version__ as appver
 from textworker import icon
 
 from .extensions import autosave, multiview, gitsp
-from .generic import SettingsWindow, global_settings
+from .generic import SettingsWindow, global_settings, LogFormatter
 from .tabs import Tabber
 
 # https://stackoverflow.com/a/27872625
@@ -36,6 +36,7 @@ if platform.system() == "Windows":
 
 cfg = global_settings
 logger.UseGUIToolKit('wx')
+logfmter = LogFormatter()
 
 class MainFrame(wx.Frame):
     def __init__(self, *args, **kwds):
@@ -46,16 +47,19 @@ class MainFrame(wx.Frame):
             svg2png(open(icon, "r").read(), write_to="./icon.png")
             self.SetIcon(wx.Icon("./icon.png"))
 
+        """ Main box sizer ever . """
         mainboxer = wx.BoxSizer(wx.VERTICAL)
         self.SetSizer(mainboxer)
 
+        # wxInfoBar
         self.infer = wx.InfoBar(self)
+        mainboxer.Add(self.infer, 1, wx.EXPAND, 5)
 
+        """ Main editor frame """
         editorbox = wx.SplitterWindow(self)
 
         # Editor
         self.notebook = Tabber(editorbox)
-        mainboxer.Add(self.infer, 1, wx.EXPAND, 5)
 
         # Side bar
 
@@ -81,8 +85,10 @@ class MainFrame(wx.Frame):
         # Else things
         self.wiz = SettingsWindow(self)
         self.autosv_cfg = autosave.AutoSaveConfig(self)
+        self.logwindow = wx.LogWindow(self, "Log", False)
+        self.logwindow.SetFormatter(logfmter)
+        self.logwindow.SetVerbose()
 
-        self.SetUpLogger()
         self.PlaceMenu()
 
         self.Layout()
@@ -234,7 +240,7 @@ class MainFrame(wx.Frame):
         configsmenu = CreateMenu(
             self,
             [
-                (wx.ID_ANY, _("Show all configurations"), None, self.ShowCfgs, None),
+                (wx.ID_ANY, _("Show all configurations"), None, lambda evt: self.OpenDir(None, TOPLV_DIR), None),
                 (wx.ID_ANY, _("Reset all configs"), None, self.ResetCfgs, None),
                 (wx.ID_ANY, _("Run Setup"), None, self.wiz.Run, None),
             ],
@@ -270,26 +276,22 @@ class MainFrame(wx.Frame):
                     ),
                     None,
                 ),
+                (
+                    None,
+                    _("View log"),
+                    None,
+                    lambda evt: self.logwindow.Show(),
+                    None
+                )
             ],
         )
 
         self.menubar.Append(filemenu, _("&File"))
         self.menubar.Append(editmenu, _("&Edit"))
         self.menubar.Append(viewmenu, _("&View"))
-        self.menubar.Append(configsmenu, _("&Configs"))
+        self.menubar.Append(configsmenu, _("&Config"))
         self.menubar.Append(helpmenu, _("&Help"))
         self.SetMenuBar(self.menubar)
-
-    """
-    Logging
-    """
-
-    def SetUpLogger(self):
-        panel = wx.Panel(self)
-        self.logwindow = wx.LogWindow(self, "")
-        self.messages_text = wx.StaticText(panel, label=_("Messages"))
-        self.messages_text.Bind(wx.EVT_RIGHT_DOWN, self.ShowLogWindow)
-        self.GetSizer().Add(panel, 1, wx.EXPAND, 5)
 
     """
     Event callbacks
@@ -321,11 +323,6 @@ class MainFrame(wx.Frame):
             return
         self.notebook.fileops.OpenFile(path)
 
-    def ShowCfgs(self, evt):
-        import os
-
-        return self.OpenDir(None, os.path.expanduser("~/.config/textworker"))
-
     def ShowMarkdown(self, evt):
         try:
             from markdown2 import markdown
@@ -350,20 +347,14 @@ class MainFrame(wx.Frame):
         ask = wx.MessageDialog(
             self,
             _(
-                "Are you sure want to reset all configurations? There is no way BACK! The app will close after the operation."
+                "Are you sure want to reset all configurations?\nThere is no way BACK!\nThe app will close after the operation."
             ),
             _("Confirm configs reset"),
             wx.YES_NO | wx.ICON_WARNING,
         ).ShowModal()
         if ask == wx.ID_YES:
+            logger.info(_("Done resetting all configs. App restart required."))
             ResetEveryConfig()
-            logger.info(_("Done resetting all configs."))
-
-    def ShowLogWindow(self, evt):
-        if not self.logwindow.IsActive():
-            return self.logwindow.SetFocus()
-        else:
-            return self.logwindow.Show()
 
     def ShowAbout(self, evt):
         aboutdlg = AboutDialog()
@@ -402,6 +393,7 @@ class MainFrame(wx.Frame):
     * but not all of them, "Close all tabs" is an example *
     """
 
+    # File operations
     def OpenFile(self, evt) -> bool:
         return self.notebook.fileops.AskToOpen()
 
