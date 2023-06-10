@@ -1,4 +1,3 @@
-import logging
 import os
 import platform
 import webbrowser
@@ -16,7 +15,7 @@ else:
     CAIRO_AVAILABLE = True
 
 from libtextworker import __version__ as libver
-from libtextworker.general import GetCurrentDir, ResetEveryConfig
+from libtextworker.general import GetCurrentDir, ResetEveryConfig, logger
 from libtextworker.interface.wx.about import AboutDialog
 from libtextworker.interface.wx.dirctrl import PatchedDirCtrl
 from libtextworker.interface.wx.miscs import CreateMenu
@@ -36,8 +35,7 @@ if platform.system() == "Windows":
     ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(myappid)
 
 cfg = global_settings
-logger = logging.getLogger("textworker")
-
+logger.UseGUIToolKit('wx')
 
 class MainFrame(wx.Frame):
     def __init__(self, *args, **kwds):
@@ -51,10 +49,13 @@ class MainFrame(wx.Frame):
         mainboxer = wx.BoxSizer(wx.VERTICAL)
         self.SetSizer(mainboxer)
 
+        self.infer = wx.InfoBar(self)
+
         editorbox = wx.SplitterWindow(self)
 
         # Editor
         self.notebook = Tabber(editorbox)
+        mainboxer.Add(self.infer, 1, wx.EXPAND, 5)
 
         # Side bar
 
@@ -285,15 +286,10 @@ class MainFrame(wx.Frame):
 
     def SetUpLogger(self):
         panel = wx.Panel(self)
+        self.logwindow = wx.LogWindow(self, "")
         self.messages_text = wx.StaticText(panel, label=_("Messages"))
+        self.messages_text.Bind(wx.EVT_RIGHT_DOWN, self.ShowLogWindow)
         self.GetSizer().Add(panel, 1, wx.EXPAND, 5)
-
-    def SetMessageText(self, msg: str):
-        self.messages_text.SetLabel(msg)
-        self.logwindow.logs.WriteText(msg + "\n")
-        self.logwindow.logs.WriteText(msg + "\n")
-        wx.CallLater(5000, self.messages_text.SetLabel, _("Got new message(s)!"))
-        wx.CallLater(10000, self.messages_text.SetLabel, _("Messages"))
 
     """
     Event callbacks
@@ -344,8 +340,8 @@ class MainFrame(wx.Frame):
         content = markdown(self.notebook.text_editor.GetText())
 
         wind = wx.Frame(self, title=_("Markdown to HTML"))
-        newwind = wx.html2.WebView(wind)
-        newwind.SetPage(content)
+        newwind = wx.html2.WebView.New(wind)
+        newwind.SetPage(content, "")
 
         wind.Show()
         newwind.Show(True)
@@ -361,7 +357,7 @@ class MainFrame(wx.Frame):
         ).ShowModal()
         if ask == wx.ID_YES:
             ResetEveryConfig()
-            # self.SetMessageText(_("Done resetting all configs."))
+            logger.info(_("Done resetting all configs."))
 
     def ShowLogWindow(self, evt):
         if not self.logwindow.IsActive():
