@@ -3,7 +3,7 @@ name: Build releases (wheel) (wx version)
 on:
   push:
     tags:
-      - "v[0-9]+.[0-9]+.[0-9]"
+      - "v[0-9]+.[0-9]+[a][b][d]+[0-9]+.[0-9]"
       - "v[0-9]+.[0-9]"
   workflow_dispatch:
 
