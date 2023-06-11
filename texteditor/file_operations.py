@@ -1,52 +1,96 @@
 import os
+from tkinter.ttk import Notebook
 import typing
 
+from tkinter import Misc
 from tkinter.filedialog import *
 from tkinter.messagebox import *
 
+from .extensions.autosave import AutoSave
 from .extensions.generic import global_settings
 
-searchdir = global_settings.get("editor", "searchdir") or os.path.expanduser("~/Documents")
+searchdir = global_settings.get("editor", "searchdir") or os.path.expanduser(
+    "~/Documents"
+)
+
 
 class FileOperations:
-    HasContentModified: bool = False
-    Editor: object
-    NewTabFunc: typing.Callable
-    NewTabFunc_Args: typing.Any
-    Parent: object
+    """
+    The extended texteditor.tabs + libtextworker's Tkinter editor
+        with (auto)save and text modify-detect functions
+    """
 
-    def InitEditor(self):
-        self.Editor.bind("<<Modified>>", self.OnTextModified)
+    NoteBook: Misc | Notebook
+    AutoSave: bool = True
 
-    def OnTextModified(self, evt):
-        self.HasContentModified = True
-        # Nothing else
+    SetWindowTitleFn: typing.Callable
+    NewTabFn: typing.Callable
+    NewTabFn_Args: dict | None = None
 
-    def OpenFileDialog(self, evt=None):
-        ask = askopenfilename(
-            initialdir=searchdir, parent=self.Parent, title=_("Open a file")
+    # File touch
+    def LoadFile(self, path: str):
+        tabname = self.NoteBook.tab("current", "text")
+
+        if (
+            os.path.isfile(tabname.removesuffix(_(" (Duplicated)")))
+            or self.NoteBook.select().editor.Modified
+        ):
+            if self.NewTabFn_Args is not None:
+                self.NewTabFn(**self.NewTabFn_Args)
+            else:
+                self.NewTabFn()
+
+        self.NoteBook.nametowidget(self.NoteBook.select()).editor.insert(
+            1.0, open(path, "r").read()
         )
-        if ask:
-            return self.LoadFile(ask)
 
-    def LoadFile(self, filepath: str):
-        if self.HasContentModified:
-            self.NewTabFunc(self.NewTabFunc_Args)
+    def SaveFile(self, path: str):
+        return open(path, "w").write(
+            self.NoteBook.nametowidget(self.NoteBook.select()).editor.get(1.0, "end")
+        )
 
-        with open(filepath, "r") as f:
-            self.Editor.insert("1.0", filepath)
+    # GUI-side functions
+    def OpenFileDialog(self, evt=None):
+        return self.LoadFile(
+            askopenfilename(
+                initialdir=searchdir,
+                parent=self.NoteBook,
+                title=_("Open a file to continue"),
+            )
+        )
 
     def SaveFileEvent(self, evt=None):
-        if not self.HasContentModified:
-            self.SaveFile()
-        self.SaveAs()
+        tabname = self.NoteBook.tab("current", "text")
+        if not os.path.isfile(tabname):
+            return self.SaveAs()
+        else:
+            return self.SaveFile(tabname)
 
-    def SaveFile(self):
-        with open(self.Editor.FilePath, "w") as f:
-            f.write(self.Editor.get("1.0", "end"))
+    def SaveAs(self, evt=None):
+        return self.SaveFile(
+            asksaveasfilename(
+                confirmoverwrite=True,
+                initialdir=searchdir,
+                parent=self.NoteBook,
+                title=_("Save this file as..."),
+            )
+        )
 
-    def SaveAs(self):
-        ask = asksaveasfilename(initialdir=searchdir, parent=self.Parent)
-        if ask:
-            with open(ask, "w") as f:
-                f.write(self.Editor.get("1.0", "end"))
+    def OnEditorModified(self, evt):
+        self.NoteBook.nametowidget(self.NoteBook.select()).editor.Modified = True
+        # Nothing else
+
+    def InitEditor(self):
+        currtab = self.NoteBook.select()
+        self.NoteBook.nametowidget(currtab).editor.Modified: bool = False
+        self.NoteBook.nametowidget(currtab).editor.bind(
+            "<<Modified>>", self.OnEditorModified
+        )
+
+    def AutoSaveSetup(self):
+        if self.AutoSave:
+            for fm in self.NoteBook.tabs():
+                obj = AutoSave(
+                    self.NoteBook.nametowidget(fm).editor, self.SaveFileEvent
+                )
+                # obj.start() # Not this time
