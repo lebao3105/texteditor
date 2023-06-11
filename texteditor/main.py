@@ -1,17 +1,23 @@
-import os, sys
+import os
 from tkinter import messagebox as msgbox
 from . import mainwindow
+
+ignore_not_exists: bool = False
+create_new: bool = True
 
 
 # Startup functions
 def __filenotfound(filepath):
+    if ignore_not_exists:
+        return False
+    if create_new:
+        return True
     return msgbox.askyesno(
         _("File not found"), _("Cannot find the file %s - create it?" % str(filepath))
     )
 
 
-def start_app(argv=None):
-    argv = sys.argv[1:]
+def start_app(argv: list[str]):
     root = mainwindow.MainWindow()
     n = len(argv)
 

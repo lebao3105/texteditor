@@ -11,13 +11,16 @@ from libtextworker.versioning import is_development_version_from_project, requir
 
 currdir = GetCurrentDir(__file__, True)
 __version__ = "1.5a0"
+
 require("libtextworker", "0.1.3")
 test_import("tkinter")
 
+icon = currdir / "data" / "icons"
+
 if is_development_version_from_project("texteditor"):
-    icon = currdir / "icons" / "texteditor.Devel.png"
+    icon = icon / "me.lebao3105.textworker.Devel.svg"
 else:
-    icon = currdir / "icons" / "texteditor.png"
+    icon = icon / "me.lebao3105.textworker.svg"
 
 LOCALE_DIR = currdir / "po"
 
