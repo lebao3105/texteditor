@@ -16,7 +16,9 @@ jobs:
         python-version: ["3.9", "3.10", "3.11"]
 
     steps:
-      - uses: actions/checkout@v3
+      - name: Clone the source code
+        run: |
+          git clone https://github.com/lebao3105/texteditor.git
       
       - uses: actions/setup-python@v4
         with:
@@ -24,22 +26,22 @@ jobs:
       
       - name: Fetch submodules
         run: |
-          git switch main
           git submodule update --init --recursive
+        working-directory: texteditor
 
       - name: Install dependencies
         run: |
-          git switch main
           sudo apt install python3-tk -y
-          pip3 install build wheel
-          pip3 install -r requirements.txt
+          pip3 install poetry wheel
+        working-directory: texteditor
       
       - name: Build
         run: |
-          python3 -m build
+          python3 -m poetry build
+        working-directory: texteditor
       
       - name: Upload artifacts
         uses: actions/upload-artifact@v3
         with:
           name: TextworkerWheel
-          path: dist/
+          path: texteditor/dist/
