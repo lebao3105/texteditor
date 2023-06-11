@@ -15,7 +15,8 @@ log = logging.getLogger("textworker")
 
 
 class AutoSave:
-    """Contructs the autosaving files function on texteditor.\n
+    """
+    Contructs the autosaving files function on texteditor.\n
     Configurations:
     * forceEnable : bool : Force enable this
     * useTime : float : Force auto save after a time

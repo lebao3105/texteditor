@@ -7,6 +7,7 @@ from .generic import global_settings
 
 from libtextworker.interface.tk.editor import TextWidget
 
+
 class cmd(TextWidget):
     useWrap = True
 
