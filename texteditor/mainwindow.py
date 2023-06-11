@@ -1,23 +1,33 @@
-import logging
 import os
 import pygubu
 import webbrowser
-import tkinter.messagebox as msgbox
-from tkinter import *
+from typing import NoReturn
+from tkinter import messagebox as msgbox
+from tkinter import Tk, BooleanVar, PhotoImage, TclError, Menu
+
+try:
+    from cairosvg import svg2png
+except ImportError:
+    CAIRO_AVAILABLE = False
+else:
+    CAIRO_AVAILABLE = True
 
 import texteditor
 from .tabs import TabsViewer
 from .extensions import autosave, cmd, finding, generic
 from .views import about
 
+from libtextworker.general import logger, ResetEveryConfig
+
 global_settings = generic.global_settings
 clrcall = generic.clrcall
-logger = logging.getLogger("textworker")
+logger.UseGUIToolKit("tk")
 
 
 class MainWindow(Tk):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self.geometry("810x610")
 
         # Configure some required menu items callback
         self.callbacks = {
@@ -31,34 +41,25 @@ class MainWindow(Tk):
             "open_doc": lambda: webbrowser.open(
                 "https://lebao3105.gitbook.io/texteditor_doc"
             ),
-            "aboutdlg": lambda: self.aboutdlg(),
+            "aboutdlg": lambda: about.AboutDialog(self).run(),
         }
 
-        self.log = logger
-
-        # Set icon
-        if os.path.isfile(texteditor.icon):
+        # Set the application icon
+        if os.path.isfile(texteditor.icon) and CAIRO_AVAILABLE:
+            svg2png(open(texteditor.icon, "r").read(), write_to="./icon.png")
             try:
-                self.wm_iconphoto(False, PhotoImage(file=texteditor.icon))
+                self.wm_iconphoto(False, PhotoImage(file="./icon.png"))
             except TclError:
-                self.log.throwerr("Unable to set application icon", "TCLError occured")
-        else:
-            self.log.throwwarn(
-                "Warning: Application icon %s not found" % texteditor.icon
-            )
+                self.log.exception("Unable to set application icon", "TCLError occured")
 
-        # Wrap button
-        self.wrapbtn = BooleanVar(value=True)
+        # BooleanVar_s
+        self.wrapbtn = BooleanVar(value=True)  # Wrap button
+        self.autocolor = BooleanVar()  # Auto change color
 
-        # Auto change color
-        self.autocolor = BooleanVar()
-        if clrcall.getkey("color", "autocolor") == "yes":
+        if clrcall.getkey("color", "autocolor") == "yes" or True:
             self.autocolor.set(True)
         else:
             self.autocolor.set(False)
-
-        # Window size
-        self.geometry("810x610")
 
         self.get_color()
         self.load_ui()
@@ -128,7 +129,7 @@ class MainWindow(Tk):
             self, savefile_fn=lambda: self.notebook.fileops.SaveFileEvent()
         )
 
-    # Binding commands to the application
+    # Bind commands to the application
     def add_event(self):
         bindcfg = self.bind
         bindcfg("<Control-n>", lambda event: self.add_tab(self))
@@ -142,41 +143,26 @@ class MainWindow(Tk):
         bindcfg("<Control-w>", lambda event: self.text_editor.wrapmode())
 
     # Menu bar callbacks
-    def resetcfg(self, event=None):
+    def resetcfg(self, event=None) -> False | NoReturn:
         message = msgbox.askyesno(
             _("Warning"),
             _("This will reset ALL configurations you have ever made. Continue?"),
         )
         if message:
-            check = global_settings.cfg.reset()
-            if not check:
+            try:
+                ResetEveryConfig()
+            except:
                 msgbox.showerror(
                     _("Error occured!"),
                     _(
                         "Unable to reset configuration file: Backed up default variables not found"
                     ),
                 )
-                # self.text_editor.statusbar.writeleftmessage(
-                #     _("Error: Unable to reset all configurations!")
-                # )
-                return
-            else:
-                msgbox.showinfo(
-                    _("Completed"),
-                    _(
-                        "Resetted texteditor configurations.\nRestart the application to take effect."
-                    ),
-                )
-                # self.text_editor.statusbar.writeleftmessage(
-                #     _("Resetted all configurations. Restart the app to take effect.")
-                # )
+                return False
 
     def opencfg(self, event=None):
         self.add_tab()
-        # self.notebook.fileops.LoadFile(get_config.file)
-
-    def aboutdlg(self, event=None):
-        return about.AboutDialog(self).run()
+        self.notebook.fileops.LoadFile(generic.CONFIGS_PATH)
 
     def get_color(self):
         if clrcall.getkey("color", "background") == "dark":
@@ -208,14 +194,12 @@ class MainWindow(Tk):
 
     def autocolor_mode(self, event=None, permanent: bool = False):
         toggle = self.autocolor.get()
+        clrcall.threads = {}
         if toggle == True:
-            del clrcall.threads
             if permanent:
                 clrcall.set("color", "autocolor", "no")
                 clrcall.update()
         elif toggle == False:
-            print("turned 2")
-            clrcall.threads = {}
             if permanent:
                 clrcall.set("color", "autocolor", "yes")
                 clrcall.update()

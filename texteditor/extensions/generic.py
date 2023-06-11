@@ -1,12 +1,9 @@
 # For texteditor's local use only.
-
-import json
-import logging
 import os
 import platform
 
 from libtextworker import EDITOR_DIR, THEMES_DIR
-from libtextworker.general import CraftItems, GetCurrentDir
+from libtextworker.general import CraftItems, GetCurrentDir, logger
 from libtextworker.get_config import GetConfig
 from libtextworker.interface.manager import default_configs
 from libtextworker.interface.tk import ColorManager
@@ -18,36 +15,10 @@ CONFIGS_PATH = os.path.expanduser(
         "_dev" if is_development_version_from_project("texteditor") else ""
     )
 )
-log = logging.getLogger("textworker")
-configs = f"""
-[config-paths]
-    [config-paths.ui]
-        theme = default
-        path = unchanged
-    [config-paths.editor]
-        name = default
-        path = unchanged
-
-[editor]
-    [editor.autosave]
-        enable = yes
-        time = 120
-    [editor.tabs]
-        move_tabs = yes
-        middle_close = yes
-        close_on_no_tab = no ; Close the program on last tab close - will override fun->allow_restore_notebook
-
-[extensions]
-    [extensions.textwkr.multiview]
-        notebook_location = bottom
-    
-    [extensions.cmd]
-        enable = yes
-        term = {"cmd" if platform.system() == "Windows" else "xterm"}
-
-[fun]
-allow_restore_notebook = yes
-"""
+configs = open(
+    CraftItems(GetCurrentDir(__file__), "..", "data", "appconfig.ini"), "r"
+).read()
+configs.replace("%(term)", "xterm" if platform.system() != "Windows" else "cmd")
 
 # App settings
 global_settings = GetConfig(configs, file=CONFIGS_PATH)

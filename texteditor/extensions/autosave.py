@@ -1,5 +1,4 @@
-import tkinter.messagebox as msb
-from tkinter import BooleanVar, Label, StringVar, Toplevel
+from tkinter import BooleanVar, Label, StringVar, Toplevel, messagebox as msb
 from tkinter.ttk import Button, Checkbutton, Combobox
 
 import logging
@@ -13,7 +12,6 @@ MIN_20 = MIN_15 + MIN_1 * 5  # 1200 secs
 MIN_30 = MIN_15 * 2  # 1800 secs
 
 log = logging.getLogger("textworker")
-# texteditor.backend.require_version("1.6a", "<")
 
 
 class AutoSave:

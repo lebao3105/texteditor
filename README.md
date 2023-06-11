@@ -1,10 +1,10 @@
 ## Texteditor
 [![Code style: black][codestyle]](https://github.com/psf/black)
 
-<div align="center">
+<!-- <div align="center">
     <img src="texteditor/icons/texteditor.png">
     <img src="texteditor/icons/texteditor.Devel.png">
-</div>
+</div> -->
 
 Texteditor is a text editor written in Python using Tkinter interface.
 

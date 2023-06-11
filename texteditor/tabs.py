@@ -1,7 +1,11 @@
+import os
+
+from . import file_operations
+
 from tkinter import Frame, END
 from tkinter.messagebox import askyesnocancel
 from tkinter.ttk import Notebook
-from texteditor.backend import constants, file_operations
+
 from libtextworker.interface.tk.editor import TextWidget
 from libtextworker.interface.tk.miscs import CreateMenu
 
@@ -23,6 +27,7 @@ class TabsViewer(Notebook):
         self.fileops.Editor = self.parent.text_editor
         self.fileops.NewTabFunc = self.add_tab
         self.fileops.NewTabFunc_Args = {"idx": "default"}
+        self.fileops.InitEditor()
 
         # A tab but it's used to add a new tab
         # Idea from StackOverflow.. I don't know there was something like this
@@ -81,7 +86,7 @@ class TabsViewer(Notebook):
             "<Button-3>",
             lambda event: self.right_click_menu.post(event.x_root, event.y_root),
         )
-        self.bind("<<NotebookTabChanged>>", lambda evt: self.tab_changed)
+        self.bind("<<NotebookTabChanged>>", self.tab_changed)
 
         # Place the notebook, if you want
         if do_place is True:
@@ -97,6 +102,7 @@ class TabsViewer(Notebook):
 
         # Add a new tab
         textframe = Frame(self)
+
         if isinstance(idx, int):
             self.insert(idx, textframe, text=newtab_name)
         elif idx == "default":
@@ -107,17 +113,17 @@ class TabsViewer(Notebook):
         # Add contents
         self.parent.text_editor = TextWidget(textframe)
 
-        ## Right-click menu
+        ## Additional right-click menu items
         self.parent.text_editor.addMenusepr()
         self.parent.text_editor.addMenucmd(
             label=_("Save"),
             acc="Ctrl+S",
-            fn=lambda: self.fileops.SaveFileEvent,
+            fn=self.fileops.SaveFileEvent,
         )
         self.parent.text_editor.addMenucmd(
             label=_("Save as"),
             acc="Ctrl+Shift+S",
-            fn=self.fileops.SaveAs,
+            fn=lambda : self.fileops.SaveAs,
         )
         self.parent.text_editor.bind("<KeyRelease>", self.__bindkey)
         self.parent.text_editor.pack(expand=True, fill="both")
@@ -158,12 +164,16 @@ class TabsViewer(Notebook):
             self.forget(self.select())
 
     def tab_changed(self, event):
+        # Check if by somehow we are in the last tab
         if self.select() == self.tabs()[-1]:
             self.add_tab(idx=(len(self.tabs()) - 1))
+
         tabname = event.widget.tab("current")["text"]
+
         # Check if the tab name is + (new tab button)
         if tabname == "+":
             self.add_tab(idx=(len(self.tabs())))
+
         if self.parent.winfo_class() == "Tk":
             self.parent.title(tabname)
 
@@ -177,14 +187,14 @@ class TabsViewer(Notebook):
 
     def reopenfile(self, event=None):
         filename = self.tab(self.select(), "text")
-        if filename not in constants.FILES_ARR:
+        if os.path.isfile(filename):
             self.parent.text_editor.statusbar.writeleftmessage(
-                _("Cannot reopen this tab because it opens no file.")
+                _("No file opened in this tab.")
             )
-            return  # Whetever we can reload the tab content
+            return  # However we can reload the tab content
         else:
             with open(filename, "r") as f:
-                print("Opening file: ", filename)
+                # print("Opening file: ", filename)
                 self.parent.text_editor.insert(1.0, f.read())
                 self.parent.title(filename)
                 self.tab("current", text=filename)

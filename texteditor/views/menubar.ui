@@ -126,7 +126,7 @@
     <child>
       <object class="tk.Menuitem.Command" id="command6">
         <property name="command" type="command" cbtype="simple">open_doc</property>
-        <property name="label" translatable="yes">Read documents...</property>
+        <property name="label" translatable="yes">Read documents online</property>
       </object>
     </child>
     <child>

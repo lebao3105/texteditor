@@ -1,16 +1,11 @@
 import os
 import subprocess
-import texteditor.backend
 import threading
 
 from tkinter import END, BooleanVar, TclError, Toplevel, messagebox
 from .generic import global_settings
 
 from libtextworker.interface.tk.editor import TextWidget
-
-texteditor.backend.require_version("1.4a", ">=")
-# texteditor.backend.require_version("1.6a", "=<")
-
 
 class cmd(TextWidget):
     useWrap = True
@@ -34,7 +29,7 @@ class cmd(TextWidget):
         append = self.insert
 
         if command.startswith("exit"):
-            print("Closed Console Window.")
+            # print("Closed Console Window.")
             self.parent.destroy()  # Destroy the Toplevel widget
 
         elif command.startswith("clear"):

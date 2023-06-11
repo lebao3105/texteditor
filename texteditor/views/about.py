@@ -1,8 +1,12 @@
 import pathlib
 import pygubu
 import texteditor
+
 from tkinter import Toplevel
 from tkinter.ttk import *
+
+from ..extensions.generic import clrcall
+from libtextworker.general import CraftItems, GetCurrentDir, __file__ as libpath
 
 PROJECT_PATH = pathlib.Path(__file__).parent
 PROJECT_UI = PROJECT_PATH / "about.ui"
@@ -14,7 +18,7 @@ class AboutDialog(Toplevel):
 
         self.grab_release()
         self.wm_title(_("About this app"))
-        self.geometry("500x350")
+        self.geometry("300x400")
         # self.resizable(False, False)
 
         builder = pygubu.Builder(_)
@@ -22,7 +26,6 @@ class AboutDialog(Toplevel):
         # Call both the project folder and
         # the current folder (which contains this file)
         builder.add_resource_path(PROJECT_PATH)
-        # print(texteditor.currdir)
         builder.add_resource_path(texteditor.currdir)
 
         # Load the UI layout
@@ -32,11 +35,10 @@ class AboutDialog(Toplevel):
         self.appname = builder.get_object("appname", self)
         self.version = builder.get_object("version", self)
         self.mainfm = builder.get_object("mainfm", self)
-        button1 = builder.get_object("button1", self)
-        button2 = builder.get_object("button2", self)
-        button3 = builder.get_object("button3", self)
 
         self.version.configure(text=_("Version {}".format(texteditor.__version__)))
+
+        clrcall.configure(self.mainfm, True)
 
         builder.connect_callbacks(self)
 
@@ -68,9 +70,11 @@ class AboutDialog(Toplevel):
         leftbtn.pack(side="left")
         rightbtn.pack(side="right")
 
+        self.geometry("500x350")
         return labelfm, bottomfm
 
     def goback(self, *args):
+        self.geometry("300x400")
         for widget in args:
             widget.forget()
             for children in widget.winfo_children():
@@ -86,8 +90,7 @@ class AboutDialog(Toplevel):
         labelfm = self.build_new_page()[0]
         labelfm.config(
             text=_(
-                """\
-        Texteditor is a small, flexible, and cross-platform text editor. It
+                """Texteditor is a small, flexible, and cross-platform text editor. It
         comes with a basic but customizable user interface, and a Command Window
         which allows you to execute some commands.
         """
@@ -97,19 +100,9 @@ class AboutDialog(Toplevel):
     def call_license(self, event=None):
         labelfm = self.build_new_page()[0]
         labelfm.config(
-            text="""\
-        This program is free software: you can redistribute it and/or modify
-        it under the terms of the GNU General Public License as published by
-        the Free Software Foundation, either version 3 of the License, or
-        (at your option) any later version.
-
-        This program is distributed in the hope that it will be useful,
-        but WITHOUT ANY WARRANTY; without even the implied warranty of
-        MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-        GNU General Public License for more details.
-
-        You should have received a copy of the GNU General Public License
-        along with this program.  If not, see <https://www.gnu.org/licenses/>."""
+            text=open(
+                CraftItems(GetCurrentDir(libpath), "licenses", "GPL3_short.txt"), "r"
+            ).read()
         )
 
     def call_devs(self, event=None):

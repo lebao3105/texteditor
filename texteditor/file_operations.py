@@ -1,17 +1,12 @@
 import os
-import texteditor
-import texteditor.backend
 import typing
 
-from tkinter import Text
 from tkinter.filedialog import *
 from tkinter.messagebox import *
 
-searchdir = os.path.expanduser("~/Documents")
+from .extensions.generic import global_settings
 
-texteditor.backend.require_version("1.4a", ">=")
-# texteditor.backend.require_version("1.6a", "<") # It doesn't work! Why?
-
+searchdir = global_settings.get("editor", "searchdir") or os.path.expanduser("~/Documents")
 
 class FileOperations:
     HasContentModified: bool = False
@@ -20,19 +15,26 @@ class FileOperations:
     NewTabFunc_Args: typing.Any
     Parent: object
 
+    def InitEditor(self):
+        self.Editor.bind("<<Modified>>", self.OnTextModified)
+
+    def OnTextModified(self, evt):
+        self.HasContentModified = True
+        # Nothing else
+
     def OpenFileDialog(self, evt=None):
         ask = askopenfilename(
             initialdir=searchdir, parent=self.Parent, title=_("Open a file")
         )
         if ask:
-            return self.Load(ask)
+            return self.LoadFile(ask)
 
     def LoadFile(self, filepath: str):
         if self.HasContentModified:
             self.NewTabFunc(self.NewTabFunc_Args)
 
         with open(filepath, "r") as f:
-            self.Editor.insert("1.0", "end", filepath)
+            self.Editor.insert("1.0", filepath)
 
     def SaveFileEvent(self, evt=None):
         if not self.HasContentModified:
