@@ -5,7 +5,7 @@ include = '\.pyi?$'
 
 [tool.poetry]
 name = "textworker"
-version = "1.6a3"
+version = "1.6dev1"
 description = "It's just a text editor"
 authors = ["lebao3105 <bao12345yocoo@gmail.com>"]
 license = "GPL_V3"

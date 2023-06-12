@@ -54,7 +54,7 @@ class MainFrame(wx.Frame):
 
         # wxInfoBar
         self.infer = wx.InfoBar(self)
-        mainboxer.Add(self.infer, 1, wx.EXPAND, 5)
+        mainboxer.Add(self.infer)
 
         """ Main editor frame """
         editorbox = wx.SplitterWindow(self)
@@ -91,7 +91,6 @@ class MainFrame(wx.Frame):
         self.logwindow.SetVerbose()
 
         self.PlaceMenu()
-
         self.Layout()
 
     def PlaceMenu(self):

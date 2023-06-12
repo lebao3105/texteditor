@@ -1,7 +1,16 @@
 This is the changelog file for textworker in wip/wx branch.
 
+### 1.6a3 (Git tag v1.6a3 last commit 35b74fa)
+* Updated:
+- Git status check (textworker.extensions.gitsp)
+* Fixed:
+- Menu items callback
+* New:
+- Use cairosvg.svg2png to convert application icon from .svg to .png then load it:)
+- Markdown preview support
+
 ### 1.6a2 (Git tag 1.6a2 - last commit 467a669)
-This is a complete build, at least it's usable.
+This is not a complete build, at least it's usable.
 * Fixes:
 - Application auto color (from libtextworker)
 - New configs under interface section
@@ -10,7 +19,7 @@ This is a complete build, at least it's usable.
 - Updated libtextworker to 0.1.2
 - Turn on/off tab guides
 
-### 1.6a1 (Git tag 1.6.1 - wrong tag) (last commit 51ef790)
+### 1.6a1 (Git tag 1.6.1 ~ wrong tag name) (last commit 51ef790)
 * New:
 - Setup window
 - Class to make the menu bar
