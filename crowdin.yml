@@ -1,0 +1,5 @@
+files:
+  - source: /texteditor/
+    ignore:
+      - /texteditor/data
+    translation: /po/%two_letters_code%/%original_file_name%
