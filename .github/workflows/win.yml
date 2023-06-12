@@ -1,0 +1,8 @@
+on:
+    workflow_dispatch:
+
+name: Build portable builds for Windows
+
+jobs:
+    build:
+        runs-on: windows-latest

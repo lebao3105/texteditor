@@ -1,0 +1,8 @@
+on:
+    workflow_dispatch:
+
+name: Build releases (wheel) (wx version)
+
+jobs:
+    build:
+        runs-on: ubuntu-latest
