@@ -1,4 +1,5 @@
-import os.path
+import os
+import sys
 import wx
 
 ignore_not_exists: bool = False
@@ -23,7 +24,7 @@ def start_app(files: list[str], directory: str | None = None):
 
     from .mainwindow import MainFrame
 
-    fm = MainFrame(None)
+    fm = MainFrame()
 
     if len(files) >= 1:
         nb = fm.notebook
@@ -52,8 +53,6 @@ def start_app(files: list[str], directory: str | None = None):
         else:
             wx.MessageBox(f"Directory {directory} not found!", "Error", parent=fm)
 
-    import sys
-
     if sys.platform == "win32":
         import ctypes
 
@@ -69,6 +68,6 @@ def start_app(files: list[str], directory: str | None = None):
             wx.ICON_WARNING,
         )
 
-    app.SetTopWindow(fm)
+    app.SetTopWindow(fm.mainFrame)
     fm.Show()
     app.MainLoop()

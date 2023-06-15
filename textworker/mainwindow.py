@@ -1,24 +1,24 @@
-import os
 import platform
 import webbrowser
 
 import wx
 import wx.adv
+import wx.aui
 import wx.html2
-import wx.stc
+import wx.xrc
 
 try:
-    from cairosvg import svg2png
+    from cairosvg import svg2png # type: ignore
 except ImportError:
     CAIRO_AVAILABLE = False
 else:
     CAIRO_AVAILABLE = True
 
 from libtextworker import __version__ as libver
-from libtextworker.general import TOPLV_DIR, ResetEveryConfig, logger
+from libtextworker.general import TOPLV_DIR, ResetEveryConfig, logger, CraftItems, GetCurrentDir
 from libtextworker.interface.wx.about import AboutDialog
 from libtextworker.interface.wx.dirctrl import PatchedDirCtrl
-from libtextworker.interface.wx.miscs import CreateMenu
+from libtextworker.interface.wx.miscs import XMLBuilder
 from libtextworker.versioning import *
 from textworker import __version__ as appver
 from textworker import icon
@@ -39,33 +39,35 @@ logger.UseGUIToolKit("wx")
 logfmter = LogFormatter()
 
 
-class MainFrame(wx.Frame):
-    def __init__(self, *args, **kwds):
-        wx.Frame.__init__(self, *args, **kwds)
-        self.SetSize((860, 640))
+class MainFrame(XMLBuilder):
+
+    def __init__(self):
+        super().__init__(None, CraftItems(GetCurrentDir(__file__), "ui", "mainmenu.xrc"))
+        
+        self.mainFrame = self.loadObject("mainFrame", "wxFrame")
+        self.mainFrame.SetSize((860, 640))
 
         if CAIRO_AVAILABLE:
             svg2png(open(icon, "r").read(), write_to="./icon.png")
-            self.SetIcon(wx.Icon("./icon.png"))
+            self.mainFrame.SetIcon(wx.Icon("./icon.png"))
+        
+        self.Show = self.mainFrame.Show
+        self.Hide = self.mainFrame.Hide
+        self.Close = self.mainFrame.Close
 
-        """ Main box sizer ever . """
         mainboxer = wx.BoxSizer(wx.VERTICAL)
-        self.SetSizer(mainboxer)
+        editorBox = wx.SplitterWindow(self.mainFrame)
 
         # wxInfoBar
-        self.infer = wx.InfoBar(self)
-        mainboxer.Add(self.infer)
-
-        """ Main editor frame """
-        editorbox = wx.SplitterWindow(self)
+        self.infer = wx.InfoBar(self.mainFrame)
 
         # Editor
-        self.notebook = Tabber(editorbox)
+        self.notebook = Tabber(editorBox)
 
         # Side bar
 
         ## Container
-        self.multiviewer = multiview.MultiViewer(editorbox)
+        self.multiviewer = multiview.MultiViewer(editorBox)
 
         ## Explorer
         self.dirs = PatchedDirCtrl(self.multiviewer.tabs)
@@ -79,219 +81,123 @@ class MainFrame(wx.Frame):
         ## Always show Explorer on startup
         self.multiviewer.tabs.SetSelection(0)
 
-        editorbox.SplitVertically(self.multiviewer.tabs, self.notebook, 246)
-
-        mainboxer.Add(editorbox, 1, wx.GROW, 5)
-
-        # Else things
-        self.wiz = SettingsWindow(self)
-        self.autosv_cfg = autosave.AutoSaveConfig(self)
-        self.logwindow = wx.LogWindow(self, "Log", False)
+        # Other stuffs
+        self.wiz = SettingsWindow(self.mainFrame)
+        self.file_history = wx.FileHistory()
+        self.autosv_cfg = autosave.AutoSaveConfig(self.mainFrame)
+        self.logwindow = wx.LogWindow(self.mainFrame, "Log", False)
         self.logwindow.SetFormatter(logfmter)
         self.logwindow.SetVerbose()
 
-        self.PlaceMenu()
-        self.Layout()
+        # Place everything
+        editorBox.SplitVertically(self.multiviewer.tabs, self.notebook, 246)
+        mainboxer.Add(self.infer, 0, wx.ALL|wx.EXPAND, 5)
+        mainboxer.Add(editorBox, 1, wx.GROW, 5)
 
-    def PlaceMenu(self):
-        self.menubar = wx.MenuBar()
+        self.BindMenuEvents()
+        self.mainFrame.Bind(wx.EVT_CLOSE, self.OnClose)
+        self.mainFrame.SetSizer(mainboxer)
+        self.mainFrame.Layout()
+    
+    def BindMenuEvents(self): # Seems that it's longer than the old PlaceMenu(), but this better
+        def bind(menu, event: list):
+            for callback, pos in event:
+                self.mainFrame.Bind(wx.EVT_MENU, callback, menu.FindItemByPosition(pos))
 
-        ## File
-        filemenu = CreateMenu(
-            self,
-            [
-                (wx.ID_NEW, None, None, self.notebook.AddTab, None),
-                (wx.ID_OPEN, None, None, self.OpenFile, None),
-                (
-                    wx.ID_ANY,
-                    _("Open directory\tCtrl+Shift+D"),
-                    None,
-                    self.OpenDir,
-                    None,
-                ),
-                (
-                    wx.ID_ANY,
-                    _("Close all tabs"),
-                    None,
-                    lambda evt: (
-                        self.notebook.DeleteAllPages(),
-                        self.notebook.AddTab(),
-                    ),
-                    None,
-                ),
-                (None, None, None, None, None),  # Separator
-                (wx.ID_SAVE, None, None, self.SaveFile, None),
-                (
-                    wx.ID_SAVEAS,
-                    _("Save as...\tCtrl+Shift+S"),
-                    None,
-                    self.SaveAs,
-                    None,
-                ),
-                (None, None, None, None, None),
-                (wx.ID_EXIT, _("Quit\tAlt+F4"), None, lambda evt: self.Close, None),
-            ],
-        )
+        filemenu = self.mainFrame.GetMenuBar().GetMenu(0)
+        editmenu = self.mainFrame.GetMenuBar().GetMenu(1)
+        viewmenu = self.mainFrame.GetMenuBar().GetMenu(2)
+        cfgmenu = self.mainFrame.GetMenuBar().GetMenu(3)
+        helpmenu = self.mainFrame.GetMenuBar().GetMenu(4)
 
-        ## Edit
-        editmenu = CreateMenu(
-            self,
-            [
-                (
-                    wx.ID_COPY,
-                    None,
-                    None,
-                    lambda evt: self.TextEditOps(evt, "copy"),
-                    None,
-                ),
-                (
-                    wx.ID_PASTE,
-                    None,
-                    None,
-                    lambda evt: self.TextEditOps(evt, "paste"),
-                    None,
-                ),
-                (
-                    wx.ID_CUT,
-                    None,
-                    None,
-                    lambda evt: self.TextEditOps(evt, "cut"),
-                    None,
-                ),
-                (None, None, None, None, None),
-                (
-                    wx.ID_SELECTALL,
-                    None,
-                    None,
-                    lambda evt: self.TextEditOps(evt, "selall"),
-                    None,
-                ),
-                (
-                    wx.ID_DELETE,
-                    _("Delete\tDelete"),
-                    None,
-                    lambda evt: self.TextEditOps(evt, "delback"),
-                    None,
-                ),
-                (None, None, None, None, None),
-                (
-                    wx.ID_ANY,
-                    _("Auto save"),
-                    _("Configure auto-saving file function"),
-                    lambda evt: self.autosv_cfg.ConfigWindow(),
-                    None,
-                ),
-            ],
-        )
+        # File menu
+        # Remember to skip separators!
+        filemenu_events = [
+            (self.notebook.AddTab, 0),
+            (self.NewWindow, 1),
+            # Sep
+            (self.OpenFile, 3),
+            # Open folder (submenu)
+            # Recents
+            # Sep
+            (self.notebook.fileops.SaveFileEvent, 7),
+            (self.notebook.fileops.AskToSave, 8),
+            # Sep
+            (self.CloseAllPages, 10),
+            (lambda evt: wx.PostEvent(self.mainFrame, wx.CommandEvent(wx.wxEVT_CLOSE_WINDOW)), 11)
+        ]
+    
+        for callback, pos in [
+            (self.OpenDir, 0),
+            (lambda evt: self.OpenDir(evt, newwind = True), 1)
+        ]:
+            self.mainFrame.Bind(
+                wx.EVT_MENU,
+                callback,
+                filemenu.FindItemByPosition(4).GetSubMenu().FindItemByPosition(pos)
+            )
 
-        ## View
-        viewmenu = CreateMenu(
-            self,
-            [
-                (
-                    wx.ID_ZOOM_IN,
-                    _("Zoom in\tCtrl++"),
-                    None,
-                    lambda evt: self.ZoomEditor(evt, "zoomin"),
-                    None,
-                ),
-                (
-                    wx.ID_ZOOM_OUT,
-                    _("Zoom out\tCtrl+-"),
-                    None,
-                    lambda evt: self.ZoomEditor(evt, "zoomout"),
-                    None,
-                ),
-                (
-                    None,
-                    _("View markdown document"),
-                    None,
-                    lambda evt: self.ShowMarkdown(evt),
-                    None,
-                ),
-            ],
-        )
-        wrap = wx.MenuItem(viewmenu, wx.ID_ANY, _("Wrap by word"), kind=wx.ITEM_CHECK)
-        viewmenu.Append(wrap)
-        self.Bind(
+        ## Setup wxFileHistory
+        self.file_history.UseMenu(filemenu.FindItemByPosition(5).GetSubMenu())
+        self.mainFrame.Bind(wx.EVT_MENU_RANGE, self.OnFileHistory, id=wx.ID_FILE1, id2=wx.ID_FILE9)
+        
+        # Edit menu
+        editmenu_events = [
+            (lambda evt: self.notebook.GetCurrentPage().Undo(), 0),
+            (lambda evt: self.notebook.GetCurrentPage().Redo(), 1),
+            (lambda evt: self.notebook.GetCurrentPage().Cut(), 3),
+            (lambda evt: self.notebook.GetCurrentPage().Copy(), 4),
+            (lambda evt: self.notebook.GetCurrentPage().Paste(), 5),
+            (lambda evt: self.notebook.GetCurrentPage().SelectAll(), 7)
+            # Find & Replace dialogs are not implemented yet
+        ]
+        
+        # View menu
+        viewmenu_events = [
+            (lambda evt: self.notebook.GetCurrentPage().ZoomIn(), 0),
+            (lambda evt: self.notebook.GetCurrentPage().ZoomOut(), 1),
+            (self.ShowMarkdown, 4)
+        ]
+
+        self.mainFrame.Bind(
             wx.EVT_MENU,
-            lambda evt: self.notebook.text_editor.SetWrapMode(wrap.IsChecked()),
-            wrap,
-        )
-
-        tabgd = wx.MenuItem(
-            viewmenu,
-            wx.ID_ANY,
-            _("Show tab guides"),
-            kind=wx.ITEM_CHECK,
-        )
-        viewmenu.Append(tabgd)
-        if self.notebook.text_editor.GetIndentationGuides():
-            tabgd.Check()
-        self.Bind(
-            wx.EVT_MENU,
-            lambda evt: (
-                self.notebook.text_editor.SetIndentationGuides(tabgd.IsChecked())
+            lambda evt: self.notebook.GetCurrentPage().SetWrapMode(
+                viewmenu.FindItemByPosition(2).IsChecked()
             ),
-            tabgd,
+            viewmenu.FindItemByPosition(2)
         )
 
-        ## Configs
-        configsmenu = CreateMenu(
-            self,
-            [
-                (
-                    wx.ID_ANY,
-                    _("Show all configurations"),
-                    None,
-                    lambda evt: self.OpenDir(None, TOPLV_DIR),
-                    None,
-                ),
-                (wx.ID_ANY, _("Reset all configs"), None, self.ResetCfgs, None),
-                (wx.ID_ANY, _("Run Setup"), None, self.wiz.Run, None),
-            ],
+        if self.notebook.GetCurrentPage().GetIndentationGuides():
+            viewmenu.FindItemByPosition(3).Check()
+        self.mainFrame.Bind(
+            wx.EVT_MENU,
+            lambda evt: self.notebook.GetCurrentPage().SetIndentationGuides(
+                viewmenu.FindItemByPosition(3).IsChecked()
+            ),
+            viewmenu.FindItemByPosition(3)
         )
 
-        ## Help
-        helpmenu = CreateMenu(
-            self,
-            [
-                (wx.ID_ABOUT, None, None, self.ShowAbout, None),
-                (
-                    None,
-                    _("Documentation"),
-                    _("Read app documents online."),
-                    lambda evt: webbrowser.open_new_tab(
-                        "https://lebao3105.gitbook.io/texteditor_doc"
-                    ),
-                    None,
-                ),
-                (
-                    None,
-                    _("System specs"),
-                    _("Show system specs found - helpful for bug reports or questions"),
-                    self.SysInf_Show,
-                    None,
-                ),
-                (
-                    None,
-                    _("Source code"),
-                    _("View the app source code online."),
-                    lambda evt: webbrowser.open_new_tab(
-                        "https://github.com/lebao3105/texteditor/tree/wip/wx"
-                    ),
-                    None,
-                ),
-                (None, _("View log"), None, lambda evt: self.logwindow.Show(), None),
-            ],
-        )
+        # Settings menu
+        cfgmenu_events = [
+            # OMG Settings window! But not this time:) (index 0)
+            (self.ResetCfgs, 1),
+            (lambda evt: self.OpenDir(evt, TOPLV_DIR, True), 2)
+        ]
 
-        self.menubar.Append(filemenu, _("&File"))
-        self.menubar.Append(editmenu, _("&Edit"))
-        self.menubar.Append(viewmenu, _("&View"))
-        self.menubar.Append(configsmenu, _("&Config"))
-        self.menubar.Append(helpmenu, _("&Help"))
-        self.SetMenuBar(self.menubar)
+        # Help menu
+        helpmenu_events = [
+            (self.ShowAbout, 0),
+            (self.SysInf_Show, 1),
+            (lambda evt: self.logwindow.Show(), 2),
+            (lambda evt: webbrowser.open("https://github.com/lebao3105/texteditor/issues"), 4),
+            (lambda evt: webbrowser.open("https://lebao3105.gitbook.io/texteditor_doc"), 5)
+        ]
+
+        bind(filemenu, filemenu_events)
+        bind(editmenu, editmenu_events)
+        bind(viewmenu, viewmenu_events)
+        bind(cfgmenu, cfgmenu_events)
+        bind(helpmenu, helpmenu_events)
 
     """
     Event callbacks
@@ -301,10 +207,10 @@ class MainFrame(wx.Frame):
         evt.Skip()
         wx.GetApp().ExitMainLoop()
 
-    def OpenDir(self, evt, path: str = ""):
+    def OpenDir(self, evt, path: str = "", newwind: bool = False):
         if not path:
             ask = wx.DirDialog(
-                self,
+                self.mainFrame,
                 _("Select a folder to start"),
             )
             if ask.ShowModal() == wx.ID_OK:
@@ -314,13 +220,16 @@ class MainFrame(wx.Frame):
         else:
             selected_dir = path
 
-        self.dirs.SetFolder(selected_dir)
-        self.gitsp.InitFolder(selected_dir)
+        if not newwind:
+            self.dirs.SetFolder(selected_dir)
+            self.gitsp.InitFolder(selected_dir)
+        else:
+            new = wx.Frame(self.mainFrame)
+            PatchedDirCtrl(new).SetFolder(selected_dir)
+            new.Show()
 
     def OpenFileFromTree(self, evt):
         path = self.dirs.GetFullPath()
-        if not os.path.isfile(path):
-            return
         self.notebook.fileops.OpenFile(path)
 
     def ShowMarkdown(self, evt):
@@ -330,13 +239,13 @@ class MainFrame(wx.Frame):
             wx.MessageBox(
                 _("You need to get markdown2 package from Pypi first!"),
                 _("Extra package required"),
-                parent=self,
+                parent=self.mainFrame,
             )
             return False
 
         content = markdown(self.notebook.text_editor.GetText())
 
-        wind = wx.Frame(self, title=_("Markdown to HTML"))
+        wind = wx.Frame(self.mainFrame)
         newwind = wx.html2.WebView.New(wind)
         newwind.SetPage(content, "")
 
@@ -345,15 +254,17 @@ class MainFrame(wx.Frame):
 
     def ResetCfgs(self, evt):
         ask = wx.MessageDialog(
-            self,
+            self.mainFrame,
             _(
-                "Are you sure want to reset all configurations?\nThere is no way BACK!\nThe app will close after the operation."
+                "Are you sure want to reset every settings?\n"
+                "If so, finish your work first since the app will close after"
+                "the operation. (and you will need to reopen yourself)"
             ),
-            _("Confirm configs reset"),
-            wx.YES_NO | wx.ICON_WARNING,
+            style=wx.YES_NO | wx.ICON_WARNING,
         ).ShowModal()
+
         if ask == wx.ID_YES:
-            logger.info(_("Done resetting all configs. App restart required."))
+            logger.info("App reset requested.")
             ResetEveryConfig()
 
     def ShowAbout(self, evt):
@@ -388,36 +299,29 @@ class MainFrame(wx.Frame):
         wx.StaticText(newdlg, label=msg)
         newdlg.ShowModal()
 
-    """
-    Still event callbacks, but "lambda evt" does not work
-    * but not all of them, "Close all tabs" is an example *
-    """
-
-    # File operations
-    def OpenFile(self, evt) -> bool:
-        return self.notebook.fileops.AskToOpen()
-
-    def SaveFile(self, evt) -> bool:
-        return self.notebook.fileops.SaveFile(
-            self.notebook.GetPageText(self.notebook.GetSelection())
+    def NewWindow(self, evt):
+        import subprocess, sys
+        subprocess.Popen(
+            [sys.executable, "-m", "textworker"],
+            cwd=CraftItems(GetCurrentDir(__file__), "..")
         )
 
-    def SaveAs(self, evt) -> bool:
-        return self.notebook.fileops.AskToSave()
+    def OnFileHistory(self, evt):
+        # get the file based on the menu ID
+        fileNum = evt.GetId() - wx.ID_FILE1
+        path = self.file_history.GetHistoryFile(fileNum)
+        self.notebook.fileops.OpenFile(path)
 
-    # Text edit
-    def TextEditOps(self, evt, action: str):
-        acts = {
-            "copy": self.notebook.text_editor.Copy(),
-            "paste": self.notebook.text_editor.Paste(),
-            "cut": self.notebook.text_editor.Cut(),
-            "selall": self.notebook.text_editor.SelectAll(),
-            "delback": self.notebook.text_editor.DeleteBack(),
-        }
-        return acts.get(action)
-
-    def ZoomEditor(self, evt, i: str):
-        if i == "zoomin":
-            return self.notebook.text_editor.ZoomIn()
-        elif i == "zoomout":
-            return self.notebook.text_editor.ZoomOut()
+        # add it back to the history so it will be moved up the list
+        self.file_history.AddFileToHistory(path)
+    
+    def OpenFile(self, evt):
+        self.notebook.fileops.AskToOpen(evt)
+        self.file_history.AddFileToHistory(self.notebook.GetPageText(self.notebook.GetSelection()))
+    
+    def CloseAllPages(self, evt):
+        self.notebook.DeleteAllPages()
+        wx.PostEvent(
+            self.notebook,
+            wx.CommandEvent(wx.aui.wxEVT_AUINOTEBOOK_PAGE_CLOSED)
+        )

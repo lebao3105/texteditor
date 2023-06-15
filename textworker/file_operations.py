@@ -6,7 +6,7 @@ from .extensions import autosave
 from .generic import global_settings
 
 searchdir = global_settings.getkey("editor", "searchdir", noraiseexp=True, restore=True)
-if searchdir == "" or isinstance(searchdir, bool):
+if not os.path.isdir(searchdir):
     searchdir = os.path.expanduser("~/Documents")
 
 
@@ -43,7 +43,14 @@ class FileOperations:
         self.file_dialog.SetName(_("Save this to..."))
         result = self.file_dialog.ShowModal()
         if result == wx.ID_OK:
-            self.Tabber.GetCurrentPage().Save(self.file_dialog.GetPath())
+            self.Tabber.GetCurrentPage().SaveFile(self.file_dialog.GetPath())
+    
+    def SaveFileEvent(self, evt=None):
+        tablabel = self.Tabber.GetPageText(self.Tabber.GetSelection())
+        if not os.path.isfile(tablabel):
+            return self.AskToSave()
+        else:
+            return self.SaveFile(tablabel)
 
     def OpenFile(self, path: str):
         self.Tabber.GetCurrentPage().LoadFile(path)
@@ -55,7 +62,7 @@ class FileOperations:
             self.Tabber.Parent.SetTitle(path)
 
     def SaveFile(self, path: str):
-        return self.Tabber.GetCurrentPage().Save(path)
+        return self.Tabber.GetCurrentPage().SaveFile(path)
 
     def AutoSave(self):
         for i in range(self.Tabber.GetPageCount()):
