@@ -21,9 +21,10 @@ classifiers = [
 
 [tool.poetry.dependencies]
 python = "^3.8"
-libtextworker = {path = "libtextworker"}
+libtextworker[tkinter] = {path = "libtextworker"}
 cairosvg = {version = "^2.7.0", optional = true}
 pygubu = "^0.31"
+sv-ttk = "^2.4.5"
 
 [build-system]
 requires = ["poetry-core"]
