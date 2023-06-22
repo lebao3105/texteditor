@@ -6,7 +6,7 @@ import sys
 
 from textworker import __version__
 
-print("Textworker version: %s" % __version__)
+print("Textworker version: ", __version__)
 parser = argparse.ArgumentParser(
     description="Help setting up textworker easier",
     usage="'install' for install the project, 'build' to build, 'maketrans' to create translations (gettext required).\nThat's all.",
@@ -111,5 +111,4 @@ elif "install" in opts.action:
 elif "clean" in opts.action:
     clean()
 else:
-    parser.print_help()
-    parser.error("No argument provided/invalid argument")
+    parser.error("No (valid) argument provided")

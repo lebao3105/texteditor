@@ -1,5 +1,8 @@
 textworker/extensions/multiview.py
 textworker/mainwindow.py
 textworker/tabs.py
+textworker/editor.py
+textworker/file_operations.py
 po/autosave.pot
 po/preferences.pot
+po/menubar.pot
