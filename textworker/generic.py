@@ -1,6 +1,7 @@
 import json
 import logging
 import os
+
 import wx
 import wx.xml
 import wx.xrc
@@ -8,7 +9,7 @@ import wx.adv
 
 from libtextworker import get_config, THEMES_DIR, EDITOR_DIR
 from libtextworker.versioning import *
-from libtextworker.general import CraftItems, CreateDirectory, GetCurrentDir
+from libtextworker.general import CraftItems, GetCurrentDir, TOPLV_DIR
 from libtextworker.interface.manager import default_configs
 from libtextworker.interface.wx import ColorManager
 from libtextworker.interface.wx.constants import FONTST, FONTWT
@@ -19,11 +20,9 @@ UIRC_DIR = str(currdir / "ui")
 logger = logging.getLogger("textworker")
 
 # Config file path
-configpath = os.path.expanduser(
-    "~/.config/textworker/configs{}.ini".format(
+configpath = TOPLV_DIR + "/configs{}.ini".format(
         "" if not is_development_version_from_project("textworker") else "_dev"
     )
-)
 
 # Default configs
 
@@ -34,11 +33,9 @@ cfg = open(CraftItems(GetCurrentDir(__file__), "data", "appconfig.ini")).read()
 
 # App settings
 global_settings = get_config.GetConfig(cfg, file=configpath)
-global_settings.set_setting = global_settings.set
-global_settings.get_setting = global_settings.getkey
 
 # Move old configs, if any
-# (Compare with versions =< 1.6a2)
+# (Compare with versions < 1.6a2)
 moves = json.loads(open(CraftItems(GetCurrentDir(__file__), "merges.json")).read())
 
 global_settings.move(moves)

@@ -2,7 +2,9 @@
 
 - 1.6:
     - Fully port the app to use libtextworker (it's done)
-    - Fix file_operations (come on...)
+    - Fix file_operations (done!)
     - Setup Window on first launch/update (needs some fixes to be done)
-    - Side bar & status bar like VSCode (yeah right)
-    - Use guesslang to "guess" language of the text
+    - Side bar & status bar like VSCode (yeah right) (can't make statusbar)
+    - Use guesslang to "guess" language of the text (cancelled)
+    - Settings window (this is hard)
+    - Autosave for tabs with no file open (maybe write cache?)

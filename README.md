@@ -1,25 +1,36 @@
-## Textworker
-[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
-[![Build releases (wheel) (wx version)](https://github.com/lebao3105/texteditor/actions/workflows/wheel.yml/badge.svg?branch=data)](https://github.com/lebao3105/texteditor/actions/workflows/wheel.yml)
+<div style="float: left;">
+    <img src="https://raw.githubusercontent.com/lebao3105/texteditor/data/icons/me.lebao3105.textworker.svg">
+    <img src="https://raw.githubusercontent.com/lebao3105/texteditor/data/icons/me.lebao3105.textworker.Devel.svg">
+</div>
 
-A simple and cross-platform Python text editor.
+<p align="right">
+    <h1 align="right">
+        <strong>Textworker</strong>
+    </h1>
+    <h3 align="right">
+    A simple and cross-platform Python text editor.
+    </h3>
+    <a href="https://github.com/psf/black">
+        <image src="https://img.shields.io/badge/code%20style-black-000000.svg" align="right"/>
+    </a>
+    <a href="https://github.com/lebao3105/texteditor/actions/workflows/wheel.yml">
+        <image src="https://github.com/lebao3105/texteditor/actions/workflows/wheel.yml/badge.svg?branch=data" align="right"/>
+    </a>
+</p>
 
-> Note: This is a port of texteditor/textworker to use wxPython. Features, mostly are different to the Tkinter one and are not fully completed.
+<br clear="both">
 
-Stuffs you can do with this editor:
-* VSCode-like tabs split - re-arrangement & side bar
+## Features
+* Tabs split/rearrangement
 * Access to your files without opening File Explorer
 * Run some tasks with Command Window
 * Customizable interface
-* New since 1.6a3: Git support!
-* Auto save! (for the current tab in this time) (currently disabled)
+* Partial Git support (1.6a3+)
+* Auto save
 
-<div align="center">
-    <img src="textworker/data/icons/me.lebao3105.textworker.Devel.svg">
-    <img src="textworker/data/icons/me.lebao3105.textworker.svg">
-</div>
+See all app releases [here.](https://github.com/lebao3105/texteditor/releases)
 
-See all app releases [here.](https://github.com/lebao3105/texteditor/releases) You can get wheels from [GitHub actions](https://github.com/lebao3105/texteditor/actions).
+You can get wheels from [GitHub actions](https://github.com/lebao3105/texteditor/actions).
 
 ## Build and install
 Requires Python 3.8+.

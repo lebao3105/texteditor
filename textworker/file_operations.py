@@ -2,7 +2,6 @@ import os
 import typing
 import wx
 
-from .extensions import autosave
 from .generic import global_settings
 
 searchdir = global_settings.getkey("editor", "searchdir", noraiseexp=True, restore=True)
@@ -11,15 +10,10 @@ if not os.path.isdir(searchdir):
 
 
 class FileOperations:
-    """
-    Class to provide wx.*Book* support for editors.
-    """
-
-    Tabber: typing.Callable | wx.Notebook
+    Tabber: wx.Window
 
     configs = {
         "AddTab": typing.Callable,
-        "IndependentAutoSave": True,
         "SetTabName": True,
         "SetWindowTitle": True,
     }
@@ -28,7 +22,7 @@ class FileOperations:
     message = wx.MessageDialog(None, "")
 
     def __init__(
-        self, Tabber: typing.Callable | wx.Notebook, configs: dict[str, typing.Any]
+        self, Tabber: wx.Window, configs: dict[str, typing.Any]
     ):
         self.Tabber = Tabber
         self.configs = configs
@@ -60,13 +54,7 @@ class FileOperations:
             self.Tabber.Parent, "SetTitle"
         ):
             self.Tabber.Parent.SetTitle(path)
+        self.Tabber.GetCurrentPage().FileLoaded = path
 
     def SaveFile(self, path: str):
         return self.Tabber.GetCurrentPage().SaveFile(path)
-
-    def AutoSave(self):
-        for i in range(self.Tabber.GetPageCount()):
-            obj = autosave.AutoSave(self.Tabber.GetPage(i))
-            obj.Function = self.SaveFile
-            obj.Function_args = self.Tabber.GetPageText(i)
-            obj.Start()
