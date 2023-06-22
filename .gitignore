@@ -163,3 +163,8 @@ cython_debug/
 
 # CairoSVG generated icon
 icon.png
+
+# Packaging results
+*.deb
+*.rpm
+*.flatpak
