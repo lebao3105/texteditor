@@ -1,56 +1,40 @@
-import threading
 import wx
 import wx.xrc
 
-from typing import Any, Callable
+from threading import Thread
+from typing import Callable
 from libtextworker.general import GetCurrentDir
 from ..generic import global_settings, XMLBuilder
 
-# Minutes to seconds
-MIN_05 = 30  # 30 secs
-MIN_1 = MIN_05 * 2  # 60 secs
-MIN_15 = MIN_1 * 15  # 900 secs
-MIN_20 = MIN_15 + MIN_1 * 5  # 1200 secs
-MIN_30 = MIN_15 * 2  # 1800 secs
 
 # Configs
-enabled = global_settings.get_setting(
-    "editor", "autosave", noraiseexp=True, restore=True
+enabled = global_settings.getkey(
+    "editor.autosave", "enable", noraiseexp=True, restore=False
 )
-if not enabled:
-    enabled = global_settings.get_setting(
-        "extensions.autosave", "enable", noraiseexp=True, restore=False
-    )
 
-time = global_settings.get_setting(
-    "editor", "autosave_time", noraiseexp=True, restore=True
+time = global_settings.getkey(
+    "editor.autosave", "time", noraiseexp=True, restore=True
 )
 if not int(time):
-    time = global_settings.get_setting(
-        "extensions.autosave", "time", noraiseexp=True, restore=False
-    )
-    time = global_settings.get_setting(
-        "extensions.autosave", "time", noraiseexp=True, restore=False
-    )
-    if not int(time):
-        time = MIN_05
+    time = 30
 
+TOGGLE: bool = bool(enabled)
 
 class AutoSaveConfig(XMLBuilder):
     timealiases = {
-        "30 seconds": MIN_05,
-        "1 minute": MIN_1,
-        "2 minutes": MIN_1 * 2,
-        "5 minutes": MIN_1 * 5,
-        "10 minutes": MIN_1 * 10,
-        "15 minutes": MIN_15,
-        "20 minutes": MIN_20,
-        "30 minutes": MIN_30,
+        "30 seconds": 30,
+        "1 minute": 60,
+        "2 minutes": 120,
+        "5 minutes": 300,
+        "10 minutes": 600,
+        "15 minutes": 900,
+        "20 minutes": 1200,
+        "30 minutes": 1800
     }
     enabled = enabled
     shown = False
 
-    def __init__(self, Parent):
+    def __init__(self, Parent: wx.Window):
         super().__init__(
             Parent, str(GetCurrentDir(__file__, True) / ".." / "ui" / "autosave.xrc"), _
         )
@@ -67,9 +51,9 @@ class AutoSaveConfig(XMLBuilder):
 
     def OnChoiceSelected(self, evt):
         choice = self.Cmb.GetValue()
-        if self.ChkBox.GetValue():
-            global_settings.set_setting(
-                "editor", "autosave_time", self.timealiases[choice]
+        if choice:
+            global_settings.set_and_update(
+                "editor.autosave", "time", self.timealiases[choice]
             )
 
     def ConfigWindow(self):
@@ -85,24 +69,43 @@ class AutoSaveConfig(XMLBuilder):
 class AutoSave:
     """
     Auto-save support for wxPython editors.
+    Just simple as it is.
     """
 
     Function: Callable
-    Function_args: Any
+    Function_args: dict
 
-    def __init__(self, editor):
-        """
-        Constructor of the class.
-        @param editor: wxPython editable editor
-        """
+    CurrDelay: int = time
 
-        if enabled in global_settings.no_values or [False]:
+    def __init__(self):
+        if enabled in global_settings.no_values:
             return
         else:
             pass
 
-    def Start(self, time: str = time):
-        return wx.CallAfter(int(time) * 1000, self.Function, **self.Function_args)
+        self.Timer = wx.CallLater(int(self.CurrDelay) * 1000, self.Function, **self.Function_args)
+        Thread(target=self.CheckToggle).start()
 
-    def Config(self, evt=None):
-        return self.cfg.ConfigWindow()
+    def Start(self, time_: str = ""):
+        if time_:
+            self.CurrDelay = int(time_)
+
+        if self.Timer.IsRunning():
+            self.Timer.Stop()
+
+        self.Timer.Start(int(self.CurrDelay) * 1000)
+
+    def Stop(self):
+        self.Timer.Stop()
+    
+    def Toggle(self, on_or_off: bool):
+        if on_or_off:
+            self.Start()
+        else:
+            self.Stop()
+    
+    def CheckToggle(self):
+        if not TOGGLE and self.Timer.IsRunning() == True:
+            self.Stop()
+        elif not self.Timer.IsRunning():
+            self.Start()

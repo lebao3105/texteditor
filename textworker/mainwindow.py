@@ -8,21 +8,26 @@ import wx.html2
 import wx.xrc
 
 try:
-    from cairosvg import svg2png # type: ignore
+    from cairosvg import svg2png  # type: ignore
 except ImportError:
     CAIRO_AVAILABLE = False
 else:
     CAIRO_AVAILABLE = True
 
 from libtextworker import __version__ as libver
-from libtextworker.general import TOPLV_DIR, ResetEveryConfig, logger, CraftItems, GetCurrentDir
+from libtextworker.general import (
+    TOPLV_DIR,
+    ResetEveryConfig,
+    logger,
+    CraftItems,
+    GetCurrentDir,
+)
 from libtextworker.interface.wx.about import AboutDialog
 from libtextworker.interface.wx.dirctrl import PatchedDirCtrl
-from libtextworker.interface.wx.miscs import XMLBuilder
+from libtextworker.interface.wx.miscs import XMLBuilder, BindMenuEvents
 from libtextworker.versioning import *
-from textworker import __version__ as appver
-from textworker import icon
 
+from textworker import __version__ as appver, icon
 from .extensions import autosave, multiview, gitsp
 from .generic import SettingsWindow, global_settings, LogFormatter
 from .tabs import Tabber
@@ -34,23 +39,24 @@ if platform.system() == "Windows":
     myappid = "me.lebao3105.textworker"
     ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(myappid)
 
-cfg = global_settings
-logger.UseGUIToolKit("wx")
-logfmter = LogFormatter()
-
 
 class MainFrame(XMLBuilder):
+    cfg = global_settings
+    logger.UseGUIToolKit("wx")
+    logfmter = LogFormatter()
 
     def __init__(self):
-        super().__init__(None, CraftItems(GetCurrentDir(__file__), "ui", "mainmenu.xrc"))
-        
+        super().__init__(
+            None, CraftItems(GetCurrentDir(__file__), "ui", "mainmenu.xrc")
+        )
+
         self.mainFrame = self.loadObject("mainFrame", "wxFrame")
         self.mainFrame.SetSize((860, 640))
 
         if CAIRO_AVAILABLE:
             svg2png(open(icon, "r").read(), write_to="./icon.png")
             self.mainFrame.SetIcon(wx.Icon("./icon.png"))
-        
+
         self.Show = self.mainFrame.Show
         self.Hide = self.mainFrame.Hide
         self.Close = self.mainFrame.Close
@@ -86,23 +92,26 @@ class MainFrame(XMLBuilder):
         self.file_history = wx.FileHistory()
         self.autosv_cfg = autosave.AutoSaveConfig(self.mainFrame)
         self.logwindow = wx.LogWindow(self.mainFrame, "Log", False)
-        self.logwindow.SetFormatter(logfmter)
+        self.logwindow.SetFormatter(self.logfmter)
         self.logwindow.SetVerbose()
 
         # Place everything
         editorBox.SplitVertically(self.multiviewer.tabs, self.notebook, 246)
-        mainboxer.Add(self.infer, 0, wx.ALL|wx.EXPAND, 5)
+        mainboxer.Add(self.infer, wx.EXPAND)
         mainboxer.Add(editorBox, 1, wx.GROW, 5)
 
-        self.BindMenuEvents()
+        self.LoadMenu()
         self.mainFrame.Bind(wx.EVT_CLOSE, self.OnClose)
         self.mainFrame.SetSizer(mainboxer)
         self.mainFrame.Layout()
-    
-    def BindMenuEvents(self): # Seems that it's longer than the old PlaceMenu(), but this better
-        def bind(menu, event: list):
-            for callback, pos in event:
-                self.mainFrame.Bind(wx.EVT_MENU, callback, menu.FindItemByPosition(pos))
+        self.mainFrame.Centre()
+
+    def LoadMenu(self):
+
+        def ToggleAutoSave(evt):
+            wx.MessageBox(_("This will only affect to this session"), parent=self.mainFrame)
+            autosave.TOGGLE = False
+            evt.Skip()
 
         filemenu = self.mainFrame.GetMenuBar().GetMenu(0)
         editmenu = self.mainFrame.GetMenuBar().GetMenu(1)
@@ -124,23 +133,30 @@ class MainFrame(XMLBuilder):
             (self.notebook.fileops.AskToSave, 8),
             # Sep
             (self.CloseAllPages, 10),
-            (lambda evt: wx.PostEvent(self.mainFrame, wx.CommandEvent(wx.wxEVT_CLOSE_WINDOW)), 11)
+            (
+                lambda evt: wx.PostEvent(
+                    self.mainFrame, wx.CommandEvent(wx.wxEVT_CLOSE_WINDOW)
+                ),
+                11,
+            ),
         ]
-    
+
         for callback, pos in [
             (self.OpenDir, 0),
-            (lambda evt: self.OpenDir(evt, newwind = True), 1)
+            (lambda evt: self.OpenDir(evt, newwind=True), 1),
         ]:
             self.mainFrame.Bind(
                 wx.EVT_MENU,
                 callback,
-                filemenu.FindItemByPosition(4).GetSubMenu().FindItemByPosition(pos)
+                filemenu.FindItemByPosition(4).GetSubMenu().FindItemByPosition(pos),
             )
 
         ## Setup wxFileHistory
         self.file_history.UseMenu(filemenu.FindItemByPosition(5).GetSubMenu())
-        self.mainFrame.Bind(wx.EVT_MENU_RANGE, self.OnFileHistory, id=wx.ID_FILE1, id2=wx.ID_FILE9)
-        
+        self.mainFrame.Bind(
+            wx.EVT_MENU_RANGE, self.OnFileHistory, id=wx.ID_FILE1, id2=wx.ID_FILE9
+        )
+
         # Edit menu
         editmenu_events = [
             (lambda evt: self.notebook.GetCurrentPage().Undo(), 0),
@@ -151,12 +167,56 @@ class MainFrame(XMLBuilder):
             (lambda evt: self.notebook.GetCurrentPage().SelectAll(), 7)
             # Find & Replace dialogs are not implemented yet
         ]
+
+        ## Auto-save menus
+        ## This. REALLY.
+        global_autosv = (
+            editmenu.FindItemByPosition(12)
+            .GetSubMenu()
+            .FindItemByPosition(0)
+            .GetSubMenu()
+        )
+        editor_autosv = (
+            editmenu.FindItemByPosition(12)
+            .GetSubMenu()
+            .FindItemByPosition(1)
+            .GetSubMenu()
+        )
+
+        self.mainFrame.Bind(
+            wx.EVT_MENU,
+            lambda evt: self.autosv_cfg.ConfigWindow(),
+            global_autosv.FindItemByPosition(0),
+        )
+
+        self.mainFrame.Bind(
+            wx.EVT_MENU,
+            lambda evt: self.notebook.GetCurrentPage().ConfigWindow(),
+            editor_autosv.FindItemByPosition(0),
+        )
+
+        if autosave.enabled in global_settings.yes_values:
+            global_autosv.FindItemByPosition(1).Check(True)
+            editor_autosv.FindItemByPosition(1).Check(True)
+            self.notebook.GetCurrentPage().Start()  # On init only 1 tab opened, so we can do this
         
+        self.mainFrame.Bind(
+            wx.EVT_MENU,
+            lambda evt: self.notebook.GetCurrentPage().Toggle(editor_autosv.FindItemByPosition(1).IsChecked()),
+            editor_autosv.FindItemByPosition(1)
+        )
+
+        self.mainFrame.Bind(
+            wx.EVT_MENU,
+            lambda evt: ToggleAutoSave(evt),
+            global_autosv.FindItemByPosition(1)
+        )
+
         # View menu
         viewmenu_events = [
             (lambda evt: self.notebook.GetCurrentPage().ZoomIn(), 0),
             (lambda evt: self.notebook.GetCurrentPage().ZoomOut(), 1),
-            (self.ShowMarkdown, 4)
+            (self.ShowMarkdown, 4),
         ]
 
         self.mainFrame.Bind(
@@ -164,24 +224,25 @@ class MainFrame(XMLBuilder):
             lambda evt: self.notebook.GetCurrentPage().SetWrapMode(
                 viewmenu.FindItemByPosition(2).IsChecked()
             ),
-            viewmenu.FindItemByPosition(2)
+            viewmenu.FindItemByPosition(2),
         )
 
         if self.notebook.GetCurrentPage().GetIndentationGuides():
             viewmenu.FindItemByPosition(3).Check()
+            
         self.mainFrame.Bind(
             wx.EVT_MENU,
             lambda evt: self.notebook.GetCurrentPage().SetIndentationGuides(
                 viewmenu.FindItemByPosition(3).IsChecked()
             ),
-            viewmenu.FindItemByPosition(3)
+            viewmenu.FindItemByPosition(3),
         )
 
         # Settings menu
         cfgmenu_events = [
             # OMG Settings window! But not this time:) (index 0)
             (self.ResetCfgs, 1),
-            (lambda evt: self.OpenDir(evt, TOPLV_DIR, True), 2)
+            (lambda evt: self.OpenDir(evt, TOPLV_DIR, True), 2),
         ]
 
         # Help menu
@@ -189,15 +250,25 @@ class MainFrame(XMLBuilder):
             (self.ShowAbout, 0),
             (self.SysInf_Show, 1),
             (lambda evt: self.logwindow.Show(), 2),
-            (lambda evt: webbrowser.open("https://github.com/lebao3105/texteditor/issues"), 4),
-            (lambda evt: webbrowser.open("https://lebao3105.gitbook.io/texteditor_doc"), 5)
+            (
+                lambda evt: webbrowser.open(
+                    "https://github.com/lebao3105/texteditor/issues"
+                ),
+                4,
+            ),
+            (
+                lambda evt: webbrowser.open(
+                    "https://lebao3105.gitbook.io/texteditor_doc"
+                ),
+                5,
+            ),
         ]
 
-        bind(filemenu, filemenu_events)
-        bind(editmenu, editmenu_events)
-        bind(viewmenu, viewmenu_events)
-        bind(cfgmenu, cfgmenu_events)
-        bind(helpmenu, helpmenu_events)
+        BindMenuEvents(self.mainFrame, filemenu, filemenu_events)
+        BindMenuEvents(self.mainFrame, editmenu, editmenu_events)
+        BindMenuEvents(self.mainFrame, viewmenu, viewmenu_events)
+        BindMenuEvents(self.mainFrame, cfgmenu, cfgmenu_events)
+        BindMenuEvents(self.mainFrame, helpmenu, helpmenu_events)
 
     """
     Event callbacks
@@ -234,7 +305,7 @@ class MainFrame(XMLBuilder):
 
     def ShowMarkdown(self, evt):
         try:
-            from markdown2 import markdown
+            from markdown2 import markdown  # type: ignore
         except ImportError:
             wx.MessageBox(
                 _("You need to get markdown2 package from Pypi first!"),
@@ -295,18 +366,24 @@ class MainFrame(XMLBuilder):
         Machine architecture: {platform.machine()}
         """
         )
-        newdlg = wx.Dialog(self, title=_("System specs"))
+        newdlg = wx.Dialog(self.mainFrame, title=_("System specs"))
         wx.StaticText(newdlg, label=msg)
         newdlg.ShowModal()
 
     def NewWindow(self, evt):
         import subprocess, sys
-        subprocess.Popen(
-            [sys.executable, "-m", "textworker"],
-            cwd=CraftItems(GetCurrentDir(__file__), "..")
-        )
 
-    def OnFileHistory(self, evt):
+        # subprocess.Popen(
+        #     [sys.executable, "-m", "textworker"],
+        #     cwd=CraftItems(GetCurrentDir(__file__), ".."),
+        # )
+
+        cloned = wx.App()
+        cloned.SetAppName("textworker")
+        MainFrame().Show()
+        cloned.MainLoop()
+
+    def OnFileHistory(self, evt):  # cre: wxdemo program
         # get the file based on the menu ID
         fileNum = evt.GetId() - wx.ID_FILE1
         path = self.file_history.GetHistoryFile(fileNum)
@@ -314,14 +391,15 @@ class MainFrame(XMLBuilder):
 
         # add it back to the history so it will be moved up the list
         self.file_history.AddFileToHistory(path)
-    
+
     def OpenFile(self, evt):
         self.notebook.fileops.AskToOpen(evt)
-        self.file_history.AddFileToHistory(self.notebook.GetPageText(self.notebook.GetSelection()))
-    
+        self.file_history.AddFileToHistory(
+            self.notebook.GetPageText(self.notebook.GetSelection())
+        )
+
     def CloseAllPages(self, evt):
         self.notebook.DeleteAllPages()
         wx.PostEvent(
-            self.notebook,
-            wx.CommandEvent(wx.aui.wxEVT_AUINOTEBOOK_PAGE_CLOSED)
+            self.notebook, wx.CommandEvent(wx.aui.wxEVT_AUINOTEBOOK_PAGE_CLOSED)
         )

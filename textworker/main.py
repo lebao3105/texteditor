@@ -63,7 +63,8 @@ def start_app(files: list[str], directory: str | None = None):
     if is_admin:
         fm.infer.ShowMessage(
             _(
-                "You're running this application as root. Be careful with the file system."
+                "You're running this application as root.\n"
+                "Be careful with the file system as it can easily be broken."
             ),
             wx.ICON_WARNING,
         )
