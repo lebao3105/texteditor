@@ -328,7 +328,7 @@
                         <property name="label">Find</property>
                         <property name="name">m_menuItem19</property>
                         <property name="permission">none</property>
-                        <property name="shortcut">Ctrl+R</property>
+                        <property name="shortcut">Ctrl+F</property>
                         <property name="unchecked_bitmap"></property>
                     </object>
                     <object class="wxMenuItem" expanded="1">
@@ -341,7 +341,7 @@
                         <property name="label">Replace</property>
                         <property name="name">m_menuItem20</property>
                         <property name="permission">none</property>
-                        <property name="shortcut"></property>
+                        <property name="shortcut">Ctrl+R</property>
                         <property name="unchecked_bitmap"></property>
                     </object>
                     <object class="separator" expanded="1">

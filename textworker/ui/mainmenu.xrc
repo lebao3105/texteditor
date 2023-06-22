@@ -85,11 +85,11 @@
 				</object>
 				<object class="separator" />
 				<object class="wxMenuItem" name="m_menuItem19">
-					<label>Find\tCtrl+R</label>
+					<label>Find\tCtrl+F</label>
 					<help></help>
 				</object>
 				<object class="wxMenuItem" name="m_menuItem20">
-					<label>Replace</label>
+					<label>Replace\tCtrl+R</label>
 					<help></help>
 				</object>
 				<object class="separator" />
