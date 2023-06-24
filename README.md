@@ -1,41 +1,58 @@
-## Texteditor
-[![Code style: black][codestyle]](https://github.com/psf/black)
+<div style="float: left;">
+    <img src="https://raw.githubusercontent.com/lebao3105/texteditor/data/icons/me.lebao3105.textworker.svg">
+    <img src="https://raw.githubusercontent.com/lebao3105/texteditor/data/icons/me.lebao3105.textworker.Devel.svg">
+</div>
 
-<!-- <div align="center">
-    <img src="texteditor/icons/texteditor.png">
-    <img src="texteditor/icons/texteditor.Devel.png">
-</div> -->
+<p align="right">
+    <h1 align="right">
+        <strong>Textworker</strong>
+    </h1>
+    <h3 align="right">
+    A simple and cross-platform Python text editor.
+    </h3>
+    <a href="https://github.com/psf/black">
+        <image src="https://img.shields.io/badge/code%20style-black-000000.svg" align="right"/>
+    </a>
+    <a href="https://github.com/lebao3105/texteditor/actions/workflows/wheeltk.yml">
+        <image src="https://github.com/lebao3105/texteditor/actions/workflows/wheeltk.yml/badge.svg?branch=data" align="right"/>
+    </a>
+</p>
 
-Texteditor is a text editor written in Python using Tkinter interface.
-
-Read documents online: https://lebao3105.gitbook.io/texteditor_doc
-
-Read the app API online: https://lebao3105.github.io/libtextworker
+<br clear="both">
 
 ## Features
-* Tabs support
-* Fast
-* Dark mode + Text colors support
-* Configuration file support
-* Auto save documents
-* Command window where you can run external commands (except Console apps which require your inputs)
 
-> This project is available on [GitLab.](https://gitlab.com/lebao3105/texteditor_tk)
+* Lightweight
+* Run some tasks with Command Window (removed since version 1.5a+)
+* Customizable interface
+* Auto save
 
-## Running
-Make sure you have Python 3.8 or higher with pip and Tkinter (not from Pypi), installed.
+See all app releases [here.](https://github.com/lebao3105/texteditor/releases)
 
-Cairosvg is used for generating app icon (.png) from .svg file, and it's optional.
+You can get wheels from [GitHub actions](https://github.com/lebao3105/texteditor/actions).
 
-Install dependencies: ```pip install ./libtextworker[tkinter]```
+## Build and install
 
-Run: ```python3 -m texteditor [args]```
+Requires Python 3.8+ with Tkinter and pip installed.
 
-Install: ```pip install -e .```
+Installable directly from TestPypi as the ```texteditor``` package.
 
-## Screenshots
-![image][img]
+Run:
 
-[buildmd]: BuildAndRun.md
-[codestyle]: https://img.shields.io/badge/code%20style-black-000000.svg
-[img]: https://user-images.githubusercontent.com/77564176/206902963-b65f0c3c-efa4-438c-8f9b-1d98fa4faae1.png
+```bash
+python3 -m texteditor [args]
+```
+
+If you want to use the source code:
+
+```bash
+git clone https://github.com/lebao3105/texteditor.git # Or you can use gitlab instead
+cd texteditor
+git submodule update --init --recursive
+pip install attrdict3
+pip install cairosvg # If you want, for app icon support
+pip install ./libtextworker[configparser,tkinter]
+pip install ./libtextworker[autocolor] # for autocolor support
+```
+
+Install from source: ```pip install -e .```
