@@ -9,9 +9,11 @@ from tkinter.messagebox import *
 from .extensions.autosave import AutoSave
 from .extensions.generic import global_settings
 
-searchdir = global_settings.get("editor", "searchdir") or os.path.expanduser(
-    "~/Documents"
-)
+searchdir = global_settings.get("editor", "searchdir") 
+if not os.path.isdir(searchdir):
+    os.path.expanduser(
+        "~/Documents"
+    )
 
 
 class FileOperations:
@@ -33,7 +35,7 @@ class FileOperations:
 
         if (
             os.path.isfile(tabname.removesuffix(_(" (Duplicated)")))
-            or self.NoteBook.select().editor.Modified
+            or self.NoteBook.nametowidget(self.NoteBook.select()).editor.Modified
         ):
             if self.NewTabFn_Args is not None:
                 self.NewTabFn(**self.NewTabFn_Args)
@@ -86,11 +88,3 @@ class FileOperations:
         self.NoteBook.nametowidget(currtab).editor.bind(
             "<<Modified>>", self.OnEditorModified
         )
-
-    def AutoSaveSetup(self):
-        if self.AutoSave:
-            for fm in self.NoteBook.tabs():
-                obj = AutoSave(
-                    self.NoteBook.nametowidget(fm).editor, self.SaveFileEvent
-                )
-                # obj.start() # Not this time

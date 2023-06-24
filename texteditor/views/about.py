@@ -8,8 +8,8 @@ from tkinter.ttk import *
 from ..extensions.generic import clrcall
 from libtextworker.general import CraftItems, GetCurrentDir, __file__ as libpath
 
-PROJECT_PATH = pathlib.Path(__file__).parent
-PROJECT_UI = PROJECT_PATH / "about.ui"
+PROJECT_PATH = GetCurrentDir(__file__)
+PROJECT_UI = CraftItems(PROJECT_PATH, "about.ui")
 
 
 class AboutDialog(Toplevel):

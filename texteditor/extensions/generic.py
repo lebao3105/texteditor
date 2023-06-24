@@ -3,9 +3,9 @@ import os
 import platform
 
 from libtextworker import EDITOR_DIR, THEMES_DIR
-from libtextworker.general import CraftItems, GetCurrentDir, logger
+from libtextworker.general import CraftItems, GetCurrentDir
 from libtextworker.get_config import GetConfig
-from libtextworker.interface.manager import default_configs
+from libtextworker.interface import stock_ui_configs
 from libtextworker.interface.tk import ColorManager
 from libtextworker.versioning import is_development_version_from_project
 
@@ -17,8 +17,7 @@ CONFIGS_PATH = os.path.expanduser(
 )
 configs = open(
     CraftItems(GetCurrentDir(__file__), "..", "data", "appconfig.ini"), "r"
-).read()
-configs.replace("%(term)", "xterm" if platform.system() != "Windows" else "cmd")
+).read().replace("%(term)", "xterm" if platform.system() != "Windows" else "cmd")
 
 # App settings
 global_settings = GetConfig(configs, file=CONFIGS_PATH)
@@ -37,7 +36,7 @@ if _theme_path and _theme:
 else:
     _theme_load = CraftItems(THEMES_DIR, "default.ini")
 
-clrcall = ColorManager(default_configs, _theme_load)
+clrcall = ColorManager(stock_ui_configs, _theme_load)
 
 # Editor config
 _editor_config_name = global_settings["config-paths.editor"]["name"]

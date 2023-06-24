@@ -40,6 +40,44 @@
         <property name="label" translatable="yes">Quit</property>
       </object>
     </child>
+    <child>
+      <object class="tk.Menuitem.Submenu" id="submenu1">
+        <property name="label" translatable="yes">Auto Save...</property>
+        <property name="tearoff">false</property>
+        <child>
+          <object class="tk.Menuitem.Submenu" id="submenu2">
+            <property name="label" translatable="yes">The current editor</property>
+            <property name="tearoff">false</property>
+            <child>
+              <object class="tk.Menuitem.Command" id="command18">
+                <property name="label" translatable="yes">Configure</property>
+              </object>
+            </child>
+            <child>
+              <object class="tk.Menuitem.Checkbutton" id="checkbutton3">
+                <property name="label" translatable="yes">Is enabled?</property>
+              </object>
+            </child>
+          </object>
+        </child>
+        <child>
+          <object class="tk.Menuitem.Submenu" id="submenu3">
+            <property name="label" translatable="yes">Global</property>
+            <property name="tearoff">false</property>
+            <child>
+              <object class="tk.Menuitem.Command" id="command21">
+                <property name="label" translatable="yes">Configure</property>
+              </object>
+            </child>
+            <child>
+              <object class="tk.Menuitem.Checkbutton" id="checkbutton4">
+                <property name="label" translatable="yes">Is enabled?</property>
+              </object>
+            </child>
+          </object>
+        </child>
+      </object>
+    </child>
   </object>
   <object class="tk.Menu" id="menu2">
     <property name="tearoff">false</property>
@@ -99,6 +137,24 @@
         <property name="label" translatable="yes">Replace</property>
       </object>
     </child>
+    <child>
+      <object class="tk.Menuitem.Separator" id="separator4" />
+    </child>
+    <child>
+      <object class="tk.Menuitem.Checkbutton" id="checkbutton1">
+        <property name="command" type="command" cbtype="simple">toggle_autocolor</property>
+        <property name="label" translatable="yes">Auto color</property>
+        <property name="variable">boolean:autocolor</property>
+      </object>
+    </child>
+    <child>
+      <object class="tk.Menuitem.Checkbutton" id="checkbutton2">
+        <property name="accelerator">Ctrl+W</property>
+        <property name="command" type="command" cbtype="simple">toggle_wrap</property>
+        <property name="label" translatable="yes">Word wrap</property>
+        <property name="variable">boolean:wrapbtn</property>
+      </object>
+    </child>
   </object>
   <object class="tk.Menu" id="menu3">
     <property name="tearoff">false</property>
@@ -117,7 +173,7 @@
     <child>
       <object class="tk.Menuitem.Command" id="command16">
         <property name="command" type="command" cbtype="simple">change_color</property>
-		  <property name="label" translatable="yes">Toggle color mode...</property>
+        <property name="label" translatable="yes">Toggle color mode...</property>
       </object>
     </child>
   </object>

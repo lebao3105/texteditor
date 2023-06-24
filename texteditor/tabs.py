@@ -1,12 +1,12 @@
 import os
 
 from . import file_operations
+from . import editor
 
 from tkinter import Frame, END
 from tkinter.messagebox import askyesnocancel
 from tkinter.ttk import Notebook
 
-from libtextworker.interface.tk.editor import TextWidget
 from libtextworker.interface.tk.miscs import CreateMenu
 
 from .extensions.generic import global_settings
@@ -32,10 +32,6 @@ class TabsViewer(Notebook):
         # Add an initial tab
         self.add_tab()
         self.fileops.InitEditor()
-
-        if global_settings.get("editor.autosave", "enable") == "yes" or True:
-            self.fileops.AutoSave = True
-            self.fileops.AutoSaveSetup()
 
         # A tab but it's used to add a new tab
         # Idea from StackOverflow.. I don't know there was something like that
@@ -116,7 +112,7 @@ class TabsViewer(Notebook):
             self.add(textframe, text=newtab_name)
 
         # Add contents
-        textframe.editor = TextWidget(textframe)
+        textframe.editor = editor.Editor(textframe)
 
         ## Additional right-click menu items
         textframe.editor.addMenusepr()

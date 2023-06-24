@@ -1,6 +1,7 @@
 import os
 import pygubu
 import webbrowser
+
 from typing import NoReturn
 from tkinter import messagebox as msgbox
 from tkinter import Tk, BooleanVar, PhotoImage, TclError, Menu
@@ -14,13 +15,12 @@ else:
 
 import texteditor
 from .tabs import TabsViewer
-from .extensions import autosave, cmd, finding, generic
+from .extensions import autosave, finding, generic
+from .extensions.generic import clrcall, global_settings
 from .views import about
 
 from libtextworker.general import logger, ResetEveryConfig
 
-global_settings = generic.global_settings
-clrcall = generic.clrcall
 logger.UseGUIToolKit("tk")
 
 
@@ -34,6 +34,8 @@ class MainWindow(Tk):
             "add_tab": lambda: self.add_tab(),
             "gofind": lambda: finding.Finder(self, "find"),
             "goreplace": lambda: finding.Finder(self, ""),
+            "toggle_autocolor": lambda: self.toggle_autocolor(),
+            "toggle_wrap": lambda: self.toggle_wrap(),
             "destroy": lambda: self.destroy(),
             "opencfg": lambda: self.opencfg(),
             "resetcfg": lambda: self.resetcfg(),
@@ -53,13 +55,8 @@ class MainWindow(Tk):
                 self.log.exception("Unable to set application icon", "TCLError occured")
 
         # BooleanVar_s
-        self.wrapbtn = BooleanVar(value=True)  # Wrap button
-        self.autocolor = BooleanVar()  # Auto change color
-
-        if clrcall.getkey("color", "autocolor") == "yes" or True:
-            self.autocolor.set(True)
-        else:
-            self.autocolor.set(False)
+        self.wrapbtn = BooleanVar(value=global_settings.getkey("editor.autosave", "enable") in global_settings.yes_values)  # Wrap button
+        self.autocolor = BooleanVar(value=clrcall.getkey("color", "autocolor") in clrcall.yes_values)  # Auto change color
 
         self.get_color()
         self.load_ui()
@@ -85,33 +82,6 @@ class MainWindow(Tk):
         self.menu3 = builder.get_object("menu3", self)
         self.menu4 = builder.get_object("menu4", self)
 
-        ## Add "code-only" menu items
-        addeditcmd = self.menu2.add_command
-        if global_settings.call("editor.autosave", "enable") == "yes":
-            addeditcmd(
-                label=_("Autosave"),
-                command=lambda: self.autosv.openpopup(),
-            )
-
-        if global_settings.call("extensions.cmd", "enable") == "yes":
-            self.menu2.add_separator()
-            addeditcmd(
-                label=_("Open System Shell"),
-                command=lambda: cmd.showcmd(self),
-                accelerator="Ctrl+T",
-            )
-        self.menu3.add_checkbutton(
-            label=_("Autocolor mode"),
-            command=lambda: self.autocolor_mode(),
-            variable=self.autocolor,
-        )
-        self.menu3.add_checkbutton(
-            label=_("Word wrap"),
-            command=lambda: self.text_editor.wrapmode(),
-            variable=self.wrapbtn,
-            accelerator="Ctrl+W",
-        )
-
         ## Add menus to the main one
         menu.add_cascade(menu=self.menu1, label=_("File"))
         menu.add_cascade(menu=self.menu2, label=_("Edit"))
@@ -125,16 +95,13 @@ class MainWindow(Tk):
         builder.connect_callbacks(self.callbacks)
 
         self.notebook = TabsViewer(self, do_place=True)
-        self.autosv = autosave.AutoSave(
-            self, savefile_fn=lambda: self.notebook.fileops.SaveFileEvent()
-        )
+        self.autosv = autosave.AutoSaveConfig(self)
+        self.autosv.ShowWind()
 
     # Bind commands to the application
     def add_event(self):
         bindcfg = self.bind
         bindcfg("<Control-n>", lambda event: self.add_tab(self))
-        if global_settings.call("extensions.cmd", "enable") == "yes":
-            bindcfg("<Control-t>", lambda event: cmd.showcmd(self))
         bindcfg("<Control-f>", lambda event: finding.Finder(self, "find"))
         bindcfg("<Control-r>", lambda event: finding.Finder(self, ""))
         bindcfg("<Control-Shift-S>", lambda event: self.notebook.fileops.SaveAs())
@@ -182,7 +149,7 @@ class MainWindow(Tk):
                 """
                 ),
             ):
-                self.autocolor_mode()
+                self.toggle_autocolor()
             else:
                 return
         clrcall.set("color", "background", self.lb)
@@ -192,15 +159,20 @@ class MainWindow(Tk):
     def add_tab(self, event=None):
         return self.notebook.add_tab(idx="default")
 
-    def autocolor_mode(self, event=None, permanent: bool = False):
+    def toggle_autocolor(self, event=None, permanent: bool = False):
         toggle = self.autocolor.get()
         clrcall.threads = {}
         if toggle == True:
             if permanent:
-                clrcall.set("color", "autocolor", "no")
-                clrcall.update()
+                clrcall.set_and_update("color", "autocolor", "no")
         elif toggle == False:
             if permanent:
-                clrcall.set("color", "autocolor", "yes")
-                clrcall.update()
+                clrcall.set_and_update("color", "autocolor", "yes")
         self.get_color()
+
+    def toggle_wrap(self, event=None):
+        toggle = self.wrapbtn.get()
+        if toggle:
+            self.notebook.nametowidget(self.notebook.select()).editor.configure("word")
+        else:
+            self.notebook.nametowidget(self.notebook.select()).editor.configure("none")
