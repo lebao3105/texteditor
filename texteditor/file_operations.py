@@ -1,12 +1,11 @@
 import os
-from tkinter.ttk import Notebook
 import typing
 
 from tkinter import Misc
 from tkinter.filedialog import *
 from tkinter.messagebox import *
+from tkinter.ttk import Notebook
 
-from .extensions.autosave import AutoSave
 from .extensions.generic import global_settings
 
 searchdir = global_settings.get("editor", "searchdir") 
@@ -19,11 +18,11 @@ if not os.path.isdir(searchdir):
 class FileOperations:
     """
     The extended texteditor.tabs + libtextworker's Tkinter editor
-        with (auto)save and text modify-detect functions
+        with text modify-detect function
+    Use with texteditor.editor.Editor.
     """
 
     NoteBook: Misc | Notebook
-    AutoSave: bool = True
 
     SetWindowTitleFn: typing.Callable
     NewTabFn: typing.Callable

@@ -90,9 +90,8 @@ class AboutDialog(Toplevel):
         labelfm = self.build_new_page()[0]
         labelfm.config(
             text=_(
-                """Texteditor is a small, flexible, and cross-platform text editor. It
-        comes with a basic but customizable user interface, and a Command Window
-        which allows you to execute some commands.
+                """Texteditor is a small, flexible, and cross-platform text editor. It is built
+        with Tkinter GUI toolkit to be fast and lightweight, comes with a basic but customizable user interface.
         """
             )
         )

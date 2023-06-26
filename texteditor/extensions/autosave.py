@@ -24,11 +24,13 @@ TOGGLE: bool = bool(enabled)
 
 class AutoSave:
     Editor: Misc
+    CurrDelay: int = time
 
-    def Start(self):
+    def Start(self, time_: int = time):
+        self.CurrDelay = time_
         if not enabled:
             return
-        self.TaskId = self.Editor.after(int(time) * 1000, lambda: self.SaveFunc())
+        self.TaskId = self.Editor.after(int(time_) * 1000, lambda: self.SaveFunc())
     
     def Stop(self):
         self.Editor.after_cancel(self.TaskId)
@@ -69,19 +71,28 @@ class AutoSaveConfig(Toplevel):
         self.grab_release()
         self.resizable(False, False)
 
-        builder = Builder(_)
-        builder.add_from_file(CraftItems(GetCurrentDir(__file__), "../views", "autosave.ui"))
+        self.builder = Builder(_)
+        self.builder.add_from_file(CraftItems(GetCurrentDir(__file__), "../views", "autosave.ui"))
 
-        self.dialog = builder.get_object("dialog1", self)
-        self.combobox = builder.get_object("combobox1", self.dialog)
+        self.dialog = self.builder.get_object("dialog1", self)
+        self.combobox = self.builder.get_object("combobox1", self.dialog)
+        self.checkbtn = self.builder.get_object("checkbutton1", self.dialog)
         self.combobox["values"] = [item for item in self.timealiases]
-        self.checkbtn = builder.get_object("checkbutton1", self.dialog)
+        self.combobox["state"] = "readonly"
 
         clrcall.configure(self.dialog, True)
-        builder.connect_callbacks(self)
+        self.builder.connect_callbacks(self)
     
     def do_the_task(self):
-        print(self.combobox.get())
+        choice = self.builder.get_variable("selected_time").get()
+        do_save = self.builder.get_variable("save").get()
+        if choice:
+            global_settings.set(
+                "editor.autosave",
+                self.timealiases[choice]
+            )
+            if do_save:
+                global_settings.update()
     
     def ShowWind(self):
         self.dialog.mainloop()
