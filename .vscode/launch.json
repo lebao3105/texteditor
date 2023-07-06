@@ -1,6 +1,4 @@
 {
-    // Use IntelliSense to learn about possible attributes.
-    // Hover to view descriptions of existing attributes.
     "version": "0.2.0",
     "configurations": [
         {
@@ -9,7 +7,8 @@
             "request": "launch",
             "module": "texteditor",
             "console": "internalConsole",
-            "justMyCode": true
+            "justMyCode": false,
+            // "env": {"PYTHONPATH": "../libtextworker"}
         },
         {
             "name": "Run texteditor to open README.md",
@@ -18,7 +17,7 @@
             "module": "texteditor",
             "console": "internalConsole",
             "args": ["README.md"],
-            "justMyCode": true
+            "justMyCode": false
         }
     ]
 }

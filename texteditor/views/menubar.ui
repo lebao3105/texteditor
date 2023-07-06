@@ -40,11 +40,13 @@
             <property name="tearoff">false</property>
             <child>
               <object class="tk.Menuitem.Command" id="command18">
+                <property name="command" type="command" cbtype="simple">autosv_localcfg</property>
                 <property name="label" translatable="yes">Configure</property>
               </object>
             </child>
             <child>
               <object class="tk.Menuitem.Checkbutton" id="checkbutton3">
+                <property name="command" type="command" cbtype="simple">autosv_local</property>
                 <property name="label" translatable="yes">Is enabled?</property>
                 <property name="variable">boolean:autosave_local</property>
               </object>
@@ -57,13 +59,15 @@
             <property name="tearoff">false</property>
             <child>
               <object class="tk.Menuitem.Command" id="command21">
+                <property name="command" type="command" cbtype="simple">autosv_globalcfg</property>
                 <property name="label" translatable="yes">Configure</property>
               </object>
             </child>
             <child>
               <object class="tk.Menuitem.Checkbutton" id="checkbutton4">
+                <property name="command" type="command" cbtype="simple">autosv_global</property>
                 <property name="label" translatable="yes">Is enabled?</property>
-                <property name="variable">string:autosave_global</property>
+                <property name="variable">boolean:autosave_global</property>
               </object>
             </child>
           </object>

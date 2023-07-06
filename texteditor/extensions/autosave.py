@@ -4,13 +4,6 @@ from libtextworker.general import logger, CraftItems, GetCurrentDir
 from pygubu.builder import Builder
 from threading import Thread
 
-# Minutes to seconds
-MIN_05 = 30  # 30 secs
-MIN_1 = MIN_05 * 2  # 60 secs
-MIN_15 = MIN_1 * 15  # 900 secs
-MIN_20 = MIN_15 + MIN_1 * 5  # 1200 secs
-MIN_30 = MIN_15 * 2  # 1800 secs
-
 enabled = global_settings.getkey("editor.autosave", "enable", False, True)
 time = global_settings.getkey("editor.autosave", "time", False, True)
 
@@ -22,6 +15,7 @@ if not int(time):
 
 TOGGLE: bool = bool(enabled)
 
+
 class AutoSave:
     Editor: Misc
     CurrDelay: int = time
@@ -31,7 +25,7 @@ class AutoSave:
         if not enabled:
             return
         self.TaskId = self.Editor.after(int(time_) * 1000, lambda: self.SaveFunc())
-    
+
     def Stop(self):
         self.Editor.after_cancel(self.TaskId)
         self.__delattr__("TaskId")
@@ -51,30 +45,37 @@ class AutoSave:
     def __init__(self):
         Thread(target=self.CheckToggle, daemon=True).start()
 
+
 class AutoSaveConfig(Toplevel):
     """
     Autosave window.
     """
+    isShown : bool = False
+
     timealiases = {
-        "30 seconds": 30,
-        "1 minute": 60,
-        "2 minutes": 120,
-        "5 minutes": 300,
-        "10 minutes": 600,
-        "15 minutes": 900,
-        "20 minutes": 1200,
-        "30 minutes": 1800
+        _("30 seconds"): 30,
+        _("1 minute"): 60,
+        _("2 minutes"): 120,
+        _("5 minutes"): 300,
+        _("10 minutes"): 600,
+        _("15 minutes"): 900,
+        _("20 minutes"): 1200,
+        _("30 minutes"): 1800,
     }
 
-    def __init__(self, parent: Misc):
-        super().__init__(master=parent)
+    def __init__(self, master: Misc | None = None):
+        super().__init__(master)
         self.grab_release()
+        self.wm_title("AutoSave config")
+        self.wm_protocol("WM_DELETE_WINDOW", self.OnClose)
         self.resizable(False, False)
 
         self.builder = Builder(_)
-        self.builder.add_from_file(CraftItems(GetCurrentDir(__file__), "../views", "autosave.ui"))
+        self.builder.add_from_file(
+            CraftItems(GetCurrentDir(__file__), "../views", "autosave.ui")
+        )
 
-        self.dialog = self.builder.get_object("dialog1", self)
+        self.dialog = self.builder.get_object("frame", self)
         self.combobox = self.builder.get_object("combobox1", self.dialog)
         self.checkbtn = self.builder.get_object("checkbutton1", self.dialog)
         self.combobox["values"] = [item for item in self.timealiases]
@@ -82,17 +83,26 @@ class AutoSaveConfig(Toplevel):
 
         clrcall.configure(self.dialog, True)
         self.builder.connect_callbacks(self)
-    
+
     def do_the_task(self):
         choice = self.builder.get_variable("selected_time").get()
         do_save = self.builder.get_variable("save").get()
         if choice:
-            global_settings.set(
-                "editor.autosave",
-                self.timealiases[choice]
-            )
+            global_settings.set("editor.autosave", "time", self.timealiases[choice])
             if do_save:
                 global_settings.update()
+
+    """
+    BUG: This func auto runs on editor init??? (unexpectedly)
+    """
     
     def ShowWind(self):
-        self.dialog.mainloop()
+        if not self.isShown:
+            self.mainloop()
+            self.isShown = True
+        else:
+            self.focus()
+
+    def OnClose(self):
+        self.isShown = False
+        self.quit()

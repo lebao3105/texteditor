@@ -9,9 +9,6 @@ from tkinter.ttk import Notebook
 
 from libtextworker.interface.tk.miscs import CreateMenu
 
-from .extensions.generic import global_settings
-
-
 class TabsViewer(Notebook):
     def __init__(self, master, do_place: bool, newtablabel: str = None, **kw):
         super().__init__(master, **kw)
@@ -27,11 +24,10 @@ class TabsViewer(Notebook):
         self.fileops = file_operations.FileOperations()
         self.fileops.NoteBook = self
         self.fileops.NewTabFn = self.add_tab
-        self.fileops.NewTabFunc_Args = {"idx": "default"}
+        self.fileops.NewTabFn_Args = {"idx": "default"}
 
         # Add an initial tab
         self.add_tab()
-        self.fileops.InitEditor()
 
         # A tab but it's used to add a new tab
         # Idea from StackOverflow.. I don't know there was something like that
@@ -113,27 +109,19 @@ class TabsViewer(Notebook):
 
         # Add contents
         textframe.editor = editor.Editor(textframe)
-
-        ## Additional right-click menu items
-        textframe.editor.addMenusepr()
-        textframe.editor.addMenucmd(
-            label=_("Save"),
-            acc="Ctrl+S",
-            fn=self.fileops.SaveFileEvent,
-        )
-        textframe.editor.addMenucmd(
-            label=_("Save as"),
-            acc="Ctrl+Shift+S",
-            fn=lambda: self.fileops.SaveAs,
-        )
+        textframe.editor.EditorInit()
         textframe.editor.pack(expand=True, fill="both")
 
         # Post setup
         self.select(textframe)
+        self.fileops.InitEditor()
         textframe.editor.focus()
 
-        if self.parent.winfo_class() == "Tk" or "TopLevel":
-            self.parent.title(newtab_name)
+        self.nametitle(newtab_name)
+
+    def nametitle(self, title: str):
+        if hasattr(self.master, "title"):
+            self.master.title(title)
 
     def close_tab(self, event=None):
         tabname = self.tab(self.select(), "text")
@@ -145,13 +133,9 @@ class TabsViewer(Notebook):
             )
             if result == True:
                 self.fileops.SaveFile(tabname.removesuffix(" *"))
-                self.forget(self.select())
             elif result == None:
                 return
-            else:
-                self.forget(self.select())
-        else:
-            self.forget(self.select())
+        self.forget(self.select())
 
     def tab_changed(self, event):
         # Check if by somehow we are in the last tab
@@ -164,8 +148,7 @@ class TabsViewer(Notebook):
         if tabname == "+":
             self.add_tab(idx=(len(self.tabs())))
 
-        if self.parent.winfo_class() == "Tk":
-            self.parent.title(tabname)
+        self.nametitle(tabname)
 
     def duplicate_tab(self, event=None):
         content = self.nametowidget(self.select()).editor.get(1.0, END)
@@ -178,13 +161,10 @@ class TabsViewer(Notebook):
     def reopenfile(self, event=None):
         filename = self.tab(self.select(), "text")
         if os.path.isfile(filename):
-            # self.select().editor.statusbar.writeleftmessage(
-            #     _("No file opened in this tab.")
-            # )
             return  # However we can reload the tab content
         else:
             with open(filename, "r") as f:
                 # print("Opening file: ", filename)
                 self.nametowidget(self.select()).editor.insert(1.0, f.read())
-                self.parent.title(filename)
-                self.tab("current", text=filename)
+            self.nametitle(filename)
+            self.tab("current", text=filename)

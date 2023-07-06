@@ -1,7 +1,7 @@
 import argparse
+import libtextworker
 import sys
 
-import libtextworker
 from texteditor import main as main_entrypoint
 from libtextworker.general import CraftItems
 from texteditor import __version__
@@ -44,7 +44,8 @@ file_flags.add_argument(
 )
 # file_flags.add_argument("--open-directory", "-d", help="Open a directory")
 
-if __name__ == "__main__":
+
+def main():
     options = parser.parse_args()
 
     if options.ignore_not_exists and options.create_new:  # Conflict args
@@ -72,3 +73,7 @@ if __name__ == "__main__":
     #     dir = None
 
     main_entrypoint.start_app(files)
+
+
+if __name__ == "__main__":
+    main()

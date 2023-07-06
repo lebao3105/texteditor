@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='utf-8'?>
 <interface version="1.3">
-  <object class="ttk.Frame" id="dialog1">
+  <object class="ttk.Frame" id="frame" named="True">
     <layout manager="pack">
       <property name="anchor">n</property>
       <property name="side">top</property>

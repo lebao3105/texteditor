@@ -2,7 +2,7 @@ import os
 import pygubu
 import webbrowser
 
-from typing import NoReturn
+from typing import Literal, NoReturn
 from tkinter import messagebox as msgbox
 from tkinter import Tk, PhotoImage, TclError, Menu
 
@@ -25,7 +25,6 @@ logger.UseGUIToolKit("tk")
 
 
 class MainWindow(Tk):
-
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.geometry("810x610")
@@ -35,8 +34,8 @@ class MainWindow(Tk):
             svg2png(open(texteditor.icon, "r").read(), write_to="./icon.png")
             try:
                 self.wm_iconphoto(False, PhotoImage(file="./icon.png"))
-            except TclError:
-                self.log.exception("Unable to set application icon", "TCLError occured")
+            except TclError as e:
+                logger.exception("Unable to set application icon: %s", e)
 
         # Build the UI
         self.builder = pygubu.Builder(_)
@@ -54,51 +53,50 @@ class MainWindow(Tk):
         self.autosave_local = self.builder.get_variable("autosave_local")
         self.autosave_global = self.builder.get_variable("autosave_global")
 
-        if global_settings.getkey("editor.autosave", "enable") in global_settings.yes_values:
+        if (
+            global_settings.getkey("editor.autosave", "enable")
+            in global_settings.yes_values
+        ):
             self.autosave_global.set(True)
             self.autosave_local.set(True)
 
     def LoadMenu(self):
-
         # Configure some required menu items callback
         self.callbacks = {
+            "aboutdlg": lambda: about.AboutDialog(self).run(),
             "add_tab": lambda: self.add_tab(),
+            "autosv_local": lambda: self.autosv_config("local", "switch"),
+            "autosv_global": lambda: self.autosv_config("global", "switch"),
+            "autosv_localcfg": lambda: self.autosv_config("local"),
+            "autosv_globalcfg": lambda: self.autosv_config("global"),
+            "change_color": lambda: self.change_color(),
+            "destroy": lambda: self.destroy(),
             "gofind": lambda: finding.Finder(self, "find"),
             "goreplace": lambda: finding.Finder(self, ""),
-            "toggle_autocolor": lambda: self.toggle_autocolor(),
-            "toggle_wrap": lambda: self.toggle_wrap(),
-            "destroy": lambda: self.destroy(),
             "opencfg": lambda: self.opencfg(),
-            "resetcfg": lambda: self.resetcfg(),
-            "change_color": lambda: self.change_color(),
             "open_doc": lambda: webbrowser.open(
                 "https://lebao3105.gitbook.io/texteditor_doc"
             ),
-            "aboutdlg": lambda: about.AboutDialog(self).run(),
+            "openfile": lambda: self.notebook.fileops.OpenFileDialog(),
+            "savefile": lambda: self.notebook.fileops.SaveFileEvent(),
+            "savefileas": lambda: self.notebook.fileops.SaveAs(),
+            "resetcfg": lambda: self.resetcfg(),
+            "toggle_wrap": lambda: self.toggle_wrap(),
         }
 
         menu = Menu(self)
         self.config(menu=menu)
 
-        ## Get all menus
-        self.menu1 = self.builder.get_object("menu1", self)
-        self.menu2 = self.builder.get_object("menu2", self)
-        self.menu3 = self.builder.get_object("menu3", self)
-        self.menu4 = self.builder.get_object("menu4", self)
+        for menu_, name in [
+            ("menu1", _("File")),
+            ("menu2", _("Edit")),
+            ("menu3", _("Config")),
+            ("menu4", _("Help")),
+        ]:
+            setattr(self, menu_, self.builder.get_object(menu_, self))
+            menu.add_cascade(menu=getattr(self, menu_), label=name)
 
-        ## Add menus to the main one
-        menu.add_cascade(menu=self.menu1, label=_("File"))
-        menu.add_cascade(menu=self.menu2, label=_("Edit"))
-        menu.add_cascade(menu=self.menu3, label=_("Config"))
-        menu.add_cascade(menu=self.menu4, label=_("Help"))
-
-        ## Do stuff
-        self.callbacks["openfile"] = lambda: self.notebook.fileops.OpenFileDialog()
-        self.callbacks["savefile"] = lambda: self.notebook.fileops.SaveFileEvent()
-        self.callbacks["savefileas"] = lambda: self.notebook.fileops.SaveAs()
         self.builder.connect_callbacks(self.callbacks)
-
-        self.autosv.ShowWind()
 
     def BindEvents(self):
         bindcfg = self.bind
@@ -108,7 +106,12 @@ class MainWindow(Tk):
         bindcfg("<Control-Shift-S>", lambda event: self.notebook.fileops.SaveAs())
         bindcfg("<Control-s>", self.notebook.fileops.SaveFileEvent)
         bindcfg("<Control-o>", self.notebook.fileops.OpenFileDialog)
-        bindcfg("<Control-w>", lambda event: self.text_editor.wrapmode())
+        bindcfg(
+            "<Control-w>",
+            lambda event: self.notebook.nametowidget(
+                self.notebook.select()
+            ).editor.wrapmode(),
+        )
 
     # Menu bar callbacks
     def resetcfg(self, event=None) -> NoReturn:
@@ -127,7 +130,8 @@ class MainWindow(Tk):
             self.lb = "light"
         else:
             self.lb = "dark"
-        clrcall.configure(self, True)
+        clrcall.recursive_configure = True
+        clrcall.autocolor_run(self)
 
     def change_color(self, event=None):
         if self.autocolor.get() == True:
@@ -154,3 +158,20 @@ class MainWindow(Tk):
             self.notebook.nametowidget(self.notebook.select()).editor.configure("word")
         else:
             self.notebook.nametowidget(self.notebook.select()).editor.configure("none")
+
+    def autosv_config(
+        self, type: Literal["global", "local"], type2: Literal["switch", None] = None
+    ):
+        if type == "global":
+            if type2 == "switch":
+                msgbox.showinfo(message=_("This is applied only for this session."))
+                autosave.TOGGLE = self.autosave_global.get()
+            else:
+                self.autosv.ShowWind()
+        else:
+            if type2 == "switch":
+                self.notebook.nametowidget(self.notebook.select()).editor.Toggle(
+                    self.autosave_local.get()
+                )
+            else:
+                self.notebook.nametowidget(self.notebook.select()).editor.ShowWind()

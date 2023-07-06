@@ -8,11 +8,9 @@ from tkinter.ttk import Notebook
 
 from .extensions.generic import global_settings
 
-searchdir = global_settings.get("editor", "searchdir") 
+searchdir = global_settings.get("editor", "searchdir")
 if not os.path.isdir(searchdir):
-    os.path.expanduser(
-        "~/Documents"
-    )
+    os.path.expanduser("~/Documents")
 
 
 class FileOperations:

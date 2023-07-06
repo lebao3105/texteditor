@@ -1,112 +1,81 @@
-import pathlib
+import platform
 import pygubu
+import sys
 import texteditor
 
-from tkinter import Toplevel
+from tkinter import TkVersion, TclVersion
 from tkinter.ttk import *
 
+from ..editor import Editor
 from ..extensions.generic import clrcall
-from libtextworker.general import CraftItems, GetCurrentDir, __file__ as libpath
 
-PROJECT_PATH = GetCurrentDir(__file__)
-PROJECT_UI = CraftItems(PROJECT_PATH, "about.ui")
+from libtextworker import LICENSES, __version__ as libver
+from libtextworker.general import CraftItems, GetCurrentDir
 
 
-class AboutDialog(Toplevel):
+class AboutDialog:
+    app_description: str = \
+        _(
+        "A text editor in Python, with customizable and easy-to-use user interface." \
+        "View this project on GitHub: https://github.com/lebao3105/texteditor" \
+        "On GitLab (mirrored from GitHub): https://gitlab.com/lebao3105/texteditor" \
+        "Read documents online: https://lebao3105.gitbook.io/texteditor_doc"
+        )
+    
+    app_license: str = \
+        '(C) Le Bao Nguyen 2022-2023' \
+        'By using this application, you agree to texteditor license below:\n\n' \
+        f'{open(CraftItems(LICENSES, "GPL3_full.txt"), "r").read()}'
+
+    app_builds: str = \
+        f'Libtextworker {libver}' \
+        f'Tk {TkVersion}' \
+        f'Tcl {TclVersion}' \
+        f'Operating system: {platform.system()} version {platform.version()}' \
+        f'Python {sys.version}'
+
     def __init__(self, master):
-        super().__init__(master)
-
-        self.grab_release()
-        self.wm_title(_("About this app"))
-        self.geometry("300x400")
-        # self.resizable(False, False)
-
         builder = pygubu.Builder(_)
 
-        # Call both the project folder and
-        # the current folder (which contains this file)
-        builder.add_resource_path(PROJECT_PATH)
-        builder.add_resource_path(texteditor.currdir)
-
         # Load the UI layout
-        builder.add_from_file(PROJECT_UI)
+        builder.add_from_file(CraftItems(GetCurrentDir(__file__), "about.ui"))
 
         # Get objects
-        self.appname = builder.get_object("appname", self)
-        self.version = builder.get_object("version", self)
-        self.mainfm = builder.get_object("mainfm", self)
+        self.dialog = builder.get_object("aboutdlg", master)
+        self.version = builder.get_object("label2", self.dialog)
+        self.notebook = builder.get_object("notebook", self.dialog)
+
+        # Description
+        fm1 = Frame(self.notebook)
+        des = Editor(fm1, state="disabled")
+        des.EditorInit(True, True, False)
+        des.insert(1.0, self.app_description)
+        des.pack(expand=True, fill="both")
+        self.notebook.add(fm1, text=_("Description"))
+
+        # License
+        fm2 = Frame(self.notebook)
+        lcs = Editor(fm2, state="disabled")
+        lcs.EditorInit(True, True, False)
+        lcs.insert(1.0, self.app_license)
+        lcs.pack(expand=True, fill="both")
+        self.notebook.add(fm2, text=_("License"))
+
+        # Inspect versions
+        fm3 = Frame(self.notebook)
+        ins = Editor(fm3, state="disabled")
+        ins.EditorInit(True, True, False)
+        ins.insert(1.0, self.app_builds)
+        ins.pack(expand=True, fill="both")
+        self.notebook.add(fm3, text=_("System specs"))
 
         self.version.configure(text=_("Version {}".format(texteditor.__version__)))
 
-        clrcall.configure(self.mainfm, True)
-
-        builder.connect_callbacks(self)
+        clrcall.configure(self.notebook, True)
+        clrcall.configure(builder.get_object("frame1", self.dialog), True)
 
     def run(self):
-        self.mainloop()
+        self.dialog.mainloop()
 
     def quit(self, event=None):
         return self.destroy()
-
-    # Page switching functions
-    def build_new_page(self):
-        for item in self.mainfm.winfo_children():
-            item.forget()
-        self.appname.forget()
-        self.version.forget()
-        self.mainfm.forget()
-
-        newfm = Frame(self)
-        labelfm = Label(newfm)
-        bottomfm = Frame(self)
-        leftbtn = Button(
-            bottomfm, text=_("Go back"), command=lambda: self.goback(newfm, bottomfm)
-        )
-        rightbtn = Button(bottomfm, text=_("Close"), command=lambda: self.quit())
-
-        labelfm.pack(expand=True, fill="both")
-        newfm.pack(expand=True, fill="both")
-        bottomfm.pack(fill="x")
-        leftbtn.pack(side="left")
-        rightbtn.pack(side="right")
-
-        self.geometry("500x350")
-        return labelfm, bottomfm
-
-    def goback(self, *args):
-        self.geometry("300x400")
-        for widget in args:
-            widget.forget()
-            for children in widget.winfo_children():
-                children.forget()
-        self.appname.pack(pady="0 20", side="top")
-        self.version.pack(pady="0 20", side="top")
-        self.mainfm.pack(expand=True, fill="both")
-
-        for child in self.mainfm.winfo_children():
-            child.pack(expand=True, fill="x", side="top")
-
-    def call_des(self, event=None):
-        labelfm = self.build_new_page()[0]
-        labelfm.config(
-            text=_(
-                """Texteditor is a small, flexible, and cross-platform text editor. It is built
-        with Tkinter GUI toolkit to be fast and lightweight, comes with a basic but customizable user interface.
-        """
-            )
-        )
-
-    def call_license(self, event=None):
-        labelfm = self.build_new_page()[0]
-        labelfm.config(
-            text=open(
-                CraftItems(GetCurrentDir(libpath), "licenses", "GPL3_short.txt"), "r"
-            ).read()
-        )
-
-    def call_devs(self, event=None):
-        labelfm = self.build_new_page()[0]
-        labelfm.config(
-            text="""\
-        Le Bao Nguyen for the app code, logo and Vietnamese translation."""
-        )

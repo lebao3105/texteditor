@@ -21,7 +21,7 @@ classifiers = [
 
 [tool.poetry.dependencies]
 python = "^3.8"
-libtextworker[tkinter] = {path = "libtextworker"}
+libtextworker = {path = "libtextworker", extras = ["tkinter"]}
 cairosvg = {version = "^2.7.0", optional = true}
 pygubu = "^0.31"
 sv-ttk = "^2.4.5"
@@ -31,4 +31,4 @@ requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
 
 [tool.poetry.scripts]
-texteditor = 'texteditor:start_app'
+texteditor = 'texteditor:__main__:main'

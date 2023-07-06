@@ -12,7 +12,7 @@ from libtextworker.versioning import is_development_version_from_project, requir
 currdir = GetCurrentDir(__file__, True)
 __version__ = "1.5a0"
 
-require("libtextworker", "0.1.3")
+require("libtextworker", "0.1.4")
 test_import("tkinter")
 
 icon = currdir / "data" / "icons"

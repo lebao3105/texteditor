@@ -13,7 +13,7 @@ def __filenotfound(filepath):
     if create_new:
         return True
     return msgbox.askyesno(
-        _("File not found"), _("Cannot find the file %s - create it?" % str(filepath))
+        _("File not found"), _("Cannot find %s - create it?" % str(filepath))
     )
 
 
@@ -23,21 +23,21 @@ def start_app(argv: list[str]):
 
     if n > 0:
         if os.path.isfile(argv[1]):
-            root.notebook.fileops.openfile(argv[1])
+            root.notebook.fileops.LoadFile(argv[1])
         else:
             if __filenotfound(argv[1]):
                 f = open(argv[1], mode="w")
-                root.notebook.fileops.openfile(argv[1])
+                root.notebook.fileops.LoadFile(argv[1])
                 del f
 
         for i in range(2, n):
             if os.path.isfile(argv[i]):
                 root.add_tab()
-                root.notebook.fileops.openfile(argv[i])
+                root.notebook.fileops.LoadFile(argv[i])
             elif __filenotfound(argv[i]):
                 f = open(argv[i], mode="w")
                 root.add_tab()
-                root.notebook.fileops.openfile(argv[i])
+                root.notebook.fileops.LoadFile(argv[i])
                 del f
     else:
         pass

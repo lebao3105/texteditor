@@ -1,6 +1,5 @@
 # For texteditor's local use only.
 import os
-import platform
 
 from libtextworker import EDITOR_DIR, THEMES_DIR
 from libtextworker.general import CraftItems, GetCurrentDir
@@ -15,13 +14,13 @@ CONFIGS_PATH = os.path.expanduser(
         "_dev" if is_development_version_from_project("texteditor") else ""
     )
 )
-configs = open(
-    CraftItems(GetCurrentDir(__file__), "..", "data", "appconfig.ini"), "r"
-).read().replace("%(term)", "xterm" if platform.system() != "Windows" else "cmd")
+configs = (
+    open(CraftItems(GetCurrentDir(__file__), "..", "data", "appconfig.ini"), "r")
+    .read()
+)
 
 # App settings
 global_settings = GetConfig(configs, file=CONFIGS_PATH)
-global_settings.call = global_settings.getkey
 
 # Find theme resource
 _theme = global_settings["config-paths.ui"]["theme"]
