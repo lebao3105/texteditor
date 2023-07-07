@@ -9,10 +9,10 @@ import wx.adv
 from libtextworker import get_config, THEMES_DIR, EDITOR_DIR
 from libtextworker.versioning import *
 from libtextworker.general import CraftItems, GetCurrentDir, TOPLV_DIR
-from libtextworker.color import stock_ui_configs
-from libtextworker.color.wx import ColorManager
-from libtextworker.color.wx.constants import FONTST, FONTWT
-from libtextworker.color.wx.miscs import XMLBuilder
+from libtextworker.interface import stock_ui_configs
+from libtextworker.interface.wx import ColorManager
+from libtextworker.interface.wx.constants import FONTST, FONTWT
+from libtextworker.interface.wx.miscs import XMLBuilder
 
 currdir = GetCurrentDir(__file__, True)
 UIRC_DIR = str(currdir / "ui")
