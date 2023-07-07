@@ -9,7 +9,7 @@
         "newpath": "extensions.textwkr.multiview->notebook_location"
     },
     "fun->empty_page_on_last_tab_close": {
-        "newpath": "fun->allow_restore_notebook"
+        "newpath": "editor.tabs->close_on_no_tab"
     },
     "interface.tabs->move_tabs": {
         "newpath": "editor.tabs->move_tabs"

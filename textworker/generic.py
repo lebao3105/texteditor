@@ -1,6 +1,5 @@
 import json
 import logging
-import os
 
 import wx
 import wx.xml
@@ -10,10 +9,10 @@ import wx.adv
 from libtextworker import get_config, THEMES_DIR, EDITOR_DIR
 from libtextworker.versioning import *
 from libtextworker.general import CraftItems, GetCurrentDir, TOPLV_DIR
-from libtextworker.interface.manager import default_configs
-from libtextworker.interface.wx import ColorManager
-from libtextworker.interface.wx.constants import FONTST, FONTWT
-from libtextworker.interface.wx.miscs import XMLBuilder
+from libtextworker.color import stock_ui_configs
+from libtextworker.color.wx import ColorManager
+from libtextworker.color.wx.constants import FONTST, FONTWT
+from libtextworker.color.wx.miscs import XMLBuilder
 
 currdir = GetCurrentDir(__file__, True)
 UIRC_DIR = str(currdir / "ui")
@@ -37,8 +36,7 @@ global_settings = get_config.GetConfig(cfg, file=configpath)
 # Move old configs, if any
 # (Compare with versions < 1.6a2)
 moves = json.loads(open(CraftItems(GetCurrentDir(__file__), "merges.json")).read())
-
-global_settings.move(moves)
+# global_settings.move(moves)
 
 # Find theme resource
 _theme = global_settings["config-paths.ui"]["theme"]
@@ -53,7 +51,7 @@ if _theme_path and _theme:
 else:
     _theme_load = CraftItems(THEMES_DIR, "default.ini")
 
-clrcall = ColorManager(default_configs, _theme_load)
+clrcall = ColorManager(stock_ui_configs, _theme_load)
 
 # Editor config
 _editor_config_name = global_settings["config-paths.editor"]["name"]
@@ -116,14 +114,14 @@ class SettingsWindow(XMLBuilder):
             wx.EVT_COLOURPICKER_CHANGED,
             lambda evt: (
                 clrcall.set_and_update(
-                    "interface",
-                    "textcolor",
+                    "color",
+                    "foreground",
                     evt.GetColour().GetAsString(wx.C2S_HTML_SYNTAX),
                 )
             ),
         )
         self.AppTheme.Bind(wx.EVT_CHOICE, self.SetTheme)
-        clrcall.configure(self.Page1, True)
+        clrcall.configure(self.Frame, True)
 
     def SelectFont(self, evt):
         selected_font = self.Font.GetSelectedFont()
@@ -137,11 +135,11 @@ class SettingsWindow(XMLBuilder):
         weights = {val: key for key, val in FONTWT}
 
         clrcall.set(
-            "interface", "textcolor", selected_color.GetAsString(wx.C2S_HTML_SYNTAX)
+            "color", "foreground", selected_color.GetAsString(wx.C2S_HTML_SYNTAX)
         )
-        clrcall.set("interface.font", "weight", weights[weight])
-        clrcall.set("interface.font", "style", styles[style])
-        clrcall.set("interface.font", "family", family)
+        clrcall.set("font", "weight", weights[weight])
+        clrcall.set("font", "style", styles[style])
+        clrcall.set("font", "family", family)
         clrcall.update()
         self.TextPreview.SetFont(selected_font)
 
@@ -149,11 +147,11 @@ class SettingsWindow(XMLBuilder):
         selected_item = self.FontColorChoices.GetStringSelection()
         self.ColorPicker.Enable(False)
         if selected_item == _("Default"):
-            return clrcall.set_and_update("interface", "textcolor", "default")
+            return clrcall.set_and_update("color", "foreground", "default")
         elif selected_item == _("Red"):
-            return clrcall.set_and_update("interface", "textcolor", "red")
+            return clrcall.set_and_update("color", "foreground", "red")
         elif selected_item == _("Green"):
-            return clrcall.set_and_update("interface", "textcolor", "green")
+            return clrcall.set_and_update("color", "foreground", "green")
         elif selected_item == _("Custom"):
             self.ColorPicker.Enable()
             return
@@ -161,11 +159,11 @@ class SettingsWindow(XMLBuilder):
     def SetTheme(self, evt):
         selected_item = self.AppTheme.GetStringSelection()
         if selected_item == _("Dark"):
-            return clrcall.set_and_update("interface", "color", "dark")
+            return clrcall.set_and_update("color", "background", "dark")
         elif selected_item == _("Light"):
-            return clrcall.set_and_update("interface", "color", "light")
+            return clrcall.set_and_update("color", "background", "light")
         elif selected_item == _("Automatic"):
-            return clrcall.set_and_update("interface", "autocolor", "yes")
+            return clrcall.set_and_update("color", "auto", "yes")
 
     def Run(self, evt):
         self.Frame.RunWizard(self.Page1)
@@ -175,5 +173,5 @@ class SettingsWindow(XMLBuilder):
 # TODO: Move to libtextworker
 # wxLog Formatter
 class LogFormatter(wx.LogFormatter):
-    def Format(level, msg, info):
+    def Format(self, level, msg, info):
         return "[%d] %s line %d : %s" % (info.threadId, info.filename, info.line, msg)

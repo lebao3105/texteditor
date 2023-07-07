@@ -5,9 +5,7 @@ import subprocess
 import wx
 import wx.xrc
 
-from libtextworker.general import CraftItems
-
-logger = logging.getLogger("textworker")
+from libtextworker.general import CraftItems, logger
 
 
 class GitSupport:
@@ -55,18 +53,31 @@ class GitSupport:
         ## R <renamed files> C <copied - if status.renames git config is set to "copies">
         ## U <updated but unmerged>
 
-        ## Thanks to GitHub for suggestting me the '-s' parameter:)
+        ## Thanks GitHub for suggestting me the '-s' parameter:)
         ## Mostly taken from: https://git-scm.com/docs/git-status
 
         ## P/s: The code below looks good:v
-        status = status.replace("M ", "<M>")
-        status = status.replace("D ", "<D>")
-        status = status.replace("?? ", "<N>")
-        status = status.replace("T ", "<T>")
-        status = status.replace("A ", "<A>")
-        status = status.replace("R ", "<R>")
-        status = status.replace("C ", "<C>")
-        status = status.replace("U ", "<U>")
+        # status = status.replace("M ", "<M>")
+        # status = status.replace("D ", "<D>")
+        # status = status.replace("?? ", "<N>")
+        # status = status.replace("T ", "<T>")
+        # status = status.replace("A ", "<A>")
+        # status = status.replace("R ", "<R>")
+        # status = status.replace("C ", "<C>")
+        # status = status.replace("U ", "<U>")
+
+        trans = {
+            "M ": "<M>",
+            "D ": "<D>",
+            "?? ": "<N>",
+            "T ": "<T>",
+            "A ": "<A>",
+            "R": "<R>",
+            "C ": "<C>",
+            "U ": "<U>"
+        }
+        for key in trans:
+            status = status.replace(key, trans[key])
 
         self.Refresh()  # Clean
 

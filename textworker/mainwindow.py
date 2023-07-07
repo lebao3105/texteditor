@@ -28,7 +28,7 @@ from libtextworker.interface.wx.miscs import XMLBuilder, BindMenuEvents
 from libtextworker.versioning import *
 
 from textworker import __version__ as appver, icon
-from .extensions import autosave, multiview, gitsp
+from .extensions import autosave, multiview, gitsp, mergedialog
 from .generic import SettingsWindow, global_settings, LogFormatter
 from .tabs import Tabber
 
@@ -94,6 +94,7 @@ class MainFrame(XMLBuilder):
         self.logwindow = wx.LogWindow(self.mainFrame, "Log", False)
         self.logwindow.SetFormatter(self.logfmter)
         self.logwindow.SetVerbose()
+        # mergedialog.MergeDialog(self.mainFrame).ShowModal()
 
         # Place everything
         editorBox.SplitVertically(self.multiviewer.tabs, self.notebook, 246)
@@ -301,7 +302,7 @@ class MainFrame(XMLBuilder):
 
     def OpenFileFromTree(self, evt):
         path = self.dirs.GetFullPath()
-        self.notebook.fileops.OpenFile(path)
+        self.notebook.fileops.OpenFile(self.gitsp.currdir + "/" + path)
 
     def ShowMarkdown(self, evt):
         try:
@@ -371,16 +372,11 @@ class MainFrame(XMLBuilder):
         newdlg.ShowModal()
 
     def NewWindow(self, evt):
-        import subprocess, sys
-
-        # subprocess.Popen(
-        #     [sys.executable, "-m", "textworker"],
-        #     cwd=CraftItems(GetCurrentDir(__file__), ".."),
-        # )
-
         cloned = wx.App()
         cloned.SetAppName("textworker")
-        MainFrame().Show()
+        newwind = MainFrame()
+        cloned.SetTopWindow(newwind.mainFrame)
+        newwind.Show()
         cloned.MainLoop()
 
     def OnFileHistory(self, evt):  # cre: wxdemo program

@@ -11,9 +11,9 @@ from libtextworker._importer import test_import
 from libtextworker.general import CraftItems
 from libtextworker.versioning import *
 
-require("libtextworker", "0.1.3")
+require("libtextworker", "0.1.4")
 test_import("wx")
-__version__ = "1.6a3"
+__version__ = "1.6dev1"
 
 
 LOCALE_DIR = currdir / "po"
