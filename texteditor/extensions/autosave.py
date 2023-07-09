@@ -1,8 +1,9 @@
-from tkinter import Toplevel, messagebox as msb, Misc
+from tkinter import Toplevel, Misc
 from .generic import global_settings, clrcall
-from libtextworker.general import logger, CraftItems, GetCurrentDir
+from libtextworker.general import CraftItems
 from pygubu.builder import Builder
 from threading import Thread
+from texteditor import VIEWS_DIR
 
 enabled = global_settings.getkey("editor.autosave", "enable", False, True)
 time = global_settings.getkey("editor.autosave", "time", False, True)
@@ -72,7 +73,7 @@ class AutoSaveConfig(Toplevel):
 
         self.builder = Builder(_)
         self.builder.add_from_file(
-            CraftItems(GetCurrentDir(__file__), "../views", "autosave.ui")
+            CraftItems(VIEWS_DIR, "autosave.ui")
         )
 
         self.dialog = self.builder.get_object("frame", self)
@@ -84,6 +85,9 @@ class AutoSaveConfig(Toplevel):
         clrcall.configure(self.dialog, True)
         self.builder.connect_callbacks(self)
 
+        # Github issue #5. How tf I need to do this?
+        self.destroy()
+
     def do_the_task(self):
         choice = self.builder.get_variable("selected_time").get()
         do_save = self.builder.get_variable("save").get()
@@ -91,10 +95,6 @@ class AutoSaveConfig(Toplevel):
             global_settings.set("editor.autosave", "time", self.timealiases[choice])
             if do_save:
                 global_settings.update()
-
-    """
-    BUG: This func auto runs on editor init??? (unexpectedly)
-    """
     
     def ShowWind(self):
         if not self.isShown:
@@ -105,4 +105,4 @@ class AutoSaveConfig(Toplevel):
 
     def OnClose(self):
         self.isShown = False
-        self.quit()
+        self.destroy()
