@@ -62,7 +62,6 @@ If you want to use the source code:
 git clone https://github.com/lebao3105/texteditor.git # Or you can use gitlab instead
 cd texteditor
 git submodule update --init --recursive
-pip install attrdict3
 pip install cairosvg # If you want, for app icon support
 pip install ./libtextworker[configparser,tkinter]
 pip install ./libtextworker[autocolor] # for autocolor support
