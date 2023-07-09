@@ -1,81 +1,94 @@
 import platform
-import pygubu
 import sys
-import texteditor
 
-from tkinter import TkVersion, TclVersion
-from tkinter.ttk import *
+from tkinter import TclVersion, TkVersion, Misc, Toplevel
+from tkinter.ttk import Notebook, Label, Frame, Button
 
-from ..editor import Editor
-from ..extensions.generic import clrcall
+from libtextworker import __version__ as libver, LICENSES
+from libtextworker.interface.tk.about import AboutDialog
+from libtextworker.interface.tk.editor import StyledTextControl
+from libtextworker.general import CraftItems
 
-from libtextworker import LICENSES, __version__ as libver
-from libtextworker.general import CraftItems, GetCurrentDir
+from texteditor import __version__ as appver, is_development_version_from_project
+from texteditor.extensions.generic import clrcall
 
+class AboutDialog(AboutDialog):
+    
+    ProjectName = "textworker"
+    ProjectVersion = appver
+    ProjectSite = "https://github.com/lebao3105/texteditor and https://gitlab.com/lebao3105/texteditor (mirror)"
 
-class AboutDialog:
-    app_description: str = \
+    ProjectDescription = \
         _(
         "A text editor in Python, with customizable and easy-to-use user interface." \
-        "View this project on GitHub: https://github.com/lebao3105/texteditor" \
-        "On GitLab (mirrored from GitHub): https://gitlab.com/lebao3105/texteditor" \
         "Read documents online: https://lebao3105.gitbook.io/texteditor_doc"
         )
     
-    app_license: str = \
-        '(C) Le Bao Nguyen 2022-2023' \
+    ProjectLicense = \
+        '(C) Le Bao Nguyen 2022-2023\n' \
         'By using this application, you agree to texteditor license below:\n\n' \
         f'{open(CraftItems(LICENSES, "GPL3_full.txt"), "r").read()}'
 
-    app_builds: str = \
-        f'Libtextworker {libver}' \
-        f'Tk {TkVersion}' \
-        f'Tcl {TclVersion}' \
-        f'Operating system: {platform.system()} version {platform.version()}' \
+    ProjectBuilds: str = \
+        f'Libtextworker {libver}\n' \
+        f'Tk {TkVersion}\n' \
+        f'Tcl {TclVersion}\n' \
+        f'Operating system: {platform.system()} version {platform.version()}\n' \
         f'Python {sys.version}'
+    
+    Developers = "Le Bao Nguyen (@lebao3105)"
+    Translators = Testers = Developers # Looks sad btw
 
-    def __init__(self, master):
-        builder = pygubu.Builder(_)
+    def ShowDialog(self, master: Misc | None = None):
+        dlg = Toplevel(master)
+        dlg.wm_title(_("About this project"))
+        dlg.geometry("350x485")
 
-        # Load the UI layout
-        builder.add_from_file(CraftItems(GetCurrentDir(__file__), "about.ui"))
+        project_infos = \
+            _("About this project\n"
+              f"{self.ProjectName} version {self.ProjectVersion}\n" \
+              f"App branch: {'Dev' if is_development_version_from_project('texteditor') else 'Stable'}\n" \
+              f"Description: {self.ProjectDescription}\n" \
+              f"Project website: {self.ProjectSite}"
+            )
+        
+        project_credits = \
+            _("This software is made possible by:\n"
+              f"Developers:\n\t{self.Developers}")
+        
+        if self.ArtMakers:
+            project_credits += _(f"\nArtists:\n\t{self.ArtMakers}")
+        
+        if self.Testers:
+            project_credits += _(f"\nTesters:\n\t{self.Testers}")
+        
+        if self.Translators:
+            project_credits += _(f"\nTranslators:\n\t{self.Translators}")
+        
+        nb = Notebook(dlg)
+        nb.pack(fill="both", expand=True)
 
-        # Get objects
-        self.dialog = builder.get_object("aboutdlg", master)
-        self.version = builder.get_object("label2", self.dialog)
-        self.notebook = builder.get_object("notebook", self.dialog)
+        # Make tabs
+        credits_te = StyledTextControl(dlg, state="disabled", wrap="word")
+        license_te = StyledTextControl(dlg, state="disabled", wrap="word")
+        license_te.insert(1.0, self.ProjectLicense)
+        credits_te.insert(1.0, project_credits)
+        license_te.pack(expand=True, fill="both")
+        credits_te.pack(expand=True, fill="both")
 
-        # Description
-        fm1 = Frame(self.notebook)
-        des = Editor(fm1, state="disabled")
-        des.EditorInit(True, True, False)
-        des.insert(1.0, self.app_description)
-        des.pack(expand=True, fill="both")
-        self.notebook.add(fm1, text=_("Description"))
+        nb.add(Label(dlg, text=project_infos), text=_("This software"))
+        nb.add(credits_te._frame, text=_("Contributors"))
+        nb.add(license_te._frame, text=_("License"))
+        nb.add(Label(dlg, text=self.ProjectBuilds), text=_("System specifications"))
 
-        # License
-        fm2 = Frame(self.notebook)
-        lcs = Editor(fm2, state="disabled")
-        lcs.EditorInit(True, True, False)
-        lcs.insert(1.0, self.app_license)
-        lcs.pack(expand=True, fill="both")
-        self.notebook.add(fm2, text=_("License"))
-
-        # Inspect versions
-        fm3 = Frame(self.notebook)
-        ins = Editor(fm3, state="disabled")
-        ins.EditorInit(True, True, False)
-        ins.insert(1.0, self.app_builds)
-        ins.pack(expand=True, fill="both")
-        self.notebook.add(fm3, text=_("System specs"))
-
-        self.version.configure(text=_("Version {}".format(texteditor.__version__)))
-
-        clrcall.configure(self.notebook, True)
-        clrcall.configure(builder.get_object("frame1", self.dialog), True)
-
-    def run(self):
-        self.dialog.mainloop()
-
-    def quit(self, event=None):
-        return self.destroy()
+        # The bottom bar
+        bottomfm = Frame(dlg)
+        quitbtn = Button(bottomfm, text="OK", default="active")
+        quitbtn.bind("<Button-1>", lambda evt: (dlg.destroy()))
+        quitbtn.pack(side="right")
+        bottomfm.pack(fill="x", side="bottom")
+        
+        clrcall.configure(dlg, True)
+        # clrcall.autocolor_run(dlg)
+        
+        dlg.mainloop()

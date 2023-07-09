@@ -32,20 +32,20 @@ class FileOperations:
 
         if (
             os.path.isfile(tabname.removesuffix(_(" (Duplicated)")))
-            or self.NoteBook.nametowidget(self.NoteBook.select()).editor.Modified
+            or self.NoteBook.nametowidget(self.NoteBook.select()).Modified
         ):
             if self.NewTabFn_Args is not None:
                 self.NewTabFn(**self.NewTabFn_Args)
             else:
                 self.NewTabFn()
 
-        self.NoteBook.nametowidget(self.NoteBook.select()).editor.insert(
+        self.NoteBook.nametowidget(self.NoteBook.select()).insert(
             1.0, open(path, "r").read()
         )
 
     def SaveFile(self, path: str):
         return open(path, "w").write(
-            self.NoteBook.nametowidget(self.NoteBook.select()).editor.get(1.0, "end")
+            self.NoteBook.nametowidget(self.NoteBook.select()).get(1.0, "end")
         )
 
     # GUI-side functions
@@ -76,12 +76,12 @@ class FileOperations:
         )
 
     def OnEditorModified(self, evt):
-        self.NoteBook.nametowidget(self.NoteBook.select()).editor.Modified = True
+        self.NoteBook.nametowidget(self.NoteBook.select()).Modified = True
         # Nothing else
 
     def InitEditor(self):
         currtab = self.NoteBook.select()
-        self.NoteBook.nametowidget(currtab).editor.Modified: bool = False
-        self.NoteBook.nametowidget(currtab).editor.bind(
+        self.NoteBook.nametowidget(currtab).Modified: bool = False
+        self.NoteBook.nametowidget(currtab).bind(
             "<<Modified>>", self.OnEditorModified
         )

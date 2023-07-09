@@ -8,7 +8,7 @@
             "module": "texteditor",
             "console": "internalConsole",
             "justMyCode": false,
-            // "env": {"PYTHONPATH": "../libtextworker"}
+            "env": {"PYTHONPATH": "../libtextworker"}
         },
         {
             "name": "Run texteditor to open README.md",

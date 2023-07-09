@@ -63,7 +63,7 @@ class MainWindow(Tk):
     def LoadMenu(self):
         # Configure some required menu items callback
         self.callbacks = {
-            "aboutdlg": lambda: about.AboutDialog(self).run(),
+            "aboutdlg": lambda: about.AboutDialog().ShowDialog(self),
             "add_tab": lambda: self.add_tab(),
             "autosv_local": lambda: self.autosv_config("local", "switch"),
             "autosv_global": lambda: self.autosv_config("global", "switch"),
@@ -110,7 +110,7 @@ class MainWindow(Tk):
             "<Control-w>",
             lambda event: self.notebook.nametowidget(
                 self.notebook.select()
-            ).editor.wrapmode(),
+            ).wrapmode(),
         )
 
     # Menu bar callbacks
@@ -154,13 +154,14 @@ class MainWindow(Tk):
 
     def toggle_wrap(self, event=None):
         toggle = self.wrapbtn.get()
+
         if toggle:
-            self.notebook.nametowidget(self.notebook.select()).editor.configure("word")
+            self.notebook.nametowidget(self.notebook.select()).configure(wrap="word")
         else:
-            self.notebook.nametowidget(self.notebook.select()).editor.configure("none")
+            self.notebook.nametowidget(self.notebook.select()).configure(wrap="none")
 
     def autosv_config(
-        self, type: Literal["global", "local"], type2: Literal["switch", None] = None
+        self, type: Literal["global", "local"], type2: Literal["switch"] | None = None
     ):
         if type == "global":
             if type2 == "switch":
@@ -170,8 +171,8 @@ class MainWindow(Tk):
                 self.autosv.ShowWind()
         else:
             if type2 == "switch":
-                self.notebook.nametowidget(self.notebook.select()).editor.Toggle(
+                self.notebook.nametowidget(self.notebook.select()).Toggle(
                     self.autosave_local.get()
                 )
             else:
-                self.notebook.nametowidget(self.notebook.select()).editor.ShowWind()
+                self.notebook.nametowidget(self.notebook.select()).ShowWind()

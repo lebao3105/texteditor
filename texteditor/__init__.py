@@ -23,6 +23,7 @@ else:
     icon = icon / "me.lebao3105.textworker.svg"
 
 LOCALE_DIR = currdir / "po"
+VIEWS_DIR = currdir / "views"
 
 if not os.path.isdir(LOCALE_DIR):
     LOCALE_DIR = currdir / ".." / "po"

@@ -1,13 +1,9 @@
 {
     "python.analysis.extraPaths": [
         "./texteditor",
-        "./libtextworker"
+        "./libtextworker",
+        "../libtextworker"
     ],
     "python.formatting.provider": "black",
-    "python.testing.pytestArgs": [
-        "tests"
-    ],
-    "python.testing.unittestEnabled": false,
-    "python.testing.pytestEnabled": true,
     "python.analysis.typeCheckingMode": "off",
 }

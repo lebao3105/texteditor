@@ -2,6 +2,9 @@ import os
 
 from . import file_operations
 from . import editor
+from .extensions.generic import _editor_config_load, _theme_load
+
+from typing import Literal
 
 from tkinter import Frame, END
 from tkinter.messagebox import askyesnocancel
@@ -10,15 +13,10 @@ from tkinter.ttk import Notebook
 from libtextworker.interface.tk.miscs import CreateMenu
 
 class TabsViewer(Notebook):
-    def __init__(self, master, do_place: bool, newtablabel: str = None, **kw):
-        super().__init__(master, **kw)
+    newtablabel: str = _("Untitled")
 
-        self.parent = master
-
-        if newtablabel == None:
-            self.newtablabel = _("Untitled")
-        else:
-            self.newtablabel = newtablabel
+    def __init__(self, master, do_place: bool, *args, **kw):
+        super().__init__(master, *args, **kw)
 
         # Setup FileOperations
         self.fileops = file_operations.FileOperations()
@@ -94,30 +92,22 @@ class TabsViewer(Notebook):
     ):
         return self.right_click_menu.add_command(label, fn, acc)
 
-    def add_tab(self, event=None, idx=None):
-        newtab_name = self.newtablabel
-
-        # Add a new tab
-        textframe = Frame(self)
+    def add_tab(self, event=None, idx: int | None | Literal["default"] = None, newtabtitle : str = newtablabel):
+        neweditor = editor.Editor(self)
+        neweditor.EditorInit(custom_config_path=_editor_config_load, custom_theme_path=_theme_load)
+        neweditor.pack(expand=True, fill="both")
 
         if isinstance(idx, int):
-            self.insert(idx, textframe, text=newtab_name)
+            self.insert(idx, neweditor._frame, text=newtabtitle)
         elif idx == "default":
-            self.insert(len(self.tabs()) - 1, textframe, text=newtab_name)
+            self.insert(len(self.tabs()) - 1, neweditor._frame, text=newtabtitle)
         else:
-            self.add(textframe, text=newtab_name)
-
-        # Add contents
-        textframe.editor = editor.Editor(textframe)
-        textframe.editor.EditorInit()
-        textframe.editor.pack(expand=True, fill="both")
-
-        # Post setup
-        self.select(textframe)
+            self.add(neweditor._frame, text=newtabtitle)
+        
+        self.select(neweditor._frame)
         self.fileops.InitEditor()
-        textframe.editor.focus()
-
-        self.nametitle(newtab_name)
+        neweditor.focus()
+        self.nametitle(newtabtitle)
 
     def nametitle(self, title: str):
         if hasattr(self.master, "title"):
@@ -140,22 +130,23 @@ class TabsViewer(Notebook):
     def tab_changed(self, event):
         # Check if by somehow we are in the last tab
         if self.select() == self.tabs()[-1]:
-            self.add_tab(idx=(len(self.tabs()) - 1))
+            self.add_tab(idx="default")
 
         tabname = event.widget.tab("current")["text"]
 
         # Check if the tab name is + (new tab button)
         if tabname == "+":
-            self.add_tab(idx=(len(self.tabs())))
+            self.add_tab(idx=len(self.tabs()))
+            return
 
         self.nametitle(tabname)
 
     def duplicate_tab(self, event=None):
-        content = self.nametowidget(self.select()).editor.get(1.0, END)
+        content = self.nametowidget(self.select()).get(1.0, END)
         tabname = self.tab(self.select(), "text")
 
         self.add_tab(idx="default")
-        self.nametowidget(self.select()).editor.insert(1.0, content)
+        self.nametowidget(self.select()).insert(1.0, content)
         self.tab("current", text=tabname + _(" (Duplicated)"))
 
     def reopenfile(self, event=None):
@@ -165,6 +156,6 @@ class TabsViewer(Notebook):
         else:
             with open(filename, "r") as f:
                 # print("Opening file: ", filename)
-                self.nametowidget(self.select()).editor.insert(1.0, f.read())
+                self.nametowidget(self.select()).insert(1.0, f.read())
             self.nametitle(filename)
             self.tab("current", text=filename)
