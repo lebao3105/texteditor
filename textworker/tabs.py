@@ -8,6 +8,9 @@ from .generic import global_settings
 
 
 class Tabber(wx.aui.AuiNotebook):
+    SetStatus: bool = False
+    NewTabTitle: str = _("Untitled")
+
     def __init__(self, *args, **kwds):
         kwds["style"] = (
             kwds.get("style", 0)
@@ -20,7 +23,7 @@ class Tabber(wx.aui.AuiNotebook):
         # AUI_NB_TAB_MOVE : Move tab
         movetabs = global_settings.getkey("editor.tabs", "move_tabs")
         middle_close = global_settings.getkey("editor.tabs", "middle_close")
-        close_on_all_tabs = global_settings.getkey(
+        self.close_on_no_tab = global_settings.getkey(
             "editor.tabs", "close_on_no_tab"
         )
 
@@ -30,16 +33,12 @@ class Tabber(wx.aui.AuiNotebook):
         if middle_close == True:
             kwds["style"] |= wx.aui.AUI_NB_MIDDLE_CLICK_CLOSE
 
-        if close_on_all_tabs == True:
+        if self.close_on_no_tab == True:
             kwds["style"] |= wx.aui.AUI_NB_CLOSE_ON_ALL_TABS
         else:
             kwds["style"] |= wx.aui.AUI_NB_CLOSE_ON_ACTIVE_TAB
 
-        del movetabs, middle_close, close_on_all_tabs
-
-        super().__init__(*args, **kwds)
-
-        self.setstatus: bool = False
+        wx.aui.AuiNotebook.__init__(self, *args, **kwds)
 
         self.AddTab()
 
@@ -56,13 +55,13 @@ class Tabber(wx.aui.AuiNotebook):
         self.Bind(wx.aui.EVT_AUINOTEBOOK_PAGE_CLOSED, self.OnPageClose)
 
     def AddTab(self, evt=None, tabname: str = _("New file")):
-        self.text_editor = Editor(
+        newte = Editor(
             self, style=wx.TE_MULTILINE | wx.EXPAND | wx.HSCROLL | wx.VSCROLL
         )
-        self.text_editor.SetZoom(3)
-        self.text_editor.FileLoaded: str = ""
+        newte.SetZoom(3)
+        newte.FileLoaded: str = ""
 
-        self.AddPage(self.text_editor, tabname, select=True)
+        self.AddPage(newte, tabname, select=True)
         self.SetTitle(tabname)
 
     def SetTitle(self, title=""):
@@ -71,27 +70,13 @@ class Tabber(wx.aui.AuiNotebook):
 
     def OnPageChanged(self, evt):
         tabname = self.GetPageText(evt.GetSelection())
-        if self.setstatus is True:
-            self.Parent.SetStatusText(tabname)
+        if self.SetStatus is True:
+            wx.GetTopLevelParent(self).SetStatusText(tabname)
         self.SetTitle(tabname)
 
     def OnPageClose(self, evt):
-        def repoen(event):
-            nonlocal btn
-            btn.Hide()
-            self.Show(True)
-
         if self.GetPageCount() == 0:
-            if global_settings.getkey("editor.tabs", "close_on_no_tab") in global_settings.yes_values:
-                self.Hide()
-
-            if not hasattr(self.Parent, "AddChild"):
-                return self.Show(True)
-
-            btn = wx.Button(self.Parent, label=_("Show again"))
-
-            if hasattr(self.Parent, "GetSizer") and self.Parent.GetSizer():
-                self.Parent.GetSizer().Add(btn, wx.CENTER)
-
-            self.Parent.Bind(wx.EVT_BUTTON, repoen, btn)
-            self.AddTab()
+            if self.close_on_no_tab in global_settings.yes_values:
+                wx.GetApp().ExitMainLoop()
+            else:
+                self.AddTab()
