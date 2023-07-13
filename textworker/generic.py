@@ -1,5 +1,6 @@
 import json
 import logging
+import typing
 
 import wx
 import wx.xml
@@ -33,42 +34,31 @@ cfg = open(CraftItems(GetCurrentDir(__file__), "data", "appconfig.ini")).read()
 # App settings
 global_settings = get_config.GetConfig(cfg, file=configpath)
 
-# Move old configs, if any
-# (Compare with versions < 1.6a2)
 moves = json.loads(open(CraftItems(GetCurrentDir(__file__), "merges.json")).read())
 # global_settings.move(moves)
 
-# Find theme resource
-_theme = global_settings["config-paths.ui"]["theme"]
-_theme_path = global_settings["config-paths.ui"]["path"]
+def find_resource(t: typing.Literal["theme", "editor"]) -> str:
+    import os
 
-if _theme_path and _theme:
-    _theme += ".ini"
-    if _theme_path != "unchanged" and "none":
-        _theme_load = CraftItems(_theme_path, _theme)
+    if t == "theme":
+        _name = global_settings.get("config-paths.ui", "theme")
+        _path = global_settings.get("config-paths.ui", "path")
     else:
-        _theme_load = CraftItems(THEMES_DIR, _theme)
-else:
-    _theme_load = CraftItems(THEMES_DIR, "default.ini")
+        _name = global_settings.get("config-paths.editor", "name")
+        _path = global_settings.get("config-paths.editor", "path")
 
-clrcall = ColorManager(stock_ui_configs, _theme_load)
+    _name += ".ini"
 
-# Editor config
-_editor_config_name = global_settings["config-paths.editor"]["name"]
-_editor_config_path = global_settings["config-paths.editor"]["path"]
-
-if _editor_config_name and _editor_config_path:
-    _editor_config_name += ".ini"
-    if _editor_config_name == "default":
-        _editor_config_name = "editor"
-
-    if _editor_config_path != "unchanged":
-        _editor_config_load = CraftItems(_editor_config_path, _editor_config_name)
+    if _path != "unchanged":
+        _path = os.path.abspath(os.path.expanduser(_path))
     else:
-        _editor_config_load = CraftItems(EDITOR_DIR, _editor_config_name)
-else:
-    _editor_config_load = CraftItems(EDITOR_DIR, "editor.ini")
+        _path = THEMES_DIR if t == "theme" else EDITOR_DIR
 
+    return CraftItems(_path, _name)
+
+_theme_load = find_resource("theme")
+_editor_config_load = find_resource("editor")
+clrcall = ColorManager(customfilepath=_theme_load)
 
 # Classes
 class Error(Exception):
@@ -169,9 +159,3 @@ class SettingsWindow(XMLBuilder):
         self.Frame.RunWizard(self.Page1)
         self.Frame.Destroy()
 
-
-# TODO: Move to libtextworker
-# wxLog Formatter
-class LogFormatter(wx.LogFormatter):
-    def Format(self, level, msg, info):
-        return "[%d] %s line %d : %s" % (info.threadId, info.filename, info.line, msg)
