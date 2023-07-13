@@ -4,7 +4,7 @@ import wx.xrc
 from libtextworker.interface.wx.editor import StyledTextControl
 
 from .extensions.autosave import AutoSave, AutoSaveConfig
-from .generic import _editor_config_load
+from .generic import _editor_config_load, _theme_load
 
 
 class Editor(StyledTextControl, AutoSave, AutoSaveConfig):
@@ -27,9 +27,9 @@ class Editor(StyledTextControl, AutoSave, AutoSaveConfig):
         AutoSave.__init__(self)
         AutoSaveConfig.__init__(self, self)
         
-        self.EditorInit(_editor_config_load)
+        self.EditorInit(_editor_config_load, _theme_load)
 
-
+    # AutoSaveConfig
     def ConfigWindow(self):
         wx.xrc.XRCCTRL(self.Dialog, "m_checkBox1", "wxCheckBox").Hide()
         super().ConfigWindow()

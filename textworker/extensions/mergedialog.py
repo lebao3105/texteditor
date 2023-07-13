@@ -1,5 +1,5 @@
 import wx
-from ..generic import clrcall, moves, global_settings
+from ..generic import clrcall, moves
 
 class MergeDialog(wx.Dialog):
     """
@@ -16,17 +16,15 @@ class MergeDialog(wx.Dialog):
         header = wx.StaticText(self, label=_("Merges ahead"))
         text = wx.StaticText(self,
                              label=_(
-                                "The settings system has been changed recently and you need to merge them."
+                                "The settings system has been changed recently and automatically merged into your settings."
                                 "Look for the changes below."
-                                "All changes are required."
+                                "All changes are required. You just need to review what are they:)"
                                 )
                             )
         listctrl = wx.ListCtrl(self, style=wx.LC_AUTOARRANGE | wx.LC_REPORT)
         listctrl.InsertColumn(0, _("Setting (section->option)"))
         listctrl.InsertColumn(1, _("New setting (section->option)"))
         listctrl.InsertColumn(2, _("Moved to file..."))
-        start = wx.Button(self, label=_("Start"))
-        self.Bind(wx.EVT_BUTTON, lambda evt: global_settings.move(moves), start)
 
         for oldpath in moves:
             listctrl.InsertItem(0, oldpath)
@@ -39,7 +37,6 @@ class MergeDialog(wx.Dialog):
         mainBoxer.Add(header, 0, wx.ALL, 5)
         mainBoxer.Add(text, 0, wx.ALL, 5)
         mainBoxer.Add(listctrl, 0, wx.ALL, 5)
-        mainBoxer.Add(start, 0, wx.ALL|wx.RIGHT, 5)
 
         clrcall.configure(self, True)
         header.SetFont(wx.Font(12, wx.FONTFAMILY_MODERN, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD))

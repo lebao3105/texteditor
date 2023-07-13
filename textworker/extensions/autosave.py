@@ -3,8 +3,8 @@ import wx.xrc
 
 from threading import Thread
 from typing import Callable
-from libtextworker.general import GetCurrentDir
-from ..generic import global_settings, XMLBuilder
+from libtextworker.general import GetCurrentDir, CraftItems
+from ..generic import global_settings, XMLBuilder, UIRC_DIR
 
 
 # Configs
@@ -36,7 +36,7 @@ class AutoSaveConfig(XMLBuilder):
 
     def __init__(self, Parent: wx.Window):
         super().__init__(
-            Parent, str(GetCurrentDir(__file__, True) / ".." / "ui" / "autosave.xrc"), _
+            Parent, CraftItems(UIRC_DIR, "autosave.xrc"), _
         )
 
         self.Dialog = self.loadObject("AutoSaveDialog", "wxDialog")

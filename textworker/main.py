@@ -2,6 +2,9 @@ import os
 import sys
 import wx
 
+from libtextworker.general import logger
+logger.UseGUIToolKit("wx")
+
 ignore_not_exists: bool = False
 create_new: bool = False
 
@@ -28,30 +31,30 @@ def start_app(files: list[str], directory: str | None = None):
 
     if len(files) >= 1:
         nb = fm.notebook
-        if os.path.isfile(files[0]):
-            nb.text_editor.LoadFile(files[0])
-        else:
-            if _file_not_found(files[0]) == wx.ID_YES:
-                open(files[0], "w")
-                nb.text_editor.LoadFile(files[0])
+        for i in range(0, len(files)):
+            if i >= 1:
+                nb.AddTab(tabname=files[i])
 
-        for i in range(1, len(files)):
-            if os.path.isfile(files[i]):
-                nb.AddTab()
-                nb.text_editor.LoadFile(files[i])
+            if not os.path.exists(files[i]):
+                if _file_not_found(files[i]) != wx.ID_YES:
+                    nb.DeletePage(nb.GetSelection()); break
+            
+            try:
+                # nb.fileops.OpenFile(files[i])
+                open(files[i], "r")
+            except Exception as e:
+                logger.warning(e)
+                nb.DeletePage(nb.GetSelection())
             else:
-                if _file_not_found(files[i]) == wx.ID_YES:
-                    nb.AddTab()
-                    open(files[i], "w")
-                    nb.text_editor.LoadFile(files[i])
+                nb.fileops.OpenFile(files[i])
 
     if directory != None:
         directory = os.path.realpath(os.path.curdir + "/" + directory)
 
-        if os.path.isdir(directory):
+        if os.path.exists(directory) and os.path.isdir(directory):
             fm.OpenDir(None, directory)
         else:
-            wx.MessageBox(f"Directory {directory} not found!", "Error", parent=fm)
+            logger.warning(e)
 
     if sys.platform == "win32":
         import ctypes
@@ -61,12 +64,10 @@ def start_app(files: list[str], directory: str | None = None):
         is_admin = os.getuid() == 0
 
     if is_admin:
-        fm.infer.ShowMessage(
-            _(
-                "You're running this application as root.\n"
-                "Be careful with the file system as it can easily be broken."
-            ),
-            wx.ICON_WARNING,
+        wx.MessageBox(
+            _("You are running this program as root.\n"
+              "You must be responsible for your changes."),
+            style=wx.OK|wx.ICON_WARNING, parent=fm.mainFrame
         )
 
     app.SetTopWindow(fm.mainFrame)

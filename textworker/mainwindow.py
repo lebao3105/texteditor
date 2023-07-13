@@ -29,7 +29,7 @@ from libtextworker.versioning import *
 
 from textworker import __version__ as appver, icon
 from .extensions import autosave, multiview, gitsp, mergedialog
-from .generic import SettingsWindow, global_settings, LogFormatter
+from .generic import SettingsWindow, global_settings
 from .tabs import Tabber
 
 # https://stackoverflow.com/a/27872625
@@ -42,8 +42,7 @@ if platform.system() == "Windows":
 
 class MainFrame(XMLBuilder):
     cfg = global_settings
-    logger.UseGUIToolKit("wx")
-    logfmter = LogFormatter()
+    logfmter = wx.LogFormatter()
 
     def __init__(self):
         super().__init__(
@@ -63,9 +62,6 @@ class MainFrame(XMLBuilder):
 
         mainboxer = wx.BoxSizer(wx.VERTICAL)
         editorBox = wx.SplitterWindow(self.mainFrame)
-
-        # wxInfoBar
-        self.infer = wx.InfoBar(self.mainFrame)
 
         # Editor
         self.notebook = Tabber(editorBox)
@@ -93,12 +89,11 @@ class MainFrame(XMLBuilder):
         self.autosv_cfg = autosave.AutoSaveConfig(self.mainFrame)
         self.logwindow = wx.LogWindow(self.mainFrame, "Log", False)
         self.logwindow.SetFormatter(self.logfmter)
-        self.logwindow.SetVerbose()
+        self.logwindow.SetVerbose(True)
         # mergedialog.MergeDialog(self.mainFrame).ShowModal()
 
         # Place everything
         editorBox.SplitVertically(self.multiviewer.tabs, self.notebook, 246)
-        mainboxer.Add(self.infer, wx.EXPAND)
         mainboxer.Add(editorBox, 1, wx.GROW, 5)
 
         self.LoadMenu()
@@ -315,7 +310,7 @@ class MainFrame(XMLBuilder):
             )
             return False
 
-        content = markdown(self.notebook.text_editor.GetText())
+        content = markdown(self.notebook.GetCurrentPage().GetText())
 
         wind = wx.Frame(self.mainFrame)
         newwind = wx.html2.WebView.New(wind)
