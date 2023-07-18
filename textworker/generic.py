@@ -1,3 +1,4 @@
+import builtins
 import json
 import logging
 import typing
@@ -8,34 +9,38 @@ import wx.xrc
 import wx.adv
 
 from libtextworker import get_config, THEMES_DIR, EDITOR_DIR
-from libtextworker.versioning import *
 from libtextworker.general import CraftItems, GetCurrentDir, TOPLV_DIR
-from libtextworker.interface import stock_ui_configs
 from libtextworker.interface.wx import ColorManager
 from libtextworker.interface.wx.constants import FONTST, FONTWT
 from libtextworker.interface.wx.miscs import XMLBuilder
+from libtextworker.versioning import is_development_version_from_project
 
-currdir = GetCurrentDir(__file__, True)
+"""
+Defines (for local use.)
+"""
+builtins.true = True  # Me when thinking abt C++ :)))
+builtins.false = False
+builtins.nil = None
+
+currdir = GetCurrentDir(__file__, true)
 UIRC_DIR = str(currdir / "ui")
+datadir = str(currdir / "data")
 logger = logging.getLogger("textworker")
 
 # Config file path
 configpath = TOPLV_DIR + "/configs{}.ini".format(
-        "" if not is_development_version_from_project("textworker") else "_dev"
-    )
+    "" if not is_development_version_from_project("textworker") else "_dev"
+)
 
 # Default configs
-
-## Early work.
-## Because there is no sub-sections support here, so...
-## Maybe switching to toml? Or not?
-cfg = open(CraftItems(GetCurrentDir(__file__), "data", "appconfig.ini")).read()
+cfg = open(CraftItems(datadir, "appconfig.ini")).read()
 
 # App settings
 global_settings = get_config.GetConfig(cfg, file=configpath)
 
 moves = json.loads(open(CraftItems(GetCurrentDir(__file__), "merges.json")).read())
 # global_settings.move(moves)
+
 
 def find_resource(t: typing.Literal["theme", "editor"]) -> str:
     import os
@@ -56,11 +61,16 @@ def find_resource(t: typing.Literal["theme", "editor"]) -> str:
 
     return CraftItems(_path, _name)
 
+
 _theme_load = find_resource("theme")
 _editor_config_load = find_resource("editor")
 clrcall = ColorManager(customfilepath=_theme_load)
 
-# Classes
+
+"""
+Classes.
+"""
+
 class Error(Exception):
     def __init__(self, objname: str, title: str, msg: str, *args: object):
         fullmsg = "Object {} error: ({}) {}".format(objname, title, msg)
@@ -68,7 +78,7 @@ class Error(Exception):
         super().__init__(fullmsg, *args)
 
 
-class SettingsWindow(XMLBuilder):
+class FirstRunWindow(XMLBuilder):
     def __init__(self, Parent):
         super().__init__(Parent, CraftItems(UIRC_DIR, "preferences.xrc"), _)
 
@@ -111,7 +121,7 @@ class SettingsWindow(XMLBuilder):
             ),
         )
         self.AppTheme.Bind(wx.EVT_CHOICE, self.SetTheme)
-        clrcall.configure(self.Frame, True)
+        clrcall.configure(self.Frame, true)
 
     def SelectFont(self, evt):
         selected_font = self.Font.GetSelectedFont()
@@ -135,7 +145,7 @@ class SettingsWindow(XMLBuilder):
 
     def SetFontColor(self, evt):
         selected_item = self.FontColorChoices.GetStringSelection()
-        self.ColorPicker.Enable(False)
+        self.ColorPicker.Enable(false)
         if selected_item == _("Default"):
             return clrcall.set_and_update("color", "foreground", "default")
         elif selected_item == _("Red"):
@@ -158,4 +168,3 @@ class SettingsWindow(XMLBuilder):
     def Run(self, evt):
         self.Frame.RunWizard(self.Page1)
         self.Frame.Destroy()
-
