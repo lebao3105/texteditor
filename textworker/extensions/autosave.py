@@ -9,16 +9,15 @@ from ..generic import global_settings, XMLBuilder, UIRC_DIR
 
 # Configs
 enabled = global_settings.getkey(
-    "editor.autosave", "enable", noraiseexp=True, restore=False
+    "editor.autosave", "enable", noraiseexp=true, restore=false
 )
 
-time = global_settings.getkey(
-    "editor.autosave", "time", noraiseexp=True, restore=True
-)
+time = global_settings.getkey("editor.autosave", "time", noraiseexp=true, restore=true)
 if not int(time):
     time = 30
 
 TOGGLE: bool = bool(enabled)
+
 
 class AutoSaveConfig(XMLBuilder):
     timealiases = {
@@ -29,15 +28,13 @@ class AutoSaveConfig(XMLBuilder):
         "10 minutes": 600,
         "15 minutes": 900,
         "20 minutes": 1200,
-        "30 minutes": 1800
+        "30 minutes": 1800,
     }
     enabled = enabled
-    shown = False
+    shown = false
 
     def __init__(self, Parent: wx.Window):
-        super().__init__(
-            Parent, CraftItems(UIRC_DIR, "autosave.xrc"), _
-        )
+        super().__init__(Parent, CraftItems(UIRC_DIR, "autosave.xrc"), _)
 
         self.Dialog = self.loadObject("AutoSaveDialog", "wxDialog")
         self.Cmb = wx.xrc.XRCCTRL(self.Dialog, "m_comboBox1")
@@ -58,12 +55,12 @@ class AutoSaveConfig(XMLBuilder):
 
     def ConfigWindow(self):
         def onDlgClose(evt):
-            self.shown = False
+            self.shown = false
             evt.Skip()
 
         self.Dialog.ShowModal()
         self.Dialog.Bind(wx.EVT_CLOSE, onDlgClose)
-        self.shown = True
+        self.shown = true
 
 
 class AutoSave:
@@ -83,7 +80,9 @@ class AutoSave:
         else:
             pass
 
-        self.Timer = wx.CallLater(int(self.CurrDelay) * 1000, self.Function, **self.Function_args)
+        self.Timer = wx.CallLater(
+            int(self.CurrDelay) * 1000, self.Function, **self.Function_args
+        )
         Thread(target=self.CheckToggle).start()
 
     def Start(self, time_: str = ""):
@@ -97,15 +96,15 @@ class AutoSave:
 
     def Stop(self):
         self.Timer.Stop()
-    
+
     def Toggle(self, on_or_off: bool):
         if on_or_off:
             self.Start()
         else:
             self.Stop()
-    
+
     def CheckToggle(self):
-        if not TOGGLE and self.Timer.IsRunning() == True:
+        if not TOGGLE and self.Timer.IsRunning() == true:
             self.Stop()
         elif not self.Timer.IsRunning():
             self.Start()

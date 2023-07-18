@@ -9,8 +9,8 @@ from libtextworker.general import CraftItems, logger
 
 
 class GitSupport:
-    IsGitRepo: bool = False
-    HasSubModules: bool = False  # TODO
+    IsGitRepo: bool = false
+    HasSubModules: bool = false  # TODO
 
     GitPath = shutil.which("git")
 
@@ -21,11 +21,11 @@ class GitSupport:
     def InitGit(self):
         if not self.GitPath:
             logger.exception("textworker.extensions.gitsp[INIT]: Git not found")
-            return False
+            return false
         else:
             gitver = str(subprocess.check_output([self.GitPath, "version"]))
             logger.debug("Using " + gitver + " from " + os.path.dirname(self.GitPath))
-            return True
+            return true
 
     def InitFolder(self, path: str):
         if not os.path.isdir(path):
@@ -37,13 +37,13 @@ class GitSupport:
             logger.debug(
                 "textworker.extensions.gitsp: Not a git repo (or any of the parent directories) - .git not found anywhere"
             )
-            return None
+            return nil
 
         status = str(
             subprocess.check_output([self.GitPath, "status", "-z"], encoding="utf-8")
         )
 
-        self.IsGitRepo = True
+        self.IsGitRepo = true
 
         # Repo status
 
@@ -64,7 +64,7 @@ class GitSupport:
             "A ": "<A>",
             "R": "<R>",
             "C ": "<C>",
-            "U ": "<U>"
+            "U ": "<U>",
         }
         for key in trans:
             status = status.replace(key, trans[key])
@@ -107,7 +107,7 @@ class GitSupportGUI(GitSupport):
                 wx.FONTFAMILY_SWISS,
                 wx.FONTSTYLE_NORMAL,
                 wx.FONTWEIGHT_BOLD,
-                False,
+                false,
                 "Arial",
             )
         )
@@ -128,7 +128,7 @@ class GitSupportGUI(GitSupport):
                 wx.FONTFAMILY_SWISS,
                 wx.FONTSTYLE_NORMAL,
                 wx.FONTWEIGHT_NORMAL,
-                False,
+                false,
                 "Arial",
             )
         )
@@ -142,7 +142,7 @@ class GitSupportGUI(GitSupport):
                 wx.FONTFAMILY_SWISS,
                 wx.FONTSTYLE_NORMAL,
                 wx.FONTWEIGHT_NORMAL,
-                False,
+                false,
                 "Arial",
             )
         )
@@ -173,12 +173,12 @@ class GitSupportGUI(GitSupport):
         self.Panel.Layout()
         self.Panel.Centre()
 
-    def NewRepo(self, evt=None) -> int | None:
+    def NewRepo(self, evt=nil) -> int | nil:
         target = self.currdir
         if not os.path.isdir(self.currdir):
             target = wx.DirSelector(_("Open a folder to start"))
         if not target:
-            return None
+            return nil
         self.currdir = target
         status = subprocess.call([self.GitPath, "init"], cwd=self.currdir)
         self.InitFolder(self.currdir)

@@ -5,7 +5,7 @@ from ..generic import global_settings
 class MultiViewer:
     def __init__(self, parent):
         location = global_settings.getkey(
-            "extensions.textwkr.multiview", "notebook_location", needed=True
+            "extensions.textwkr.multiview", "notebook_location", needed=true
         )
         nbside = getattr(wx, "NB_{}".format(location.upper()))
 
@@ -19,7 +19,7 @@ class MultiViewer:
         @param content: Section content (must be a wxPython object). Don't forget to Show() it!
         :return: The result of the new section creation
         """
-        return self.tabs.AddPage(content, tabname, True)
+        return self.tabs.AddPage(content, tabname, true)
 
     def UnregisterTab(self, content) -> bool:
         return self.tabs.DeletePage(content)

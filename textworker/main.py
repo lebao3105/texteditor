@@ -3,6 +3,7 @@ import sys
 import wx
 
 from libtextworker.general import logger
+
 logger.UseGUIToolKit("wx")
 
 ignore_not_exists: bool = False
@@ -37,8 +38,9 @@ def start_app(files: list[str], directory: str | None = None):
 
             if not os.path.exists(files[i]):
                 if _file_not_found(files[i]) != wx.ID_YES:
-                    nb.DeletePage(nb.GetSelection()); break
-            
+                    nb.DeletePage(nb.GetSelection())
+                    break
+
             try:
                 # nb.fileops.OpenFile(files[i])
                 open(files[i], "r")
@@ -65,9 +67,12 @@ def start_app(files: list[str], directory: str | None = None):
 
     if is_admin:
         wx.MessageBox(
-            _("You are running this program as root.\n"
-              "You must be responsible for your changes."),
-            style=wx.OK|wx.ICON_WARNING, parent=fm.mainFrame
+            _(
+                "You are running this program as root.\n"
+                "You must be responsible for your changes."
+            ),
+            style=wx.OK | wx.ICON_WARNING,
+            parent=fm.mainFrame,
         )
 
     app.SetTopWindow(fm.mainFrame)

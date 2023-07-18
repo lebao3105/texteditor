@@ -8,25 +8,24 @@ from .generic import _editor_config_load, _theme_load
 
 
 class Editor(StyledTextControl, AutoSave, AutoSaveConfig):
-    
     FileLoaded: str = _("New file")
-    
+
     def __init__(
-            self,
-            parent: wx.Window,
-            id = wx.ID_ANY,
-            pos: wx.Point = wx.DefaultPosition,
-            size: wx.Size = wx.DefaultSize,
-            style = 0,
-            name: str = ""
-        ):
+        self,
+        parent: wx.Window,
+        id=wx.ID_ANY,
+        pos: wx.Point = wx.DefaultPosition,
+        size: wx.Size = wx.DefaultSize,
+        style=0,
+        name: str = "",
+    ):
         self.Function = self.SaveFile
         self.Function_args = {"filename": self.FileLoaded}
 
         StyledTextControl.__init__(self, parent, id, pos, size, style, name)
         AutoSave.__init__(self)
         AutoSaveConfig.__init__(self, self)
-        
+
         self.EditorInit(_editor_config_load, _theme_load)
 
     # AutoSaveConfig

@@ -4,7 +4,7 @@ import wx
 
 from .generic import global_settings
 
-searchdir = global_settings.getkey("editor", "searchdir", noraiseexp=True, restore=True)
+searchdir = global_settings.getkey("editor", "searchdir", noraiseexp=true, restore=true)
 if not os.path.isdir(searchdir):
     searchdir = os.path.expanduser("~/Documents")
 
@@ -14,32 +14,30 @@ class FileOperations:
 
     configs = {
         "AddTab": typing.Callable,
-        "SetTabName": True,
-        "SetWindowTitle": True,
+        "SetTabName": true,
+        "SetWindowTitle": true,
     }
 
-    file_dialog = wx.FileDialog(None, defaultDir=searchdir)
-    message = wx.MessageDialog(None, "")
+    file_dialog = wx.FileDialog(nil, defaultDir=searchdir)
+    message = wx.MessageDialog(nil, "")
 
-    def __init__(
-        self, Tabber: wx.Window, configs: dict[str, typing.Any]
-    ):
+    def __init__(self, Tabber: wx.Window, configs: dict[str, typing.Any]):
         self.Tabber = Tabber
         self.configs = configs
 
-    def AskToOpen(self, evt=None):
+    def AskToOpen(self, evt=nil):
         self.file_dialog.SetName(_("Open a file"))
         result = self.file_dialog.ShowModal()
         if result == wx.ID_OK:
             self.OpenFile(self.file_dialog.GetPath())
 
-    def AskToSave(self, evt=None):
+    def AskToSave(self, evt=nil):
         self.file_dialog.SetName(_("Save this to..."))
         result = self.file_dialog.ShowModal()
         if result == wx.ID_OK:
             self.Tabber.GetCurrentPage().SaveFile(self.file_dialog.GetPath())
-    
-    def SaveFileEvent(self, evt=None):
+
+    def SaveFileEvent(self, evt=nil):
         tablabel = self.Tabber.GetPageText(self.Tabber.GetSelection())
         if not os.path.isfile(tablabel):
             return self.AskToSave()
@@ -48,9 +46,9 @@ class FileOperations:
 
     def OpenFile(self, path: str):
         self.Tabber.GetCurrentPage().LoadFile(path)
-        if self.configs["SetTabName"] == True:
+        if self.configs["SetTabName"] == true:
             self.Tabber.SetPageText(self.Tabber.GetSelection(), path)
-        if self.configs["SetWindowTitle"] == True and hasattr(
+        if self.configs["SetWindowTitle"] == true and hasattr(
             self.Tabber.Parent, "SetTitle"
         ):
             self.Tabber.Parent.SetTitle(path)
