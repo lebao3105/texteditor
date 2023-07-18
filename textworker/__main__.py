@@ -1,10 +1,11 @@
 import argparse
+import os
 import sys
 
 import libtextworker
 import textworker.main as main_entrypoint
 from libtextworker.general import CraftItems
-from textworker import __version__
+from textworker import __version__, generic
 
 parser = argparse.ArgumentParser(
     sys.argv[0],
@@ -25,6 +26,11 @@ config_flags.add_argument(
     "-l",
     type=str,
     help="Load custom configuration(s) from a directory",
+)
+config_flags.add_argument(
+    "--custom-data-dir",
+    type=str,
+    help="Load custom application data"
 )
 
 file_flags = parser.add_argument_group("File-related flags")
@@ -56,10 +62,14 @@ if __name__ == "__main__":
         main_entrypoint.create_new = bool(options.create_new)
 
     if options.custom_config_dir:
+        options.custom_config_dir = os.path.abspath(options.custom_config_dir)
         libtextworker.THEMES_DIR = CraftItems(options.custom_config_dir, "/themes/")
         libtextworker.EDITOR_DIR = CraftItems(
             options.custom_config_dir, "/editorconfigs/"
         )
+    
+    if options.custom_data_dir:
+        generic.datadir = os.path.abspath(options.custom_data_dir)
 
     if options.files:
         files = options.files

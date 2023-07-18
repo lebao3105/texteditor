@@ -37,7 +37,3 @@ else:
 
 
 del LOCALE_DIR, ICON_DIR
-
-if not os.path.isdir(currdir / "data"):
-    raise Exception("git submodules update is needed! Exiting.")
-    exit(-1)
