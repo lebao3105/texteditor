@@ -29,7 +29,7 @@ from libtextworker.versioning import *
 
 from textworker import __version__ as appver, icon
 from .extensions import autosave, multiview, gitsp, mergedialog
-from .generic import SettingsWindow, global_settings
+from .generic import FirstRunWindow, global_settings
 from .tabs import Tabber
 
 # https://stackoverflow.com/a/27872625
@@ -45,9 +45,7 @@ class MainFrame(XMLBuilder):
     logfmter = wx.LogFormatter()
 
     def __init__(self):
-        super().__init__(
-            None, CraftItems(GetCurrentDir(__file__), "ui", "mainmenu.xrc")
-        )
+        super().__init__(nil, CraftItems(GetCurrentDir(__file__), "ui", "mainmenu.xrc"))
 
         self.mainFrame = self.loadObject("mainFrame", "wxFrame")
         self.mainFrame.SetSize((860, 640))
@@ -84,12 +82,12 @@ class MainFrame(XMLBuilder):
         self.multiviewer.tabs.SetSelection(0)
 
         # Other stuffs
-        self.wiz = SettingsWindow(self.mainFrame)
+        self.wiz = FirstRunWindow(self.mainFrame)
         self.file_history = wx.FileHistory()
         self.autosv_cfg = autosave.AutoSaveConfig(self.mainFrame)
-        self.logwindow = wx.LogWindow(self.mainFrame, "Log", False)
+        self.logwindow = wx.LogWindow(self.mainFrame, "Log", false)
         self.logwindow.SetFormatter(self.logfmter)
-        self.logwindow.SetVerbose(True)
+        self.logwindow.SetVerbose(true)
         # mergedialog.MergeDialog(self.mainFrame).ShowModal()
 
         # Place everything
@@ -103,10 +101,11 @@ class MainFrame(XMLBuilder):
         self.mainFrame.Centre()
 
     def LoadMenu(self):
-
         def ToggleAutoSave(evt):
-            wx.MessageBox(_("This will only affect to this session"), parent=self.mainFrame)
-            autosave.TOGGLE = False
+            wx.MessageBox(
+                _("This will only affect to this session"), parent=self.mainFrame
+            )
+            autosave.TOGGLE = not autosave.TOGGLE
             evt.Skip()
 
         filemenu = self.mainFrame.GetMenuBar().GetMenu(0)
@@ -139,7 +138,7 @@ class MainFrame(XMLBuilder):
 
         for callback, pos in [
             (self.OpenDir, 0),
-            (lambda evt: self.OpenDir(evt, newwind=True), 1),
+            (lambda evt: self.OpenDir(evt, newwind=true), 1),
         ]:
             self.mainFrame.Bind(
                 wx.EVT_MENU,
@@ -192,20 +191,22 @@ class MainFrame(XMLBuilder):
         )
 
         if autosave.enabled in global_settings.yes_values:
-            global_autosv.FindItemByPosition(1).Check(True)
-            editor_autosv.FindItemByPosition(1).Check(True)
+            global_autosv.FindItemByPosition(1).Check(true)
+            editor_autosv.FindItemByPosition(1).Check(true)
             self.notebook.GetCurrentPage().Start()  # On init only 1 tab opened, so we can do this
-        
+
         self.mainFrame.Bind(
             wx.EVT_MENU,
-            lambda evt: self.notebook.GetCurrentPage().Toggle(editor_autosv.FindItemByPosition(1).IsChecked()),
-            editor_autosv.FindItemByPosition(1)
+            lambda evt: self.notebook.GetCurrentPage().Toggle(
+                editor_autosv.FindItemByPosition(1).IsChecked()
+            ),
+            editor_autosv.FindItemByPosition(1),
         )
 
         self.mainFrame.Bind(
             wx.EVT_MENU,
             lambda evt: ToggleAutoSave(evt),
-            global_autosv.FindItemByPosition(1)
+            global_autosv.FindItemByPosition(1),
         )
 
         # View menu
@@ -215,6 +216,13 @@ class MainFrame(XMLBuilder):
             (self.ShowMarkdown, 4),
         ]
 
+        viewmenu.FindItemByPosition(2).Check(
+            bool(
+                self.notebook.GetCurrentPage().cfg.getkey(
+                    "editor", "wordwrap", true, true, true
+                )
+            )
+        )
         self.mainFrame.Bind(
             wx.EVT_MENU,
             lambda evt: self.notebook.GetCurrentPage().SetWrapMode(
@@ -225,7 +233,7 @@ class MainFrame(XMLBuilder):
 
         if self.notebook.GetCurrentPage().GetIndentationGuides():
             viewmenu.FindItemByPosition(3).Check()
-            
+
         self.mainFrame.Bind(
             wx.EVT_MENU,
             lambda evt: self.notebook.GetCurrentPage().SetIndentationGuides(
@@ -238,7 +246,7 @@ class MainFrame(XMLBuilder):
         cfgmenu_events = [
             # OMG Settings window! But not this time:) (index 0)
             (self.ResetCfgs, 1),
-            (lambda evt: self.OpenDir(evt, TOPLV_DIR, True), 2),
+            (lambda evt: self.OpenDir(evt, TOPLV_DIR, true), 2),
         ]
 
         # Help menu
@@ -274,7 +282,7 @@ class MainFrame(XMLBuilder):
         evt.Skip()
         wx.GetApp().ExitMainLoop()
 
-    def OpenDir(self, evt, path: str = "", newwind: bool = False):
+    def OpenDir(self, evt, path: str = "", newwind: bool = false):
         if not path:
             ask = wx.DirDialog(
                 self.mainFrame,
@@ -292,7 +300,9 @@ class MainFrame(XMLBuilder):
             self.gitsp.InitFolder(selected_dir)
         else:
             new = wx.Frame(self.mainFrame)
-            PatchedDirCtrl(new).SetFolder(selected_dir)
+            newctrl = PatchedDirCtrl(new)
+            newctrl.SetFolder(selected_dir)
+            newctrl.Bind(wx.EVT_TREE_ITEM_ACTIVATED, self.OpenFileFromTree)
             new.Show()
 
     def OpenFileFromTree(self, evt):
@@ -308,7 +318,7 @@ class MainFrame(XMLBuilder):
                 _("Extra package required"),
                 parent=self.mainFrame,
             )
-            return False
+            return false
 
         content = markdown(self.notebook.GetCurrentPage().GetText())
 
@@ -317,7 +327,7 @@ class MainFrame(XMLBuilder):
         newwind.SetPage(content, "")
 
         wind.Show()
-        newwind.Show(True)
+        newwind.Show(true)
 
     def ResetCfgs(self, evt):
         ask = wx.MessageDialog(
@@ -349,7 +359,7 @@ class MainFrame(XMLBuilder):
         return aboutdlg.ShowBox()
 
     def SysInf_Show(self, evt):
-        ostype = platform.system() if platform.system() != "" or None else _("Unknown")
+        ostype = platform.system() if platform.system() != "" or nil else _("Unknown")
         msg = _(
             f"""
         Textworker version {appver}
