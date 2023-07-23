@@ -24,7 +24,7 @@ python = "^3.8"
 libtextworker = {path = "libtextworker", extras = ["tkinter"]}
 cairosvg = {version = "^2.7.0", optional = true}
 pygubu = "^0.31"
-sv-ttk = "^2.4.5"
+sv-ttk = "^2.5.4"
 
 [build-system]
 requires = ["poetry-core"]
