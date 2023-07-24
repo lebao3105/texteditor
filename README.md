@@ -22,16 +22,16 @@
 
 ## Notes from this work-in-progress (WIP) version
 
-This is a really **unstable** build of texteditor 1.5 (alpha 0).
+This is an **unstable** build of texteditor 1.5 (alpha 0).
 
-Frustation may come. Disappointment might come.
+The code in the main branch is 1.5 alpha too, but it's not complete. I'm going to remanage everything - 'main' branch will store the most recent stable version. So use this branch or 'wip/wx' instead.
 
 Expected new features:
 * About window (but the contents seem not to be shown - wthell??)
 * New auto-save implementation like the wip/wx branch - but it auto show on editor init (unexpected + unknown reason) (VSCode breakpoint didn't help)
 * New Find & Replace dialog - not available right now
 * An Editor class which embeds auto-save support by default (but that's not the reason of auto-open dialogs)
-* Update libtextworker to 0.1.4 with fixes and new features (not pushed yet)
+* Update libtextworker to 0.1.4 with fixes and new features (not released yet)
 
 ## Features
 
