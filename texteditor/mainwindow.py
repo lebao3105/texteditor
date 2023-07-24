@@ -1,10 +1,10 @@
 import os
-import pygubu
 import webbrowser
-
-from typing import Literal, NoReturn
+from tkinter import Menu, PhotoImage, TclError, Tk
 from tkinter import messagebox as msgbox
-from tkinter import Tk, PhotoImage, TclError, Menu
+from typing import Literal, NoReturn
+
+import pygubu
 
 try:
     from cairosvg import svg2png
@@ -13,13 +13,14 @@ except ImportError:
 else:
     CAIRO_AVAILABLE = True
 
+from libtextworker.general import ResetEveryConfig, logger
+
 import texteditor
-from .tabs import TabsViewer
+
 from .extensions import autosave, finding, generic
 from .extensions.generic import clrcall, global_settings
+from .tabs import TabsViewer
 from .views import about
-
-from libtextworker.general import logger, ResetEveryConfig
 
 logger.UseGUIToolKit("tk")
 
@@ -35,7 +36,7 @@ class MainWindow(Tk):
             try:
                 self.wm_iconphoto(False, PhotoImage(file="./icon.png"))
             except TclError as e:
-                logger.exception("Unable to set application icon: %s", e)
+                logger.exception("Unable to set application icon: ", e)
 
         # Build the UI
         self.builder = pygubu.Builder(_)
@@ -63,7 +64,7 @@ class MainWindow(Tk):
     def LoadMenu(self):
         # Configure some required menu items callback
         self.callbacks = {
-            "aboutdlg": lambda: about.AboutDialog().ShowDialog(self),
+            "aboutdlg": lambda: about.About().ShowDialog(self),
             "add_tab": lambda: self.add_tab(),
             "autosv_local": lambda: self.autosv_config("local", "switch"),
             "autosv_global": lambda: self.autosv_config("global", "switch"),
@@ -77,7 +78,7 @@ class MainWindow(Tk):
             "open_doc": lambda: webbrowser.open(
                 "https://lebao3105.gitbook.io/texteditor_doc"
             ),
-            "openfile": lambda: self.notebook.fileops.OpenFileDialog(),
+            "openfile": self.notebook.fileops.OpenFileDialog(),
             "savefile": lambda: self.notebook.fileops.SaveFileEvent(),
             "savefileas": lambda: self.notebook.fileops.SaveAs(),
             "resetcfg": lambda: self.resetcfg(),
@@ -108,9 +109,7 @@ class MainWindow(Tk):
         bindcfg("<Control-o>", self.notebook.fileops.OpenFileDialog)
         bindcfg(
             "<Control-w>",
-            lambda event: self.notebook.nametowidget(
-                self.notebook.select()
-            ).wrapmode(),
+            lambda event: self.notebook.nametowidget(self.notebook.select()).wrapmode(),
         )
 
     # Menu bar callbacks
@@ -134,7 +133,7 @@ class MainWindow(Tk):
         clrcall.autocolor_run(self)
 
     def change_color(self, event=None):
-        if self.autocolor.get() == True:
+        if self.autocolor.get() is True:
             if not msgbox.askyesno(
                 _("Warning"),
                 _(

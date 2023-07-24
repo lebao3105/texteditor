@@ -1,9 +1,7 @@
 import os
 import typing
-
 from tkinter import Misc
-from tkinter.filedialog import *
-from tkinter.messagebox import *
+from tkinter.filedialog import askopenfilename, asksaveasfilename
 from tkinter.ttk import Notebook
 
 from .extensions.generic import global_settings
@@ -61,9 +59,9 @@ class FileOperations:
     def SaveFileEvent(self, evt=None):
         tabname = self.NoteBook.tab("current", "text")
         if not os.path.isfile(tabname):
-            return self.SaveAs()
+            self.SaveAs()
         else:
-            return self.SaveFile(tabname)
+            self.SaveFile(tabname)
 
     def SaveAs(self, evt=None):
         return self.SaveFile(
@@ -82,6 +80,4 @@ class FileOperations:
     def InitEditor(self):
         currtab = self.NoteBook.select()
         self.NoteBook.nametowidget(currtab).Modified: bool = False
-        self.NoteBook.nametowidget(currtab).bind(
-            "<<Modified>>", self.OnEditorModified
-        )
+        self.NoteBook.nametowidget(currtab).bind("<<Modified>>", self.OnEditorModified)

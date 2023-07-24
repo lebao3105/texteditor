@@ -1,16 +1,14 @@
 import os
-
-from . import file_operations
-from . import editor
-from .extensions.generic import _editor_config_load, _theme_load
-
-from typing import Literal
-
-from tkinter import Frame, END
+from tkinter import END, Frame
 from tkinter.messagebox import askyesnocancel
 from tkinter.ttk import Notebook
+from typing import Literal
 
 from libtextworker.interface.tk.miscs import CreateMenu
+
+from . import editor, file_operations
+from .extensions.generic import _editor_config_load, _theme_load
+
 
 class TabsViewer(Notebook):
     newtablabel: str = _("Untitled")
@@ -92,9 +90,16 @@ class TabsViewer(Notebook):
     ):
         return self.right_click_menu.add_command(label, fn, acc)
 
-    def add_tab(self, event=None, idx: int | None | Literal["default"] = None, newtabtitle : str = newtablabel):
+    def add_tab(
+        self,
+        event=None,
+        idx: int | None | Literal["default"] = None,
+        newtabtitle: str = newtablabel,
+    ):
         neweditor = editor.Editor(self)
-        neweditor.EditorInit(custom_config_path=_editor_config_load, custom_theme_path=_theme_load)
+        neweditor.EditorInit(
+            custom_config_path=_editor_config_load, custom_theme_path=_theme_load
+        )
         neweditor.pack(expand=True, fill="both")
 
         if isinstance(idx, int):
@@ -103,7 +108,7 @@ class TabsViewer(Notebook):
             self.insert(len(self.tabs()) - 1, neweditor._frame, text=newtabtitle)
         else:
             self.add(neweditor._frame, text=newtabtitle)
-        
+
         self.select(neweditor._frame)
         self.fileops.InitEditor()
         neweditor.focus()
@@ -121,9 +126,9 @@ class TabsViewer(Notebook):
                 message=_("The content of this tab is modified. Save it?"),
                 icon="info",
             )
-            if result == True:
+            if result is True:
                 self.fileops.SaveFile(tabname.removesuffix(" *"))
-            elif result == None:
+            elif result is None:
                 return
         self.forget(self.select())
 
@@ -151,9 +156,7 @@ class TabsViewer(Notebook):
 
     def reopenfile(self, event=None):
         filename = self.tab(self.select(), "text")
-        if os.path.isfile(filename):
-            return  # However we can reload the tab content
-        else:
+        if not os.path.isfile(filename):
             with open(filename, "r") as f:
                 # print("Opening file: ", filename)
                 self.nametowidget(self.select()).insert(1.0, f.read())

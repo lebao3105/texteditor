@@ -1,5 +1,6 @@
-from .extensions.autosave import AutoSave, AutoSaveConfig
 from libtextworker.interface.tk.editor import TextWidget
+
+from .extensions.autosave import AutoSave, AutoSaveConfig
 
 
 class Editor(TextWidget, AutoSave):

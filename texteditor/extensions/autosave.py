@@ -1,14 +1,18 @@
-from tkinter import Toplevel, Misc
-from .generic import global_settings, clrcall
-from libtextworker.general import CraftItems
-from pygubu.builder import Builder
 from threading import Thread
+from tkinter import Misc, Toplevel
+from typing import Callable
+
+from pygubu.builder import Builder
+from libtextworker.general import CraftItems
+
 from texteditor import VIEWS_DIR
+
+from .generic import clrcall, global_settings
 
 enabled = global_settings.getkey("editor.autosave", "enable", False, True)
 time = global_settings.getkey("editor.autosave", "time", False, True)
 
-if not enabled in global_settings.yes_values:
+if enabled not in global_settings.yes_values:
     enabled = False
 
 if not int(time):
@@ -20,6 +24,7 @@ TOGGLE: bool = bool(enabled)
 class AutoSave:
     Editor: Misc
     CurrDelay: int = time
+    SaveFunc: Callable
 
     def Start(self, time_: int = time):
         self.CurrDelay = time_
@@ -29,10 +34,10 @@ class AutoSave:
 
     def Stop(self):
         self.Editor.after_cancel(self.TaskId)
-        self.__delattr__("TaskId")
+        del self.TaskId
 
     def CheckToggle(self):
-        if not TOGGLE and hasattr(self, "TaskId") == True:
+        if not TOGGLE and hasattr(self, "TaskId"):
             self.Stop()
         elif not hasattr(self, "TaskId"):
             self.Start()
@@ -51,7 +56,8 @@ class AutoSaveConfig(Toplevel):
     """
     Autosave window.
     """
-    isShown : bool = False
+
+    isShown: bool = False
 
     timealiases = {
         _("30 seconds"): 30,
@@ -72,14 +78,12 @@ class AutoSaveConfig(Toplevel):
         self.resizable(False, False)
 
         self.builder = Builder(_)
-        self.builder.add_from_file(
-            CraftItems(VIEWS_DIR, "autosave.ui")
-        )
+        self.builder.add_from_file(CraftItems(VIEWS_DIR, "autosave.ui"))
 
         self.dialog = self.builder.get_object("frame", self)
         self.combobox = self.builder.get_object("combobox1", self.dialog)
         self.checkbtn = self.builder.get_object("checkbutton1", self.dialog)
-        self.combobox["values"] = [item for item in self.timealiases]
+        self.combobox["values"] = list(self.timealiases)
         self.combobox["state"] = "readonly"
 
         clrcall.configure(self.dialog, True)
@@ -95,7 +99,7 @@ class AutoSaveConfig(Toplevel):
             global_settings.set("editor.autosave", "time", self.timealiases[choice])
             if do_save:
                 global_settings.update()
-    
+
     def ShowWind(self):
         if not self.isShown:
             self.mainloop()
