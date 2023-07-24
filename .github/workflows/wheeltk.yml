@@ -6,3 +6,6 @@ name: Build releases (wheel) (wx version)
 jobs:
     build:
         runs-on: ubuntu-latest
+        steps:
+          - name: echoooo
+            run: echo if you see this, go to the corressponding workflow on "data" branch.
