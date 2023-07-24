@@ -4,10 +4,10 @@ import os
 import pathlib
 import sys
 
-sys.path.append(str(pathlib.Path(__file__).parent / ".." / "libtextworker"))
 from libtextworker._importer import test_import
 from libtextworker.general import GetCurrentDir
-from libtextworker.versioning import is_development_version_from_project, require
+from libtextworker.versioning import (is_development_version_from_project,
+                                      require)
 
 currdir = GetCurrentDir(__file__, True)
 __version__ = "1.5a0"
