@@ -3,8 +3,18 @@
 - 1.6:
     - Fully port the app to use libtextworker (it's done)
     - Fix file_operations (done!)
-    - Setup Window on first launch/update (needs some fixes to be done)
+    - ~~Setup Window on first launch/update (needs some fixes to be done)~~
     - Side bar & status bar like VSCode (yeah right) (can't make statusbar)
     - Use guesslang to "guess" language of the text (cancelled)
     - Settings window (this is hard)
-    - Autosave for tabs with no file open (maybe write cache?)
+- 1.7:
+    - File backup (ends with ~ or .bck)
+    - Consider using wxFlatNotebook for more customized tab-zone, but we'll lost tabs dragging
+    - Learn how to send inputs to subprocess.Popen
+    - Make FirstRunDialog great (again)
+    - Further we can make extensions support
+
+Side requests:
+- Dependency management
+- Logging fix (libtew side)
+- Translations

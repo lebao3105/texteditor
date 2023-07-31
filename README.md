@@ -36,7 +36,8 @@ You can get wheels from [GitHub actions](https://github.com/lebao3105/texteditor
 Requires Python 3.8+.
 
 Additional dependencies may required:
-* Linux: ```libgtk-3-dev``` and ```libsdl2-dev``` plus C++ compiler (g++)
+* Linux: ```libgtk-3-dev``` and ```libsdl2-dev``` plus C++ compiler (g++). That's basic for now - you may need more
+* macOS: You don't need to worry if you're on a recent macOS on a x86_64 Intel mac, else you may need to have a build. ```XCode Command-line tools``` may not enough.
 * Windows: Microsoft Visual C++
 
 Installable directly from Pypi as the ```textworker``` package.
@@ -46,14 +47,17 @@ Run:
 $ python3 -m textworker [args]
 ```
 
+For any additional arguments, please use ```-h``` / ```--help``` to show them.
+
 If you want to use the source code:
+
 ```bash
 $ git clone https://github.com/lebao3105/texteditor.git -b wip/wx # Or you can use gitlab instead
 $ cd texteditor
 $ git submodule update --init --recursive
 $ pip install attrdict3
 $ pip install cairosvg # If you want, for app icon support
-$ pip install ./libtextworker[autocolor,configparser,wx]
+$ pip install ./libtextworker[autocolor,configparser,wx] # autocolor is optional, even you have dark mode.
 ```
 
 Install from source: ```pip install -e .```
