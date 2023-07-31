@@ -66,6 +66,10 @@ class Tabber(wx.aui.AuiNotebook):
         if hasattr(wx.GetTopLevelParent(self), "SetTitle"):
             return wx.GetTopLevelParent(self).SetTitle(title)
 
+    """
+    Events.
+    """
+
     def OnPageChanged(self, evt):
         tabname = self.GetPageText(evt.GetSelection())
         if self.SetStatus is true:
