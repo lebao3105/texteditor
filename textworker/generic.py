@@ -17,8 +17,10 @@ from libtextworker.versioning import is_development_version_from_project
 
 """
 Defines (for local use.)
+Adding they to builtins is legit lmao:v
 """
-builtins.true = True  # Me when thinking abt C++ :)))
+
+builtins.true = True
 builtins.false = False
 builtins.nil = None
 
@@ -98,7 +100,7 @@ class FirstRunWindow(XMLBuilder):
 
         # Font
         self.Font = wx.xrc.XRCCTRL(self.Frame, "m_fontPicker1")
-        self.Font.SetSelectedFont(clrcall.GetFont)
+        self.Font.SetSelectedFont(clrcall.GetFont())
         self.TextPreview = wx.xrc.XRCCTRL(self.Frame, "m_staticText6")
         clrcall.configure(self.TextPreview)
 
