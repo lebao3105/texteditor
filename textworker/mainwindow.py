@@ -28,8 +28,8 @@ from libtextworker.interface.wx.miscs import XMLBuilder, BindMenuEvents
 from libtextworker.versioning import *
 
 from textworker import __version__ as appver, icon
-from .extensions import autosave, multiview, gitsp, mergedialog
-from .generic import FirstRunWindow, global_settings
+from .extensions import autosave, multiview, gitsp, mergedialog, settings
+from .generic import global_settings
 from .tabs import Tabber
 
 # https://stackoverflow.com/a/27872625
@@ -81,8 +81,8 @@ class MainFrame(XMLBuilder):
         ## Always show Explorer on startup
         self.multiviewer.tabs.SetSelection(0)
 
-        # Other stuffs
-        self.wiz = FirstRunWindow(self.mainFrame)
+        # Other stuff
+        self.wiz = settings.SettingsDialog(self.mainFrame).dlg
         self.file_history = wx.FileHistory()
         self.autosv_cfg = autosave.AutoSaveConfig(self.mainFrame)
         self.logwindow = wx.LogWindow(self.mainFrame, "Log", false)
@@ -244,7 +244,7 @@ class MainFrame(XMLBuilder):
 
         # Settings menu
         cfgmenu_events = [
-            # OMG Settings window! But not this time:) (index 0)
+            (self.wiz.ShowModal, 0),
             (self.ResetCfgs, 1),
             (lambda evt: self.OpenDir(evt, TOPLV_DIR, true), 2),
         ]

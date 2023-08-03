@@ -8,7 +8,6 @@ searchdir = global_settings.getkey("editor", "searchdir", noraiseexp=true, resto
 if not os.path.isdir(searchdir):
     searchdir = os.path.expanduser("~/Documents")
 
-
 class FileOperations:
     Tabber: wx.Window
 
@@ -21,7 +20,7 @@ class FileOperations:
     file_dialog = wx.FileDialog(nil, defaultDir=searchdir)
     message = wx.MessageDialog(nil, "")
 
-    def __init__(self, Tabber: wx.Window, configs: dict[str, typing.Any]):
+    def __init__(self, Tabber: wx.Window, configs: dict[str, typing.Callable | bool]):
         self.Tabber = Tabber
         self.configs = configs
 
