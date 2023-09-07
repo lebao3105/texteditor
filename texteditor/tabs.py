@@ -7,7 +7,7 @@ from typing import Literal
 from libtextworker.interface.tk.miscs import CreateMenu
 
 from . import editor, file_operations
-from .extensions.generic import _editor_config_load, _theme_load
+from .extensions.generic import _editor_config_load, clrcall
 
 
 class TabsViewer(Notebook):
@@ -30,49 +30,18 @@ class TabsViewer(Notebook):
         dummy = Frame()
         self.add(dummy, text="+")
 
-        # Now, make a right-click menu
         self.right_click_menu = CreateMenu(
             [
-                (
-                    _("New tab"),
-                    "Ctrl+N",
-                    lambda evt: self.add_tab(idx="default"),
-                    None,
-                    None,
-                    None,
-                    "normal",
-                    None,
-                ),
-                (
-                    _("Close the current tab"),
-                    "",
-                    lambda: self.close_tab(self),
-                    None,
-                    None,
-                    None,
-                    "normal",
-                    None,
-                ),
-                (
-                    _("Duplicate the current opening tab"),
-                    "",
-                    self.duplicate_tab,
-                    None,
-                    None,
-                    None,
-                    "normal",
-                    None,
-                ),
-                (
-                    _("Reopen the file"),
-                    "",
-                    lambda: self.reopenfile(self),
-                    None,
-                    None,
-                    None,
-                    "normal",
-                    None,
-                ),
+                {
+                    "label": _("New Tab"),
+                    "accelerator": "Ctrl+N",
+                    "handler": lambda: self.add_tab("default"),
+                },
+                {"label": _("Close the open tab"), "handler": lambda: self.close_tab},
+                {
+                    "label": _("Clone the open tab"),
+                    "handler": lambda: self.duplicate_tab,
+                },
             ]
         )
         self.bind(
@@ -92,15 +61,13 @@ class TabsViewer(Notebook):
 
     def add_tab(
         self,
-        event=None,
         idx: int | None | Literal["default"] = None,
         newtabtitle: str = newtablabel,
     ):
         neweditor = editor.Editor(self)
-        neweditor.EditorInit(
-            custom_config_path=_editor_config_load, custom_theme_path=_theme_load
-        )
+        neweditor.EditorInit(custom_config_path=_editor_config_load)
         neweditor.pack(expand=True, fill="both")
+        clrcall.configure(neweditor, True)
 
         if isinstance(idx, int):
             self.insert(idx, neweditor._frame, text=newtabtitle)
@@ -118,7 +85,7 @@ class TabsViewer(Notebook):
         if hasattr(self.master, "title"):
             self.master.title(title)
 
-    def close_tab(self, event=None):
+    def close_tab(self):
         tabname = self.tab(self.select(), "text")
         if tabname.endswith(" *"):
             result = askyesnocancel(
@@ -146,8 +113,8 @@ class TabsViewer(Notebook):
 
         self.nametitle(tabname)
 
-    def duplicate_tab(self, event=None):
-        content = self.nametowidget(self.select()).get(1.0, END)
+    def duplicate_tab(self):
+        content = self.nametowidget(self.select()).winfo_children()[0].get(1.0, END)
         tabname = self.tab(self.select(), "text")
 
         self.add_tab(idx="default")

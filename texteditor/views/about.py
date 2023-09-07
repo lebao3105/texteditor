@@ -16,8 +16,10 @@ from texteditor.extensions.generic import clrcall
 class About(AboutDialog):
     ProjectName = "textworker"
     ProjectVersion = appver
-    ProjectSite = "https://github.com/lebao3105/texteditor " \
+    ProjectSite = (
+        "https://github.com/lebao3105/texteditor "
         "and https://gitlab.com/lebao3105/texteditor (mirror)"
+    )
 
     ProjectDescription = _(
         "A text editor in Python, with customizable and easy-to-use user interface."

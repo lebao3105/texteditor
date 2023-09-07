@@ -15,47 +15,40 @@ CONFIGS_PATH = os.path.expanduser(
         "_dev" if is_development_version_from_project("texteditor") else ""
     )
 )
-configs = open(
-    CraftItems(GetCurrentDir(__file__), "..", "data", "appconfig.ini"), "r"
-).read()
+DATA_PATH: str = CraftItems(GetCurrentDir(__file__), "..", "data")
 
-# App settings
-global_settings = GetConfig(configs, file=CONFIGS_PATH)
+clrcall: ColorManager
+configs: str
+_editor_config_load: str
+_theme_load: str
+global_settings: GetConfig
 
-# Find theme resource
 
 def find_resource(t: typing.Literal["theme", "editor"]) -> str:
-    
     if t == "theme":
         _name = global_settings["config-paths.ui"]["theme"]
         _path = global_settings["config-paths.ui"]["path"]
-    
+
     else:
         _name = global_settings["config-paths.editor"]["name"]
         _path = global_settings["config-paths.editor"]["path"]
-    
+
     _name += ".ini"
 
     if _path != "unchanged":
         _path = os.path.abspath(os.path.expanduser(_path))
     else:
         _path = THEMES_DIR if t == "theme" else EDITOR_DIR
-    
+
     return CraftItems(_path, _name)
 
 
-clrcall = ColorManager(stock_ui_configs, _theme_load)
+def ready():
+    global _theme_load, _editor_config_load, clrcall, configs, global_settings
+    configs = open(CraftItems(DATA_PATH, "appconfig.ini"), "r").read()
 
-# Editor config
+    global_settings = GetConfig(configs, file=CONFIGS_PATH)
 
-if _editor_config_name and _editor_config_path:
-    _editor_config_name += ".ini"
-    if _editor_config_name == "default":
-        _editor_config_name = "editor"
-
-    if _editor_config_path != "unchanged":
-        _editor_config_load = CraftItems(_editor_config_path, _editor_config_name)
-    else:
-        _editor_config_load = CraftItems(EDITOR_DIR, _editor_config_name)
-else:
-    _editor_config_load = CraftItems(EDITOR_DIR, "editor.ini")
+    _theme_load = find_resource("theme")
+    _editor_config_load = find_resource("editor")
+    clrcall = ColorManager(stock_ui_configs, _theme_load)

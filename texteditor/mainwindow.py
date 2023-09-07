@@ -1,10 +1,21 @@
 import os
+from tkinter.filedialog import askdirectory
+import pygubu
+import texteditor
 import webbrowser
-from tkinter import Menu, PhotoImage, TclError, Tk
+
+from libtextworker.general import ResetEveryConfig, logger
+from libtextworker.interface.tk.dirctrl import DirList
+
+from tkinter import Menu, PhotoImage, TclError, Tk, Toplevel
 from tkinter import messagebox as msgbox
 from typing import Literal, NoReturn
 
-import pygubu
+from .extensions.generic import CONFIGS_PATH
+from .extensions.generic import clrcall, global_settings
+from .extensions import autosave, finding
+from .tabs import TabsViewer
+from .views import about
 
 try:
     from cairosvg import svg2png
@@ -13,14 +24,6 @@ except ImportError:
 else:
     CAIRO_AVAILABLE = True
 
-from libtextworker.general import ResetEveryConfig, logger
-
-import texteditor
-
-from .extensions import autosave, finding, generic
-from .extensions.generic import clrcall, global_settings
-from .tabs import TabsViewer
-from .views import about
 
 logger.UseGUIToolKit("tk")
 
@@ -78,7 +81,8 @@ class MainWindow(Tk):
             "open_doc": lambda: webbrowser.open(
                 "https://lebao3105.gitbook.io/texteditor_doc"
             ),
-            "openfile": self.notebook.fileops.OpenFileDialog(),
+            "openfile": lambda: self.notebook.fileops.OpenFileDialog(),
+            "openfolder": lambda: self.openfolder(),
             "savefile": lambda: self.notebook.fileops.SaveFileEvent(),
             "savefileas": lambda: self.notebook.fileops.SaveAs(),
             "resetcfg": lambda: self.resetcfg(),
@@ -109,7 +113,7 @@ class MainWindow(Tk):
         bindcfg("<Control-o>", self.notebook.fileops.OpenFileDialog)
         bindcfg(
             "<Control-w>",
-            lambda event: self.notebook.nametowidget(self.notebook.select()).wrapmode(),
+            lambda event: self.notebook.fileops.GetEditorFromCurrTab().wrapmode(),
         )
 
     # Menu bar callbacks
@@ -122,7 +126,7 @@ class MainWindow(Tk):
 
     def opencfg(self, event=None):
         self.add_tab()
-        self.notebook.fileops.LoadFile(generic.CONFIGS_PATH)
+        self.notebook.fileops.LoadFile(CONFIGS_PATH)
 
     def GetColor(self):
         if clrcall.getkey("color", "background") == "dark":
@@ -155,9 +159,9 @@ class MainWindow(Tk):
         toggle = self.wrapbtn.get()
 
         if toggle:
-            self.notebook.nametowidget(self.notebook.select()).configure(wrap="word")
+            self.notebook.fileops.GetEditorFromCurrTab().configure(wrap="word")
         else:
-            self.notebook.nametowidget(self.notebook.select()).configure(wrap="none")
+            self.notebook.fileops.GetEditorFromCurrTab().configure(wrap="none")
 
     def autosv_config(
         self, type: Literal["global", "local"], type2: Literal["switch"] | None = None
@@ -170,8 +174,20 @@ class MainWindow(Tk):
                 self.autosv.ShowWind()
         else:
             if type2 == "switch":
-                self.notebook.nametowidget(self.notebook.select()).Toggle(
+                self.notebook.fileops.GetEditorFromCurrTab().Toggle(
                     self.autosave_local.get()
                 )
             else:
-                self.notebook.nametowidget(self.notebook.select()).ShowWind()
+                self.notebook.fileops.GetEditorFromCurrTab().ShowWind()
+
+    def openfolder(self):
+        new = Toplevel(self)
+        path = askdirectory(
+            initialdir=os.path.expanduser("~/"), mustexist=True,
+            parent=self, title=_("Open a directory")
+        )
+        control = DirList(new)
+        control.SetFolder(path)
+        control.Frame.pack(fill="both", expand=True)
+        new.wm_title(path)
+        new.mainloop()

@@ -8,7 +8,7 @@ from .extensions.generic import global_settings
 
 searchdir = global_settings.get("editor", "searchdir")
 if not os.path.isdir(searchdir):
-    os.path.expanduser("~/Documents")
+    searchdir = os.path.expanduser("~/Documents")
 
 
 class FileOperations:
@@ -30,21 +30,17 @@ class FileOperations:
 
         if (
             os.path.isfile(tabname.removesuffix(_(" (Duplicated)")))
-            or self.NoteBook.nametowidget(self.NoteBook.select()).Modified
+            or self.GetEditorFromCurrTab().Modified
         ):
             if self.NewTabFn_Args is not None:
                 self.NewTabFn(**self.NewTabFn_Args)
             else:
                 self.NewTabFn()
 
-        self.NoteBook.nametowidget(self.NoteBook.select()).insert(
-            1.0, open(path, "r").read()
-        )
+        self.GetEditorFromCurrTab().insert(1.0, open(path, "r").read())
 
     def SaveFile(self, path: str):
-        return open(path, "w").write(
-            self.NoteBook.nametowidget(self.NoteBook.select()).get(1.0, "end")
-        )
+        return open(path, "w").write(self.GetEditorFromCurrTab().get(1.0, "end"))
 
     # GUI-side functions
     def OpenFileDialog(self, evt=None):
@@ -74,10 +70,16 @@ class FileOperations:
         )
 
     def OnEditorModified(self, evt):
-        self.NoteBook.nametowidget(self.NoteBook.select()).Modified = True
+        self.GetEditorFromCurrTab().Modified = True
         # Nothing else
 
     def InitEditor(self):
-        currtab = self.NoteBook.select()
-        self.NoteBook.nametowidget(currtab).Modified: bool = False
-        self.NoteBook.nametowidget(currtab).bind("<<Modified>>", self.OnEditorModified)
+        currtab = self.GetEditorFromCurrTab()
+        currtab.Modified: bool = False
+        currtab.bind("<<Modified>>", self.OnEditorModified)
+
+    def GetEditorFromTab(self, tab) -> Misc:
+        return self.NoteBook.nametowidget(tab).winfo_children()[0]
+
+    def GetEditorFromCurrTab(self) -> Misc:
+        return self.GetEditorFromTab(self.NoteBook.select())

@@ -10,6 +10,13 @@
       </object>
     </child>
     <child>
+      <object class="tk.Menuitem.Command" id="command23">
+        <property name="accelerator">Ctrl+O</property>
+        <property name="command" type="command" cbtype="simple">openfolder</property>
+        <property name="label" translatable="yes">Open a folder</property>
+      </object>
+    </child>
+    <child>
       <object class="tk.Menuitem.Command" id="command2">
         <property name="accelerator">Ctrl+N</property>
         <property name="command" type="command" cbtype="simple">add_tab</property>
