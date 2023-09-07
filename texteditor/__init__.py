@@ -1,13 +1,10 @@
 import gettext
 import locale
 import os
-import pathlib
-import sys
 
-from libtextworker._importer import test_import
-from libtextworker.general import GetCurrentDir
-from libtextworker.versioning import (is_development_version_from_project,
-                                      require)
+import libtextworker
+from libtextworker.general import GetCurrentDir, test_import, CraftItems
+from libtextworker.versioning import is_development_version_from_project, require
 
 currdir = GetCurrentDir(__file__, True)
 __version__ = "1.5a0"
@@ -32,3 +29,6 @@ locale.setlocale(locale.LC_ALL, None)
 gettext.bindtextdomain("me.lebao3105.texteditor", LOCALE_DIR)
 gettext.textdomain("me.lebao3105.texteditor")
 gettext.install("me.lebao3105.texteditor")
+
+libtextworker.EDITOR_DIR = CraftItems(libtextworker.TOPLV_DIR, "editorconfigs")
+libtextworker.THEMES_DIR = CraftItems(libtextworker.TOPLV_DIR, "themes")

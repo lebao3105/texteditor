@@ -1,110 +1,91 @@
-import argparse
+import getopt
 import os
-import pathlib
 import sys
+import typing
 
-import libtextworker
-from libtextworker.general import CraftItems
-from texteditor import __version__
-from texteditor import main as main_entrypoint
+commands: dict[str, list[typing.Callable, str]] = {}
 
-parser = argparse.ArgumentParser(
-    sys.argv[0],
-    formatter_class=argparse.RawDescriptionHelpFormatter,
-    description=f"""
-    Texteditor version {__version__}
-    A simple, cross-platform text editor.
-    Read documents online: https://lebao3105.gitbook.io/texteditor_doc
-    Where the source code goes: https://gitlab.com/lebao3105/texteditor
-    """,
-)
-parser.add_argument("files", nargs="*", help="File(s) to open")
+def register_command(cmd: typing.Callable, help: str):
+    global commands
+    commands[cmd.__code__.co_name] = [cmd, help]
 
-# Flags
-config_flags = parser.add_argument_group("Configurations")
-config_flags.add_argument(
-    "--custom-config-dir",
-    "-l",
-    nargs=1,
-    type=str,
-    help="Load custom configuration(s) from a directory",
-)
-config_flags.add_argument(
-    "--custom-data-dir",
-    type=str,
-    nargs=1,
-    const=str(pathlib.Path(__file__).parent / "data"),
-    help="Custom application data directory (defaults to <script dir>/data)"
-)
-config_flags.add_argument(
-    "--custom-libtew-dir",
-    type=str,
-    nargs=1,
-    const=str(pathlib.Path(__file__).parent / ".." / "libtextworker"),
-    help="Custom libtextworker path (useful for debugging)"
-)
+def help():
+    print("All available options:")
+    for command in commands:
+        print(f"--{command}\t\t{commands[command][1]}")
+    exit(0)
+    
 
-file_flags = parser.add_argument_group("File-related flags")
-file_flags.add_argument(
-    "--create-new",
-    "-c",
-    const="False",
-    nargs=1,
-    type=bool,
-    help="Send 'yes' to any 'File not found' message",
-)
-file_flags.add_argument(
-    "--ignore-not-exists",
-    "-ig",
-    const="False",
-    nargs=1,
-    type=bool,
-    help="Ignore all 'File not found' messages",
-)
-# file_flags.add_argument("--open-directory", "-d", help="Open a directory")
+def version():
+    from texteditor import __version__
+    print(__version__)
+    exit(0)
 
+def editorcfg(path_: str):
+    if not os.path.isdir(path_): raise NotADirectoryError(path_)
+    import libtextworker
+    libtextworker.EDITOR_DIR = path_
+
+def themesdir(path_: str):
+    if not os.path.isdir(path_): raise NotADirectoryError(path_)
+    import libtextworker
+    libtextworker.THEMES_DIR = path_
+
+def libtewdir(path_: str):
+    if not os.path.isdir(path_): raise NotADirectoryError(path_)
+    sys.path.insert(0, path_)
+    try:
+        import libtextworker
+    except ImportError as e: raise e
+    else:
+        if not libtextworker.__path__  == path_ + "/libtextworker" : raise ImportError("Can't find libtextworker in the specified path", path=path_)
+
+def appdatadir(path_: str):
+    if not os.path.isdir(path_): raise NotADirectoryError(path_)
+    from texteditor.extensions import generic
+    generic.DATA_PATH = path_
+
+register_command(editorcfg, "Custom editor settings folder path (should be placed after --libtewdir if used)")
+register_command(themesdir, "Custom application themes folder path (should be placed after --libtewdir if used)")
+register_command(libtewdir, "Custom libtextworker path (usually used for testers) - can use PYTHONPATH instead")
+register_command(appdatadir, "Custom textworker Git-cloned data branch path (for testers)")
+register_command(help, "Show this help and exit")
+register_command(version, "Show the app version")
+
+def invalid_option(): help(); exit(-1)
+
+def getoptions():
+    opts = [
+        "editorcfg=",
+        "themesdir=",
+        "help",
+        "version",
+        "libtewdir=",
+        "appdatadir="
+    ]
+
+    options, args = getopt.getopt(
+        sys.argv[1:],
+        "",
+        opts
+    )
+    for option, follow in options:
+        for it in opts:
+            if option == f'--{it.removesuffix("=")}':
+                target = commands.get(option.removeprefix("--"))[0]
+                if target.__code__.co_argcount == 0:
+                    target()
+                else:
+                    target(follow)
+    
+    return args
 
 def main():
-    options = parser.parse_args()
-
-    if options.ignore_not_exists and options.create_new:  # Conflict args
-        parser.error("2 conlict arguments: --ignore-not-exists/-ig and --create-new/-c")
-
-    if options.ignore_not_exists:
-        main_entrypoint.ignore_not_exists = options.ignore_not_existt
-
-    if options.create_new:
-        main_entrypoint.create_new = options.create_new
-
-    if options.custom_config_dir:
-        options.custom_config_dir = os.path.abspath(options.custom_config_dir)
-        libtextworker.THEMES_DIR = CraftItems(options.custom_config_dir, "/themes/")
-        libtextworker.EDITOR_DIR = CraftItems(
-            options.custom_config_dir, "/editorconfigs/"
-        )
-    
-    if options.custom_data_dir:
-        options.custom_data_dir = os.path.abspath(options.custom_data_dir)
-        if not os.path.exists(options.custom_data_dir): raise NotADirectoryError(f"Custom data dir not found: {options.custom_data_dir}")
-        sys.path.append(options.custom_data_dir)
-    
-    if options.custom_libtew_dir:
-        options.custom_data_dir = os.path.abspath(options.custom_libtew_dir)
-        if not os.path.exists(options.custom_data_dir): raise NotADirectoryError(f"Custom libtextworker dir not found: {options.custom_libtew_dir}")
-        sys.path.append(options.custom_libtew_dir)
-
-    if options.files:
-        files = options.files
-    else:
-        files = []
-
-    # if options.open_directory:
-    #     dir = options.open_directory
-    # else:
-    #     dir = None
-
-    main_entrypoint.start_app(files)
-
+    files = getoptions()
+    from .extensions import generic
+    generic.ready()
+    from . import main
+    main.start_app(files)
 
 if __name__ == "__main__":
-    main()
+    sys.exit(main())
