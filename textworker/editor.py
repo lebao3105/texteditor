@@ -26,7 +26,7 @@ class Editor(StyledTextControl, AutoSave, AutoSaveConfig):
         AutoSave.__init__(self)
         AutoSaveConfig.__init__(self, self)
 
-        self.EditorInit(_editor_config_load, _theme_load)
+        self.EditorInit(_editor_config_load)
 
     # AutoSaveConfig
     def ConfigWindow(self):

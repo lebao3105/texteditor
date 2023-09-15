@@ -4,7 +4,7 @@ import wx
 
 from .generic import global_settings
 
-searchdir = global_settings.getkey("editor", "searchdir", noraiseexp=true, restore=true)
+searchdir = global_settings.getkey("editor", "searchdir", noraiseexp=true, make=true)
 if not os.path.isdir(searchdir):
     searchdir = os.path.expanduser("~/Documents")
 

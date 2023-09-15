@@ -33,16 +33,21 @@ See all app releases [here.](https://github.com/lebao3105/texteditor/releases)
 You can get wheels from [GitHub actions](https://github.com/lebao3105/texteditor/actions).
 
 ## Build and install
+
 Requires Python 3.8+.
 
-Additional dependencies may required:
+Additional dependencies may required for wxPython:
+
 * Linux: ```libgtk-3-dev``` and ```libsdl2-dev``` plus C++ compiler (g++). That's basic for now - you may need more
-* macOS: You don't need to worry if you're on a recent macOS on a x86_64 Intel mac, else you may need to have a build. ```XCode Command-line tools``` may not enough.
+
+* macOS: You don't need to worry if you're on a recent macOS on a x86_64 Intel mac, else you may need to have a build.
+
 * Windows: Microsoft Visual C++
 
 Installable directly from Pypi as the ```textworker``` package.
 
 Run:
+
 ```bash
 $ python3 -m textworker [args]
 ```
@@ -61,3 +66,19 @@ $ pip install ./libtextworker[autocolor,configparser,wx] # autocolor is optional
 ```
 
 Install from source: ```pip install -e .```
+
+## Contributing
+
+Feel free to do that!
+
+As the code is hosted on GitHub, that means you use GitHub to report issues, share ideas, or make your own work and do a PR.
+
+Before reporting issues:
+
+- Check for all steps you've done to run textworker.
+
+- Try running in Terminal/Command Prompt to capture everything
+
+- Check for all the issues, including closed ones.
+
+- Check for open PRs.
