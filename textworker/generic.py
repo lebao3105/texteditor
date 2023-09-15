@@ -1,52 +1,48 @@
+# For texteditor's local use only.
 import builtins
 import json
 import logging
+import os
+import sys
 import typing
 
-from libtextworker import get_config, THEMES_DIR, EDITOR_DIR
-from libtextworker.general import CraftItems, GetCurrentDir, TOPLV_DIR
+from libtextworker.general import CraftItems, GetCurrentDir
+from libtextworker.get_config import GetConfig
+from libtextworker.interface import stock_ui_configs
 from libtextworker.interface.wx import ColorManager
 from libtextworker.versioning import is_development_version_from_project
 
-"""
-Defines (for local use.)
-Adding they to builtins is legit lmao:v
-"""
+from libtextworker import EDITOR_DIR, THEMES_DIR
+
+CONFIGS_PATH = os.path.expanduser(
+    "~/.config/textworker/configs{}.ini".format(
+        "_dev" if is_development_version_from_project("textworker") else ""
+    )
+)
+DATA_PATH: str = CraftItems(GetCurrentDir(__file__), "data")
+UIRC_DIR = CraftItems(GetCurrentDir(__file__), "ui")
+
+clrcall: ColorManager
+configs: str
+_editor_config_load: str
+_theme_load: str
+global_settings: GetConfig
+logger = logging.getLogger("textworker")
 
 builtins.true = True
 builtins.false = False
 builtins.nil = None
 
-currdir = GetCurrentDir(__file__, true)
-UIRC_DIR = str(currdir / "ui")
-datadir = str(currdir / "data")
-logger = logging.getLogger("textworker")
-
-# Config file path
-configpath = TOPLV_DIR + "/configs{}.ini".format(
-    "" if not is_development_version_from_project("textworker") else "_dev"
-)
-
-# Default configs
-cfg = open(CraftItems(datadir, "appconfig.ini")).read()
-
-# App settings
-global_settings = get_config.GetConfig(cfg, file=configpath)
-
-# TODO (libtextworker): Detect changes
 moves = json.loads(open(CraftItems(GetCurrentDir(__file__), "merges.json")).read())
-# global_settings.move(moves)
-
 
 def find_resource(t: typing.Literal["theme", "editor"]) -> str:
-    import os
-
     if t == "theme":
-        _name = global_settings.get("config-paths.ui", "theme")
-        _path = global_settings.get("config-paths.ui", "path")
+        _name = global_settings["config-paths.ui"]["theme"]
+        _path = global_settings["config-paths.ui"]["path"]
+
     else:
-        _name = global_settings.get("config-paths.editor", "name")
-        _path = global_settings.get("config-paths.editor", "path")
+        _name = global_settings["config-paths.editor"]["name"]
+        _path = global_settings["config-paths.editor"]["path"]
 
     _name += ".ini"
 
@@ -58,7 +54,12 @@ def find_resource(t: typing.Literal["theme", "editor"]) -> str:
     return CraftItems(_path, _name)
 
 
-_theme_load = find_resource("theme")
-_editor_config_load = find_resource("editor")
-clrcall = ColorManager(customfilepath=_theme_load)
+def ready():
+    global _theme_load, _editor_config_load, clrcall, configs, global_settings
+    
+    configs = open(CraftItems(DATA_PATH, "appconfig.ini"), "r").read()
+    global_settings = GetConfig(configs, file=CONFIGS_PATH)
 
+    _theme_load = find_resource("theme")
+    _editor_config_load = find_resource("editor")
+    clrcall = ColorManager(stock_ui_configs, _theme_load)
