@@ -7,6 +7,9 @@
             "request": "launch",
             "module": "textworker",
             "console": "internalConsole",
+            "env": {
+                "PYTHONPATH": "../libtextworker"
+            },
             "justMyCode": true
         },
         {
@@ -16,14 +19,6 @@
             "module": "textworker",
             "console": "internalConsole",
             "args": ["README.md"],
-            "justMyCode": true
-        },
-        {
-            "name": "Test parts of the program (pytest)",
-            "type": "python",
-            "request": "launch",
-            "module": "pytest",
-            "args": ["tests/"],
             "justMyCode": true
         }
     ]
