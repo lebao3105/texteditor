@@ -10,10 +10,10 @@ from ..generic import global_settings, UIRC_DIR
 
 # Configs
 enabled = global_settings.getkey(
-    "editor.autosave", "enable", noraiseexp=true, restore=false
+    "editor.autosave", "enable", noraiseexp=true, make=false
 )
 
-time = global_settings.getkey("editor.autosave", "time", noraiseexp=true, restore=true)
+time = global_settings.getkey("editor.autosave", "time", noraiseexp=true, make=true)
 if not int(time):
     time = 30
 

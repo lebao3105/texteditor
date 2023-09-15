@@ -244,7 +244,7 @@ class MainFrame(XMLBuilder):
 
         # Settings menu
         cfgmenu_events = [
-            (self.wiz.ShowModal, 0),
+            (lambda evt: self.wiz.ShowModal(), 0),
             (self.ResetCfgs, 1),
             (lambda evt: self.OpenDir(evt, TOPLV_DIR, true), 2),
         ]
@@ -311,7 +311,7 @@ class MainFrame(XMLBuilder):
 
     def ShowMarkdown(self, evt):
         try:
-            from markdown2 import markdown  # type: ignore
+            from markdown2 import markdown
         except ImportError:
             wx.MessageBox(
                 _("You need to get markdown2 package from Pypi first!"),
