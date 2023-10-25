@@ -1,10 +1,11 @@
 import wx
 import wx.xrc
+import wx.stc
 
 from libtextworker.interface.wx.editor import StyledTextControl
 
 from .extensions.autosave import AutoSave, AutoSaveConfig
-from .generic import _editor_config_load, _theme_load
+from .generic import _editor_config_load, clrcall
 
 
 class Editor(StyledTextControl, AutoSave, AutoSaveConfig):
@@ -27,6 +28,10 @@ class Editor(StyledTextControl, AutoSave, AutoSaveConfig):
         AutoSaveConfig.__init__(self, self)
 
         self.EditorInit(_editor_config_load)
+        font = self.StyleGetFont(wx.stc.STC_STYLE_DEFAULT)
+        font.SetFaceName("Consolas")
+        self.StyleSetFont(wx.stc.STC_STYLE_DEFAULT, font)
+        clrcall.configure(self)
 
     # AutoSaveConfig
     def ConfigWindow(self):
