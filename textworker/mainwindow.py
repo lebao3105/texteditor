@@ -45,7 +45,7 @@ class MainFrame(XMLBuilder):
     logfmter = wx.LogFormatter()
 
     def __init__(self):
-        super().__init__(nil, CraftItems(GetCurrentDir(__file__), "ui", "mainmenu.xrc"))
+        XMLBuilder.__init__(self, nil, CraftItems(GetCurrentDir(__file__), "ui", "mainmenu.xrc"))
 
         self.mainFrame = self.loadObject("mainFrame", "wxFrame")
         self.mainFrame.SetSize((860, 640))
@@ -85,7 +85,7 @@ class MainFrame(XMLBuilder):
         self.wiz = settings.SettingsDialog(self.mainFrame).dlg
         self.file_history = wx.FileHistory()
         self.autosv_cfg = autosave.AutoSaveConfig(self.mainFrame)
-        self.logwindow = wx.LogWindow(self.mainFrame, "Log", false)
+        self.logwindow = wx.LogWindow(self.mainFrame, _("Log"), false)
         self.logwindow.SetFormatter(self.logfmter)
         self.logwindow.SetVerbose(true)
         # mergedialog.MergeDialog(self.mainFrame).ShowModal()
@@ -96,7 +96,10 @@ class MainFrame(XMLBuilder):
 
         self.LoadMenu()
         self.mainFrame.Bind(wx.EVT_CLOSE, self.OnClose)
+
+        # self.mainFrame.GetMenuBar().Destroy()
         self.mainFrame.SetSizer(mainboxer)
+
         self.mainFrame.Layout()
         self.mainFrame.Centre()
 
@@ -310,6 +313,14 @@ class MainFrame(XMLBuilder):
         self.notebook.fileops.OpenFile(self.gitsp.currdir + "/" + path)
 
     def ShowMarkdown(self, evt):
+        def autorefresh(event):
+            event.Skip()
+            nonlocal wind, content, newwind
+            if not wind: return # Window closed
+            content = markdown(self.notebook.GetCurrentPage().GetText())
+            newwind.SetPage(content, "")
+            wind.Refresh()
+
         try:
             from markdown2 import markdown
         except ImportError:
@@ -329,13 +340,15 @@ class MainFrame(XMLBuilder):
         wind.Show()
         newwind.Show(true)
 
+        self.notebook.GetCurrentPage().Bind(wx.EVT_CHAR, autorefresh)
+
     def ResetCfgs(self, evt):
         ask = wx.MessageDialog(
             self.mainFrame,
             _(
                 "Are you sure want to reset every settings?\n"
                 "If so, finish your work first since the app will close after"
-                "the operation. (and you will need to reopen yourself)"
+                "the operation.\n(and you will need to reopen yourself)"
             ),
             style=wx.YES_NO | wx.ICON_WARNING,
         ).ShowModal()
@@ -377,12 +390,12 @@ class MainFrame(XMLBuilder):
         newdlg.ShowModal()
 
     def NewWindow(self, evt):
-        cloned = wx.App()
-        cloned.SetAppName("textworker")
+        # cloned = wx.App()
+        # cloned.SetAppName("textworker")
         newwind = MainFrame()
-        cloned.SetTopWindow(newwind.mainFrame)
+        # cloned.SetTopWindow(newwind.mainFrame)
         newwind.Show()
-        cloned.MainLoop()
+        # cloned.MainLoop()
 
     def OnFileHistory(self, evt):  # cre: wxdemo program
         # get the file based on the menu ID
