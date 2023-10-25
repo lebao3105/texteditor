@@ -2,10 +2,8 @@ import gettext
 import locale
 import os.path
 import pathlib
-import sys
 
 currdir = pathlib.Path(__file__).parent
-sys.path.append(str(currdir / ".." / "libtextworker"))
 
 from libtextworker.general import CraftItems, test_import
 from libtextworker.versioning import *
@@ -34,5 +32,3 @@ if is_development_version(__version__) == True:
 else:
     icon = CraftItems(ICON_DIR, "me.lebao3105.textworker.svg")
 
-
-del LOCALE_DIR, ICON_DIR

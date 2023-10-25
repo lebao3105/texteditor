@@ -13,7 +13,7 @@ from libtextworker.interface.wx import ColorManager
 from libtextworker.versioning import is_development_version_from_project
 
 from libtextworker import EDITOR_DIR, THEMES_DIR
-
+import libtextworker
 CONFIGS_PATH = os.path.expanduser(
     "~/.config/textworker/configs{}.ini".format(
         "_dev" if is_development_version_from_project("textworker") else ""
@@ -47,8 +47,9 @@ def find_resource(t: typing.Literal["theme", "editor"]) -> str:
     _name += ".ini"
 
     if _path != "unchanged":
-        _path = os.path.abspath(os.path.expanduser(_path))
+        _path = os.path.normpath(os.path.expanduser(_path))
     else:
+        print(THEMES_DIR, EDITOR_DIR)
         _path = THEMES_DIR if t == "theme" else EDITOR_DIR
 
     return CraftItems(_path, _name)
@@ -61,5 +62,6 @@ def ready():
     global_settings = GetConfig(configs, file=CONFIGS_PATH)
 
     _theme_load = find_resource("theme")
+    print(_theme_load)
     _editor_config_load = find_resource("editor")
     clrcall = ColorManager(stock_ui_configs, _theme_load)
