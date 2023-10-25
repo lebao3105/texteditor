@@ -1,4 +1,5 @@
 import configparser
+import json
 import logging
 import packaging.version as version
 import requests
@@ -27,7 +28,7 @@ def parse_json(inipath: str):
     if not r.text:
         return r.status_code
 
-    if not r.json(): return "invalid_json"
+    if not json.loads(r.text): return "invalid_json"
 
     parser = configparser.ConfigParser()
     parser.read(inipath, "utf-8")
@@ -36,27 +37,27 @@ def parse_json(inipath: str):
         branch = parser["base"]["branch"]
     except KeyError:
         logger.info("No app versioning setting found. Will assume that we'll go stable.")
-        branch = "stable"
+        branch = "latest"
     finally:
-        global currappbranch
+        global currappbranch, currver
         if version.Version(currver) < version.Version ("1.6"): # Tkinter
             currappbranch = "tk"
         else:
             currappbranch = "wx"
+        branch += f"-{currappbranch}"
     
     try:
-        target_branch = r.json()[branch]
+        target_branch = json.loads(r.text)[branch]
     except:
         logging.warning("""Invalid branch name on settings.ini? Or version.json?
                         Whatever the updater must be stopped.
                         """
         )
-        return "invalid_json (No such branch %s found in version.json)" % branch
+        return "invalid_json: No such branch %s found in version.json" % branch
     else:
-        if version.Version(branch) < version.Version(target_branch["version"]):
+        if version.Version(currver) < version.Version(target_branch["version"]):
             return target_branch["version"], branch, target_branch["changelog"]
-        elif version.Version(branch) == version.Version(target_branch["version"]):
-            return # Up to date
+        else: return # Up to date
 
 # def install(version: str):
 #     r = requests.get()
