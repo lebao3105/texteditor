@@ -376,10 +376,10 @@ class MainFrame(XMLBuilder):
         msg = _(
             f"""
         Textworker version {appver}
-        Branch: {"DEV" if is_development_version(appver) else "STABLE"}
+        Branch: {"Nightly" if is_development_version(appver) else "Stable"}
         libtextworker verison {libver}
         wxPython version: {wx.__version__}
-        Python verison: {platform.python_version()}
+        Python version: {platform.python_version()}
         OS type: {ostype}
         OS version {platform.version()}
         Machine architecture: {platform.machine()}
