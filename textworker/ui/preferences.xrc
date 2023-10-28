@@ -236,7 +236,7 @@
 													<flag>wxALL|wxALIGN_CENTER_VERTICAL</flag>
 													<border>5</border>
 													<object class="wxStaticText" name="m_staticText3">
-														<label>Is enabled?</label>
+														<label>Type</label>
 														<wrap>-1</wrap>
 													</object>
 												</object>
@@ -247,9 +247,8 @@
 													<object class="wxChoice" name="m_choice1">
 														<selection>0</selection>
 														<content>
-															<item>Enabled - use tabs</item>
-															<item>Enabled - use spaces</item>
-															<item>Disabled</item>
+															<item>Use tabs</item>
+															<item>Use spaces</item>
 														</content>
 													</object>
 												</object>
@@ -443,13 +442,6 @@
 				<flag>wxBOTTOM|wxALIGN_RIGHT</flag>
 				<border>5</border>
 				<object class="wxStdDialogButtonSizer">
-					<object class="button">
-						<flag>wxALIGN_CENTER_HORIZONTAL|wxALL</flag>
-						<border>5</border>
-						<object class="wxButton" name="wxID_APPLY">
-							<label>&amp;Apply</label>
-						</object>
-					</object>
 					<object class="button">
 						<flag>wxALIGN_CENTER_HORIZONTAL|wxALL</flag>
 						<border>5</border>
