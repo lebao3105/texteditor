@@ -57,7 +57,7 @@ For any additional arguments, please use ```-h``` / ```--help``` to show them.
 If you want to use the source code:
 
 ```bash
-$ git clone https://github.com/lebao3105/texteditor.git -b wip/wx # Or you can use gitlab instead
+$ git clone https://github.com/lebao3105/texteditor.git -b wip/wx
 $ cd texteditor
 $ git submodule update --init --recursive
 $ pip install attrdict3
