@@ -32,7 +32,7 @@ config_flags.add_argument(
 config_flags.add_argument(
     "--custom-data-dir",
     type=str,
-    help="Load custom application data (should not be a relative path)"
+    help="Load custom application data (should not be a relative path)",
 )
 
 file_flags = parser.add_argument_group("File-related flags")
@@ -70,12 +70,15 @@ if __name__ == "__main__":
             options.custom_config_dir, "/editorconfigs/"
         )
         libtextworker.TOPLV_DIR = options.custom_config_dir
-        generic.CONFIGS_PATH = generic.CONFIGS_PATH.replace(os.path.expanduser("~/.config/textworker"), os.path.expanduser(options.custom_config_dir))
+        generic.CONFIGS_PATH = generic.CONFIGS_PATH.replace(
+            os.path.expanduser("~/.config/textworker"),
+            os.path.expanduser(options.custom_config_dir),
+        )
     else:
         libtextworker.TOPLV_DIR = os.path.expanduser("~/.config/textworker")
         libtextworker.THEMES_DIR = libtextworker.TOPLV_DIR + "/themes/"
         libtextworker.EDITOR_DIR = libtextworker.TOPLV_DIR + "/editorconfigs/"
-    
+
     if options.custom_data_dir:
         generic.DATA_PATH = os.path.normpath(options.custom_data_dir)
 
@@ -90,5 +93,6 @@ if __name__ == "__main__":
         dir = None
 
     import textworker.main as main_entrypoint
+
     generic.ready()
     main_entrypoint.start_app(files, dir)

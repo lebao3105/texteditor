@@ -8,6 +8,7 @@ searchdir = global_settings.getkey("editor", "searchdir", noraiseexp=true, make=
 if not os.path.isdir(searchdir):
     searchdir = os.path.expanduser("~/Documents")
 
+
 class FileOperations:
     Tabber: wx.Window
 

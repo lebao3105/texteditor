@@ -45,7 +45,9 @@ class MainFrame(XMLBuilder):
     logfmter = wx.LogFormatter()
 
     def __init__(self):
-        XMLBuilder.__init__(self, nil, CraftItems(GetCurrentDir(__file__), "ui", "mainmenu.xrc"))
+        XMLBuilder.__init__(
+            self, nil, CraftItems(GetCurrentDir(__file__), "ui", "mainmenu.xrc")
+        )
 
         self.mainFrame = self.loadObject("mainFrame", "wxFrame")
         self.mainFrame.SetSize((860, 640))
@@ -316,7 +318,8 @@ class MainFrame(XMLBuilder):
         def autorefresh(event):
             event.Skip()
             nonlocal wind, content, newwind
-            if not wind: return # Window closed
+            if not wind:
+                return  # Window closed
             content = markdown(self.notebook.GetCurrentPage().GetText())
             newwind.SetPage(content, "")
             wind.Refresh()
@@ -325,7 +328,10 @@ class MainFrame(XMLBuilder):
             from markdown2 import markdown
         except ImportError:
             wx.MessageBox(
-                _("You need to get markdown2 package from Pypi first!"),
+                _(
+                    "You need to get markdown2 package from Pypi first!\n"
+                    "If you're running a packaged version, tell us."
+                ),
                 _("Extra package required"),
                 parent=self.mainFrame,
             )

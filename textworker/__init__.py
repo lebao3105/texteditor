@@ -31,4 +31,3 @@ if is_development_version(__version__) == True:
     icon = CraftItems(ICON_DIR, "me.lebao3105.textworker.Devel.svg")
 else:
     icon = CraftItems(ICON_DIR, "me.lebao3105.textworker.svg")
-
