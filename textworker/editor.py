@@ -5,7 +5,7 @@ import wx.stc
 from libtextworker.interface.wx.editor import StyledTextControl
 
 from .extensions.autosave import AutoSave, AutoSaveConfig
-from .generic import _editor_config_load, clrcall
+from .generic import clrCall, editorCfg
 
 
 class Editor(StyledTextControl, AutoSave, AutoSaveConfig):
@@ -27,11 +27,24 @@ class Editor(StyledTextControl, AutoSave, AutoSaveConfig):
         AutoSave.__init__(self)
         AutoSaveConfig.__init__(self, self)
 
-        self.EditorInit(_editor_config_load)
-        font = self.StyleGetFont(wx.stc.STC_STYLE_DEFAULT)
-        font.SetFaceName("Consolas")
-        self.StyleSetFont(wx.stc.STC_STYLE_DEFAULT, font)
-        clrcall.configure(self)
+        self.cfg = editorCfg
+
+        # self.EditorInit() content :troll:
+        self.LineNumbers()
+        self.DNDSupport()
+        self.IndentationSet()
+
+        if self.cfg.getkey("menu", "enabled") in self.cfg.yes_values:
+            self.Bind(wx.EVT_RIGHT_DOWN, self.MenuPopup)
+
+        self.SetWrapMode(
+            bool(self.cfg.getkey("editor", "wordwrap" in self.cfg.yes_values))
+        )
+
+        # font = self.StyleGetFont(wx.stc.STC_STYLE_DEFAULT)
+        # font.SetFaceName("Consolas")
+        # self.StyleSetFont(wx.stc.STC_STYLE_DEFAULT, font)
+        clrCall.configure(self)
 
     # AutoSaveConfig
     def ConfigWindow(self):
