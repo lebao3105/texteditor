@@ -1,5 +1,5 @@
 import wx
-from ..generic import clrcall, moves
+from ..generic import clrCall, moves
 
 
 class MergeDialog(wx.Dialog):
