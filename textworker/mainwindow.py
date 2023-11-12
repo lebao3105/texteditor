@@ -5,6 +5,7 @@ import wx
 import wx.adv
 import wx.aui
 import wx.html2
+import wx.lib.splitter
 import wx.xrc
 
 try:
@@ -16,7 +17,6 @@ else:
 
 from libtextworker import __version__ as libver
 from libtextworker.general import (
-    TOPLV_DIR,
     ResetEveryConfig,
     logger,
     CraftItems,
@@ -27,9 +27,9 @@ from libtextworker.interface.wx.dirctrl import PatchedDirCtrl
 from libtextworker.interface.wx.miscs import XMLBuilder, BindMenuEvents
 from libtextworker.versioning import *
 
-from textworker import __version__ as appver, icon
+from . import __version__ as appver, icon
 from .extensions import autosave, multiview, gitsp, mergedialog, settings
-from .generic import global_settings
+from .generic import global_settings, TOPLV_DIR
 from .tabs import Tabber
 
 # https://stackoverflow.com/a/27872625
@@ -61,7 +61,7 @@ class MainFrame(XMLBuilder):
         self.Close = self.mainFrame.Close
 
         mainboxer = wx.BoxSizer(wx.VERTICAL)
-        editorBox = wx.SplitterWindow(self.mainFrame)
+        editorBox = wx.lib.splitter.MultiSplitterWindow(self.mainFrame, style=wx.SP_LIVE_UPDATE)
 
         # Editor
         self.notebook = Tabber(editorBox)
@@ -93,13 +93,13 @@ class MainFrame(XMLBuilder):
         # mergedialog.MergeDialog(self.mainFrame).ShowModal()
 
         # Place everything
-        editorBox.SplitVertically(self.multiviewer.tabs, self.notebook, 246)
+        editorBox.AppendWindow(self.multiviewer.tabs, 246)
+        editorBox.AppendWindow(self.notebook)
         mainboxer.Add(editorBox, 1, wx.GROW, 5)
 
         self.LoadMenu()
         self.mainFrame.Bind(wx.EVT_CLOSE, self.OnClose)
 
-        # self.mainFrame.GetMenuBar().Destroy()
         self.mainFrame.SetSizer(mainboxer)
 
         self.mainFrame.Layout()
@@ -398,10 +398,11 @@ class MainFrame(XMLBuilder):
     def NewWindow(self, evt):
         # cloned = wx.App()
         # cloned.SetAppName("textworker")
-        newwind = MainFrame()
+        # newwind = MainFrame()
         # cloned.SetTopWindow(newwind.mainFrame)
-        newwind.Show()
+        # newwind.Show()
         # cloned.MainLoop()
+        wx.MessageBox("Fixes needed")
 
     def OnFileHistory(self, evt):  # cre: wxdemo program
         # get the file based on the menu ID
