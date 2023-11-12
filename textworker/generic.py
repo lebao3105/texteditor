@@ -10,8 +10,7 @@ from libtextworker.interface import stock_ui_configs, stock_editor_configs
 from libtextworker.interface.wx import ColorManager
 from libtextworker.versioning import is_development_version_from_project
 
-from libtextworker import EDITOR_DIR, THEMES_DIR
-import libtextworker
+from libtextworker import EDITOR_DIR, THEMES_DIR, TOPLV_DIR
 
 currPath = GetCurrentDir(__file__)
 
@@ -64,10 +63,16 @@ def find_resource(t: typing.Literal["theme", "editor"]) -> str:
 
 
 def ready():
-    global _theme_load, _editor_config_load, clrCall, configs, global_settings, editorCfg
+    global _theme_load, _editor_config_load
+    global clrCall, configs, global_settings, editorCfg
+    global THEMES_DIR, EDITOR_DIR, TOPLV_DIR
 
     configs = open(CraftItems(DATA_PATH, "appconfig.ini"), "r").read()
     global_settings = GetConfig(configs, file=CONFIGS_PATH)
+
+    TOPLV_DIR = os.path.dirname(CONFIGS_PATH)
+    THEMES_DIR = TOPLV_DIR + "/themes/"
+    EDITOR_DIR = TOPLV_DIR + "/editorconfigs/"
 
     _theme_load = find_resource("theme")
     _editor_config_load = find_resource("editor")

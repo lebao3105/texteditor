@@ -2,8 +2,6 @@ import argparse
 import os
 import sys
 
-import libtextworker.general
-from libtextworker.general import CraftItems
 from textworker import generic
 
 ignore_not_exists: bool
@@ -39,14 +37,14 @@ file_flags = parser.add_argument_group("File-related flags")
 file_flags.add_argument(
     "--create-new",
     "-c",
-    const="False",
+    const=False,
     nargs="?",
     help="Send 'yes' to any 'File not found' message",
 )
 file_flags.add_argument(
     "--ignore-not-exists",
     "-ig",
-    const="False",
+    const=False,
     nargs="?",
     help="Ignore all 'File not found' messages",
 )
@@ -60,24 +58,16 @@ if __name__ == "__main__":
 
     if options.ignore_not_exists:
         ignore_not_exists = bool(options.ignore_not_exists)
+
     if options.create_new:
         create_new = bool(options.create_new)
 
     if options.custom_config_dir:
         options.custom_config_dir = os.path.normpath(options.custom_config_dir)
-        libtextworker.THEMES_DIR = CraftItems(options.custom_config_dir, "/themes/")
-        libtextworker.EDITOR_DIR = CraftItems(
-            options.custom_config_dir, "/editorconfigs/"
-        )
-        libtextworker.TOPLV_DIR = options.custom_config_dir
         generic.CONFIGS_PATH = generic.CONFIGS_PATH.replace(
             os.path.expanduser("~/.config/textworker"),
-            os.path.expanduser(options.custom_config_dir),
+            os.path.normpath(options.custom_config_dir),
         )
-    else:
-        libtextworker.TOPLV_DIR = os.path.expanduser("~/.config/textworker")
-        libtextworker.THEMES_DIR = libtextworker.TOPLV_DIR + "/themes/"
-        libtextworker.EDITOR_DIR = libtextworker.TOPLV_DIR + "/editorconfigs/"
 
     if options.custom_data_dir:
         generic.DATA_PATH = os.path.normpath(options.custom_data_dir)
