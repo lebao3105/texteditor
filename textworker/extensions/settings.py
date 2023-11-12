@@ -1,10 +1,17 @@
-import webbrowser
+import json
+import os
+import requests
 import wx
+import wx.html2
 import wx.xrc
 
 from libtextworker.general import CraftItems
+from libtextworker.get_config import GetConfig
+from libtextworker.interface import stock_ui_configs
 from libtextworker.interface.manager import hextorgb
 from libtextworker.interface.wx.miscs import XMLBuilder
+
+from markdown2 import markdown
 
 from ..generic import (
     CONFIGS_PATH,
@@ -13,6 +20,7 @@ from ..generic import (
     global_settings,
     DATA_PATH,
     editorCfg,
+    THEMES_DIR,
 )
 from .. import __version__
 
@@ -79,13 +87,22 @@ class SettingsDialog(XMLBuilder):
 
         self.dlg.Bind(wx.EVT_BUTTON, self.check_updates, m_button3)
 
-        self.dlg.Bind(
-            wx.EVT_BUTTON,
-            lambda evt: webbrowser.open_new(
-                f"https://github.com/lebao3105/textworker/releases/tag/v{__version__}"
-            ),
-            m_button4,
-        )
+        def showchangelog(evt):
+            new = wx.Dialog(self.dlg)
+            try:
+                text = json.loads(
+                    requests.get(
+                        f"https://api.github.com/repos/lebao3105/texteditor/releases/v{__version__}"
+                    ).text
+                )["body"]
+            except:
+                text = _("No changelog/unable to get.")
+
+            wb = wx.html2.WebView.New(new)
+            wb.SetPage(markdown(text), "")
+            new.ShowModal()
+
+        self.dlg.Bind(wx.EVT_BUTTON, showchangelog, m_button4)
 
         self.dlg.Bind(
             wx.EVT_CHOICE,
@@ -101,6 +118,9 @@ class SettingsDialog(XMLBuilder):
         m_radioBox1: wx.RadioBox = page2.GetChildren()[0]
         m_colourPicker1: wx.ColourPickerCtrl = page2.GetChildren()[1].GetChildren()[1]
         m_colourPicker2: wx.ColourPickerCtrl = page2.GetChildren()[1].GetChildren()[3]
+        m_choice3: wx.Choice = page2.GetChildren()[2].GetChildren()[1]
+        m_textCtrl1: wx.TextCtrl = page2.GetChildren()[2].GetChildren()[3]
+        m_button31: wx.TextCtrl = page2.GetChildren()[2].GetChildren()[4]
 
         m_radioBox1.SetSelection(
             0
@@ -108,6 +128,7 @@ class SettingsDialog(XMLBuilder):
             else _(clrCall.getkey("color", "background").capitalize())
         )
 
+        m_colourPicker1.SetColour(wx.Colour(*hextorgb(clrCall.GetColor()[0])))
         m_colourPicker2.SetColour(wx.Colour(*hextorgb(clrCall.GetColor()[1])))
 
         self.dlg.Bind(
@@ -116,12 +137,37 @@ class SettingsDialog(XMLBuilder):
             m_radioBox1,
         )
 
+        for i in os.listdir(THEMES_DIR):
+            m_choice3.Append(i.removesuffix(".ini"))
+
+        m_choice3.SetStringSelection(global_settings.getkey("config-paths.ui", "theme"))
+
         # Needs some changes
         # self.dlg.Bind(wx.EVT_COLOURPICKER_CHANGED,
         #               lambda evt: )
 
         # self.dlg.Bind(wx.EVT_COLOURPICKER_CHANGED,
         #               lambda evt: global_settings.set())
+
+        def newtheme(evt):
+            if not m_textCtrl1.GetLabelText():
+                wx.MessageBox(
+                    _("Error while setting a new theme: Name required."),
+                    style=wx.ICON_ERROR | wx.OK,
+                )
+            else:
+                # new = m_textCtrl1.GetLabel()
+                # scheme = m_radioBox1.GetStringSelection().lower()
+                # cfg = GetConfig(stock_ui_configs, CraftItems(THEMES_DIR, f"{new}.ini"))
+
+                # cfg.set_and_update("color", "background", scheme)
+                # cfg.set_and_update("color", "foreground", m_colourPicker1.GetTextCtrl().GetLabelText())
+                # global_settings.set_and_update("config-paths.ui", "theme", new)
+                # m_choice3.Append(new)
+                # m_choice3.SetStringSelection(new)
+                wx.MessageBox(_("Not implemented yet."))
+
+        self.dlg.Bind(wx.EVT_BUTTON, newtheme, m_button31)
 
         # Editors page
         m_choice1: wx.Choice = page3.GetChildren()[0].GetChildren()[1]
