@@ -62,7 +62,7 @@ $ cd texteditor
 $ git submodule update --init --recursive
 $ pip install attrdict3
 $ pip install cairosvg # If you want, for app icon support
-$ pip install ./libtextworker[autocolor,configparser,wx] # autocolor is optional, even you have dark mode.
+$ pip install ./libtextworker[autocolor,configparser,wx] # autocolor is optional
 ```
 
 Install from source: ```pip install -e .```
