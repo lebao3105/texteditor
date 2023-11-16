@@ -20,6 +20,14 @@
 
 <br clear="both">
 
+## For Tkinter builds
+
+Releases from 1.5a0 and their source code will be placed in a new repository: lebao3105/texteditor-tk. This is made in order to make the updater for both 2 types of app works easier, as it uses GitHub api.
+
+So that: the `main` branch will place the latest (trunk) code (again).
+
+Texteditor-tk still available in TestPypi, even for the 1.5 release.
+
 ## Features
 * Tabs split/rearrangement
 * Access to your files without opening File Explorer
@@ -65,7 +73,7 @@ $ pip install cairosvg # If you want, for app icon support
 $ pip install ./libtextworker[autocolor,configparser,wx] # autocolor is optional
 ```
 
-Install from source: ```pip install -e .```
+Install from source: ```pip install -e .``` or ```python3 builder.py install```
 
 ## Contributing
 

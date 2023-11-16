@@ -32,54 +32,65 @@ def make_trans():
     msgfmt = shutil.which("msgfmt")
     gettext = shutil.which("xgettext")
     msgmerge = shutil.which("msgmerge")
+    wxrc = shutil.which("wxrc")
 
     print("Going to use the following tools:")
-    print("* xgettext : {}".format(gettext))
-    print("* msgmerge {}".format(msgmerge))
-    print("* msgfmt {}".format(msgfmt))
-    print("#####################################")
+    print(f"* xgettext : {gettext}")
+    print(f"* msgmerge {msgmerge}")
+    print(f"* msgfmt {msgfmt}")
+    print(f"* wxrc {wxrc}")
+    print("---------------------------------------")
 
+    for line in open("po/WXRCFILES", "r").read().split("\n"):
+        source = line.split(" ")[0]
+        out = line.split(" ")[1]
+        os.system(
+            f'"{wxrc}" {source} -g -o {out}'
+        )
+    
     os.system(
-        '"{}"'.format(gettext)
+        f'"{gettext}"'
         + ' --copyright-holder="Le Bao Nguyen <bao12345yocoo@gmail.com>"'
-        + " --package-version={}".format(__version__)
+        + f" --package-version={__version__}"
         + " -C --language=python"
         + " -f po/POTFILES"
         " -d textworker -o po/textworker.pot"
     )
+    
     for line in open("po/LINGUAS", "r").read().split():
-        target = "po/{}.po".format(line)
-        os.system(
-            '"{}"'.format(msgmerge)
-            + " {} po/textworker.pot".format(target)
-            + " -o {}".format(target)
-        )
-        os.mkdir("po/{}".format(line))
-        os.mkdir("po/{}/LC_MESSAGES".format(line))
-        os.system(
-            '"{}"'.format(msgfmt)
-            + " -D po "
-            + target.removeprefix("po/")
-            + " -o po/{}/LC_MESSAGES/{}.mo".format(line, line)
-        )
+       target = f"po/{line}.po"
+       os.system(
+           '"{}"'.format(msgmerge)
+           + " {} po/textworker.pot".format(target)
+           + " -o {}".format(target)
+       )
+       os.mkdir("po/{}".format(line))
+       os.mkdir("po/{}/LC_MESSAGES".format(line))
+       os.system(
+           '"{}"'.format(msgfmt)
+           + " -D po "
+           + target.removeprefix("po/")
+           + " -o po/{}/LC_MESSAGES/{}.mo".format(line, line)
+       )
 
-    if os.path.isdir("textworker/po"):
-        shutil.rmtree("textworker/po")
-    shutil.copytree("po", "textworker/po")
+    # Pyinstaller should handle this
+    # (by my passed parameter)
+    # if os.path.isdir("textworker/po"):
+    #    shutil.rmtree("textworker/po")
+    # shutil.copytree("po", "textworker/po")
 
-    print("#####################################")
+    print("---------------------------------------")
 
 
 def install():
     make_trans()
-    return os.system('"{}" -m pip install .'.format(sys.executable))
+    return os.system(f'"{sys.executable}" -m pip install -e .')
 
 
 def build():
     make_trans()
-    os.system('"{}" -m pip install build wheel'.format(sys.executable))
-    return os.system('"{}" -m build'.format(sys.executable))
-
+    os.system(f'"{sys.executable}" -m pip install poetry')
+    return os.system(f'"{sys.executable}" -m poetry build')
 
 def clean():
     try:
@@ -90,7 +101,7 @@ def clean():
         for line in open("po/LINGUAS", "r").read().split():
             shutil.rmtree("po/{}".format(line))
         # textworker
-        shutil.rmtree("textworker/po")
+        # shutil.rmtree("textworker/po")
         # py build outputs
         for path in glob.glob("*.egg-info"):
             shutil.rmtree(path)
@@ -100,13 +111,10 @@ def clean():
 
 
 if "maketrans" in opts.action:
-    clean()
     make_trans()
 elif "build" in opts.action:
-    clean()
     build()
 elif "install" in opts.action:
-    clean()
     install()
 elif "clean" in opts.action:
     clean()

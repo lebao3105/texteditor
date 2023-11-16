@@ -1,8 +1,13 @@
 textworker/extensions/multiview.py
+textworker/extensions/gitsp.py
+textworker/extensions/mergedialog.py
+textworker/extensions/multiview.py
+textworker/extensions/settings.py
+textworker/main.py
 textworker/mainwindow.py
 textworker/tabs.py
 textworker/editor.py
 textworker/file_operations.py
 po/autosave.pot
 po/preferences.pot
-po/menubar.pot
+po/mainmenu.pot
