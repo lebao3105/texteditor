@@ -65,9 +65,10 @@ For any additional arguments, please use ```-h``` / ```--help``` to show them.
 If you want to use the source code:
 
 ```bash
+$ # Get libtextworker first (will have more details until the 1.6 release, but now the latest revision)
 $ git clone https://github.com/lebao3105/texteditor.git -b wip/wx
 $ cd texteditor
-$ git submodule update --init --recursive
+$ git submodule update --init textworker/data
 $ pip install attrdict3
 $ pip install cairosvg # If you want, for app icon support
 $ pip install ./libtextworker[autocolor,configparser,wx] # autocolor is optional
