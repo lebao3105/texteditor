@@ -20,6 +20,18 @@
             "console": "internalConsole",
             "args": ["README.md"],
             "justMyCode": true
+        },
+        {
+            "name": "Open textworker/",
+            "type": "python",
+            "request": "launch",
+            "module": "textworker",
+            "console": "internalConsole",
+            "env": {
+                "PYTHONPATH": "../libtextworker"
+            },
+            "args": ["textworker/"],
+            "justMyCode": true
         }
     ]
 }

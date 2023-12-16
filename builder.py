@@ -32,13 +32,13 @@ def make_trans():
     msgfmt = shutil.which("msgfmt")
     gettext = shutil.which("xgettext")
     msgmerge = shutil.which("msgmerge")
-    wxrc = shutil.which("wxrc")
+    wxrc = shutil.which("pywxrc")
 
     print("Going to use the following tools:")
     print(f"* xgettext : {gettext}")
     print(f"* msgmerge {msgmerge}")
     print(f"* msgfmt {msgfmt}")
-    print(f"* wxrc {wxrc}")
+    print(f"* pywxrc {wxrc}")
     print("---------------------------------------")
 
     for line in open("po/WXRCFILES", "r").read().split("\n"):

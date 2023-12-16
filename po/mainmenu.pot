@@ -1,88 +1,44 @@
-#line 11 "textworker/ui/mainmenu.xrc"
 _("File");
-#line 13 "textworker/ui/mainmenu.xrc"
 _("New tab\tCtrl+T");
-#line 17 "textworker/ui/mainmenu.xrc"
 _("New window\tCtrl+N");
-#line 22 "textworker/ui/mainmenu.xrc"
 _("Open a file\tCtrl+O");
-#line 26 "textworker/ui/mainmenu.xrc"
 _("Open a folder...");
-#line 28 "textworker/ui/mainmenu.xrc"
 _("Open folder\tCtrl+Shift+D");
-#line 32 "textworker/ui/mainmenu.xrc"
 _("Open directory in a new window");
-#line 37 "textworker/ui/mainmenu.xrc"
 _("Recents");
-#line 41 "textworker/ui/mainmenu.xrc"
 _("Save\tCtrl+S");
-#line 45 "textworker/ui/mainmenu.xrc"
 _("Save as...\tCtrl+Shift+S");
-#line 50 "textworker/ui/mainmenu.xrc"
 _("Close all tabs");
-#line 54 "textworker/ui/mainmenu.xrc"
 _("Quit\tAlt+F4");
-#line 59 "textworker/ui/mainmenu.xrc"
 _("Edit");
-#line 61 "textworker/ui/mainmenu.xrc"
 _("Undo\tCtrl+Z");
-#line 65 "textworker/ui/mainmenu.xrc"
 _("Redo\tCtrl+Y");
-#line 70 "textworker/ui/mainmenu.xrc"
 _("Cut\tCtrl+X");
-#line 74 "textworker/ui/mainmenu.xrc"
 _("Copy\tCtrl+C");
-#line 78 "textworker/ui/mainmenu.xrc"
 _("Paste\tCtrl+Y");
-#line 83 "textworker/ui/mainmenu.xrc"
 _("Select all\tCtrl+A");
-#line 88 "textworker/ui/mainmenu.xrc"
 _("Find\tCtrl+F");
-#line 92 "textworker/ui/mainmenu.xrc"
 _("Replace\tCtrl+R");
-#line 97 "textworker/ui/mainmenu.xrc"
 _("Auto Save");
-#line 99 "textworker/ui/mainmenu.xrc"
 _("Global");
-#line 101 "textworker/ui/mainmenu.xrc"
 _("Configure");
-#line 105 "textworker/ui/mainmenu.xrc"
 _("Is turned on?");
-#line 111 "textworker/ui/mainmenu.xrc"
 _("The current editor");
-#line 113 "textworker/ui/mainmenu.xrc"
 _("Configure");
-#line 117 "textworker/ui/mainmenu.xrc"
 _("Is turned on?");
-#line 125 "textworker/ui/mainmenu.xrc"
 _("View");
-#line 127 "textworker/ui/mainmenu.xrc"
 _("Zoom in\tCtrl++");
-#line 131 "textworker/ui/mainmenu.xrc"
 _("Zoom out\tCtrl+-");
-#line 135 "textworker/ui/mainmenu.xrc"
 _("Wrap by word\tCtrl+W");
-#line 141 "textworker/ui/mainmenu.xrc"
 _("Show indentation guides");
-#line 146 "textworker/ui/mainmenu.xrc"
 _("View document as a HTML page");
-#line 151 "textworker/ui/mainmenu.xrc"
 _("Settings");
-#line 153 "textworker/ui/mainmenu.xrc"
 _("Settings...\tCtrl+P");
-#line 157 "textworker/ui/mainmenu.xrc"
 _("Reset everything");
-#line 161 "textworker/ui/mainmenu.xrc"
 _("Open the configuration directory");
-#line 166 "textworker/ui/mainmenu.xrc"
 _("Help");
-#line 168 "textworker/ui/mainmenu.xrc"
 _("About");
-#line 172 "textworker/ui/mainmenu.xrc"
 _("System specs");
-#line 176 "textworker/ui/mainmenu.xrc"
 _("Show logs");
-#line 181 "textworker/ui/mainmenu.xrc"
 _("Report issues...");
-#line 185 "textworker/ui/mainmenu.xrc"
 _("Read documents");

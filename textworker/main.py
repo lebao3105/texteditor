@@ -42,7 +42,6 @@ def start_app(files: list[str], directory: str | None = None):
                     break
 
             try:
-                # nb.fileops.OpenFile(files[i])
                 open(files[i], "r")
             except Exception as e:
                 logger.warning(e)
@@ -50,13 +49,14 @@ def start_app(files: list[str], directory: str | None = None):
             else:
                 nb.fileops.OpenFile(files[i])
 
-    if directory != None:
-        directory = os.path.realpath(os.path.curdir + "/" + directory)
-
-        if os.path.exists(directory) and os.path.isdir(directory):
-            fm.OpenDir(None, directory)
-        else:
-            logger.warning(e)
+    # Needs a fix
+    # if directory != None:
+    #     directory = os.path.realpath(os.path.curdir + "/" + directory)
+    #     print(directory)
+    #     if os.path.exists(directory) and os.path.isdir(directory):
+    #         fm.OpenDir(None, directory)
+    #     else:
+    #         logger.warning(f"{directory} does not exist as a directory. Skipping.")
 
     if sys.platform == "win32":
         import ctypes
@@ -76,5 +76,10 @@ def start_app(files: list[str], directory: str | None = None):
         )
 
     app.SetTopWindow(fm.mainFrame)
-    fm.Show()
-    app.MainLoop()
+    try:
+        fm.Show()
+        app.MainLoop()
+    except Exception as e:
+        wx.MessageBox(e, _("An error occured"),
+                      wx.OK_DEFAULT | wx.ICON_ERROR, fm)
+        raise e

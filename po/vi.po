@@ -51,8 +51,8 @@ msgid ""
 "your settings.Look for the changes below.All changes are required. You just "
 "need to review what are they:)"
 msgstr ""
-"Hệ thống cài đặt đã được thay đổi gần đây và sẽ được áp dụng vào các cài "
-"đặt hiện tại. Xem các thay đổi bên dưới - tất cả sẽ được áp dụng."
+"Hệ thống cài đặt đã được thay đổi gần đây và sẽ được áp dụng vào các cài đặt "
+"hiện tại. Xem các thay đổi bên dưới - tất cả sẽ được áp dụng."
 
 #: textworker/extensions/mergedialog.py:27
 msgid "Setting (section->option)"
@@ -137,8 +137,7 @@ msgid ""
 "If you're running a packaged version, tell us."
 msgstr ""
 "Bạn cần cài đặt markdown2 từ kho Pypi trước đã!\n"
-"Nếu đang sử dụng bản được đóng gói (thay vì chạy từ mã nguồn), báo chúng "
-"tôi."
+"Nếu đang sử dụng bản được đóng gói (thay vì chạy từ mã nguồn), báo chúng tôi."
 
 #: textworker/mainwindow.py:335
 msgid "Extra package required"

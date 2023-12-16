@@ -1,92 +1,46 @@
-#line 5 "textworker/ui/preferences.xrc"
 _("Settings");
-#line 16 "textworker/ui/preferences.xrc"
 _("General");
-#line 30 "textworker/ui/preferences.xrc"
 _("App updates");
-#line 37 "textworker/ui/preferences.xrc"
 _("Automatically?");
-#line 46 "textworker/ui/preferences.xrc"
 _("Check for updates");
-#line 58 "textworker/ui/preferences.xrc"
 _("View release notes (requires internet)");
-#line 73 "textworker/ui/preferences.xrc"
 _("Interface");
-#line 85 "textworker/ui/preferences.xrc"
 _("Notebook tabs location");
-#line 96 "textworker/ui/preferences.xrc"
 _("Left");
-#line 97 "textworker/ui/preferences.xrc"
 _("Right");
-#line 98 "textworker/ui/preferences.xrc"
 _("Top");
-#line 99 "textworker/ui/preferences.xrc"
 _("Bottom");
-#line 116 "textworker/ui/preferences.xrc"
 _("Nothing else;)");
-#line 128 "textworker/ui/preferences.xrc"
 _("Colors");
-#line 140 "textworker/ui/preferences.xrc"
 _("Color schemes");
-#line 143 "textworker/ui/preferences.xrc"
 _("Automatic");
-#line 144 "textworker/ui/preferences.xrc"
 _("Dark");
-#line 145 "textworker/ui/preferences.xrc"
 _("Light");
-#line 156 "textworker/ui/preferences.xrc"
 _("Customize");
-#line 168 "textworker/ui/preferences.xrc"
 _("Background");
-#line 177 "textworker/ui/preferences.xrc"
 _("#000000");
-#line 194 "textworker/ui/preferences.xrc"
 _("Foreground");
-#line 203 "textworker/ui/preferences.xrc"
 _("#000000");
-#line 220 "textworker/ui/preferences.xrc"
 _("Different colors for dark/light mode (WIP)");
-#line 243 "textworker/ui/preferences.xrc"
 _("Themes");
-#line 255 "textworker/ui/preferences.xrc"
 _("Pre-made");
-#line 281 "textworker/ui/preferences.xrc"
 _("Create new");
-#line 298 "textworker/ui/preferences.xrc"
 _("Do it");
-#line 313 "textworker/ui/preferences.xrc"
 _("Editors");
-#line 325 "textworker/ui/preferences.xrc"
 _("Indentation");
-#line 337 "textworker/ui/preferences.xrc"
 _("Is enabled?");
-#line 348 "textworker/ui/preferences.xrc"
 _("Enabled - use tabs");
-#line 349 "textworker/ui/preferences.xrc"
 _("Enabled - use spaces");
-#line 350 "textworker/ui/preferences.xrc"
 _("Disabled");
-#line 367 "textworker/ui/preferences.xrc"
 _("Size");
-#line 379 "textworker/ui/preferences.xrc"
 _("2");
-#line 380 "textworker/ui/preferences.xrc"
 _("4");
-#line 381 "textworker/ui/preferences.xrc"
 _("6");
-#line 382 "textworker/ui/preferences.xrc"
 _("8");
-#line 399 "textworker/ui/preferences.xrc"
 _("Backspace clears the indentation");
-#line 426 "textworker/ui/preferences.xrc"
 _("Show indentation guides");
-#line 450 "textworker/ui/preferences.xrc"
 _("View");
-#line 462 "textworker/ui/preferences.xrc"
 _("View whitespaces");
-#line 489 "textworker/ui/preferences.xrc"
 _("View end-of-line (EOL)");
-#line 516 "textworker/ui/preferences.xrc"
 _("Line numbers");
-#line 548 "textworker/ui/preferences.xrc"
 _("&Cancel");

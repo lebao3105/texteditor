@@ -1,8 +1,4 @@
-#line 6 "textworker/ui/autosave.xrc"
 _("Auto-saving document configure");
-#line 22 "textworker/ui/autosave.xrc"
 _("Time format: minutes");
-#line 41 "textworker/ui/autosave.xrc"
 _("Changes are automatically applied.");
-#line 50 "textworker/ui/autosave.xrc"
 _("Save this permanently");

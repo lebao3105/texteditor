@@ -26,6 +26,7 @@ clrCall: ColorManager
 configs: str
 
 # TODO: Rename
+# Seems nobody else than generic uses these variables, so cancelled.
 _editor_config_load: str
 _theme_load: str
 
@@ -33,6 +34,7 @@ global_settings: GetConfig
 editorCfg: GetConfig
 logger = logging.getLogger("textworker")
 
+# C/C++ users belike:
 builtins.true = True
 builtins.false = False
 builtins.nil = None

@@ -23,12 +23,12 @@ from libtextworker.general import (
     GetCurrentDir,
 )
 from libtextworker.interface.wx.about import AboutDialog
-from libtextworker.interface.wx.dirctrl import PatchedDirCtrl
+from libtextworker.interface.wx.dirctrl import PatchedDirCtrl, DC_ONEROOT
 from libtextworker.interface.wx.miscs import XMLBuilder, BindMenuEvents
 from libtextworker.versioning import *
 
 from . import __version__ as appver, icon
-from .extensions import autosave, multiview, gitsp, mergedialog, settings
+from .extensions import autosave, multiview, settings
 from .generic import global_settings, TOPLV_DIR
 from .tabs import Tabber
 
@@ -72,13 +72,9 @@ class MainFrame(XMLBuilder):
         self.multiviewer = multiview.MultiViewer(editorBox)
 
         ## Explorer
-        self.dirs = PatchedDirCtrl(self.multiviewer.tabs)
-        self.dirs.Bind(wx.EVT_TREE_ITEM_ACTIVATED, self.OpenFileFromTree)
+        self.dirs = PatchedDirCtrl(self.multiviewer.tabs, w_styles=DC_ONEROOT)
+        self.dirs.Bind(wx.EVT_TREE_SEL_CHANGED, self.OpenFileFromTree)
         self.multiviewer.RegisterTab("Explorer", self.dirs)
-
-        ## Git
-        self.gitsp = gitsp.GitSupportGUI(self.multiviewer.tabs)
-        self.multiviewer.RegisterTab("Git", self.gitsp.Panel)
 
         ## Always show Explorer on startup
         self.multiviewer.tabs.SetSelection(0)
@@ -302,17 +298,18 @@ class MainFrame(XMLBuilder):
 
         if not newwind:
             self.dirs.SetFolder(selected_dir)
-            self.gitsp.InitFolder(selected_dir)
         else:
             new = wx.Frame(self.mainFrame)
-            newctrl = PatchedDirCtrl(new)
+            newctrl = PatchedDirCtrl(new, w_styles=DC_ONEROOT)
             newctrl.SetFolder(selected_dir)
             newctrl.Bind(wx.EVT_TREE_ITEM_ACTIVATED, self.OpenFileFromTree)
             new.Show()
 
     def OpenFileFromTree(self, evt):
         path = self.dirs.GetFullPath()
-        self.notebook.fileops.OpenFile(self.gitsp.currdir + "/" + path)
+        import os
+        if not os.path.isdir(path): self.notebook.fileops.OpenFile(path)
+        else: evt.Skip()
 
     def ShowMarkdown(self, evt):
         def autorefresh(event):
@@ -324,18 +321,7 @@ class MainFrame(XMLBuilder):
             newwind.SetPage(content, "")
             wind.Refresh()
 
-        try:
-            from markdown2 import markdown
-        except ImportError:
-            wx.MessageBox(
-                _(
-                    "You need to get markdown2 package from Pypi first!\n"
-                    "If you're running a packaged version, tell us."
-                ),
-                _("Extra package required"),
-                parent=self.mainFrame,
-            )
-            return false
+        from markdown2 import markdown
 
         content = markdown(self.notebook.GetCurrentPage().GetText())
 
