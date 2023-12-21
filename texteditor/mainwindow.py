@@ -1,12 +1,12 @@
 import os
-from tkinter.filedialog import askdirectory
 import pygubu
 import texteditor
 import webbrowser
 
 from libtextworker.general import ResetEveryConfig, logger
-from libtextworker.interface.tk.dirctrl import DirList
+from libtextworker.interface.tk.dirctrl import DirCtrl, DC_HIDEROOT
 
+from tkinter.filedialog import askdirectory
 from tkinter import Menu, PhotoImage, TclError, Tk, Toplevel
 from tkinter import messagebox as msgbox
 from typing import Literal, NoReturn
@@ -157,11 +157,7 @@ class MainWindow(Tk):
 
     def toggle_wrap(self, event=None):
         toggle = self.wrapbtn.get()
-
-        if toggle:
-            self.notebook.fileops.GetEditorFromCurrTab().configure(wrap="word")
-        else:
-            self.notebook.fileops.GetEditorFromCurrTab().configure(wrap="none")
+        self.notebook.fileops.GetEditorFromCurrTab().configure(wrap="word" if toggle else "none")
 
     def autosv_config(
         self, type: Literal["global", "local"], type2: Literal["switch"] | None = None
@@ -186,7 +182,7 @@ class MainWindow(Tk):
             initialdir=os.path.expanduser("~/"), mustexist=True,
             parent=self, title=_("Open a directory")
         )
-        control = DirList(new)
+        control = DirCtrl(new, w_styles=DC_HIDEROOT)
         control.SetFolder(path)
         control.Frame.pack(fill="both", expand=True)
         new.wm_title(path)
