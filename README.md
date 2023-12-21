@@ -22,7 +22,7 @@
 
 ## Notes from this work-in-progress (WIP) version
 
-This is an **unstable** build of texteditor 1.5 (alpha 0).
+This is the **unstable** branch of texteditor 1.5 (alpha 0).
 
 The code in the main branch is 1.5 alpha too, but it's not complete. I'm going to remanage everything - 'main' branch will store the most recent stable version. So use this branch or 'wip/wx' instead.
 
@@ -36,7 +36,7 @@ Expected new features:
 ## Features
 
 * Lightweight
-* Run some tasks with Command Window (removed since version 1.5a+)
+* Run some tasks with Command Window (removed since version 1.5a0)
 * Customizable interface
 * Auto save
 
@@ -59,12 +59,12 @@ python3 -m texteditor [args]
 If you want to use the source code:
 
 ```bash
-git clone https://github.com/lebao3105/texteditor.git # Or you can use gitlab instead
-cd texteditor
-git submodule update --init --recursive
-pip install cairosvg # If you want, for app icon support
-pip install ./libtextworker[configparser,tkinter]
-pip install ./libtextworker[autocolor] # for autocolor support
+$ # install libtextworker[configparser, tkinter] first.
+$ # install libtextworker[autocolor] for autocolor support.
+$ git clone https://github.com/lebao3105/texteditor.git # Or you can use gitlab instead
+$ cd texteditor
+$ git submodule update --init --recursive
+$ pip install cairosvg # If you want, for app icon support
 ```
 
 Install from source: ```pip install -e .```
