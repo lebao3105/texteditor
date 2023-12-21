@@ -46,6 +46,7 @@ class About(AboutDialog):
     def ShowDialog(self, master: Misc | None = None):
         dlg = Toplevel(master)
         dlg.wm_title(_("About this project"))
+        dlg.grab_set()
         dlg.geometry("350x485")
 
         project_infos = _(
@@ -72,17 +73,19 @@ class About(AboutDialog):
         nb.pack(fill="both", expand=True)
 
         # Make tabs
-        credits_te = StyledTextControl(dlg, state="disabled", wrap="word")
-        license_te = StyledTextControl(dlg, state="disabled", wrap="word")
+        credits_te = StyledTextControl(dlg, wrap="word")
+        license_te = StyledTextControl(dlg, wrap="word")
         license_te.insert(1.0, self.ProjectLicense)
         credits_te.insert(1.0, project_credits)
-        license_te.pack(expand=True, fill="both")
-        credits_te.pack(expand=True, fill="both")
+        license_te.configure(state="disabled")
+        credits_te.configure(state="disabled")
+        license_te.pack(expand=True, fill="both", anchor="nw")
+        credits_te.pack(expand=True, fill="both", anchor="nw")
 
-        nb.add(Label(dlg, text=project_infos), text=_("This software"))
+        nb.add(Label(dlg, text=project_infos, anchor="nw"), text=_("This software"))
         nb.add(credits_te._frame, text=_("Contributors"))
         nb.add(license_te._frame, text=_("License"))
-        nb.add(Label(dlg, text=self.ProjectBuilds), text=_("System specifications"))
+        nb.add(Label(dlg, text=self.ProjectBuilds, anchor="nw"), text=_("System specifications"))
 
         # The bottom bar
         bottomfm = Frame(dlg)

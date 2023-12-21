@@ -11,7 +11,7 @@
     </child>
     <child>
       <object class="tk.Menuitem.Command" id="command23">
-        <property name="accelerator">Ctrl+O</property>
+        <property name="accelerator">Ctrl+Shift+D</property>
         <property name="command" type="command" cbtype="simple">openfolder</property>
         <property name="label" translatable="yes">Open a folder</property>
       </object>
