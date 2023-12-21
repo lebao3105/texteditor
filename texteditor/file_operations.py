@@ -1,7 +1,10 @@
 import os
 import typing
+
+from hashlib import md5
 from tkinter import Misc
 from tkinter.filedialog import askopenfilename, asksaveasfilename
+from tkinter.messagebox import askyesnocancel
 from tkinter.ttk import Notebook
 
 from .extensions.generic import global_settings
@@ -15,7 +18,7 @@ class FileOperations:
     """
     The extended texteditor.tabs + libtextworker's Tkinter editor
         with text modify-detect function
-    Use with texteditor.editor.Editor.
+    This time it's for internal use.
     """
 
     NoteBook: Misc | Notebook
@@ -37,14 +40,12 @@ class FileOperations:
             else:
                 self.NewTabFn()
 
-        self.GetEditorFromCurrTab().insert(1.0, open(path, "r").read())
-
-    def SaveFile(self, path: str):
-        return open(path, "w").write(self.GetEditorFromCurrTab().get(1.0, "end"))
+        self.GetEditorFromCurrTab().LoadFile(path)
+        self.NoteBook.tab("current", text=path)
 
     # GUI-side functions
     def OpenFileDialog(self, evt=None):
-        return self.LoadFile(
+        return self.GetEditorFromCurrTab().LoadFile(
             askopenfilename(
                 initialdir=searchdir,
                 parent=self.NoteBook,
@@ -57,10 +58,10 @@ class FileOperations:
         if not os.path.isfile(tabname):
             self.SaveAs()
         else:
-            self.SaveFile(tabname)
+            self.GetEditorFromCurrTab().SaveFile(tabname)
 
     def SaveAs(self, evt=None):
-        return self.SaveFile(
+        return self.GetEditorFromCurrTab().SaveFile(
             asksaveasfilename(
                 confirmoverwrite=True,
                 initialdir=searchdir,
@@ -69,14 +70,29 @@ class FileOperations:
             )
         )
 
-    def OnEditorModified(self, evt):
+    def OnEditorModify(self, evt):
         self.GetEditorFromCurrTab().Modified = True
         # Nothing else
-
+    
+    def OnEditorDestroy(self, evt):
+        curreditor = self.GetEditorFromCurrTab()
+        path = curreditor.FileLoaded if curreditor.FileLoaded else "this new file"
+        if curreditor.Modified and curreditor.Hash.digest() != md5(curreditor.get(1.0, "end").encode("utf-8")).digest():
+            ask = askyesnocancel(_("Not saved"),
+                     _(f"Save {path}? It has unsaved changes."))
+            if ask:
+                if path != curreditor.FileLoaded:
+                    self.SaveAs()
+                else:
+                    self.SaveFile(path)
+            elif ask == None: return
+        curreditor.destroy()
+            
     def InitEditor(self):
         currtab = self.GetEditorFromCurrTab()
         currtab.Modified: bool = False
-        currtab.bind("<<Modified>>", self.OnEditorModified)
+        currtab.bind("<<Modified>>", self.OnEditorModify)
+        currtab.bind("<Destroy>", self.OnEditorDestroy)
 
     def GetEditorFromTab(self, tab) -> Misc:
         return self.NoteBook.nametowidget(tab).winfo_children()[0]

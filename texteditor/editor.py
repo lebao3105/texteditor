@@ -1,21 +1,17 @@
+from hashlib import md5
 from libtextworker.interface.tk.editor import TextWidget
-
 from .extensions.autosave import AutoSave, AutoSaveConfig
 
 
 class Editor(TextWidget, AutoSave):
-    FileLoaded: str
+    FileLoaded: str = ""
+    Hash: str = md5("".encode("utf-8"))
+    Modified: bool = False
 
     def __init__(self, *args, **kwds):
         TextWidget.__init__(self, *args, **kwds)
         self.autosv = AutoSaveConfig(self)
         self.autosv.do_the_task = self.do_the_task
-
-    def SaveFile(self, path: str):
-        return open(path, "w").write(self.get(1.0, "end"))
-
-    def LoadFile(self, path: str):
-        return self.insert(1.0, open(path, "r").read())
 
     # AutoSaveConfig
     def do_the_task(self):
