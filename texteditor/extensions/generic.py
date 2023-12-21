@@ -8,7 +8,7 @@ from libtextworker.interface import stock_ui_configs
 from libtextworker.interface.tk import ColorManager
 from libtextworker.versioning import is_development_version_from_project
 
-from libtextworker import EDITOR_DIR, THEMES_DIR
+from libtextworker import EDITOR_DIR, THEMES_DIR, TOPLV_DIR
 
 CONFIGS_PATH = os.path.expanduser(
     "~/.config/textworker/configs{}.ini".format(
@@ -36,7 +36,7 @@ def find_resource(t: typing.Literal["theme", "editor"]) -> str:
     _name += ".ini"
 
     if _path != "unchanged":
-        _path = os.path.abspath(os.path.expanduser(_path))
+        _path = os.path.normpath(os.path.expanduser(_path))
     else:
         _path = THEMES_DIR if t == "theme" else EDITOR_DIR
 
@@ -44,10 +44,16 @@ def find_resource(t: typing.Literal["theme", "editor"]) -> str:
 
 
 def ready():
-    global _theme_load, _editor_config_load, clrcall, configs, global_settings
-    configs = open(CraftItems(DATA_PATH, "appconfig.ini"), "r").read()
+    global _theme_load, _editor_config_load
+    global clrcall, configs, global_settings
+    global THEMES_DIR, EDITOR_DIR, TOPLV_DIR
 
+    configs = open(CraftItems(DATA_PATH, "appconfig.ini"), "r").read()
     global_settings = GetConfig(configs, file=CONFIGS_PATH)
+
+    TOPLV_DIR = os.path.dirname(CONFIGS_PATH)
+    THEMES_DIR = TOPLV_DIR + "/themes/"
+    EDITOR_DIR = TOPLV_DIR + "/editorconfigs/"
 
     _theme_load = find_resource("theme")
     _editor_config_load = find_resource("editor")
