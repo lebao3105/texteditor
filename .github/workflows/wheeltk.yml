@@ -1,7 +1,7 @@
 on:
     workflow_dispatch:
 
-name: Build releases (wheel) (wx version)
+name: Build releases (wheel) (tk version)
 
 jobs:
     build:

@@ -16,13 +16,10 @@ from texteditor.extensions.generic import clrcall
 class About(AboutDialog):
     ProjectName = "textworker"
     ProjectVersion = appver
-    ProjectSite = (
-        "https://github.com/lebao3105/texteditor "
-        "and https://gitlab.com/lebao3105/texteditor (mirror)"
-    )
+    ProjectSite = "https://github.com/lebao3105/texteditor "
 
     ProjectDescription = _(
-        "A text editor in Python, with customizable and easy-to-use user interface."
+        "A text editor in Python, with customizable and easy-to-use user interface.\n"
         "Read documents online: https://lebao3105.gitbook.io/texteditor_doc"
     )
 
@@ -41,7 +38,7 @@ class About(AboutDialog):
     )
 
     Developers = "Le Bao Nguyen (@lebao3105)"
-    Translators = Testers = Developers  # Looks sad btw
+    Translators = Testers = Developers  # Looks sad
 
     def ShowDialog(self, master: Misc | None = None):
         dlg = Toplevel(master)
@@ -95,6 +92,5 @@ class About(AboutDialog):
         bottomfm.pack(fill="x", side="bottom")
 
         clrcall.configure(dlg, True)
-        # clrcall.autocolor_run(dlg)
 
         dlg.mainloop()

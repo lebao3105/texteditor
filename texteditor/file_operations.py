@@ -33,7 +33,7 @@ class FileOperations:
 
         if (
             os.path.isfile(tabname.removesuffix(_(" (Duplicated)")))
-            or self.GetEditorFromCurrTab().Modified
+            or self.GetEditorFromCurrTab().IsModified
         ):
             if self.NewTabFn_Args is not None:
                 self.NewTabFn(**self.NewTabFn_Args)
@@ -69,15 +69,11 @@ class FileOperations:
                 title=_("Save this file as..."),
             )
         )
-
-    def OnEditorModify(self, evt):
-        self.GetEditorFromCurrTab().Modified = True
-        # Nothing else
     
     def OnEditorDestroy(self, evt):
         curreditor = self.GetEditorFromCurrTab()
         path = curreditor.FileLoaded if curreditor.FileLoaded else "this new file"
-        if curreditor.Modified and curreditor.Hash.digest() != md5(curreditor.get(1.0, "end").encode("utf-8")).digest():
+        if curreditor.IsModified:
             ask = askyesnocancel(_("Not saved"),
                      _(f"Save {path}? It has unsaved changes."))
             if ask:
@@ -90,8 +86,6 @@ class FileOperations:
             
     def InitEditor(self):
         currtab = self.GetEditorFromCurrTab()
-        currtab.Modified: bool = False
-        currtab.bind("<<Modified>>", self.OnEditorModify)
         currtab.bind("<Destroy>", self.OnEditorDestroy)
 
     def GetEditorFromTab(self, tab) -> Misc:

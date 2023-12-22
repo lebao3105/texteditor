@@ -4,9 +4,6 @@ from .extensions.autosave import AutoSave, AutoSaveConfig
 
 
 class Editor(TextWidget, AutoSave):
-    FileLoaded: str = ""
-    Hash: str = md5("".encode("utf-8"))
-    Modified: bool = False
 
     def __init__(self, *args, **kwds):
         TextWidget.__init__(self, *args, **kwds)

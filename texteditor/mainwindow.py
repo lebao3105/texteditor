@@ -184,6 +184,6 @@ class MainWindow(Tk):
         )
         control = DirCtrl(new, w_styles=DC_HIDEROOT)
         control.SetFolder(path)
-        control.Frame.pack(fill="both", expand=True)
+        control.Frame.pack(expand=True, fill="both")
         new.wm_title(path)
         new.mainloop()
