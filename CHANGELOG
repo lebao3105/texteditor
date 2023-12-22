@@ -11,6 +11,7 @@ The first build of texteditor 1.5 ever.
 - Auto save for all editors!
 - Directory tree
 - Use poetry
+- Don't use sv-ttk (sorry Linux/BSD users, but it should be fixed)
 
 ### 1.4.1 (tag 1.4.1 - last commit e8b49e4)
 * Updates:
