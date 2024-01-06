@@ -1,3 +1,4 @@
+import os
 import platform
 import webbrowser
 
@@ -9,7 +10,7 @@ import wx.lib.splitter
 import wx.xrc
 
 try:
-    from cairosvg import svg2png  # type: ignore
+    from cairosvg import svg2png 
 except ImportError:
     CAIRO_AVAILABLE = False
 else:
@@ -39,6 +40,20 @@ if platform.system() == "Windows":
     myappid = "me.lebao3105.textworker"
     ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(myappid)
 
+class TaskBarIcon(wx.adv.TaskBarIcon):
+    def __init__(self, frame):
+        wx.adv.TaskBarIcon.__init__(self, wx.adv.TBI_DOCK)
+        self.frame = frame
+        img = self.MakeIcon()
+        self.SetIcon(img, "textworker")
+    
+    def MakeIcon(self):
+        # if CAIRO_AVAILABLE and not os.path.isfile("./icon.png"):
+        #     svg2png(open(icon, "r").read(), write_to="./icon.png")
+        img = icon.dev.GetImage()
+        if "wxMSW" in wx.PlatformInfo: img = img.Scale(16, 16)
+        elif "wxGTK" in wx.PlatformInfo: img = img.Scale(22, 22)
+        return wx.Icon(img.ConvertToBitmap())
 
 class MainFrame(XMLBuilder):
     cfg = global_settings
@@ -52,9 +67,12 @@ class MainFrame(XMLBuilder):
         self.mainFrame = self.loadObject("mainFrame", "wxFrame")
         self.mainFrame.SetSize((860, 640))
 
-        if CAIRO_AVAILABLE:
-            svg2png(open(icon, "r").read(), write_to="./icon.png")
-            self.mainFrame.SetIcon(wx.Icon("./icon.png"))
+        # if CAIRO_AVAILABLE and not os.path.isfile("./icon.png"):
+        #     svg2png(open(icon, "r").read(), write_to="./icon.png")
+        # if os.path.isfile("./icon.png"):
+        self.mainFrame.SetIcon(wx.Icon(icon.dev.GetIcon()))
+        
+        TaskBarIcon(self.mainFrame)
 
         self.Show = self.mainFrame.Show
         self.Hide = self.mainFrame.Hide
@@ -73,7 +91,7 @@ class MainFrame(XMLBuilder):
 
         ## Explorer
         self.dirs = PatchedDirCtrl(self.multiviewer.tabs, w_styles=DC_ONEROOT)
-        self.dirs.Bind(wx.EVT_TREE_SEL_CHANGED, self.OpenFileFromTree)
+        self.dirs.Bind(wx.EVT_TREE_SEL_CHANGED, lambda evt: self.OpenFileFromTree(evt, self.dirs))
         self.multiviewer.RegisterTab("Explorer", self.dirs)
 
         ## Always show Explorer on startup
@@ -83,9 +101,9 @@ class MainFrame(XMLBuilder):
         self.wiz = settings.SettingsDialog(self.mainFrame).dlg
         self.file_history = wx.FileHistory()
         self.autosv_cfg = autosave.AutoSaveConfig(self.mainFrame)
-        self.logwindow = wx.LogWindow(self.mainFrame, _("Log"), false)
-        self.logwindow.SetFormatter(self.logfmter)
-        self.logwindow.SetVerbose(true)
+        self.logwindow = wx.Frame(self.mainFrame, title=_("Log"))
+        self.log = wx.TextCtrl(self.logwindow, style=wx.TE_READONLY | wx.TE_MULTILINE | wx.HSCROLL)  
+        wx.Log.SetActiveTarget(wx.LogTextCtrl(self.log))
         # mergedialog.MergeDialog(self.mainFrame).ShowModal()
 
         # Place everything
@@ -255,6 +273,7 @@ class MainFrame(XMLBuilder):
             (self.ShowAbout, 0),
             (self.SysInf_Show, 1),
             (lambda evt: self.logwindow.Show(), 2),
+            (self.OpenInspector, 3),
             (
                 lambda evt: webbrowser.open(
                     "https://github.com/lebao3105/texteditor/issues"
@@ -281,6 +300,7 @@ class MainFrame(XMLBuilder):
 
     def OnClose(self, evt):
         evt.Skip()
+        self.dirs.Destroy()
         wx.GetApp().ExitMainLoop()
 
     def OpenDir(self, evt, path: str = "", newwind: bool = false):
@@ -302,11 +322,11 @@ class MainFrame(XMLBuilder):
             new = wx.Frame(self.mainFrame)
             newctrl = PatchedDirCtrl(new, w_styles=DC_ONEROOT)
             newctrl.SetFolder(selected_dir)
-            newctrl.Bind(wx.EVT_TREE_ITEM_ACTIVATED, self.OpenFileFromTree)
+            newctrl.Bind(wx.EVT_TREE_SEL_CHANGED, lambda evt: self.OpenFileFromTree(evt, newctrl))
             new.Show()
 
-    def OpenFileFromTree(self, evt):
-        path = self.dirs.GetFullPath()
+    def OpenFileFromTree(self, evt, tree: PatchedDirCtrl):
+        path = tree.GetFullPath()
         import os
         if not os.path.isdir(path): self.notebook.fileops.OpenFile(path)
         else: evt.Skip()
@@ -410,3 +430,9 @@ class MainFrame(XMLBuilder):
         wx.PostEvent(
             self.notebook, wx.CommandEvent(wx.aui.wxEVT_AUINOTEBOOK_PAGE_CLOSED)
         )
+
+    def OpenInspector(self, evt):
+        from wx.lib.inspection import InspectionTool
+        wnd = wx.FindWindowAtPointer()
+        if not wnd: wnd = self.mainFrame
+        InspectionTool().Show(wnd, True)

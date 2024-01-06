@@ -25,6 +25,7 @@ def _file_not_found(filename):
 
 def start_app(files: list[str], directory: str | None = None):
     app = wx.App(0)
+    app.SetAppName("textworker")
 
     from .mainwindow import MainFrame
 
