@@ -23,7 +23,7 @@ classifiers = [
 python = "^3.8"
 #libtextworker = {version = "^0.1.4", extras = ["tkinter"]}
 cairosvg = {version = "^2.7.1", optional = true}
-pygubu = "^0.31"
+pygubu = "^0.32"
 #sv-ttk = "^2.5.5"
 
 [build-system]

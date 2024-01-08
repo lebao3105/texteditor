@@ -233,13 +233,13 @@ files = [
 
 [[package]]
 name = "pygubu"
-version = "0.31"
+version = "0.32"
 description = "A simple GUI builder for the python tkinter module"
 optional = false
 python-versions = ">=3.6"
 files = [
-    {file = "pygubu-0.31-py3-none-any.whl", hash = "sha256:b8a177deee56a9686e2a9d2939f4af5e82b27c504bf51c79610d33a8c5b6a04d"},
-    {file = "pygubu-0.31.tar.gz", hash = "sha256:058625866885eaa76dfdad148c8136c1989d6d85abd2d0156a0529c3e94b49c5"},
+    {file = "pygubu-0.32-py3-none-any.whl", hash = "sha256:86e53d125b5212876af66c8e6997ec9804033bb210619fe90d9b56b8df695b4b"},
+    {file = "pygubu-0.32.tar.gz", hash = "sha256:8cab2e02cc3b0cc7abe0fa22a3a39fddd14daa4108259f2b2658bda22982ae9a"},
 ]
 
 [package.dependencies]
@@ -303,4 +303,4 @@ testing = ["big-O", "jaraco.functools", "jaraco.itertools", "more-itertools", "p
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.8"
-content-hash = "e9f06376affe230d11eb5c0513d1ebb8d853a764f237302e8da5cd6a858d30dc"
+content-hash = "443c48d354134b890d99e1896f86d00733f35ab4fd48227c04932f11e645422a"
