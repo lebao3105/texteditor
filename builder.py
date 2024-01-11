@@ -33,12 +33,14 @@ def make_trans():
     gettext = shutil.which("xgettext")
     msgmerge = shutil.which("msgmerge")
     wxrc = shutil.which("pywxrc")
+    img2py = shutil.which("img2py")
 
     print("Going to use the following tools:")
     print(f"* xgettext : {gettext}")
     print(f"* msgmerge {msgmerge}")
     print(f"* msgfmt {msgfmt}")
     print(f"* pywxrc {wxrc}")
+    print(f"* img2py: {img2py}")
     print("---------------------------------------")
 
     for line in open("po/WXRCFILES", "r").read().split("\n"):
@@ -58,26 +60,30 @@ def make_trans():
     )
     
     for line in open("po/LINGUAS", "r").read().split():
-       target = f"po/{line}.po"
-       os.system(
-           '"{}"'.format(msgmerge)
-           + " {} po/textworker.pot".format(target)
-           + " -o {}".format(target)
-       )
-       os.mkdir("po/{}".format(line))
-       os.mkdir("po/{}/LC_MESSAGES".format(line))
-       os.system(
-           '"{}"'.format(msgfmt)
-           + " -D po "
-           + target.removeprefix("po/")
-           + " -o po/{}/LC_MESSAGES/{}.mo".format(line, line)
-       )
+        target = f"po/{line}.po"
+        os.system(
+            '"{}"'.format(msgmerge)
+            + " {} po/textworker.pot".format(target)
+            + " -o {}".format(target)
+        )
+        os.mkdir("po/{}".format(line))
+        os.mkdir("po/{}/LC_MESSAGES".format(line))
+        os.system(
+            '"{}"'.format(msgfmt)
+            + " -D po "
+            + target.removeprefix("po/")
+            + " -o po/{}/LC_MESSAGES/{}.mo".format(line, line)
+        )
 
     # Pyinstaller should handle this
     # (by my passed parameter)
     # if os.path.isdir("textworker/po"):
     #    shutil.rmtree("textworker/po")
     # shutil.copytree("po", "textworker/po")
+
+    os.remove("textworker/icon.py")
+    os.system(f"{img2py} -n dev textworker/data/icons/me.lebao3105.textworker.Devel.svg textworker/icon.py")
+    os.system(f"{img2py} -a -n stable textworker/data/icons/me.lebao3105.textworker.svg textworker/icon.py")
 
     print("---------------------------------------")
 

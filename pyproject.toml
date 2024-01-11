@@ -13,7 +13,7 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.8"
-libtextworker = {path = "libtextworker"}
+#libtextworker = {path = "libtextworker"}
 
 Pillow = "^9.5.0"
 wxPython = "^4.2.0"
