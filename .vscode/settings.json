@@ -1,13 +1,10 @@
 {
-    "mesonbuild.configureOnOpen": false,
     "python.formatting.provider": "black",
     "scm.alwaysShowActions": true,
     "python.analysis.extraPaths": [
-        "./libtextworker"
+        "../libtextworker"
     ],
     "files.associations": {
-        "*.xrc": "xml",
-        "filesystem": "cpp",
-        "*.tcc": "cpp"
+        "*.xrc": "xml"
     }
 }
