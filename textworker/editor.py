@@ -9,7 +9,7 @@ from .generic import clrCall, editorCfg
 
 
 class Editor(StyledTextControl, AutoSave, AutoSaveConfig):
-    FileLoaded: str = _("New file")
+    FileLoaded: str = ""
 
     def __init__(
         self,
