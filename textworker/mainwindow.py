@@ -28,7 +28,7 @@ from libtextworker.interface.wx.dirctrl import PatchedDirCtrl, DC_ONEROOT
 from libtextworker.interface.wx.miscs import XMLBuilder, BindMenuEvents
 from libtextworker.versioning import *
 
-from . import __version__ as appver, icon
+from . import __version__ as appver, icon, branch
 from .extensions import autosave, multiview, settings
 from .generic import global_settings, TOPLV_DIR
 from .tabs import Tabber
@@ -55,7 +55,7 @@ class MainFrame(XMLBuilder):
         # if CAIRO_AVAILABLE and not os.path.isfile("./icon.png"):
         #     svg2png(open(icon, "r").read(), write_to="./icon.png")
         # if os.path.isfile("./icon.png"):
-        self.mainFrame.SetIcon(wx.Icon(icon.dev.GetIcon()))
+        self.mainFrame.SetIcon(wx.Icon(getattr(icon, branch).GetIcon()))
 
         self.Show = self.mainFrame.Show
         self.Hide = self.mainFrame.Hide
@@ -342,8 +342,8 @@ class MainFrame(XMLBuilder):
             self.mainFrame,
             _(
                 "Are you sure want to reset every settings?\n"
-                "If so, finish your work first since the app will close after"
-                "the operation.\n(and you will need to reopen yourself)"
+                "If so, finish your work first.\n"
+                "(and you will need to reopen yourself)"
             ),
             style=wx.YES_NO | wx.ICON_WARNING,
         ).ShowModal()
@@ -356,8 +356,7 @@ class MainFrame(XMLBuilder):
         aboutdlg = AboutDialog()
         aboutdlg.SetName("TextWorker")
         aboutdlg.SetVersion(appver)
-        if CAIRO_AVAILABLE:
-            aboutdlg.SetIcon(wx.Icon("./icon.png"))
+        aboutdlg.SetIcon(getattr(icon, branch).GetIcon())
         aboutdlg.SetDescription(_("A simplified text editor."))
         aboutdlg.SetCopyright("(C) 2022-2023 Le Bao Nguyen")
         aboutdlg.SetWebSite("https://github.com/lebao3105/texteditor")
