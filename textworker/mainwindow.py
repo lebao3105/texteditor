@@ -40,21 +40,6 @@ if platform.system() == "Windows":
     myappid = "me.lebao3105.textworker"
     ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(myappid)
 
-class TaskBarIcon(wx.adv.TaskBarIcon):
-    def __init__(self, frame):
-        wx.adv.TaskBarIcon.__init__(self, wx.adv.TBI_DOCK)
-        self.frame = frame
-        img = self.MakeIcon()
-        self.SetIcon(img, "textworker")
-    
-    def MakeIcon(self):
-        # if CAIRO_AVAILABLE and not os.path.isfile("./icon.png"):
-        #     svg2png(open(icon, "r").read(), write_to="./icon.png")
-        img = icon.dev.GetImage()
-        if "wxMSW" in wx.PlatformInfo: img = img.Scale(16, 16)
-        elif "wxGTK" in wx.PlatformInfo: img = img.Scale(22, 22)
-        return wx.Icon(img.ConvertToBitmap())
-
 class MainFrame(XMLBuilder):
     cfg = global_settings
     logfmter = wx.LogFormatter()
@@ -71,8 +56,6 @@ class MainFrame(XMLBuilder):
         #     svg2png(open(icon, "r").read(), write_to="./icon.png")
         # if os.path.isfile("./icon.png"):
         self.mainFrame.SetIcon(wx.Icon(icon.dev.GetIcon()))
-        
-        TaskBarIcon(self.mainFrame)
 
         self.Show = self.mainFrame.Show
         self.Hide = self.mainFrame.Hide
