@@ -9,13 +9,6 @@ import wx.html2
 import wx.lib.splitter
 import wx.xrc
 
-try:
-    from cairosvg import svg2png 
-except ImportError:
-    CAIRO_AVAILABLE = False
-else:
-    CAIRO_AVAILABLE = True
-
 from libtextworker import __version__ as libver
 from libtextworker.general import (
     ResetEveryConfig,
@@ -23,13 +16,12 @@ from libtextworker.general import (
     CraftItems,
     GetCurrentDir,
 )
-from libtextworker.interface.wx.about import AboutDialog
 from libtextworker.interface.wx.dirctrl import PatchedDirCtrl, DC_ONEROOT
 from libtextworker.interface.wx.miscs import XMLBuilder, BindMenuEvents
 from libtextworker.versioning import *
 
 from . import __version__ as appver, icon, branch
-from .extensions import autosave, multiview, settings
+from .extensions import autosave, multiview, settings, AboutDialog
 from .generic import global_settings, TOPLV_DIR
 from .tabs import Tabber
 
@@ -261,13 +253,13 @@ class MainFrame(XMLBuilder):
                 lambda evt: webbrowser.open(
                     "https://github.com/lebao3105/texteditor/issues"
                 ),
-                4,
+                5,
             ),
             (
                 lambda evt: webbrowser.open(
                     "https://lebao3105.gitbook.io/texteditor_doc"
                 ),
-                5,
+                6,
             ),
         ]
 
@@ -353,17 +345,9 @@ class MainFrame(XMLBuilder):
             ResetEveryConfig()
 
     def ShowAbout(self, evt):
-        aboutdlg = AboutDialog()
-        aboutdlg.SetName("TextWorker")
-        aboutdlg.SetVersion(appver)
-        aboutdlg.SetIcon(getattr(icon, branch).GetIcon())
-        aboutdlg.SetDescription(_("A simplified text editor."))
-        aboutdlg.SetCopyright("(C) 2022-2023 Le Bao Nguyen")
-        aboutdlg.SetWebSite("https://github.com/lebao3105/texteditor")
-        aboutdlg.SetLicense("GPL3_short")
-        aboutdlg.infos.AddDeveloper("Le Bao Nguyen")
-        aboutdlg.infos.AddDocWriter("Le Bao Nguyen")
-        return aboutdlg.ShowBox()
+        aboutdlg = AboutDialog(self.mainFrame)
+        aboutdlg.Customize()
+        aboutdlg.ShowModal()
 
     def SysInf_Show(self, evt):
         ostype = platform.system() if platform.system() != "" or nil else _("Unknown")

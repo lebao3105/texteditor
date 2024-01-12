@@ -22,7 +22,7 @@ if not os.path.isdir(LOCALE_DIR):
 locale.setlocale(locale.LC_ALL, None)
 gettext.bindtextdomain("textworker", LOCALE_DIR)
 gettext.textdomain("textworker")
-gettext.install("textworker")
+_ = gettext.gettext
 
 if not os.path.isdir(ICON_DIR):
     ICON_DIR = ""
@@ -31,3 +31,15 @@ if is_development_version(__version__) == True:
     branch = "dev"
 else:
     branch = "stable"
+
+# Here goes the credit section!
+# (Only me though)
+DEVS = ARTISTS = DOCWRITERS = {
+    "Le Bao Nguyen (@lebao3105)": "https://github.com/lebao3105"
+}
+
+# License path
+LICENSE = currdir / "../LICENSE"
+
+# URLs
+HOMEPAGE = "https://github.com/lebao3105/texteditor"

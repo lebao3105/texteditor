@@ -6,10 +6,11 @@ include = '\.pyi?$'
 [tool.poetry]
 name = "textworker"
 version = "1.6dev1"
-description = "It's just a text editor"
+description = "Just a text editor"
 authors = ["lebao3105 <bao12345yocoo@gmail.com>"]
 license = "GPL_V3"
 readme = "README.md"
+include = ["CHANGELOG", "LICENSE"]
 
 [tool.poetry.dependencies]
 python = "^3.8"

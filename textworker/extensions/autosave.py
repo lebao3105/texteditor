@@ -3,7 +3,8 @@ import wx.xrc
 
 from threading import Thread
 from typing import Callable
-from libtextworker.general import GetCurrentDir, CraftItems
+from textworker import _
+from libtextworker.general import CraftItems
 from libtextworker.interface.wx.miscs import XMLBuilder
 from ..generic import global_settings, UIRC_DIR
 

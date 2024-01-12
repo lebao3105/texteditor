@@ -122,10 +122,13 @@ class SettingsDialog(XMLBuilder):
         m_textCtrl1: wx.TextCtrl = page2.GetChildren()[2].GetChildren()[3]
         m_button31: wx.TextCtrl = page2.GetChildren()[2].GetChildren()[4]
 
+        colors = { # Correspondint to the XRC file
+            _("Dark"): 1, _("Light"): 2
+        }
         m_radioBox1.SetSelection(
             0
             if clrCall.getkey("color", "auto") is true
-            else _(clrCall.getkey("color", "background").capitalize())
+            else colors[_(clrCall.getkey("color", "background").capitalize())]
         )
 
         m_colourPicker1.SetColour(wx.Colour(*hextorgb(clrCall.GetColor()[0])))
