@@ -22,7 +22,7 @@ from ..generic import (
     editorCfg,
     THEMES_DIR,
 )
-from .. import __version__
+from .. import __version__, branch
 
 
 class SettingsDialog(XMLBuilder):
@@ -253,17 +253,23 @@ class SettingsDialog(XMLBuilder):
                 ),
                 parent=self.dlg,
             )
-        elif result.startswith("invalid_json: "):
-            return wx.MessageBox(result.split(" ")[1], parent=self.dlg)
         elif isinstance(result, tuple):
-            if result[1] == "github":  # Go to GitHub releases
-                rl = _(f"Changelog: {updater.RELEASES}{result[0]}")
-            else:
-                rl = ""
-            wx.MessageBox(
-                _(f"Update available: {result[0]} from branch {result[2]}." f"{rl}"),
+            if wx.MessageBox(
+                message = _(f"Update available: {result[0]} from branch {branch}.\n" +
+                            (f"Get via: {result[2]}" if result[2] else "")),
                 parent=self.dlg,
-            )
+                style=wx.YES_NO
+            ) == wx.YES:
+                
+                new = wx.Frame(self.dlg)
+                text = wx.html2.WebView.New(new)
+                text.SetPage(markdown(result[1]), f"{result[0]} changelogs")
+                text.Show()
+                new.Show()
+
+                # if result[2]: updater.install(result[2])
+                # else: wx.MessageBox(_("No downloadable files yet - this means you"
+                #                       "need to either wait or install from source code."))
 
     def apply_color(self, string):
         if string != _("Automatic"):
