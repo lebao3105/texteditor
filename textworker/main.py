@@ -2,9 +2,9 @@ import os
 import sys
 import wx
 
-from libtextworker.general import logger
-
-logger.UseGUIToolKit("wx")
+import textworker
+import textworker.icon
+from textworker.generic import logger, ready
 
 ignore_not_exists: bool = False
 create_new: bool = False
@@ -27,6 +27,12 @@ def start_app(files: list[str], directory: str | None = None):
     app = wx.App(0)
     app.SetAppName("textworker")
 
+    textworker.ICON = getattr(textworker.icon, textworker.branch).GetIcon()
+    if files:
+        logger.info("Passed files: ", " ".join(files))
+    
+    ready()
+    
     from .mainwindow import MainFrame
 
     fm = MainFrame()

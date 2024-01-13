@@ -1,4 +1,3 @@
-import os
 import platform
 import webbrowser
 
@@ -20,7 +19,7 @@ from libtextworker.interface.wx.dirctrl import PatchedDirCtrl, DC_ONEROOT
 from libtextworker.interface.wx.miscs import XMLBuilder, BindMenuEvents
 from libtextworker.versioning import *
 
-from . import __version__ as appver, icon, branch
+from . import ICON, __version__ as appver
 from .extensions import autosave, multiview, settings, AboutDialog
 from .generic import global_settings, TOPLV_DIR
 from .tabs import Tabber
@@ -44,10 +43,7 @@ class MainFrame(XMLBuilder):
         self.mainFrame = self.loadObject("mainFrame", "wxFrame")
         self.mainFrame.SetSize((860, 640))
 
-        # if CAIRO_AVAILABLE and not os.path.isfile("./icon.png"):
-        #     svg2png(open(icon, "r").read(), write_to="./icon.png")
-        # if os.path.isfile("./icon.png"):
-        self.mainFrame.SetIcon(wx.Icon(getattr(icon, branch).GetIcon()))
+        self.mainFrame.SetIcon(ICON)
 
         self.Show = self.mainFrame.Show
         self.Hide = self.mainFrame.Hide
@@ -77,6 +73,7 @@ class MainFrame(XMLBuilder):
         self.file_history = wx.FileHistory()
         self.autosv_cfg = autosave.AutoSaveConfig(self.mainFrame)
         self.logwindow = wx.Frame(self.mainFrame, title=_("Log"))
+        self.logwindow.Bind(wx.EVT_CLOSE, lambda evt: self.logwindow.Hide())
         self.log = wx.TextCtrl(self.logwindow, style=wx.TE_READONLY | wx.TE_MULTILINE | wx.HSCROLL)  
         wx.Log.SetActiveTarget(wx.LogTextCtrl(self.log))
         # mergedialog.MergeDialog(self.mainFrame).ShowModal()

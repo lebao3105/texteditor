@@ -39,9 +39,6 @@ class Editor(StyledTextControl, AutoSave, AutoSaveConfig):
 
         self.SetWrapMode(self.cfg.getkey("editor", "wordwrap") in self.cfg.yes_values)
 
-        # font = self.StyleGetFont(wx.stc.STC_STYLE_DEFAULT)
-        # font.SetFaceName("Consolas")
-        # self.StyleSetFont(wx.stc.STC_STYLE_DEFAULT, font)
         clrCall.configure(self)
 
     # AutoSaveConfig

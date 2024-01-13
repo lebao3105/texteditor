@@ -1,7 +1,7 @@
 import webbrowser
 from . import about
 from textworker import DEVS, ARTISTS, DOCWRITERS, LICENSE
-from textworker import HOMEPAGE, _
+from textworker import HOMEPAGE, _, ICON
 from textworker import branch, __version__, icon
 from wx import EVT_LEFT_DOWN, EVT_TEXT_URL, Icon, Bitmap, Dialog, StaticBitmap
 from wx import EVT_COLLAPSIBLEPANE_CHANGED
@@ -23,7 +23,7 @@ class AboutDialog(about.AboutDialog):
         def fullImage(evt):
             new = Dialog(this, title=_("Textworker icon"))
             ico = StaticBitmap(new)
-            ico.SetIcon(getattr(icon, branch).GetIcon())
+            ico.SetIcon(ICON)
             new.ShowModal()
 
         this.m_bitmap1.Bind(EVT_LEFT_DOWN, fullImage)

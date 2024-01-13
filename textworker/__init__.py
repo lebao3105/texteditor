@@ -10,7 +10,7 @@ from libtextworker.versioning import *
 
 require("libtextworker", "0.1.4")
 test_import("wx")
-__version__ = "1.6dev1"
+__version__ = "1.6dev0"
 
 
 LOCALE_DIR = currdir / "po"
@@ -24,13 +24,12 @@ gettext.bindtextdomain("textworker", LOCALE_DIR)
 gettext.textdomain("textworker")
 _ = gettext.gettext
 
-if not os.path.isdir(ICON_DIR):
-    ICON_DIR = ""
-
 if is_development_version(__version__) == True:
     branch = "dev"
 else:
     branch = "stable"
+
+ICON = None # Will create later
 
 # Here goes the credit section!
 # (Only me though)

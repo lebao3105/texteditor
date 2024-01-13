@@ -83,6 +83,4 @@ if __name__ == "__main__":
         dir = None
 
     import textworker.main as main_entrypoint
-
-    generic.ready()
     main_entrypoint.start_app(files, dir)

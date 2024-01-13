@@ -10,6 +10,10 @@
             "env": {
                 "PYTHONPATH": "../libtextworker"
             },
+            "args": [
+                "--custom-data-dir",
+                "../tew-data"
+            ],
             "justMyCode": true
         },
         {
