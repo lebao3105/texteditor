@@ -1,2 +1,4 @@
 [core]
 autocrlf=input
+*.py encoding=utf-8
+*.xrc encoding=cp850

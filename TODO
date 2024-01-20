@@ -1,0 +1,24 @@
+## Welcome to my wxPython port of texteditor (now it's textworker)!
+
+- 1.6:
+    - Fully port the app to use libtextworker (it's done)
+    - Fix file_operations (done!)
+    - ~~Setup Window on first launch/update (needs some fixes to be done)~~
+    - Side bar (only file explorer is fully implemented for now)
+    - Use guesslang to "guess" language of the text (cancelled)
+    - Settings window (this is hard)
+- 1.7:
+    - File backup (ends with ~ or .bck)
+    - Consider using wxFlatNotebook for more customized tab-zone, but we'll lost tabs dragging
+    - Learn how to send inputs to subprocess.Popen (probably not, I will add python interpreter instead)
+    - Make FirstRunDialog great
+    - Merge dialog
+    - Further we can make extensions support
+    - Attempt for another UI redesign (icons etc)
+
+Side requests:
+- Dependency management
+- Logging fix (libtew side)
+- Translations
+- Makefile instead of builder.py
+- New window

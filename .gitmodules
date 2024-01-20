@@ -1,7 +1,0 @@
-[submodule "texteditor/data"]
-	path = texteditor/data
-	url = https://github.com/lebao3105/texteditor.git
-	branch = data
-[submodule "libtextworker"]
-	path = libtextworker
-	url = https://github.com/lebao3105/libtextworker.git

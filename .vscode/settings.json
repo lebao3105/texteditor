@@ -1,13 +1,10 @@
 {
-    "python.analysis.extraPaths": [
-        "./texteditor",
-        "./libtextworker"
-    ],
     "python.formatting.provider": "black",
-    "python.testing.pytestArgs": [
-        "tests"
+    "scm.alwaysShowActions": true,
+    "python.analysis.extraPaths": [
+        "../libtextworker"
     ],
-    "python.testing.unittestEnabled": false,
-    "python.testing.pytestEnabled": true,
-    "python.analysis.typeCheckingMode": "off",
+    "files.associations": {
+        "*.xrc": "xml"
+    }
 }

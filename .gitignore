@@ -26,6 +26,7 @@ share/python-wheels/
 *.egg
 MANIFEST
 output/
+textworker/po/
 
 # PyInstaller
 #  Usually these files are written by a python script from a template
@@ -55,7 +56,6 @@ cover/
 # Translations
 *.mo
 *.po~
-texteditor/po
 
 # Django stuff:
 *.log
@@ -161,4 +161,10 @@ cython_debug/
 #  option (not recommended) you can uncomment the following to ignore the entire idea folder.
 #.idea/
 
+# CairoSVG generated icon
 icon.png
+
+# Packaging results
+*.deb
+*.rpm
+*.flatpak

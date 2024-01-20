@@ -1,71 +1,35 @@
-This is the CHANGELOG file for texteditor on main branch, starting from version 1.0.
-* Tags are usually stored on Github repository.
-* Not all "last commit"_s are the real "last commit" - some hot fixes may not be released
+This is the changelog file for textworker in wip/wx branch.
 
-### 1.5a0 (1.5 Alpha 0)
-The first build of texteditor 1.5 ever.
+### 1.6a3 (Git tag v1.6a3 last commit 35b74fa)
+* Updated:
+- Git status check (textworker.extensions.gitsp)
+* Fixed:
+- Menu items callback
 * New:
-- New configuration system (implemented on 1.6a3-wx) - but user needs to update theirself or start fresh by deleting ~/.config/textworker.
-- Use libtextworker 0.1.3 as a dependency
-- Use poetry
-* Updates need to be made:
-- Redesign AboutDialog
-- Auto save for all editors! (like in 1.6a3)
+- Use cairosvg.svg2png to convert application icon from .svg to .png then load it:)
+- Markdown preview support
 
-### 1.4.1 (tag 1.4.1 - last commit e8b49e4)
-* Updates:
-- Fixed font color setting
-- Fixed Command Prompt bugs/mistakes
-- Made some minor things
-* Build artifact: https://github.com/lebao3105/texteditor/suites/10921154788/artifacts/552080532
+### 1.6a2 (Git tag 1.6a2 - last commit 467a669)
+This is not a complete build, at least it's usable.
+* Fixes:
+- Application auto color (from libtextworker)
+- New configs under interface section
+- Menu items command
+* New/Updated:
+- Updated libtextworker to 0.1.2
+- Turn on/off tab guides
 
-### 1.4 (tag 1.4 - last commit b861cf7)
+### 1.6a1 (Git tag 1.6.1 ~ wrong tag name) (last commit 51ef790)
 * New:
-- Log messages
-- Ability to change the application color with restarting the app
-- 'cd' command - current folder in Command Prompt
-- Dynamic color change
-- Status bar
-- About Dialog
-* Updates:
-- I can't remember...
+- Setup window
+- Class to make the menu bar
+- global_settings variable for the entire application
+* Updated:
+- Moved LogsWindow to textworker.mainwindow
 
-### 1.3 (tag 1.3 - last commit e344392)
-Released after version 1.2 one month, comes with a lot improvements.
+### 1.6a0 (Git tag 1.6 - wrong tag again) (last commit e0dd554)
+The first build of texteditor/textworker with wxPython!
 * New:
-- Ability to run with using "python -m" (that means we have standalone installs/runs;))
-- Use Ctrl + W to toggle text wrap
-- Auto save documents (only runs on the current open tab)
-- Translations added to wheel package
-* Updates:
-- Rewritten get_config
-- Removed blue text color
-- Updated icons load
-* There also an portable & installer for Windows 64bit - get it on GitHub releases.
-
-### 1.2 (tag 1.2 - last commit c6f9773)
-* New:
-- Customized Tkinter.Text with scrollbars and right-click menu
-- Multi-threaded Command Prompt
-- Text wrap (by word)
-* Updates:
-- Improved get_config
-- Dark mode color changed
-- Find icon from the current directory (/texteditor)
-* Portable build for Windows also available on GitHub releases.
-
-### 1.1.5 (tag 1.1.5 - last commit 25913fa)
-* New:
-- Find & Replace feature
-* Updates:
-- \*Code fixes only*
-
-### 1.1 (tag 1.1 - last commit 9a9d2d1)
-* Updates:
-- Removed requirements.txt (How and why???)
-- A better usage of gettext
-- Script to make AppImage and .exe
-* Portable build for Windows is available on GitHub releases.
-
-### 1.0 (tag 1.0 - last commit 0cf0f3e)
-The first version ever - of all time.
+- A version checking system (also available in 1.4+)
+- Lines number margin is now available
+- Folder view! See it in action: https://user-images.githubusercontent.com/77564176/212464179-6138e099-19e9-4cc7-a86b-89f5c253d9a4.png

@@ -13,18 +13,27 @@
     <a href="https://github.com/psf/black">
         <image src="https://img.shields.io/badge/code%20style-black-000000.svg" align="right"/>
     </a>
-    <a href="https://github.com/lebao3105/texteditor/actions/workflows/wheeltk.yml">
-        <image src="https://github.com/lebao3105/texteditor/actions/workflows/wheeltk.yml/badge.svg?branch=data" align="right"/>
+    <a href="https://github.com/lebao3105/texteditor/actions/workflows/wheel.yml">
+        <image src="https://github.com/lebao3105/texteditor/actions/workflows/wheel.yml/badge.svg?branch=data" align="right"/>
     </a>
 </p>
 
 <br clear="both">
 
-## Features
+## For Tkinter builds
 
-* Lightweight
-* Run some tasks with Command Window (removed since version 1.5a+)
+Releases from 1.5a0 and their source code will be placed in a new repository: lebao3105/texteditor-tk. This is made in order to make the updater for both 2 types of app works easier, as it uses GitHub api.
+
+So that: the `main` branch will place the latest (trunk) code (again).
+
+Texteditor-tk still available in TestPypi, even for the 1.5 release.
+
+## Features
+* Tabs split/rearrangement
+* Access to your files without opening File Explorer
+* Run some tasks with Command Window
 * Customizable interface
+* Partial Git support (1.6a3+)
 * Auto save
 
 See all app releases [here.](https://github.com/lebao3105/texteditor/releases)
@@ -33,26 +42,52 @@ You can get wheels from [GitHub actions](https://github.com/lebao3105/texteditor
 
 ## Build and install
 
-Requires Python 3.8+ with Tkinter and pip installed.
+Requires Python 3.8+.
 
-Installable directly from TestPypi as the ```texteditor``` package.
+Additional dependencies may required for wxPython:
+
+* Linux: ```libgtk-3-dev``` and ```libsdl2-dev``` plus C++ compiler (g++). That's basic for now - you may need more
+
+* macOS: You don't need to worry if you're on a recent macOS on a x86_64 Intel mac, else you may need to have a build.
+
+* Windows: Microsoft Visual C++
+
+Installable directly from Pypi as the ```textworker``` package.
 
 Run:
 
 ```bash
-python3 -m texteditor [args]
+$ python3 -m textworker [args]
 ```
+
+For any additional arguments, please use ```-h``` / ```--help``` to show them.
 
 If you want to use the source code:
 
 ```bash
-git clone https://github.com/lebao3105/texteditor.git # Or you can use gitlab instead
-cd texteditor
-git submodule update --init --recursive
-pip install attrdict3
-pip install cairosvg # If you want, for app icon support
-pip install ./libtextworker[configparser,tkinter]
-pip install ./libtextworker[autocolor] # for autocolor support
+$ # Get libtextworker first (will have more details until the 1.6 release, but now the latest revision)
+$ git clone https://github.com/lebao3105/texteditor.git -b wip/wx
+$ cd texteditor
+$ git submodule update --init textworker/data
+$ pip install attrdict3
+$ pip install cairosvg # If you want, for app icon support
+$ pip install ./libtextworker[autocolor,configparser,wx] # autocolor is optional
 ```
 
-Install from source: ```pip install -e .```
+Install from source: ```pip install -e .``` or ```python3 builder.py install```
+
+## Contributing
+
+Feel free to do that!
+
+As the code is hosted on GitHub, that means you use GitHub to report issues, share ideas, or make your own work and do a PR.
+
+Before reporting issues:
+
+- Check for all steps you've done to run textworker.
+
+- Try running in Terminal/Command Prompt to capture everything
+
+- Check for all the issues, including closed ones.
+
+- Check for open PRs.

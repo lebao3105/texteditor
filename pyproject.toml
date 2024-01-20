@@ -4,31 +4,23 @@ target-version = ['py310']
 include = '\.pyi?$'
 
 [tool.poetry]
-name = "texteditor"
-version = "1.5a1"
-description = "It's just a text editor"
+name = "textworker"
+version = "1.6dev1"
+description = "Just a text editor"
 authors = ["lebao3105 <bao12345yocoo@gmail.com>"]
 license = "GPL_V3"
 readme = "README.md"
-classifiers = [
-    "Development Status :: 3 - Alpha",
-    "Intended Audience :: End Users/Desktop",
-    "License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)",
-    "Operating System :: OS Independent",
-    "Programming Language :: Python :: 3",
-    "Topic :: Text Editors"
-]
+include = ["CHANGELOG", "LICENSE"]
 
 [tool.poetry.dependencies]
 python = "^3.8"
-libtextworker[tkinter] = {path = "libtextworker"}
+#libtextworker = {path = "libtextworker"}
+
+Pillow = "^9.5.0"
+wxPython = "^4.2.0"
 cairosvg = {version = "^2.7.0", optional = true}
-pygubu = "^0.31"
-sv-ttk = "^2.4.5"
+markdown2 = "^2.4.8"
 
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
-
-[tool.poetry.scripts]
-texteditor = 'texteditor:start_app'

@@ -1,0 +1,23 @@
+{
+    "interface->theme": {
+        "newpath": "config-paths.ui->theme"
+    },
+    "interface->path": {
+        "newpath": "config-paths.ui->path"
+    },
+    "extensions.multiview->notebook_location": {
+        "newpath": "extensions.textwkr.multiview->notebook_location"
+    },
+    "fun->empty_page_on_last_tab_close": {
+        "newpath": "editor.tabs->close_on_no_tab"
+    },
+    "interface.tabs->move_tabs": {
+        "newpath": "editor.tabs->move_tabs"
+    },
+    "interface.tabs->middle_close": {
+        "newpath": "editor.tabs->middle_close"
+    },
+    "interface.tabs->close_on_no_tab": {
+        "newpath": "editor.tabs->close_on_no_tab"
+    }
+}

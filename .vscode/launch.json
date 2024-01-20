@@ -1,23 +1,40 @@
 {
-    // Use IntelliSense to learn about possible attributes.
-    // Hover to view descriptions of existing attributes.
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Run texteditor with no other arguments",
+            "name": "Run textworker only",
             "type": "python",
             "request": "launch",
-            "module": "texteditor",
+            "module": "textworker",
             "console": "internalConsole",
+            "env": {
+                "PYTHONPATH": "../libtextworker"
+            },
+            "args": [
+                "--custom-data-dir",
+                "../tew-data"
+            ],
             "justMyCode": true
         },
         {
-            "name": "Run texteditor to open README.md",
+            "name": "Open README.md",
             "type": "python",
             "request": "launch",
-            "module": "texteditor",
+            "module": "textworker",
             "console": "internalConsole",
             "args": ["README.md"],
+            "justMyCode": true
+        },
+        {
+            "name": "Open textworker/",
+            "type": "python",
+            "request": "launch",
+            "module": "textworker",
+            "console": "internalConsole",
+            "env": {
+                "PYTHONPATH": "../libtextworker"
+            },
+            "args": ["textworker/"],
             "justMyCode": true
         }
     ]
