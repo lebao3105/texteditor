@@ -1,0 +1,4 @@
+[submodule "textworker/data"]
+	path = textworker/data
+	url = https://github.com/lebao3105/texteditor
+	branch = data
