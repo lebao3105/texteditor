@@ -16,7 +16,7 @@ include = ["CHANGELOG", "LICENSE"]
 python = "^3.8"
 #libtextworker = {path = "libtextworker"}
 
-Pillow = "^10.0.1"
+Pillow = "^10.2.0"
 wxPython = "^4.2.0"
 cairosvg = {version = "^2.7.0", optional = true}
 markdown2 = "^2.4.8"
