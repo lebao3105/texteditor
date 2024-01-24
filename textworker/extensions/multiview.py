@@ -1,44 +1,46 @@
 import wx
-from ..generic import global_settings
+from ..generic import global_settings, clrCall
 
 
 class MultiViewer:
-    def __init__(self, parent):
+    def __init__(this, parent):
         location = global_settings.getkey(
             "extensions.textwkr.multiview", "notebook_location", needed=true
         )
         nbside = getattr(wx, "NB_{}".format(location.upper()))
 
-        self.tabs = wx.Notebook(parent, -1, style=nbside)
-        self.tabs.Bind(wx.EVT_RIGHT_DOWN, self._RightClickTab)
+        this.tabs = wx.Notebook(parent, -1, style=nbside)
+        this.tabs.Bind(wx.EVT_RIGHT_DOWN, this._RightClickTab)
+        clrCall.configure(this.tabs)
 
-    def RegisterTab(self, tabname: str, content) -> bool:
+    def RegisterTab(this, tabname: str, content) -> bool:
         """
         Ask for add a new section to the side bar.
         @param tabname:str: Name of the section (used for the new tab name)
         @param content: Section content (must be a wxPython object). Don't forget to Show() it!
         :return: The result of the new section creation
         """
-        return self.tabs.AddPage(content, tabname, true)
+        clrCall.configure(content)
+        return this.tabs.AddPage(content, tabname, true)
 
-    def UnregisterTab(self, content) -> bool:
-        return self.tabs.DeletePage(content)
+    def UnregisterTab(this, content) -> bool:
+        return this.tabs.DeletePage(content)
 
-    def _RightClickTab(self, evt):
+    def _RightClickTab(this, evt):
         menu = wx.Menu()
         # P/s: I don't know what else to add here:\
         for label, handler in [
             (
                 _("Close the current tab"),
-                lambda evt: self.UnregisterTab(self.tabs.GetCurrentPage()),
+                lambda evt: this.UnregisterTab(this.tabs.GetCurrentPage()),
             ),
             (
                 _("Disable this (open) tab"),
-                lambda evt: self.tabs.GetCurrentPage().Disable(),
+                lambda evt: this.tabs.GetCurrentPage().Disable(),
             ),
-            (_("Close the side bar"), lambda evt: self.Close()),
+            (_("Close the side bar"), lambda evt: this.Close()),
         ]:
             item = menu.Append(wx.ID_ANY, label)
             menu.Bind(wx.EVT_MENU, handler, item)
-        self.tabs.PopupMenu(menu, evt.GetPosition())
+        this.tabs.PopupMenu(menu, evt.GetPosition())
         menu.Destroy()
