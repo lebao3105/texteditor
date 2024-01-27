@@ -1,4 +1,5 @@
 import wx
+from .. import _
 from ..generic import clrCall, moves
 
 
@@ -7,23 +8,23 @@ class MergeDialog(wx.Dialog):
     Settings merge dialog.
     """
 
-    def __init__(self, *args, **kwds):
-        super().__init__(*args, **kwds)
-        self.SetTitle(_("This needs your attention"))
+    def __init__(this, *args, **kwds):
+        wx.Dialog.__init__(this, *args, **kwds)
+        this.SetTitle(_("This needs your attention"))
 
         mainBoxer = wx.BoxSizer(wx.VERTICAL)
-        self.SetSizer(mainBoxer)
+        this.SetSizer(mainBoxer)
 
-        header = wx.StaticText(self, label=_("Merges ahead"))
+        header = wx.StaticText(this, label=_("Merges ahead"))
         text = wx.StaticText(
-            self,
+            this,
             label=_(
                 "The settings system has been changed recently and automatically merged into your settings."
                 "Look for the changes below."
                 "All changes are required. You just need to review what are they:)"
             ),
         )
-        listctrl = wx.ListCtrl(self, style=wx.LC_AUTOARRANGE | wx.LC_REPORT)
+        listctrl = wx.ListCtrl(this, style=wx.LC_AUTOARRANGE | wx.LC_REPORT)
         listctrl.InsertColumn(0, _("Setting (section->option)"))
         listctrl.InsertColumn(1, _("New setting (section->option)"))
         listctrl.InsertColumn(2, _("Moved to file..."))
@@ -40,7 +41,7 @@ class MergeDialog(wx.Dialog):
         mainBoxer.Add(text, 0, wx.ALL, 5)
         mainBoxer.Add(listctrl, 0, wx.ALL, 5)
 
-        clrcall.configure(self, true)
+        clrCall.configure(this, true)
         header.SetFont(
             wx.Font(12, wx.FONTFAMILY_MODERN, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD)
         )

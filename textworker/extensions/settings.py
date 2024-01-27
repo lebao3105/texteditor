@@ -6,10 +6,8 @@ import wx.html2
 import wx.xrc
 
 from libtextworker.general import CraftItems
-from libtextworker.get_config import GetConfig
 from libtextworker.interface import stock_ui_configs
-from libtextworker.interface.manager import hextorgb
-from libtextworker.interface.wx.miscs import XMLBuilder
+from libtextworker.interface.manager import hextorgb, AUTOCOLOR, ColorManager
 
 from markdown2 import markdown
 
@@ -23,194 +21,204 @@ from ..generic import (
     DATA_PATH,
     editorCfg,
     THEMES_DIR,
+    EDITOR_DIR
 )
 
-class SettingsDialog(XMLBuilder):
+content: str
+backup: str
+replaced: bool
+
+def initialize_work():
+    global content, backup, replaced
+    content = open(CraftItems(UIRC_DIR, "preferences.py"), "r").read()
+    replaced = content.startswith("from textworker import _")
+    if not replaced: backup = content
+
+def localize(forced: bool = False):
+    import re
+    global content, replaced, backup
+    if replaced and not forced: return
+
+    content = "from textworker import _\n" + backup # Add gettext import
+
+    # Made with the help of, yeah, AI. (cuz I'm bad at regex)
+    # I have modified it myself for the most perfect pattern.
+    # All strings in wxFormBuilder generated Python code are unicode type:
+    # u"<content>"
+    # Pattern with start with u. Then 4 regex groups:
+    # One for the first double quote (")
+    # One for the string content (. for every character except \n, + for >=1 match, ? to catch as much as posible)
+    # The matching quote (")
+    # The final look for space (just one space) OR a comma (,) but NOT include it to the catch result.
+    # One draw back is that numberic only strings are include, but can be skipped below.
+    pattern = r'u(")(.+?)(")(?=[\s,])'
+    matches = re.findall(pattern, content)
+    for match in matches:
+        # The match result will be a list of
+        # ('"', '<string>', '"') tuples.
+        # Skip number-only strings.
+        try: int(match[1])
+        except: pass
+        else: continue
+        localized = f'_(u"{match[1]}")'
+        content = content.replace(f"u{match[0]}{match[1]}{match[2]}", localized)
+
+    open(CraftItems(UIRC_DIR, "preferences.py"), "w").write(content)
+    replaced = True
+
+
+def trytoimport():
+    try:
+        from ..ui import preferences as prefs
+        return prefs
+    except:
+        return wx.MessageBox("An error occured calling the dialog code. "
+                             "Please report back to the developer.\n"
+                             "Also send the log when this message shows.",
+                             style=wx.OK_DEFAULT | wx.ICON_ERROR)
+initialize_work()
+localize()
+preferences = trytoimport()
+
+class SettingsDialog(preferences.StDialog):
     """
-    A WIP, useful textworker settings dialog with lots of things inside lol.
-    We're all waiting for new features;)
+    A WIP settings page for text worker.
     """
 
-    """
-    Here are our configs per-page
-    All changes will only be applied on the "Apply" button click event
-    This should be optional.
-    """
+    AUTOUPDATE: bool = global_settings.getkey("base", "autoupdate", True, True, True) in global_settings.yes_values
+    NB_LOC: str = global_settings.getkey("extensions.textwkr.multiview", "notebook_location", True, True, True)
 
-    AUTOUPDATE: bool = global_settings.getkey("base", "autoupdate", True, True, True)
-    NB_LOC: str = global_settings.getkey(
-        "extensions.textwkr.multiview", "notebook_location", True, True, True
-    )
+    AUTOCOLOR_CHANGE: bool = clrCall.getkey("color", "auto", True, True, True) in clrCall.yes_values
+    CURRTHEME: str = global_settings.getkey("config-paths.ui", "theme", True, True, True)
 
-    def __init__(self, Parent: wx.Window):
-        XMLBuilder.__init__(self, Parent, CraftItems(UIRC_DIR, "preferences.xrc"), _)
 
-        # Here is our get-n-bind
-        # Note: all objects will be named by their name in wxFormBuilder
-        # Top-level widgets first
-        self.dlg: wx.Dialog = self.Res.LoadDialog(Parent, "StDialog")
-        nb: wx.Notebook = self.dlg.GetChildren()[0]
-
-        # Get all pages
-        page1 = nb.GetPage(0)
-        page2 = nb.GetPage(1)
-        page3 = nb.GetPage(2)
-
-        # The most stupid way to work with XRC lmao
-        # But I can't make wxFB to generate python code because,
-        # you know: multiple language. Would be fine if I know
-        # how to use the re module.
+    def __init__(this, parent: wx.Window):
+        preferences.StDialog.__init__(this, parent)
 
         # General page
-        m_checkbox1: wx.CheckBox = page1.GetChildren()[0].GetChildren()[0]
-        m_button3 = page1.GetChildren()[0].GetChildren()[1]
-        m_button4 = page1.GetChildren()[0].GetChildren()[2]
-        m_choice2: wx.Choice = page1.GetChildren()[1].GetChildren()[1]
+        this.m_checkBox1.SetValue(this.AUTOUPDATE)
+        this.m_choice2.SetStringSelection(this.NB_LOC.capitalize())
 
-        m_checkbox1.SetValue(
-            global_settings.getkey("base", "autoupdate") in global_settings.yes_values
-        )
+        this.Bind(wx.EVT_CHECKBOX,
+                  lambda evt: global_settings.set("base", "autoupdate", this.m_checkBox1.IsChecked()),
+                  this.m_checkBox1)
 
-        m_choice2.SetStringSelection(
-            global_settings.getkey(
-                "extensions.textwkr.multiview", "notebook_location"
-            ).capitalize()
-        )
-
-        self.dlg.Bind(
-            wx.EVT_CHECKBOX,
-            lambda evt: global_settings.set(
-                "base", "autoupdate", m_checkbox1.IsChecked()
-            ),
-            m_checkbox1,
-        )
-
-        self.dlg.Bind(wx.EVT_BUTTON, self.check_updates, m_button3)
+        this.Bind(wx.EVT_BUTTON, this.check_updates, this.m_button3)
 
         def showchangelog(evt):
-            new = wx.Dialog(self.dlg)
+            new = wx.Dialog(this)
             try:
                 text = json.loads(
                     requests.get(
                         f"https://api.github.com/repos/lebao3105/texteditor/releases/v{__version__}"
                     ).text
                 )["body"]
-            except:
+            except: # TODO: Check exception message
                 text = _("No changelog/unable to get.")
 
             wb = wx.html2.WebView.New(new)
             wb.SetPage(markdown(text), "")
             new.ShowModal()
 
-        self.dlg.Bind(wx.EVT_BUTTON, showchangelog, m_button4)
+        this.Bind(wx.EVT_BUTTON, showchangelog, this.m_button4)
 
-        self.dlg.Bind(
+        this.Bind(
             wx.EVT_CHOICE,
             lambda evt: global_settings.set(
                 "extensions.textwkr.multiview",
                 "notebook_location",
-                m_choice2.GetStringSelection().lower(),
+                this.m_choice2.GetStringSelection().lower(),
             ),
-            m_choice2,
+            this.m_choice2,
         )
 
         # Colors page
-        m_radioBox1: wx.RadioBox = page2.GetChildren()[0]
-        m_colourPicker1: wx.ColourPickerCtrl = page2.GetChildren()[1].GetChildren()[1]
-        m_colourPicker2: wx.ColourPickerCtrl = page2.GetChildren()[1].GetChildren()[3]
-        m_choice3: wx.Choice = page2.GetChildren()[2].GetChildren()[1]
-        m_textCtrl1: wx.TextCtrl = page2.GetChildren()[2].GetChildren()[3]
-        m_button31: wx.TextCtrl = page2.GetChildren()[2].GetChildren()[4]
-
-        colors = { # Correspondint to the XRC file
+        colors = { # Corresponding to the XRC file
             _("Dark"): 1, _("Light"): 2
         }
-        m_radioBox1.SetSelection(
+
+        this.m_radioBox1.SetSelection(
             0
-            if clrCall.getkey("color", "auto") is true
+            if this.AUTOCOLOR_CHANGE
             else colors[_(clrCall.getkey("color", "background").capitalize())]
         )
 
-        m_colourPicker1.SetColour(wx.Colour(*hextorgb(clrCall.GetColor()[0])))
-        m_colourPicker2.SetColour(wx.Colour(*hextorgb(clrCall.GetColor()[1])))
+        this.m_colourPicker1.SetColour(wx.Colour(*hextorgb(clrCall.GetColor()[0])))
+        this.m_colourPicker2.SetColour(wx.Colour(*hextorgb(clrCall.GetColor()[1])))
 
-        self.dlg.Bind(
+        this.Bind(
             wx.EVT_RADIOBOX,
-            lambda evt: self.apply_color(m_radioBox1.GetStringSelection()),
-            m_radioBox1,
+            lambda evt: this.apply_color(this.m_radioBox1.GetStringSelection()),
+            this.m_radioBox1,
         )
 
         for i in os.listdir(THEMES_DIR):
-            m_choice3.Append(i.removesuffix(".ini"))
+            this.m_choice3.Append(i.removesuffix(".ini"))
 
-        m_choice3.SetStringSelection(global_settings.getkey("config-paths.ui", "theme"))
+        this.m_choice3.SetStringSelection(this.CURRTHEME)
 
-        # Needs some changes
-        self.dlg.Bind(wx.EVT_COLOURPICKER_CHANGED,
-                      lambda evt: clrCall.set_and_update("color", "background", 
-                                                         m_colourPicker1.GetColour().GetAsString(wx.C2S_HTML_SYNTAX)),
-                      m_colourPicker1)
+        def target_type():
+            if AUTOCOLOR and this.m_radioBox1.GetSelection() == 0 and this.m_checkBox71.IsChecked(): import darkdetect; return f"-{darkdetect.theme()}"
+            elif this.m_checkBox71.IsChecked(): return "-" + {1: "dark", 2: "light"}.get(this.m_radioBox1.GetSelection())
+            else: return ""
 
-        self.dlg.Bind(wx.EVT_COLOURPICKER_CHANGED,
-                      lambda evt: clrCall.set_and_update("color", "foreground", 
-                                                         m_colourPicker2.GetColour().GetAsString(wx.C2S_HTML_SYNTAX)),
-                      m_colourPicker2)
+        this.Bind(wx.EVT_COLOURPICKER_CHANGED,
+                      lambda evt: clrCall.set_and_update("color", "background" + target_type(), 
+                                                         this.m_colourPicker1.GetColour().GetAsString(wx.C2S_HTML_SYNTAX)),
+                      this.m_colourPicker1)
+
+        this.Bind(wx.EVT_COLOURPICKER_CHANGED,
+                      lambda evt: clrCall.set_and_update("color", "foreground" + target_type(), 
+                                                         this.m_colourPicker2.GetColour().GetAsString(wx.C2S_HTML_SYNTAX)),
+                      this.m_colourPicker2)
 
         def newtheme(evt):
-            if not m_textCtrl1.GetLabelText():
+            if not this.m_textCtrl1.GetLabelText():
                 wx.MessageBox(
                     _("Error while setting a new theme: Name required."),
                     style=wx.ICON_ERROR | wx.OK,
                 )
             else:
-                # new = m_textCtrl1.GetLabel()
-                # scheme = m_radioBox1.GetStringSelection().lower()
-                # cfg = GetConfig(stock_ui_configs, CraftItems(THEMES_DIR, f"{new}.ini"))
-
-                # cfg.set_and_update("color", "background", scheme)
-                # cfg.set_and_update("color", "foreground", m_colourPicker1.GetTextCtrl().GetLabelText())
-                # global_settings.set_and_update("config-paths.ui", "theme", new)
-                # m_choice3.Append(new)
-                # m_choice3.SetStringSelection(new)
+                new = this.m_textCtrl1.GetLabel()
+                global clrCall
+                clrCall = ColorManager(customfilepath=CraftItems(THEMES_DIR, new + ".ini"))
+                this.m_choice3.Append(new)
+                this.m_choice3.SetStringSelection(new)
                 wx.MessageBox(_("Not implemented yet."))
 
-        self.dlg.Bind(wx.EVT_BUTTON, newtheme, m_button31)
+        this.Bind(wx.EVT_BUTTON, newtheme, this.m_button31)
 
         # Editors page
-        m_choice1: wx.Choice = page3.GetChildren()[0].GetChildren()[1]
-        m_comboBox1: wx.ComboBox = page3.GetChildren()[0].GetChildren()[3]
-        m_checkBox3: wx.CheckBox = page3.GetChildren()[0].GetChildren()[5]
-        m_checkBox6: wx.CheckBox = page3.GetChildren()[0].GetChildren()[7]
-        m_checkBox4: wx.CheckBox = page3.GetChildren()[1].GetChildren()[1]
-        m_checkBox5: wx.CheckBox = page3.GetChildren()[1].GetChildren()[3]
-        m_checkBox7: wx.CheckBox = page3.GetChildren()[1].GetChildren()[5]
 
         indentationTypes = ["tabs", "spaces"]
 
-        m_choice1.SetSelection(
+        this.m_choice1.SetSelection(
             indentationTypes.index(editorCfg.getkey("indentation", "type"))
         )
-        m_comboBox1.SetValue(editorCfg.getkey("indentation", "size"))
-        m_checkBox3.SetValue(editorCfg.getkey("indentation", "backspace_unindents"))
-        m_checkBox6.SetValue(editorCfg.getkey("indentation", "show_guide"))
-        m_checkBox4.SetValue(editorCfg.getkey("editor", "view_whitespaces"))
-        m_checkBox5.SetValue(editorCfg.getkey("editor", "viewEOL"))
-        m_checkBox7.SetValue(editorCfg.getkey("editor", "line_count"))
+        this.m_comboBox1.SetValue(editorCfg.getkey("indentation", "size"))
+        this.m_checkBox3.SetValue(editorCfg.getkey("indentation", "backspace_unindents"))
+        this.m_checkBox6.SetValue(editorCfg.getkey("indentation", "show_guide"))
+        this.m_checkBox4.SetValue(editorCfg.getkey("editor", "view_whitespaces"))
+        this.m_checkBox5.SetValue(editorCfg.getkey("editor", "viewEOL"))
+        this.m_checkBox7.SetValue(editorCfg.getkey("editor", "line_count"))
 
-        self.dlg.Bind(
+        for item in os.listdir(EDITOR_DIR):
+            this.m_choice31.Append(item)
+
+        this.Bind(
             wx.EVT_CHOICE,
             lambda evt: editorCfg.set_and_update(
-                "indentation", "type", indentationTypes[m_choice1.GetSelection()]
+                "indentation", "type", indentationTypes[this.m_choice1.GetSelection()]
             ),
-            m_choice1,
+            this.m_choice1,
         )
 
-        self.dlg.Bind(
+        this.Bind(
             wx.EVT_TEXT,
             lambda evt: editorCfg.set_and_update(
                 "indentation", "size", evt.GetString()
             ),
-            m_comboBox1,
+            this.m_comboBox1,
         )
 
         # Lazy bind
@@ -224,8 +232,8 @@ class SettingsDialog(XMLBuilder):
             7: "line_count",
         }
         for i in range(3, 8):
-            checkbox = locals()[f"m_checkBox{str(i)}"]
-            self.dlg.Bind(
+            checkbox = getattr(this, f"m_checkBox{str(i)}")
+            this.Bind(
                 wx.EVT_COMBOBOX,
                 lambda evt: editorCfg.set_and_update(
                     "indentation" if i in [3, 6] else "editor",
@@ -235,9 +243,7 @@ class SettingsDialog(XMLBuilder):
                 checkbox,
             )
 
-        # WE.REALLY.NEED.TO.IMPLEMENT.A.NEW.PREFERENCES.LIBRARY
-
-    def check_updates(self, evt):
+    def check_updates(this, evt):
         import importlib.util
 
         spec = importlib.util.spec_from_file_location(
@@ -249,23 +255,23 @@ class SettingsDialog(XMLBuilder):
         result = updater.parse_json(CONFIGS_PATH)
 
         if result is None:
-            return wx.MessageBox(_("The program is up-to-date"), parent=self.dlg)
+            return wx.MessageBox(_("The program is up-to-date"), parent=this)
         elif result == "invalid_json":
             return wx.MessageBox(
                 _(
                     "Invalid response received: Maybe an internet problem, or my data is invalid."
                 ),
-                parent=self.dlg,
+                parent=this,
             )
         elif isinstance(result, tuple):
             if wx.MessageBox(
                 message = _(f"Update available: {result[0]} from branch {branch}.\n" +
                             (f"Get via: {result[2]}" if result[2] else "")),
-                parent=self.dlg,
+                parent=this,
                 style=wx.YES_NO
             ) == wx.YES:
                 
-                new = wx.Frame(self.dlg)
+                new = wx.Frame(this)
                 text = wx.html2.WebView.New(new)
                 text.SetPage(markdown(result[1]), f"{result[0]} changelogs")
                 text.Show()
@@ -274,8 +280,10 @@ class SettingsDialog(XMLBuilder):
                 # if result[2]: updater.install(result[2])
                 # else: wx.MessageBox(_("No downloadable files yet - this means you"
                 #                       "need to either wait or install from source code."))
+            
+            clrCall.configure(this)
 
-    def apply_color(self, string):
+    def apply_color(this, string):
         if string != _("Automatic"):
             clrCall.set("color", "background", string.lower())
             clrCall.set("color", "auto", "no")

@@ -35,34 +35,34 @@ class AutoSaveConfig(XMLBuilder):
     enabled = enabled
     shown = false
 
-    def __init__(self, Parent: wx.Window):
-        super().__init__(Parent, CraftItems(UIRC_DIR, "autosave.xrc"), _)
+    def __init__(this, Parent: wx.Window):
+        XMLBuilder.__init__(this, Parent, CraftItems(UIRC_DIR, "autosave.xrc"), _)
 
-        self.Dialog = self.loadObject("AutoSaveDialog", "wxDialog")
-        self.Cmb = wx.xrc.XRCCTRL(self.Dialog, "m_comboBox1")
-        self.ChkBox = wx.xrc.XRCCTRL(self.Dialog, "m_checkBox1")
+        this.Dialog = this.loadObject("AutoSaveDialog", "wxDialog")
+        this.Cmb = wx.xrc.XRCCTRL(this.Dialog, "m_comboBox1")
+        this.ChkBox = wx.xrc.XRCCTRL(this.Dialog, "m_checkBox1")
 
-        for item in self.timealiases.keys():
-            self.Cmb.Append(item)
+        for item in this.timealiases.keys():
+            this.Cmb.Append(item)
 
-        self.Cmb.Bind(wx.EVT_COMBOBOX, self.OnChoiceSelected)
-        self.Cmb.Bind(wx.EVT_TEXT_ENTER, self.OnChoiceSelected)
+        this.Cmb.Bind(wx.EVT_COMBOBOX, this.OnChoiceSelected)
+        this.Cmb.Bind(wx.EVT_TEXT_ENTER, this.OnChoiceSelected)
 
-    def OnChoiceSelected(self, evt):
-        choice = self.Cmb.GetValue()
+    def OnChoiceSelected(this, evt):
+        choice = this.Cmb.GetValue()
         if choice:
             global_settings.set_and_update(
-                "editor.autosave", "time", self.timealiases[choice]
+                "editor.autosave", "time", this.timealiases[choice]
             )
 
-    def ConfigWindow(self):
+    def ConfigWindow(this):
         def onDlgClose(evt):
-            self.shown = false
+            this.shown = false
             evt.Skip()
 
-        self.Dialog.ShowModal()
-        self.Dialog.Bind(wx.EVT_CLOSE, onDlgClose)
-        self.shown = true
+        this.Dialog.ShowModal()
+        this.Dialog.Bind(wx.EVT_CLOSE, onDlgClose)
+        this.shown = true
 
 
 class AutoSave:
@@ -76,37 +76,37 @@ class AutoSave:
 
     CurrDelay: int = time
 
-    def __init__(self):
+    def __init__(this):
         if enabled in global_settings.no_values:
             return
         else:
             pass
 
-        self.Timer = wx.CallLater(
-            int(self.CurrDelay) * 1000, self.Function, **self.Function_args
+        this.Timer = wx.CallLater(
+            int(this.CurrDelay) * 1000, this.Function, **this.Function_args
         )
-        Thread(target=self.CheckToggle).start()
+        Thread(target=this.CheckToggle).start()
 
-    def Start(self, time_: str = ""):
+    def Start(this, time_: str = ""):
         if time_:
-            self.CurrDelay = int(time_)
+            this.CurrDelay = int(time_)
 
-        if self.Timer.IsRunning():
-            self.Timer.Stop()
+        if this.Timer.IsRunning():
+            this.Timer.Stop()
 
-        self.Timer.Start(int(self.CurrDelay) * 1000)
+        this.Timer.Start(int(this.CurrDelay) * 1000)
 
-    def Stop(self):
-        self.Timer.Stop()
+    def Stop(this):
+        this.Timer.Stop()
 
-    def Toggle(self, on_or_off: bool):
+    def Toggle(this, on_or_off: bool):
         if on_or_off:
-            self.Start()
+            this.Start()
         else:
-            self.Stop()
+            this.Stop()
 
-    def CheckToggle(self):
-        if not TOGGLE and self.Timer.IsRunning() == true:
-            self.Stop()
-        elif not self.Timer.IsRunning():
-            self.Start()
+    def CheckToggle(this):
+        if not TOGGLE and this.Timer.IsRunning() == true:
+            this.Stop()
+        elif not this.Timer.IsRunning():
+            this.Start()

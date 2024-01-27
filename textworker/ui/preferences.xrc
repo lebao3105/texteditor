@@ -14,7 +14,7 @@
           <style>wxNB_TOP</style>
           <object class="notebookpage">
             <label>General</label>
-            <selected>1</selected>
+            <selected>0</selected>
             <object class="wxPanel" name="m_panel1">
               <style>wxTAB_TRAVERSAL</style>
               <fg>#000000</fg>
@@ -134,7 +134,7 @@
           </object>
           <object class="notebookpage">
             <label>Colors</label>
-            <selected>0</selected>
+            <selected>1</selected>
             <object class="wxPanel" name="m_panel2">
               <style>wxTAB_TRAVERSAL</style>
               <object class="wxBoxSizer" name="bSizer4">
@@ -310,6 +310,15 @@
                             <bitmap/>
                           </object>
                         </object>
+                      </object>
+                    </object>
+                    <object class="sizeritem">
+                      <flag>wxALL|wxALIGN_CENTER_HORIZONTAL</flag>
+                      <border>5</border>
+                      <option>0</option>
+                      <object class="wxStaticText" name="m_staticText15">
+                        <label>If you want to make a new theme, create and switch to it first before doing any color changes.</label>
+                        <wrap>-1</wrap>
                       </object>
                     </object>
                   </object>
@@ -535,6 +544,87 @@
                             <checked>1</checked>
                           </object>
                         </object>
+                      </object>
+                    </object>
+                  </object>
+                </object>
+                <object class="sizeritem">
+                  <flag>wxEXPAND</flag>
+                  <border>5</border>
+                  <option>1</option>
+                  <object class="wxStaticBoxSizer" name="sbSizer7">
+                    <orient>wxVERTICAL</orient>
+                    <label>Save settings</label>
+                    <object class="sizeritem">
+                      <flag>wxEXPAND</flag>
+                      <border>5</border>
+                      <option>1</option>
+                      <object class="wxBoxSizer" name="bSizer171">
+                        <orient>wxHORIZONTAL</orient>
+                        <object class="sizeritem">
+                          <flag>wxALL|wxALIGN_CENTER_VERTICAL</flag>
+                          <border>5</border>
+                          <option>1</option>
+                          <object class="wxStaticText" name="m_staticText131">
+                            <label>Pre-made</label>
+                            <wrap>-1</wrap>
+                          </object>
+                        </object>
+                        <object class="sizeritem">
+                          <flag>wxALL|wxALIGN_CENTER_VERTICAL</flag>
+                          <border>5</border>
+                          <option>0</option>
+                          <object class="wxChoice" name="m_choice31">
+                            <selection>0</selection>
+                            <content/>
+                          </object>
+                        </object>
+                      </object>
+                    </object>
+                    <object class="sizeritem">
+                      <flag>wxEXPAND</flag>
+                      <border>5</border>
+                      <option>1</option>
+                      <object class="wxBoxSizer" name="bSizer181">
+                        <orient>wxHORIZONTAL</orient>
+                        <object class="sizeritem">
+                          <flag>wxALL|wxALIGN_CENTER_VERTICAL</flag>
+                          <border>5</border>
+                          <option>1</option>
+                          <object class="wxStaticText" name="m_staticText141">
+                            <label>Create new</label>
+                            <wrap>-1</wrap>
+                          </object>
+                        </object>
+                        <object class="sizeritem">
+                          <flag>wxALL|wxALIGN_CENTER_VERTICAL</flag>
+                          <border>5</border>
+                          <option>0</option>
+                          <object class="wxTextCtrl" name="m_textCtrl11">
+                            <value></value>
+                          </object>
+                        </object>
+                        <object class="sizeritem">
+                          <flag>wxALL|wxALIGN_CENTER_VERTICAL</flag>
+                          <border>5</border>
+                          <option>0</option>
+                          <object class="wxButton" name="m_button311">
+                            <label>Do it</label>
+                            <default>0</default>
+                            <auth_needed>0</auth_needed>
+                            <markup>0</markup>
+                            <bitmap/>
+                          </object>
+                        </object>
+                      </object>
+                    </object>
+                    <object class="sizeritem">
+                      <flag>wxALL|wxALIGN_CENTER_HORIZONTAL</flag>
+                      <border>5</border>
+                      <option>0</option>
+                      <object class="wxStaticText" name="m_staticText151">
+                        <label>If you want to make new settings pack, create and switch to it first before doing any changes.</label>
+                        <wrap>-1</wrap>
                       </object>
                     </object>
                   </object>

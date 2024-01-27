@@ -1,10 +1,23 @@
+import os
 import webbrowser
-from . import about
+
+from libtextworker.general import CraftItems
+
 from textworker import DEVS, ARTISTS, DOCWRITERS, LICENSE
 from textworker import HOMEPAGE, _, ICON
 from textworker import branch, __version__, icon
+from textworker.generic import UIRC_DIR
+
 from wx import EVT_LEFT_DOWN, EVT_TEXT_URL, Icon, Bitmap, Dialog, StaticBitmap
 from wx import EVT_COLLAPSIBLEPANE_CHANGED
+
+__all__ = ("AboutDialog")
+
+ABOUTDLG_PATH = CraftItems(UIRC_DIR, "about.py")
+if not os.path.isfile(ABOUTDLG_PATH):
+    raise FileNotFoundError(f"{ABOUTDLG_PATH}: Read the application's FAQ for fix")
+else:
+    from ..ui import about
 
 class AboutDialog(about.AboutDialog):
 

@@ -1,0 +1,260 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<resource xmlns="http://www.wxwidgets.org/wxxrc" version="2.5.3.0">
+  <object class="wxDialog" name="AboutDialog">
+    <size>600,600</size>
+    <style>wxCAPTION|wxCLOSE_BOX|wxDEFAULT_DIALOG_STYLE|wxSTAY_ON_TOP|wxSYSTEM_MENU</style>
+    <title></title>
+    <centered>1</centered>
+    <object class="wxBoxSizer" name="bSizer1">
+      <orient>wxVERTICAL</orient>
+      <object class="sizeritem">
+        <flag>wxEXPAND | wxALL</flag>
+        <border>5</border>
+        <option>1</option>
+        <object class="wxListbook" name="m_listbook1">
+          <style>wxLB_DEFAULT</style>
+          <object class="listbookpage">
+            <label>About</label>
+            <selected>1</selected>
+            <object class="wxPanel" name="m_panel1">
+              <style>wxTAB_TRAVERSAL</style>
+              <object class="wxBoxSizer" name="bSizer2">
+                <orient>wxVERTICAL</orient>
+                <object class="sizeritem">
+                  <flag>wxEXPAND|wxRESERVE_SPACE_EVEN_IF_HIDDEN</flag>
+                  <border>5</border>
+                  <option>0</option>
+                  <object class="wxBoxSizer" name="bSizer3">
+                    <orient>wxHORIZONTAL</orient>
+                    <object class="sizeritem">
+                      <flag>wxALL|wxRESERVE_SPACE_EVEN_IF_HIDDEN</flag>
+                      <border>5</border>
+                      <option>1</option>
+                      <object class="wxStaticText" name="progName">
+                        <style>wxALIGN_LEFT</style>
+                        <label>Name here</label>
+                        <wrap>-1</wrap>
+                      </object>
+                    </object>
+                    <object class="sizeritem">
+                      <flag>wxALL|wxEXPAND|wxRESERVE_SPACE_EVEN_IF_HIDDEN</flag>
+                      <border>5</border>
+                      <option>1</option>
+                      <object class="wxStaticBitmap" name="m_bitmap1">
+                        <bitmap/>
+                      </object>
+                    </object>
+                  </object>
+                </object>
+                <object class="sizeritem">
+                  <flag>wxEXPAND</flag>
+                  <border>5</border>
+                  <option>0</option>
+                  <object class="wxBoxSizer" name="bSizer4">
+                    <orient>wxHORIZONTAL</orient>
+                    <object class="sizeritem">
+                      <flag>wxALIGN_CENTER_VERTICAL|wxALL</flag>
+                      <border>5</border>
+                      <option>1</option>
+                      <object class="wxStaticText" name="m_staticText3">
+                        <label>Project version</label>
+                        <wrap>-1</wrap>
+                      </object>
+                    </object>
+                    <object class="sizeritem">
+                      <flag>wxALL|wxALIGN_CENTER_VERTICAL</flag>
+                      <border>5</border>
+                      <option>1</option>
+                      <object class="wxStaticText" name="version">
+                        <label>MyLabel</label>
+                        <wrap>-1</wrap>
+                      </object>
+                    </object>
+                  </object>
+                </object>
+                <object class="sizeritem">
+                  <flag>wxEXPAND</flag>
+                  <border>5</border>
+                  <option>0</option>
+                  <object class="wxBoxSizer" name="bSizer10">
+                    <orient>wxHORIZONTAL</orient>
+                    <object class="sizeritem">
+                      <flag>wxALIGN_CENTER_VERTICAL|wxALL</flag>
+                      <border>5</border>
+                      <option>1</option>
+                      <object class="wxStaticText" name="m_staticText5">
+                        <label>Home page</label>
+                        <wrap>-1</wrap>
+                      </object>
+                    </object>
+                    <object class="sizeritem">
+                      <flag>wxALL|wxALIGN_CENTER_VERTICAL</flag>
+                      <border>5</border>
+                      <option>1</option>
+                      <object class="wxStaticText" name="progURL">
+                        <label>MyLabel</label>
+                        <wrap>-1</wrap>
+                      </object>
+                    </object>
+                  </object>
+                </object>
+                <object class="sizeritem">
+                  <flag>wxEXPAND</flag>
+                  <border>5</border>
+                  <option>1</option>
+                  <object class="wxBoxSizer" name="bSizer11">
+                    <orient>wxHORIZONTAL</orient>
+                    <object class="sizeritem">
+                      <flag>wxALL|wxEXPAND|wxRESERVE_SPACE_EVEN_IF_HIDDEN</flag>
+                      <border>5</border>
+                      <option>1</option>
+                      <object class="wxCollapsiblePane" name="descriptionbox">
+                        <style>wxCP_DEFAULT_STYLE|wxCP_NO_TLW_RESIZE</style>
+                        <label>Description</label>
+                        <collapsed>0</collapsed>
+                        <object class="panewindow">
+                          <object class="wxBoxSizer" name="bSizer14">
+                            <orient>wxVERTICAL</orient>
+                            <object class="sizeritem">
+                              <flag>wxALL|wxEXPAND</flag>
+                              <border>5</border>
+                              <option>1</option>
+                              <object class="wxStaticText" name="description">
+                                <label>MyLabel</label>
+                                <wrap>1</wrap>
+                              </object>
+                            </object>
+                          </object>
+                        </object>
+                      </object>
+                    </object>
+                  </object>
+                </object>
+              </object>
+            </object>
+          </object>
+          <object class="listbookpage">
+            <label>Developers</label>
+            <selected>0</selected>
+            <object class="wxPanel" name="m_panel2">
+              <style>wxTAB_TRAVERSAL</style>
+              <object class="wxBoxSizer" name="bSizer5">
+                <orient>wxVERTICAL</orient>
+                <object class="sizeritem">
+                  <flag>wxALL</flag>
+                  <border>5</border>
+                  <option>0</option>
+                  <object class="wxStaticText" name="m_staticText4">
+                    <label>This program is made possible thanks to:</label>
+                    <wrap>-1</wrap>
+                  </object>
+                </object>
+                <object class="sizeritem">
+                  <flag>wxALL|wxEXPAND|wxRESERVE_SPACE_EVEN_IF_HIDDEN</flag>
+                  <border>5</border>
+                  <option>1</option>
+                  <object class="wxCollapsiblePane" name="developers">
+                    <style>wxCP_DEFAULT_STYLE|wxCP_NO_TLW_RESIZE</style>
+                    <label>Developers</label>
+                    <collapsed>0</collapsed>
+                    <object class="panewindow">
+                      <object class="wxBoxSizer" name="bSizer6">
+                        <orient>wxVERTICAL</orient>
+                        <object class="sizeritem">
+                          <flag>wxALL|wxEXPAND|wxRESERVE_SPACE_EVEN_IF_HIDDEN</flag>
+                          <border>5</border>
+                          <option>1</option>
+                          <object class="wxRichTextCtrl" name="m_richText1">
+                            <style>wxTE_AUTO_URL|wxVSCROLL|wxHSCROLL|wxNO_BORDER|wxWANTS_CHARS</style>
+                            <value></value>
+                          </object>
+                        </object>
+                      </object>
+                    </object>
+                  </object>
+                </object>
+                <object class="sizeritem">
+                  <flag>wxALL|wxEXPAND|wxRESERVE_SPACE_EVEN_IF_HIDDEN</flag>
+                  <border>5</border>
+                  <option>1</option>
+                  <object class="wxCollapsiblePane" name="artists">
+                    <style>wxCP_DEFAULT_STYLE|wxCP_NO_TLW_RESIZE</style>
+                    <label>Artists</label>
+                    <collapsed>0</collapsed>
+                    <object class="panewindow">
+                      <object class="wxBoxSizer" name="bSizer8">
+                        <orient>wxVERTICAL</orient>
+                        <object class="sizeritem">
+                          <flag>wxALL|wxEXPAND|wxRESERVE_SPACE_EVEN_IF_HIDDEN</flag>
+                          <border>5</border>
+                          <option>1</option>
+                          <object class="wxRichTextCtrl" name="m_richText2">
+                            <style>wxTE_AUTO_URL|wxVSCROLL|wxHSCROLL|wxNO_BORDER|wxWANTS_CHARS</style>
+                            <value></value>
+                          </object>
+                        </object>
+                      </object>
+                    </object>
+                  </object>
+                </object>
+                <object class="sizeritem">
+                  <flag>wxALL|wxEXPAND|wxRESERVE_SPACE_EVEN_IF_HIDDEN</flag>
+                  <border>5</border>
+                  <option>1</option>
+                  <object class="wxCollapsiblePane" name="docwriters">
+                    <style>wxCP_DEFAULT_STYLE|wxCP_NO_TLW_RESIZE</style>
+                    <label>Documentation writers</label>
+                    <collapsed>0</collapsed>
+                    <object class="panewindow">
+                      <object class="wxBoxSizer" name="bSizer9">
+                        <orient>wxVERTICAL</orient>
+                        <object class="sizeritem">
+                          <flag>wxALL|wxEXPAND|wxRESERVE_SPACE_EVEN_IF_HIDDEN</flag>
+                          <border>5</border>
+                          <option>1</option>
+                          <object class="wxRichTextCtrl" name="document_writers">
+                            <style>wxTE_AUTO_URL|wxVSCROLL|wxHSCROLL|wxNO_BORDER|wxWANTS_CHARS</style>
+                            <value></value>
+                          </object>
+                        </object>
+                      </object>
+                    </object>
+                  </object>
+                </object>
+              </object>
+            </object>
+          </object>
+          <object class="listbookpage">
+            <label>License</label>
+            <selected>0</selected>
+            <object class="wxPanel" name="m_panel3">
+              <style>wxTAB_TRAVERSAL</style>
+              <object class="wxBoxSizer" name="bSizer121">
+                <orient>wxVERTICAL</orient>
+                <object class="sizeritem">
+                  <flag>wxALL|wxEXPAND</flag>
+                  <border>5</border>
+                  <option>1</option>
+                  <object class="wxTextCtrl" name="m_textCtrl1">
+                    <style>wxHSCROLL|wxTE_MULTILINE|wxTE_READONLY</style>
+                    <value></value>
+                  </object>
+                </object>
+              </object>
+            </object>
+          </object>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxEXPAND</flag>
+        <border>5</border>
+        <option>0</option>
+        <object class="wxStdDialogButtonSizer" name="m_sdbSizer1">
+          <object class="button">
+            <object class="wxButton" name="wxID_OK"/>
+          </object>
+        </object>
+      </object>
+    </object>
+  </object>
+</resource>
