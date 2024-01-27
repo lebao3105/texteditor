@@ -168,3 +168,6 @@ icon.png
 *.deb
 *.rpm
 *.flatpak
+
+# Generated Python files
+textworker/ui/*.py
