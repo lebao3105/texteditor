@@ -81,7 +81,7 @@ def build():
 
 def makeicons():
     img2py = shutil.which("img2py")
-    os.remove("textworker/icon.py")
+    if os.path.isfile("textworker/icon.py"): os.remove("textworker/icon.py")
     os.system(f"{img2py} -n dev textworker/data/icons/me.lebao3105.textworker.Devel.svg textworker/icon.py")
     os.system(f"{img2py} -a -n stable textworker/data/icons/me.lebao3105.textworker.svg textworker/icon.py")
 
