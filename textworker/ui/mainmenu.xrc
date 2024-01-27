@@ -42,7 +42,7 @@
           <label>Recents</label>
         </object>
         <object class="separator"/>
-        <object class="wxMenuItem" name="m_menuItem10">
+        <object class="wxMenuItem" name="m_menuItem99">
           <label>Save</label>
           <accel>Ctrl+S</accel>
           <help></help>
