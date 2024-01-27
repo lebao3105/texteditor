@@ -26,7 +26,7 @@ Releases from 1.5a0 and their source code will be placed in a new repository: le
 
 So that: the `main` branch will place the latest (trunk) code (again).
 
-Texteditor-tk still available in TestPypi, even for the 1.5 release.
+Texteditor-tk is still available in TestPypi, even for the 1.5 release.
 
 ## Features
 * Tabs split/rearrangement
@@ -48,7 +48,7 @@ Additional dependencies may required for wxPython:
 
 * Linux: ```libgtk-3-dev``` and ```libsdl2-dev``` plus C++ compiler (g++). That's basic for now - you may need more
 
-* macOS: You don't need to worry if you're on a recent macOS on a x86_64 Intel mac, else you may need to have a build.
+* macOS: You don't need to worry if you're on a recent macOS on a x86_64 Intel Mac, else you may need to have a build.
 
 * Windows: Microsoft Visual C++
 
@@ -62,17 +62,7 @@ $ python3 -m textworker [args]
 
 For any additional arguments, please use ```-h``` / ```--help``` to show them.
 
-If you want to use the source code:
-
-```bash
-$ # Get libtextworker first (will have more details until the 1.6 release, but now the latest revision)
-$ git clone https://github.com/lebao3105/texteditor.git -b wip/wx
-$ cd texteditor
-$ git submodule update --init textworker/data
-$ pip install attrdict3
-$ pip install cairosvg # If you want, for app icon support
-$ pip install ./libtextworker[autocolor,configparser,wx] # autocolor is optional
-```
+If you want to use the source code: Clone the source code, install dependencies as shown in pyproject.toml, run module `textworker` as a normal Python module.
 
 Install from source: ```pip install -e .``` or ```python3 builder.py install```
 
