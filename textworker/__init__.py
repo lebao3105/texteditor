@@ -10,11 +10,9 @@ from libtextworker.versioning import *
 
 require("libtextworker", "0.1.4")
 test_import("wx")
-__version__ = "1.6dev0"
-
+__version__ = "1.6dev2"
 
 LOCALE_DIR = currdir / "po"
-ICON_DIR = currdir / "data" / "icons"
 
 if not os.path.isdir(LOCALE_DIR):
     LOCALE_DIR = currdir / ".." / "po"
@@ -23,6 +21,7 @@ locale.setlocale(locale.LC_ALL, None)
 gettext.bindtextdomain("textworker", LOCALE_DIR)
 gettext.textdomain("textworker")
 _ = gettext.gettext
+del LOCALE_DIR
 
 if is_development_version(__version__) == True:
     branch = "dev"
