@@ -3,9 +3,10 @@ import wx.xrc
 
 from threading import Thread
 from typing import Callable
-from textworker import _
 from libtextworker.general import CraftItems
 from libtextworker.interface.wx.miscs import XMLBuilder
+
+from .. import _
 from ..generic import global_settings, UIRC_DIR
 
 

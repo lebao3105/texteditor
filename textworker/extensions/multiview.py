@@ -1,4 +1,5 @@
 import wx
+from .. import _
 from ..generic import global_settings, clrCall
 
 
