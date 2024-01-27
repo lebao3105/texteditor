@@ -9,7 +9,6 @@ create_new: bool
 
 parser = argparse.ArgumentParser(
     sys.argv[0],
-    formatter_class=argparse.RawDescriptionHelpFormatter,
     description="""
     Textworker
     A simple, cross-platform text editor.
@@ -18,7 +17,7 @@ parser = argparse.ArgumentParser(
     Where the source code goes: https://gitlab.com/lebao3105/texteditor
     """,
 )
-parser.add_argument("files", nargs="*", help="File(s) to open")
+parser.add_argument("paths", nargs="*")
 
 # Flags
 config_flags = parser.add_argument_group("Configurations")
@@ -48,9 +47,9 @@ file_flags.add_argument(
     nargs="?",
     help="Ignore all 'File not found' messages",
 )
-file_flags.add_argument("--open-directory", "-d", help="Open a directory")
 
-if __name__ == "__main__":
+def main():
+    global ignore_not_exists, create_new
     options = parser.parse_args()
 
     if options.ignore_not_exists and options.create_new:  # Conflict args
@@ -72,15 +71,16 @@ if __name__ == "__main__":
     if options.custom_data_dir:
         generic.DATA_PATH = os.path.normpath(options.custom_data_dir)
 
-    if options.files:
-        files = options.files
-    else:
-        files = []
+    files: list[str] = []
+    dirs: list[str] = []
 
-    if options.open_directory:
-        dir = options.open_directory
-    else:
-        dir = None
+    if options.paths:
+        generic.logger.debug("Got paths: %s", " ".join(options.paths))
+        for path in options.paths:
+            if not os.path.isfile(path): dirs += [path]
+            else: files += [path]
 
     import textworker.main as main_entrypoint
-    main_entrypoint.start_app(files, dir)
+    main_entrypoint.start_app(files, dirs)
+
+if __name__ == "__main__": main()
