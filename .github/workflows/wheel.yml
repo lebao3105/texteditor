@@ -22,7 +22,7 @@ jobs:
       
       - uses: actions/setup-python@v4
         with:
-          python-version: pyver
+          python-version: ${{ matrix.pyver }}
       
       - name: Install dependencies
         run: |
