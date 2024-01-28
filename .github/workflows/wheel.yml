@@ -1,0 +1,47 @@
+name: Build releases (wheel)
+
+on:
+  # release:
+  #   types: [published]
+
+  workflow_dispatch:
+  workflow_call:
+
+jobs:
+
+  time_to_run:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        pyver: ['3.10', '3.11', '3.12']
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: 'recursive'
+      
+      - uses: actions/setup-python@v4
+        with:
+          python-version: pyver
+      
+      - name: Install dependencies
+        run: |
+          sudo add-apt-repository -y universe
+          sudo apt update
+          sudo apt install -y libgtk-3-dev libsdl2-dev
+          pip3 install attrdict3 requests poetry
+          pip3 install wxpython
+      
+      - name: Add libtextworker to poetry dependency list (will be removed later)
+        run: python3 -m poetry add "libtextworker[wx,autocolor]"
+        working-directory: texteditor
+
+      - name: Build wheels
+        run: python3 -m poetry build
+        working-directory: texteditor
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: Textworker_wxWheel
+          path: texteditor/dist/
