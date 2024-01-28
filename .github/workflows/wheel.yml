@@ -34,11 +34,10 @@ jobs:
       
       - name: Add libtextworker to poetry dependency list (will be removed later)
         run: python3 -m poetry add "libtextworker[wx,autocolor]"
-        working-directory: texteditor
+        working-directory: ../
 
       - name: Build wheels
         run: python3 -m poetry build
-        working-directory: texteditor
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v3
