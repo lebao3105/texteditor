@@ -1,0 +1,154 @@
+## Contribute to textworker
+
+So you want to do something for this project?
+
+Thank you for that! You wonder how to tell me about your work, or where should you start?
+
+This document will help you well.
+
+## Table of contents
+
+A. [Setup](#setup)
+
+B. [The source code tree](#the-source-code-tree)
+
+C. [Code style](#code-style)
+
+D. [Debugging options](#debugging-options)
+
+E. [Dependencies](#dependencies)
+
+F. [Make translations](#make-translations)
+
+G. [Publish your work](#publish-your-work)
+
+## Setup
+
+This project of course requires Python 3. Not tested on 3.10- as I said that it should work from Python 3.8.
+
+At the time of the writing all dependencies should work on the latest Python 3.12 series, but remember:
+
+> That Python is quite new, even this is Feb 2024.
+
+So you whatever should consider downgrading Python first.
+
+For a true developer environment (in case you don't know), install Git: a version control tool. Yes we use that to get, commit, push or changes.
+
+GitHub itself is a Git hosting service, used for developers around the world.
+
+Next: Install all dependencies as mentioned in [this README section](./README.md#build-and-install).
+
+But since libtextworker is under heavy development and not complete for a real producion, and textworker uses libtextworker a lot (welp), you should not install it.
+
+Now create a GitHub account if haven't, fork this repository and clone that newly made fork:
+
+```bash
+$ git clone https://github.com/<your user name>/texteditor.git
+```
+
+(Ignore that $, it's a shell prompt. Can be different on your computer.)
+
+Textworker has a branch name `data`, holds app icons and updater, default settings. Either do:
+
+```bash
+$ cd texteditor
+$ git submodule update --init
+$ cd .. # We are not ready yet
+```
+
+Or this if you want to rock that branch too:
+
+```bash
+$ git clone -b data <your repository URL, same as above> tew-data
+```
+
+Data branch is used here as a Git submodule, placed inside [textworker/](textworker/).
+
+> `tew-data` is the clone destination (must not exist/contain anything inside), change to anything you like.
+
+Also do the same thing as libtextworker if you'd like to work on libtextworker too. If you just want the original source code:
+
+```bash
+$ git clone https://github.com/lebao3105/libtextworker.git
+```
+
+`cd` to textworker/ (you just made with git), make a new branch:
+
+```bash
+$ git branch wip/<blah blah (short and understandable)>
+```
+
+> Note: development branches (features, bug) should have `wip/` prefix in name.
+
+Now you can start working!
+
+## The source code tree
+
+We will go fast through this section.
+
+Top-level textworker modules:
+
+* \__init__.py: Contains code setting up icon path, translations, stores some project infomations.
+
+* \__main__.py: The module that will be ran on module start: parse command line arguments.
+
+* Every files else: It's name and things (variable/class/function name, comments) are clear.
+
+data/: Explained above.
+
+extensions/: Not quite 'app extensions', at least for now. Contains code for dialogs and views.
+
+ui/: UI designs made in wxFormBuilder, extensions/ and textworker.mainwindow modules will use them.
+
+## Code style
+
+In the past this project uses `black` as the formatter. But the past is the past.
+
+I even don't read about `PEP*` that defines a good code write (IIRC there was, but probably there was), but that does not mean my code will be a chaos.
+
+I have my own code style, points to a readable and clear code, of course.
+
+1. Naming
+
+> (You will find it weird as this uses too much formats)
+
+* Functions go `flatcase` or `snake_case`
+
+* Class names go `PascalCase`. Also class @property_s, methods
+
+* Private, one-use variables use `snake_case` or `flatcase` with `_` (underscore) as prefix (also suffix if you want)
+
+* Constants use `UPPERFLATCASE` or `SCREAMING_SNAKE_CASE`, depending on what does it do
+
+* For events callback: the parameter that the GUI toolkit passes to (an event object), name it `evt`.
+
+* Variables use `flatcase`.
+
+2. Variables usage
+
+* Replace True with true, False with false, None with nil; the work has been done from textworker.generic.
+
+* Define their should-be types, and default value if any.
+
+* Use global variables as much as possible - don't create too many new instances
+
+3. Writing code (indentation etc)
+
+* Function/class parameters: truncate all parameters like this (idk how to explain):
+
+    ```python
+    func(param1, param2, verylongparameter1, longlongparam1,
+         param3, veryverylongparameter1, longlongparameter1)
+         ^ this aligment
+    ```
+
+* Currently no word range per line yet - but just don't make it too long that we need one more scroller...
+
+* Add a line between statements, comments blocks
+
+* One line code is recommended for short work
+
+* Import order: `import` first then `from .. import ..`. Sort by alphabet + directory depth (e.g `.` for the current module level then `..` for the upper). Still code order is important, so this can be a bit "broken".
+
+4. Debugging options
+
