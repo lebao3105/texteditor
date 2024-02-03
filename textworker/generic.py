@@ -122,10 +122,18 @@ def ready():
     logger.debug("Setting background + foregroud functions for editors...")
     
     clrCall.setcolorfunc(wx.stc.StyledTextCtrl, "StyleSetBackground",
-                            {"style":wx.stc.STC_STYLE_DEFAULT,
-                            "back":"%(color)"})
+                         {"style": wx.stc.STC_STYLE_DEFAULT,
+                         "back":"%(color)"})
     clrCall.setfontcfunc(wx.stc.StyledTextCtrl, "StyleSetForeground",
-                            {"style":wx.stc.STC_STYLE_DEFAULT,
-                            "fore":"%(font)"})
+                         {"style": wx.stc.STC_STYLE_DEFAULT,
+                         "fore":"%(font)"})
+    clrCall.setcolorfunc(wx.stc.StyledTextCtrl, "StyleSetSpec",
+                         {"styleNum": wx.stc.STC_STYLE_DEFAULT, "spec": "fore:%(font),back:%(color)"})
+    
+    # clrCall.setfontandcolorfunc(wx.stc.StyledTextCtrl, "StyleSetSpec",
+    #                             (wx.stc.STC_STYLE_DEFAULT, "fore:%(font),back:%(color)"))
+
+    # clrCall.setfontandcolorfunc(wx.stc.StyledTextCtrl, "StyleSetSpec",
+    #                             (wx.stc.STC_STYLE_LINENUMBER, "fore:%(font),back:%(color)"))
 
     logger.info("Ready to go!")
