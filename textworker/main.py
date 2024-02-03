@@ -47,7 +47,7 @@ def start_app(files: list[str], directory: list[str]):
             if not os.path.isfile(files[i]):
                 if _file_not_found(files[i]) != wx.ID_YES:
                     nb.DeletePage(nb.GetSelection())
-                    break
+                    continue
 
             try:
                 open(files[i], "r")
@@ -68,17 +68,15 @@ def start_app(files: list[str], directory: list[str]):
         is_admin = os.getuid() == 0
 
     if is_admin:
-        wx.MessageBox(
-            textworker._(
-                "You are running this program as root.\n"
-                "You must be responsible for your changes."
-            ),
-            style=wx.OK | wx.ICON_WARNING,
-            parent=fm.mainFrame,
-        )
+        wx.MessageBox(textworker._("You are running this program as root.\n"
+                                   "You must be responsible for your changes."),
+                      style=wx.OK | wx.ICON_WARNING,
+                      parent=fm.mainFrame)
 
     app.SetTopWindow(fm.mainFrame)
     
+    exchook = sys.excepthook
+
     def handleexc(exc_type, value, traceb):
         trace_back = traceback.extract_tb(traceb)
 
@@ -112,6 +110,7 @@ def start_app(files: list[str], directory: list[str]):
         clrCall.configure(dlg, True)
         
         # logger.exception(f"Exception occured (type {exc_type}): {value}\n{trace_back}")
+        exchook(exc_type, value, traceb)
 
         dlg.SetSizer(box)
         box.Fit(dlg)
