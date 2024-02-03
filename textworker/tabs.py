@@ -12,7 +12,7 @@ class Tabber(wx.aui.AuiNotebook):
     SetStatus: bool = false
     NewTabTitle: str = _("Untitled")
 
-    def __init__(self, *args, **kwds):
+    def __init__(this, *args, **kwds):
         kwds["style"] = (
             kwds.get("style", 0)
             | wx.aui.AUI_NB_WINDOWLIST_BUTTON
@@ -24,7 +24,7 @@ class Tabber(wx.aui.AuiNotebook):
         # AUI_NB_TAB_MOVE : Move tab
         movetabs = global_settings.getkey("editor.tabs", "move_tabs")
         middle_close = global_settings.getkey("editor.tabs", "middle_close")
-        self.close_on_no_tab = global_settings.getkey("editor.tabs", "close_on_no_tab")
+        this.close_on_no_tab = global_settings.getkey("editor.tabs", "close_on_no_tab")
 
         if movetabs == true:
             kwds["style"] |= wx.aui.AUI_NB_TAB_MOVE
@@ -32,55 +32,56 @@ class Tabber(wx.aui.AuiNotebook):
         if middle_close == true:
             kwds["style"] |= wx.aui.AUI_NB_MIDDLE_CLICK_CLOSE
 
-        if self.close_on_no_tab == true:
+        if this.close_on_no_tab == true:
             kwds["style"] |= wx.aui.AUI_NB_CLOSE_ON_ALL_TABS
         else:
             kwds["style"] |= wx.aui.AUI_NB_CLOSE_ON_ACTIVE_TAB
 
-        wx.aui.AuiNotebook.__init__(self, *args, **kwds)
+        wx.aui.AuiNotebook.__init__(this, *args, **kwds)
 
-        self.AddTab()
+        this.fileops = FileOperations(this)
 
-        self.fileops = FileOperations(
-            self,
-            {
-                "AddTab": self.AddTab,
-                "SetTabName": true,
-                "SetWindowTitle": true,
-            },
-        )
+        this.AddTab()
 
-        self.Bind(wx.aui.EVT_AUINOTEBOOK_PAGE_CHANGED, self.OnPageChanged)
-        self.Bind(wx.aui.EVT_AUINOTEBOOK_PAGE_CLOSED, self.OnPageClose)
+        this.Bind(wx.aui.EVT_AUINOTEBOOK_PAGE_CHANGED, this.OnPageChanged)
+        this.Bind(wx.aui.EVT_AUINOTEBOOK_PAGE_CLOSED, this.OnPageClosed)
+        this.Bind(wx.EVT_WINDOW_DESTROY, this.OnSelfDestroy)
 
-    def AddTab(self, evt=nil, tabname: str = _("New file")):
-        newte = Editor(
-            self, style=wx.TE_MULTILINE | wx.EXPAND | wx.HSCROLL | wx.VSCROLL
-        )
+    def AddTab(this, evt=nil, tabname: str = _("New file")):
+        newte = Editor(this,
+                       style=wx.TE_MULTILINE | wx.EXPAND | wx.HSCROLL | wx.VSCROLL)
         newte.SetZoom(3)
-        clrCall.configure(newte, true)
+
+        newte.Bind(wx.EVT_WINDOW_DESTROY, this.fileops.OnEditorDestroy)
+        newte.Bind(wx.EVT_CHAR, this.fileops.OnEditorModify)
+
+        clrCall.configure(newte)
         newte.StyleClearAll()
 
-        self.AddPage(newte, tabname, select=true)
-        self.SetTitle(tabname)
+        this.AddPage(newte, tabname, select=true)
+        this.SetTitle(tabname)
 
-    def SetTitle(self, title=""):
-        if hasattr(wx.GetTopLevelParent(self), "SetTitle"):
-            return wx.GetTopLevelParent(self).SetTitle(title)
+    def SetTitle(this, title):
+        return wx.GetTopLevelParent(this).SetTitle(title)
 
     """
     Events.
     """
 
-    def OnPageChanged(self, evt):
-        tabname = self.GetPageText(evt.GetSelection())
-        if self.SetStatus is true:
-            wx.GetTopLevelParent(self).SetStatusText(tabname)
-        self.SetTitle(tabname)
+    def OnPageChanged(this, evt):
+        tabname = this.GetPageText(evt.GetSelection())
+        if this.SetStatus is true:
+            wx.GetTopLevelParent(this).SetStatusText(tabname)
+        this.SetTitle(tabname)
 
-    def OnPageClose(self, evt):
-        if self.GetPageCount() == 0:
-            if self.close_on_no_tab in global_settings.yes_values:
+    def OnPageClosed(this, evt):
+        if this.GetPageCount() == 0:
+            if this.close_on_no_tab in global_settings.yes_values:
                 wx.GetApp().ExitMainLoop()
             else:
-                self.AddTab()
+                this.AddTab()
+
+    def OnSelfDestroy(this, evt):
+        for i in range(this.GetPageCount()):
+            this.GetPage(i).SendDestroyEvent()
+        evt.Skip()
