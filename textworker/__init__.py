@@ -10,7 +10,7 @@ from libtextworker.versioning import *
 
 require("libtextworker", "0.1.4")
 test_import("wx")
-__version__ = "1.6dev2"
+__version__ = "1.6b0"
 
 LOCALE_DIR = currdir / "po"
 

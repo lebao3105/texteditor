@@ -1,6 +1,10 @@
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
 [tool.poetry]
 name = "textworker"
-version = "1.6dev2"
+version = "1.6b0"
 description = "Just a text editor"
 authors = ["lebao3105 <bao12345yocoo@gmail.com>"]
 license = "GPL-3.0-or-later"
@@ -9,12 +13,7 @@ include = ["CHANGELOG", "LICENSE"]
 
 [tool.poetry.dependencies]
 python = "^3.10"
-#libtextworker = {path = "libtextworker"}
 
 wxPython = "^4.2.0"
 markdown2 = "^2.4.8"
 requests = "^2.31.0"
-
-[build-system]
-requires = ["poetry-core"]
-build-backend = "poetry.core.masonry.api"
