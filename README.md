@@ -14,7 +14,7 @@
         <image src="https://img.shields.io/badge/code%20style-black-000000.svg" align="right"/>
     </a>
     <a href="https://github.com/lebao3105/texteditor/actions/workflows/wheel.yml">
-        <image src="https://github.com/lebao3105/texteditor/actions/workflows/wheel.yml/badge.svg?branch=data" align="right"/>
+        <image src="https://github.com/lebao3105/texteditor/actions/workflows/wheel.yml/badge.svg" align="right"/>
     </a>
 </p>
 
@@ -22,27 +22,33 @@
 
 ## For Tkinter builds
 
-Releases from 1.5a0 and their source code will be placed in a new repository: lebao3105/texteditor-tk. This is made in order to make the updater for both 2 types of app works easier, as it uses GitHub api.
+Releases from 1.5a0 and their source code will be placed in a new repository: lebao3105/texteditor-tk.
+
+This was made in order to make the updater for both 2 types of app works easier.
 
 So that: the `main` branch will place the latest (trunk) code (again).
 
 Texteditor-tk is still available in TestPypi, even for the 1.5 release.
 
 ## Features
+
 * Tabs split/rearrangement
 * Access to your files without opening File Explorer
-* Run some tasks with Command Window
+* ~~Run some tasks with Command Window~~
 * Customizable interface
-* Partial Git support (1.6a3+)
+* Open history
+* ~~Partial Git support (1.6a3+)~~
 * Auto save
 
 See all app releases [here.](https://github.com/lebao3105/texteditor/releases)
 
-You can get wheels from [GitHub actions](https://github.com/lebao3105/texteditor/actions).
+You can get wheels from [GitHub Actions](https://github.com/lebao3105/texteditor/actions).
 
-## Build and install
+## Setup
 
-Requires Python 3.8+.
+Requires Python 3. Version 3.10+ maybe ideal.
+
+Install all dependencies shown in [pyproject.toml](./pyproject.toml)
 
 Additional dependencies may required for wxPython:
 
@@ -81,3 +87,5 @@ Before reporting issues:
 - Check for all the issues, including closed ones.
 
 - Check for open PRs.
+
+Look at [CONTRIBUTING](./CONTRIBUTING) for more stuff.
