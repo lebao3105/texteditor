@@ -9,7 +9,6 @@ from .generic import editorCfg
 
 
 class Editor(StyledTextControl, AutoSave, AutoSaveConfig):
-    FileLoaded: str = ""
 
     def __init__(
         this,
@@ -42,7 +41,7 @@ class Editor(StyledTextControl, AutoSave, AutoSaveConfig):
     # AutoSaveConfig
     def ConfigWindow(this):
         wx.xrc.XRCCTRL(this.Dialog, "m_checkBox1", "wxCheckBox").Hide()
-        super().ConfigWindow()
+        AutoSaveConfig.ConfigWindow(this)
 
     def OnChoiceSelected(this, evt):
         value = this.Cmb.GetValue()
