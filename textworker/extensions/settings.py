@@ -6,23 +6,13 @@ import wx.html2
 import wx.xrc
 
 from libtextworker.general import CraftItems
-from libtextworker.interface import stock_ui_configs
 from libtextworker.interface.manager import hextorgb, AUTOCOLOR, ColorManager
 
 from markdown2 import markdown
 
 from . import _
 from .. import __version__, branch
-from ..generic import (
-    CONFIGS_PATH,
-    UIRC_DIR,
-    clrCall,
-    global_settings,
-    DATA_PATH,
-    editorCfg,
-    THEMES_DIR,
-    EDITOR_DIR
-)
+from ..generic import *
 
 content: str
 backup: str
@@ -56,29 +46,19 @@ def localize(forced: bool = False):
     for match in matches:
         # The match result will be a list of
         # ('"', '<string>', '"') tuples.
-        # Skip number-only strings.
-        try: int(match[1])
+        # Skip number/float-only strings.
+        try: int(match[1]); float(match[1])
         except: pass
         else: continue
         localized = f'_(u"{match[1]}")'
-        content = content.replace(f"u{match[0]}{match[1]}{match[2]}", localized)
+        content = content.replace(f'u"{match[1]}"', localized)
 
     open(CraftItems(UIRC_DIR, "preferences.py"), "w").write(content)
     replaced = True
 
-
-def trytoimport():
-    try:
-        from ..ui import preferences as prefs
-        return prefs
-    except:
-        return wx.MessageBox("An error occured calling the dialog code. "
-                             "Please report back to the developer.\n"
-                             "Also send the log when this message shows.",
-                             style=wx.OK_DEFAULT | wx.ICON_ERROR)
 initialize_work()
 localize()
-preferences = trytoimport()
+from ..ui import preferences
 
 class SettingsDialog(preferences.StDialog):
     """
@@ -100,7 +80,9 @@ class SettingsDialog(preferences.StDialog):
         this.m_choice2.SetStringSelection(this.NB_LOC.capitalize())
 
         this.Bind(wx.EVT_CHECKBOX,
-                  lambda evt: global_settings.set("base", "autoupdate", this.m_checkBox1.IsChecked()),
+                  lambda evt: global_settings.set_and_update(
+                        "base", "autoupdate", this.m_checkBox1.IsChecked()
+                  ),
                   this.m_checkBox1)
 
         this.Bind(wx.EVT_BUTTON, this.check_updates, this.m_button3)
@@ -124,7 +106,7 @@ class SettingsDialog(preferences.StDialog):
 
         this.Bind(
             wx.EVT_CHOICE,
-            lambda evt: global_settings.set(
+            lambda evt: global_settings.set_and_update(
                 "extensions.textwkr.multiview",
                 "notebook_location",
                 this.m_choice2.GetStringSelection().lower(),
@@ -133,24 +115,18 @@ class SettingsDialog(preferences.StDialog):
         )
 
         # Colors page
-        colors = { # Corresponding to the XRC file
-            _("Dark"): 1, _("Light"): 2
-        }
+        colors = {_("Dark"): 1, _("Light"): 2} # Corresponding to the XRC file
 
-        this.m_radioBox1.SetSelection(
-            0
-            if this.AUTOCOLOR_CHANGE
-            else colors[_(clrCall.getkey("color", "background").capitalize())]
+        this.m_radioBox1.SetSelection(0 if this.AUTOCOLOR_CHANGE
+                                        else colors[_(clrCall.getkey("color", "background").capitalize())]
         )
 
         this.m_colourPicker1.SetColour(wx.Colour(*hextorgb(clrCall.GetColor()[0])))
         this.m_colourPicker2.SetColour(wx.Colour(*hextorgb(clrCall.GetColor()[1])))
 
-        this.Bind(
-            wx.EVT_RADIOBOX,
-            lambda evt: this.apply_color(this.m_radioBox1.GetStringSelection()),
-            this.m_radioBox1,
-        )
+        this.Bind(wx.EVT_RADIOBOX,
+                  lambda evt: this.apply_color(this.m_radioBox1.GetStringSelection()),
+                  this.m_radioBox1)
 
         for i in os.listdir(THEMES_DIR):
             this.m_choice3.Append(i.removesuffix(".ini"))
@@ -163,28 +139,26 @@ class SettingsDialog(preferences.StDialog):
             else: return ""
 
         this.Bind(wx.EVT_COLOURPICKER_CHANGED,
-                      lambda evt: clrCall.set_and_update("color", "background" + target_type(), 
-                                                         this.m_colourPicker1.GetColour().GetAsString(wx.C2S_HTML_SYNTAX)),
-                      this.m_colourPicker1)
+                  lambda evt: clrCall.set_and_update("color", "background" + target_type(),
+                                                     this.m_colourPicker1.GetColour().GetAsString(wx.C2S_HTML_SYNTAX)),
+                  this.m_colourPicker1)
 
         this.Bind(wx.EVT_COLOURPICKER_CHANGED,
-                      lambda evt: clrCall.set_and_update("color", "foreground" + target_type(), 
-                                                         this.m_colourPicker2.GetColour().GetAsString(wx.C2S_HTML_SYNTAX)),
-                      this.m_colourPicker2)
+                  lambda evt: clrCall.set_and_update("color", "foreground" + target_type(),
+                                                     this.m_colourPicker2.GetColour().GetAsString(wx.C2S_HTML_SYNTAX)),
+                  this.m_colourPicker2)
 
         def newtheme(evt):
             if not this.m_textCtrl1.GetLabelText():
-                wx.MessageBox(
-                    _("Error while setting a new theme: Name required."),
-                    style=wx.ICON_ERROR | wx.OK,
-                )
+                wx.MessageBox(_("Error while setting a new theme: Name required."),
+                              style=wx.ICON_ERROR | wx.OK)
             else:
                 new = this.m_textCtrl1.GetLabel()
                 global clrCall
                 clrCall = ColorManager(customfilepath=CraftItems(THEMES_DIR, new + ".ini"))
                 this.m_choice3.Append(new)
                 this.m_choice3.SetStringSelection(new)
-                wx.MessageBox(_("Not implemented yet."))
+                # wx.MessageBox(_("Not implemented yet."))
 
         this.Bind(wx.EVT_BUTTON, newtheme, this.m_button31)
 
@@ -192,9 +166,7 @@ class SettingsDialog(preferences.StDialog):
 
         indentationTypes = ["tabs", "spaces"]
 
-        this.m_choice1.SetSelection(
-            indentationTypes.index(editorCfg.getkey("indentation", "type"))
-        )
+        this.m_choice1.SetSelection(indentationTypes.index(editorCfg.getkey("indentation", "type").lower()))
         this.m_comboBox1.SetValue(editorCfg.getkey("indentation", "size"))
         this.m_checkBox3.SetValue(editorCfg.getkey("indentation", "backspace_unindents"))
         this.m_checkBox6.SetValue(editorCfg.getkey("indentation", "show_guide"))
@@ -205,43 +177,33 @@ class SettingsDialog(preferences.StDialog):
         for item in os.listdir(EDITOR_DIR):
             this.m_choice31.Append(item)
 
-        this.Bind(
-            wx.EVT_CHOICE,
-            lambda evt: editorCfg.set_and_update(
-                "indentation", "type", indentationTypes[this.m_choice1.GetSelection()]
-            ),
-            this.m_choice1,
-        )
+        this.Bind(wx.EVT_CHOICE,
+                  lambda evt: editorCfg.set_and_update(
+                      "indentation", "type", indentationTypes[this.m_choice1.GetSelection()]
+                  ),
+                  this.m_choice1)
 
-        this.Bind(
-            wx.EVT_TEXT,
-            lambda evt: editorCfg.set_and_update(
-                "indentation", "size", evt.GetString()
-            ),
-            this.m_comboBox1,
-        )
+        this.Bind(wx.EVT_TEXT,
+                  lambda evt: editorCfg.set_and_update("indentation", "size", evt.GetString()),
+                  this.m_comboBox1)
 
         # Lazy bind
         # Because checkbox numbers are not correctly listed,
-        # so we have these
-        editorSettings = {
-            3: "backspace_unindents",
-            6: "show_guide",
-            4: "view_whitespaces",
-            5: "view_EOL",
-            7: "line_count",
-        }
+        # so we have this
+        editorSettings = {3: "backspace_unindents",
+                          4: "view_whitespaces",
+                          5: "view_EOL",
+                          6: "show_guide",
+                          7: "line_count"}
+        
         for i in range(3, 8):
             checkbox = getattr(this, f"m_checkBox{str(i)}")
-            this.Bind(
-                wx.EVT_COMBOBOX,
-                lambda evt: editorCfg.set_and_update(
-                    "indentation" if i in [3, 6] else "editor",
-                    editorSettings[i],
-                    checkbox.IsChecked(),
-                ),
-                checkbox,
-            )
+            this.Bind(wx.EVT_COMBOBOX,
+                      lambda evt: editorCfg.set_and_update(
+                          "indentation" if i in [3, 6] else "editor",
+                          editorSettings[i], checkbox.IsChecked()
+                      ),
+                      checkbox)
 
     def check_updates(this, evt):
         import importlib.util
@@ -264,13 +226,10 @@ class SettingsDialog(preferences.StDialog):
                 parent=this,
             )
         elif isinstance(result, tuple):
-            if wx.MessageBox(
-                message = _(f"Update available: {result[0]} from branch {branch}.\n" +
-                            (f"Get via: {result[2]}" if result[2] else "")),
-                parent=this,
-                style=wx.YES_NO
-            ) == wx.YES:
-                
+            if wx.MessageBox(_(f"Update available: {result[0]} from branch {branch}.\n"
+                               f"Get via: {result[2]}" if result[2] else ""),
+                             parent=this,
+                             style=wx.YES_NO) == wx.YES:
                 new = wx.Frame(this)
                 text = wx.html2.WebView.New(new)
                 text.SetPage(markdown(result[1]), f"{result[0]} changelogs")
@@ -285,8 +244,8 @@ class SettingsDialog(preferences.StDialog):
 
     def apply_color(this, string):
         if string != _("Automatic"):
-            clrCall.set("color", "background", string.lower())
-            clrCall.set("color", "auto", "no")
+            clrCall.set_and_update("color", "background", string.lower())
+            clrCall.set_and_update("color", "auto", "no")
         else:
-            clrCall.set("color", "background", "light")
-            clrCall.set("color", "auto", "yes")
+            clrCall.set_and_update("color", "background", "light")
+            clrCall.set_and_update("color", "auto", "yes")
