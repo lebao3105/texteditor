@@ -1,10 +1,10 @@
 {
-    "python.formatting.provider": "black",
     "scm.alwaysShowActions": true,
     "python.analysis.extraPaths": [
         "../libtextworker"
     ],
     "files.associations": {
-        "*.xrc": "xml"
+        "*.xrc": "xml",
+        "*.fbp": "xml"
     }
 }
