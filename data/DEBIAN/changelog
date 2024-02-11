@@ -1,0 +1,5 @@
+textworker (1.6+b0) unstable; urgency=medium
+
+    * Initial Debian packaging release.
+
+-- Le Bao Nguyen <bao12345yocoo@gmail.com> Set, 11 Feb 2024 19:16:08 +0007

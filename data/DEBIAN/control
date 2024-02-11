@@ -1,0 +1,9 @@
+Package: me.lebao3105.textworker
+Name: textworker
+Version: 1.6+b0
+Architecture: any
+Description: An awesome text editor!
+Author: lebao3105
+Maintainer: lebao3105
+Section: Utilities
+Build-Depends: debhelper, python3, dh-virtualenv
