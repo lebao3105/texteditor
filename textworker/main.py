@@ -110,11 +110,12 @@ def start_app(files: list[str], directory: list[str]):
         clrCall.configure(dlg, True)
         
         # logger.exception(f"Exception occured (type {exc_type}): {value}\n{trace_back}")
-        exchook(exc_type, value, traceb)
 
         dlg.SetSizer(box)
         box.Fit(dlg)
         dlg.Show()
+        
+        exchook(exc_type, value, traceb)
 
     sys.excepthook = handleexc
 

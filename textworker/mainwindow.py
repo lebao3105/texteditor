@@ -8,6 +8,7 @@ import wx.html2
 import wx.lib.splitter
 import wx.xrc
 
+from wx.lib.inspection import InspectionTool
 from libtextworker import __version__ as libver
 from libtextworker.general import ResetEveryConfig, logger, CraftItems
 from libtextworker.interface.wx.dirctrl import *
@@ -31,7 +32,7 @@ class MainFrame(XMLBuilder):
     logfmter = wx.LogFormatter()
 
     def __init__(this):
-        XMLBuilder.__init__(this, nil, CraftItems(UIRC_DIR, "mainmenu.xrc"))
+        XMLBuilder.__init__(this, nil, CraftItems(UIRC_DIR, "mainmenu.xrc"), _)
 
         this.mainFrame = this.loadObject("mainFrame", "wxFrame")
         this.mainFrame.SetSize((860, 640))
@@ -79,6 +80,7 @@ class MainFrame(XMLBuilder):
         this.LoadMenu()
         this.mainFrame.Bind(wx.EVT_CLOSE, this.OnClose)
 
+        clrCall.configure(this.mainFrame)
         clrCall.autocolor_run(this.mainFrame)
 
         this.mainFrame.SetSizer(mainboxer)
@@ -259,11 +261,12 @@ class MainFrame(XMLBuilder):
 
         content = markdown(this.notebook.GetCurrentPage().GetText())
 
-        wind = wx.Frame(this.mainFrame)
+        wind = wx.Panel(this.notebook)
         newwind = wx.html2.WebView.New(wind)
         newwind.SetPage(content, "")
 
         wind.Show()
+        this.notebook.AddPage(wind, this.notebook.GetPageText(this.notebook.GetSelection()), True)
         newwind.Show(true)
 
         this.notebook.GetCurrentPage().Bind(wx.EVT_CHAR, autorefresh)
@@ -326,7 +329,6 @@ class MainFrame(XMLBuilder):
                      wx.CommandEvent(wx.aui.wxEVT_AUINOTEBOOK_PAGE_CLOSED))
 
     def OpenInspector(this, evt):
-        from wx.lib.inspection import InspectionTool
         wnd = wx.FindWindowAtPointer()
         if not wnd: wnd = this.mainFrame
         InspectionTool().Show(wnd, True)
