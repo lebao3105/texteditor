@@ -6,7 +6,7 @@ from libtextworker.general import CraftItems
 from textworker import DEVS, ARTISTS, DOCWRITERS, LICENSE
 from textworker import HOMEPAGE, _, ICON
 from textworker import branch, __version__, icon
-from textworker.generic import UIRC_DIR
+from textworker.generic import UIRC_DIR, clrCall
 
 from wx import EVT_LEFT_DOWN, EVT_TEXT_URL, Icon, Bitmap, Dialog, StaticBitmap
 from wx import EVT_COLLAPSIBLEPANE_CHANGED
@@ -15,7 +15,7 @@ __all__ = ("AboutDialog")
 
 ABOUTDLG_PATH = CraftItems(UIRC_DIR, "about.py")
 if not os.path.isfile(ABOUTDLG_PATH):
-    raise FileNotFoundError(f"{ABOUTDLG_PATH}: Read the application's FAQ for fix")
+    raise FileNotFoundError(_(f"{ABOUTDLG_PATH}: Ask the developer for a fix"))
 else:
     from ..ui import about
 
@@ -78,3 +78,6 @@ class AboutDialog(about.AboutDialog):
         this.m_textCtrl1.SetInsertionPoint(0)
 
         this.Bind(EVT_TEXT_URL, lambda evt: webbrowser.open(evt.GetString()))
+
+        clrCall.configure(this)
+        clrCall.autocolor_run(this)

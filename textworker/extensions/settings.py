@@ -204,6 +204,9 @@ class SettingsDialog(preferences.StDialog):
                           editorSettings[i], checkbox.IsChecked()
                       ),
                       checkbox)
+        
+        clrCall.configure(this)
+        clrCall.autocolor_run(this)
 
     def check_updates(this, evt):
         import importlib.util
@@ -218,13 +221,10 @@ class SettingsDialog(preferences.StDialog):
 
         if result is None:
             return wx.MessageBox(_("The program is up-to-date"), parent=this)
+        
         elif result == "invalid_json":
-            return wx.MessageBox(
-                _(
-                    "Invalid response received: Maybe an internet problem, or my data is invalid."
-                ),
-                parent=this,
-            )
+            return wx.MessageBox(_("Invalid response received"), parent=this)
+        
         elif isinstance(result, tuple):
             if wx.MessageBox(_(f"Update available: {result[0]} from branch {branch}.\n"
                                f"Get via: {result[2]}" if result[2] else ""),

@@ -10,15 +10,13 @@ from .generic import editorCfg
 
 class Editor(StyledTextControl, AutoSave, AutoSaveConfig):
 
-    def __init__(
-        this,
-        parent: wx.Window,
-        id=wx.ID_ANY,
-        pos: wx.Point = wx.DefaultPosition,
-        size: wx.Size = wx.DefaultSize,
-        style=0,
-        name: str = "",
-    ):
+    def __init__(this, parent: wx.Window, id=wx.ID_ANY,
+                 pos: wx.Point = wx.DefaultPosition,
+                 size: wx.Size = wx.DefaultSize,
+                 style=0, name: str = ""):
+        """
+        Editor with autosave support!
+        """
         this.Function = this.SaveFile
         this.Function_args = {"filename": this.FileLoaded}
 

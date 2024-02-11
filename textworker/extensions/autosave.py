@@ -80,8 +80,6 @@ class AutoSave:
     def __init__(this):
         if enabled in global_settings.no_values:
             return
-        else:
-            pass
 
         this.Timer = wx.CallLater(
             int(this.CurrDelay) * 1000, this.Function, **this.Function_args
@@ -107,7 +105,7 @@ class AutoSave:
             this.Stop()
 
     def CheckToggle(this):
-        if not TOGGLE and this.Timer.IsRunning() == true:
+        if not TOGGLE and this.Timer.IsRunning():
             this.Stop()
         elif not this.Timer.IsRunning():
             this.Start()
