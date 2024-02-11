@@ -4,8 +4,8 @@ import wx.stc
 
 from . import _
 from .editor import Editor
-from .file_operations import FileOperations
-from .generic import global_settings, clrCall
+from .file_operations import DNDTarget, FileOperations
+from .generic import global_settings, clrCall, editorCfg
 
 
 class Tabber(wx.aui.AuiNotebook):
@@ -43,6 +43,9 @@ class Tabber(wx.aui.AuiNotebook):
 
         this.AddTab()
 
+        if editorCfg.getkey("editor", "dnd_enabled", True, True) in editorCfg.yes_values:
+            this.SetDropTarget(DNDTarget(this))
+
         this.Bind(wx.aui.EVT_AUINOTEBOOK_PAGE_CHANGED, this.OnPageChanged)
         this.Bind(wx.aui.EVT_AUINOTEBOOK_PAGE_CLOSED, this.OnPageClosed)
         this.Bind(wx.EVT_WINDOW_DESTROY, this.OnSelfDestroy)
@@ -56,6 +59,7 @@ class Tabber(wx.aui.AuiNotebook):
         newte.Bind(wx.EVT_CHAR, this.fileops.OnEditorModify)
 
         clrCall.configure(newte)
+        clrCall.autocolor_run(newte)
         newte.StyleClearAll()
 
         this.AddPage(newte, tabname, select=true)

@@ -9,12 +9,12 @@ create_new: bool
 
 parser = argparse.ArgumentParser(
     sys.argv[0],
-    description="""
-    Textworker
+    description = \
+    """
     A simple, cross-platform text editor.
-    (C) 2022-2023 Le Bao Nguyen and contributors.
+    (C) 2022-2024 Le Bao Nguyen and contributors.
     Read documents online: https://lebao3105.gitbook.io/texteditor_doc
-    Where the source code goes: https://gitlab.com/lebao3105/texteditor
+    Where the source code goes: https://github.com/lebao3105/texteditor
     """,
 )
 parser.add_argument("paths", nargs="*")

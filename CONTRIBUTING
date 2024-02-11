@@ -12,15 +12,9 @@ A. [Setup](#setup)
 
 B. [The source code tree](#the-source-code-tree)
 
-C. [Code style](#code-style)
+C. [Debugging options](#debugging-options)
 
-D. [Debugging options](#debugging-options)
-
-E. [Dependencies](#dependencies)
-
-F. [Make translations](#make-translations)
-
-G. [Publish your work](#publish-your-work)
+D. [Make translations](#make-translations)
 
 ## Setup
 
@@ -100,55 +94,36 @@ extensions/: Not quite 'app extensions', at least for now. Contains code for dia
 
 ui/: UI designs made in wxFormBuilder, extensions/ and textworker.mainwindow modules will use them.
 
-## Code style
+## Debugging options
 
-In the past this project uses `black` as the formatter. But the past is the past.
+Command-line options: `--custom-config-dir` and `--custom-data-dir` should be what you want
 
-I even don't read about `PEP*` that defines a good code write (IIRC there was, but probably there was), but that does not mean my code will be a chaos.
+Environment variable: `PYTHONPATH` for the path to libtextworker (if you want to work with it too)
 
-I have my own code style, points to a readable and clear code, of course.
+VSCode uses both of these in its [launch.json](.vscode/launch.json).
 
-1. Naming
+You also can open Inspector tool from wxPython, available since 1.6dev1. 
 
-> (You will find it weird as this uses too much formats)
+Use `importlib.reload` to reload your changes quickly. This can be ran on Inspector's own shell.
 
-* Functions go `flatcase` or `snake_case`
+## Make translations
 
-* Class names go `PascalCase`. Also class @property_s, methods
+The main concern is the [po](po/) directory, where all translations are placed.
 
-* Private, one-use variables use `snake_case` or `flatcase` with `_` (underscore) as prefix (also suffix if you want)
+For translators:
 
-* Constants use `UPPERFLATCASE` or `SCREAMING_SNAKE_CASE`, depending on what does it do
+* Add your language code into [LINGUAS](po/LINGUAS). Make a copy of [textworker.pot](po/textworker.pot) and name it `<language code>.po`. Place it inside the po directory, of course.
 
-* For events callback: the parameter that the GUI toolkit passes to (an event object), name it `evt`.
+> Warning: translation templates (*.pot) are not always updated. For the best result use builder.py.
 
-* Variables use `flatcase`.
+* Translate the app, by editing the file manually or with the help of software like Poedit.
 
-2. Variables usage
+* Use builder.py to generate .mo - compiled .po
 
-* Replace True with true, False with false, None with nil; the work has been done from textworker.generic.
+* Try to run the app with your translation!
 
-* Define their should-be types, and default value if any.
+For maintainers:
 
-* Use global variables as much as possible - don't create too many new instances
+* Just use builder.py to make sure all strings are not missing
 
-3. Writing code (indentation etc)
-
-* Function/class parameters: truncate all parameters like this (idk how to explain):
-
-    ```python
-    func(param1, param2, verylongparameter1, longlongparam1,
-         param3, veryverylongparameter1, longlongparameter1)
-         ^ this aligment
-    ```
-
-* Currently no word range per line yet - but just don't make it too long that we need one more scroller...
-
-* Add a line between statements, comments blocks
-
-* One line code is recommended for short work
-
-* Import order: `import` first then `from .. import ..`. Sort by alphabet + directory depth (e.g `.` for the current module level then `..` for the upper). Still code order is important, so this can be a bit "broken".
-
-4. Debugging options
-
+* If you made a new file containing strings to translate, add it to [POTFILES](po/POTFILES).

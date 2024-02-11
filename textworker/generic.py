@@ -17,7 +17,6 @@ from libtextworker.get_config import GetConfig
 from libtextworker.interface import stock_ui_configs, stock_editor_configs
 from libtextworker.interface.wx import ColorManager
 from libtextworker.versioning import is_development_version_from_project
-
 from libtextworker import EDITOR_DIR, THEMES_DIR, TOPLV_DIR
 
 # Settings paths

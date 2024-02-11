@@ -1,0 +1,4 @@
+libtextworker[wx,autocolor] >= 0.1.4
+requests
+wxPython >= 4.2.0
+markdown2

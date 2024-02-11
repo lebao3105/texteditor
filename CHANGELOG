@@ -1,4 +1,20 @@
-This is the changelog file for textworker in wip/wx branch.
+This contains shortened version of textworker changelogs.
+
+### 1.6dev1
+* New:
+- Redesigned about dialog
+- Added wxPython's inspector window
+- Preferences page
+- App updates
+* Updates
+- Use libtextworker 0.1.4
+- App logos have been embedded using img2py
+- Remove Git support
+- Fix command line flags
+- Use wxMultiSplitterWindow instead of wxSplitterWindow
+- Improved file_operations a lot
+- Exit the app on no tabs if able (using a setting)
+- Set active log target to Log window's text control (not working now)
 
 ### 1.6a3 (Git tag v1.6a3 last commit 35b74fa)
 * Updated:

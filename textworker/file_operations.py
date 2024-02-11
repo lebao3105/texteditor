@@ -4,11 +4,24 @@ import wx
 from . import _
 from .generic import global_settings
 from hashlib import md5
+from libtextworker.interface.wx.editor import DragNDropTarget
 
 searchdir = global_settings.getkey("editor", "searchdir", noraiseexp=true, make=true)
 if not os.path.isdir(searchdir):
     searchdir = os.path.expanduser("~/Documents")
 
+
+class DNDTarget(DragNDropTarget):
+    """
+    Drag and drop class. Made for Tabber.
+    """
+    def OnDropFiles(this, x, y, filenames):
+        
+        for i in range(0, len(filenames)):
+            this.Target.AddTab()
+            this.Target.fileops.OpenFile(filenames[i])
+        
+        return True
 
 class FileOperations:
     Tabber: wx.Window

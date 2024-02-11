@@ -48,7 +48,7 @@ You can get wheels from [GitHub Actions](https://github.com/lebao3105/texteditor
 
 Requires Python 3. Version 3.10+ maybe ideal.
 
-Install all dependencies shown in [pyproject.toml](./pyproject.toml)
+Install all dependencies shown in [requirements.txt](requirements.txt)
 
 Additional dependencies may required for wxPython:
 
