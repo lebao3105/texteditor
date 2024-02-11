@@ -1,6 +1,5 @@
 textworker/extensions/__init__.py
 textworker/extensions/multiview.py
-textworker/extensions/multiview.py
 textworker/extensions/settings.py
 textworker/main.py
 textworker/mainwindow.py

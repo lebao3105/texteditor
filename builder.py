@@ -29,15 +29,7 @@ def make_trans():
     print(f"* xgettext : {gettext}")
     print(f"* msgmerge {msgmerge}")
     print(f"* msgfmt {msgfmt}")
-    print(f"* pywxrc {wxrc}")
     print("---------------------------------------")
-
-    for line in open("po/WXRCFILES", "r").read().split("\n"):
-        source = line.split(" ")[0]
-        out = line.split(" ")[1]
-        os.system(
-            f'"{wxrc}" {source} -g -o {out}'
-        )
     
     os.system(
         f'"{gettext}"'
