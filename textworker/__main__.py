@@ -7,45 +7,37 @@ from textworker import generic
 ignore_not_exists: bool
 create_new: bool
 
-parser = argparse.ArgumentParser(
-    sys.argv[0],
-    description = \
+parser = argparse.ArgumentParser(sys.argv[0],
+                                 description = \
     """
-    A simple, cross-platform text editor.
-    (C) 2022-2024 Le Bao Nguyen and contributors.
-    Read documents online: https://lebao3105.gitbook.io/texteditor_doc
+    A simple, cross-platform text editor.\n
+    (C) 2022-2024 Le Bao Nguyen and contributors.\n
+    Read documents online: https://lebao3105.gitbook.io/texteditor_doc\n
     Where the source code goes: https://github.com/lebao3105/texteditor
-    """,
-)
-parser.add_argument("paths", nargs="*")
+    """)
+parser.add_argument("paths", nargs="*", help="paths to be used (files/folders)")
 
 # Flags
-config_flags = parser.add_argument_group("Configurations")
+config_flags = parser.add_argument_group("settings")
 config_flags.add_argument(
-    "--custom-config-dir",
-    type=str,
-    help="Load custom configuration(s) from a directory",
+    "--custom-config-dir", metavar="PATH", type=str,
+    help="load custom configuration(s) from a directory",
 )
 config_flags.add_argument(
-    "--custom-data-dir",
-    type=str,
-    help="Load custom application data (should not be a relative path)",
+    "--custom-data-dir", metavar="PATH", type=str,
+    help="load custom application data (should not be a relative path)",
 )
 
-file_flags = parser.add_argument_group("File-related flags")
+file_flags = parser.add_argument_group("file-related flags")
 file_flags.add_argument(
-    "--create-new",
-    "-c",
-    const=False,
-    nargs="?",
-    help="Send 'yes' to any 'File not found' message",
+    "--create-new", "-c", const=False, nargs="?",
+    metavar="BOOLEAN",
+    help="send 'yes' to any 'File not found' message",
 )
 file_flags.add_argument(
-    "--ignore-not-exists",
-    "-ig",
-    const=False,
-    nargs="?",
-    help="Ignore all 'File not found' messages",
+    "--ignore-not-exists", "-ig", const=False,
+    nargs="?", metavar="BOOLEAN",
+    help="ignore all 'File not found' messages",
 )
 
 def main():

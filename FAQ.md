@@ -24,4 +24,10 @@ If you are running from source code: use wxFormBuilder to generate code from pre
 
 Using (py)wxrc does NOT work!
 
-You can also use wxrc if have wxWidgets installed.
+With wxFormBuilder installed and added to PATH (don't worry if you're on *NIX, they should do it for you), run:
+
+```bash
+$ wxformbuilder -g textworker/ui/(file).fbp
+```
+
+With ``(file)`` is the corresponding file name you need to use (about/preferences).

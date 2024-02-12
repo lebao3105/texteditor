@@ -1,0 +1,11 @@
+include po/*
+exclude po/LINGUAS
+exclude po/POTFILES
+exclude po/*.po
+exclude po/*.pot
+
+include textworker/merges.json
+include textworker/ui/*.xrc
+include textworker/data/appconfig.ini
+
+exclude tests/*

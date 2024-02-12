@@ -12,13 +12,16 @@ require("libtextworker", "0.1.4")
 test_import("wx")
 __version__ = "1.6b0"
 
+locale.setlocale(locale.LC_ALL, None)
+
+
 if not os.path.isdir(LOCALE_DIR := currdir / "po"):
     LOCALE_DIR = currdir / ".." / "po"
 
-locale.setlocale(locale.LC_ALL, None)
 gettext.bindtextdomain("textworker", LOCALE_DIR)
 gettext.textdomain("textworker")
 _ = gettext.gettext
+
 del LOCALE_DIR
 
 if is_development_version(__version__) == True:

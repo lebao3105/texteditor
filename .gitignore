@@ -27,6 +27,12 @@ share/python-wheels/
 MANIFEST
 output/
 textworker/po/
+.pybuild/
+.pc
+debian/textworker*
+debian/files
+debian/debhelper*
+debian/.debhelper
 
 # PyInstaller
 #  Usually these files are written by a python script from a template

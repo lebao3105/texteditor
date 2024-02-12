@@ -1,19 +1,38 @@
 [build-system]
-requires = ["poetry-core"]
-build-backend = "poetry.core.masonry.api"
+requires = ["setuptools", "wheel"]
+build-backend = "setuptools.build_meta"
 
-[tool.poetry]
+[project]
 name = "textworker"
 version = "1.6b0"
+
 description = "Just a text editor"
-authors = ["lebao3105 <bao12345yocoo@gmail.com>"]
-license = "GPL-3.0-or-later"
 readme = "README.md"
-include = ["CHANGELOG", "LICENSE"]
 
-[tool.poetry.dependencies]
-python = "^3.10"
+authors = [
+    {name = "Le Bao Nguyen", email = "bao12345yocoo@gmail.com"}
+]
 
-wxPython = "^4.2.0"
-markdown2 = "^2.4.8"
-requests = "^2.31.0"
+license = {file = "LICENSE"}
+
+requires-python = ">=3.10"
+dynamic = ["dependencies"]
+
+[project.urls]
+Homepage = "https://github.com/lebao3105/texteditor"
+Repository = "https://github.com/lebao3105/texteditor"
+Issues = "https://github.com/lebao3105/texteditor/issues"
+Changelog = "https://github.com/lebao3105/texteditor/blob/main/CHANGELOG"
+
+[project.gui-scripts]
+textworker = "textworker.__main__:main"
+
+[tool.setuptools]
+include-package-data = true
+
+[tool.setuptools.packages.find]
+where = ["textworker"]
+
+# https://stackoverflow.com/questions/73600082
+[tool.setuptools.dynamic]
+dependencies = {file = ["requirements.txt"]}
