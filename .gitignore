@@ -177,3 +177,6 @@ icon.png
 
 # Generated Python files
 textworker/ui/*.py
+
+# XRC
+*.xrc

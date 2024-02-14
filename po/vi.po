@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-11-15 22:45+0700\n"
+"POT-Creation-Date: 2024-02-14 14:54+0700\n"
 "PO-Revision-Date: 2023-11-15 23:17+0700\n"
 "Last-Translator: LeBaoNguyen (lebao3105)\n"
 "Language-Team: \n"
@@ -17,97 +17,86 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Poedit 3.4\n"
 
-#: textworker/extensions/multiview.py:32
+#: textworker/extensions/__init__.py:18
+#, python-brace-format
+msgid "{ABOUTDLG_PATH}: Ask the developer for a fix"
+msgstr ""
+
+#: textworker/extensions/__init__.py:29
+msgid "About this application"
+msgstr ""
+
+#: textworker/extensions/__init__.py:34
+msgid "Click to view in full size"
+msgstr ""
+
+#: textworker/extensions/__init__.py:37
+msgid "Textworker icon"
+msgstr ""
+
+#: textworker/extensions/__init__.py:48
+msgid "Click to open"
+msgstr ""
+
+#: textworker/extensions/__init__.py:51
+msgid ""
+"A simple and small text editor.\n"
+"Textworker allows its users to write many things they want, with gradually "
+"added new and cool features.\n"
+"Free and open source!"
+msgstr ""
+
+#: textworker/extensions/multiview.py:35
 msgid "Close the current tab"
 msgstr "Đóng tab đang mở"
 
-#: textworker/extensions/multiview.py:36
+#: textworker/extensions/multiview.py:39
 msgid "Disable this (open) tab"
 msgstr "Khóa tab đang mở"
 
-#: textworker/extensions/multiview.py:39
+#: textworker/extensions/multiview.py:42
 msgid "Close the side bar"
 msgstr "Đóng side bar"
-
-#: textworker/extensions/gitsp.py:167
-msgid "Git not found - install it to use this plugin."
-msgstr "Không tìm thấy Git - cài đặt nó để sử dụng plugin này."
-
-#: textworker/extensions/gitsp.py:179
-msgid "Open a folder to start"
-msgstr "Chọn một thư mục để bắt đầu"
-
-#: textworker/extensions/mergedialog.py:12
-msgid "This needs your attention"
-msgstr "Chú ý"
-
-#: textworker/extensions/mergedialog.py:17
-msgid "Merges ahead"
-msgstr ""
-
-#: textworker/extensions/mergedialog.py:21
-msgid ""
-"The settings system has been changed recently and automatically merged into "
-"your settings.Look for the changes below.All changes are required. You just "
-"need to review what are they:)"
-msgstr ""
-"Hệ thống cài đặt đã được thay đổi gần đây và sẽ được áp dụng vào các cài đặt "
-"hiện tại. Xem các thay đổi bên dưới - tất cả sẽ được áp dụng."
-
-#: textworker/extensions/mergedialog.py:27
-msgid "Setting (section->option)"
-msgstr ""
-
-#: textworker/extensions/mergedialog.py:28
-msgid "New setting (section->option)"
-msgstr ""
-
-#: textworker/extensions/mergedialog.py:29
-msgid "Moved to file..."
-msgstr "Đã chuyển sang tệp..."
 
 #: textworker/extensions/settings.py:99
 msgid "No changelog/unable to get."
 msgstr "Không có thay đổi nào được ghi lại / không thể lấy bây giờ."
 
-#: textworker/extensions/settings.py:155
+#: textworker/extensions/settings.py:118
+msgid "Dark"
+msgstr ""
+
+#: textworker/extensions/settings.py:118
+msgid "Light"
+msgstr ""
+
+#: textworker/extensions/settings.py:153
 msgid "Error while setting a new theme: Name required."
 msgstr "Lỗi khi tạo một chủ đề mới: chưa đặt tên"
 
-#: textworker/extensions/settings.py:168
-msgid "Not implemented yet."
-msgstr "Tính năng chưa được viết."
-
-#: textworker/extensions/settings.py:245
+#: textworker/extensions/settings.py:223
 msgid "The program is up-to-date"
 msgstr "Chương trình này đang ở phiên bản mới nhất"
 
-#: textworker/extensions/settings.py:249
-msgid ""
-"Invalid response received: Maybe an internet problem, or my data is invalid."
+#: textworker/extensions/settings.py:226
+msgid "Invalid response received"
 msgstr ""
-"Nhận được phản hồi không hợp lệ: Có thể do internet hoặc là dữ liệu của tôi."
 
-#: textworker/extensions/settings.py:257
-#, python-brace-format
-msgid "Changelog: {updater.RELEASES}{result[0]}"
-msgstr "Thay đổi: {updater.RELEASES}{result[0]}"
-
-#: textworker/extensions/settings.py:261
-#, python-brace-format
-msgid "Update available: {result[0]} from branch {result[2]}."
+#: textworker/extensions/settings.py:229
+#, fuzzy, python-brace-format
+msgid "Update available: {result[0]} from branch {branch}.\n"
 msgstr "Có bản cập nhật: {result[0] từ kênh {result[2]}."
 
-#: textworker/extensions/settings.py:266 po/preferences.pot:32
+#: textworker/extensions/settings.py:246
 msgid "Automatic"
 msgstr "Tự động"
 
-#: textworker/main.py:20
+#: textworker/main.py:21
 #, python-format
 msgid "Cannot find file name %s - create it?"
 msgstr "Không thấy tệp %s - tạo nó?"
 
-#: textworker/main.py:21
+#: textworker/main.py:22
 msgid "File not found"
 msgstr "Không thấy tệp"
 
@@ -119,34 +108,48 @@ msgstr ""
 "Chương trình đang được chạy dưới quyền quản trị viên (admin).\n"
 "Hãy sống có trách nhiệm, cho cả những thay đổi bạn tạo ra ở đây."
 
-#: textworker/mainwindow.py:90
+#: textworker/main.py:83
+msgid "Exception caught"
+msgstr ""
+
+#: textworker/main.py:87
+msgid "An error occured and textworker caught it:\n"
+msgstr ""
+
+#: textworker/main.py:93 po/mainmenu.pot:1
+#, fuzzy
+msgid "File"
+msgstr "Mở tập tin"
+
+#: textworker/main.py:94
+msgid "Line"
+msgstr ""
+
+#: textworker/main.py:95
+msgid "Function"
+msgstr ""
+
+#: textworker/main.py:96
+msgid "Called code"
+msgstr ""
+
+#: textworker/mainwindow.py:70
 msgid "Log"
 msgstr "Nhật kí"
 
-#: textworker/mainwindow.py:111
+#: textworker/mainwindow.py:91
 msgid "This will only affect to this session"
 msgstr "Chỉ áp dụng cho phiên hiện tại"
 
-#: textworker/mainwindow.py:294
+#: textworker/mainwindow.py:227
 msgid "Select a folder to start"
 msgstr "Mở một thư mục để bắt đầu"
 
-#: textworker/mainwindow.py:332
-msgid ""
-"You need to get markdown2 package from Pypi first!\n"
-"If you're running a packaged version, tell us."
-msgstr ""
-"Bạn cần cài đặt markdown2 từ kho Pypi trước đã!\n"
-"Nếu đang sử dụng bản được đóng gói (thay vì chạy từ mã nguồn), báo chúng tôi."
-
-#: textworker/mainwindow.py:335
-msgid "Extra package required"
-msgstr "Cần gói bổ sung"
-
-#: textworker/mainwindow.py:355
+#: textworker/mainwindow.py:275
+#, fuzzy
 msgid ""
 "Are you sure want to reset every settings?\n"
-"If so, finish your work first since the app will close afterthe operation.\n"
+"If so, finish your work first.\n"
 "(and you will need to reopen yourself)"
 msgstr ""
 "Bạn có chắc mình muốn hoàn lại mọi cài đặt?\n"
@@ -154,15 +157,16 @@ msgstr ""
 "tác vụ hoàn tác.\n"
 "(và bạn phải tự mở lại nó)"
 
-#: textworker/mainwindow.py:372
-msgid "A simplified text editor."
-msgstr "Một trình chỉnh sửa đơn giản."
+#: textworker/mainwindow.py:278
+#, fuzzy
+msgid "Reset confirmation"
+msgstr "Reset tất cả cài đặt"
 
-#: textworker/mainwindow.py:381
+#: textworker/mainwindow.py:291
 msgid "Unknown"
 msgstr "Không xác định"
 
-#: textworker/mainwindow.py:383
+#: textworker/mainwindow.py:293
 msgid ""
 "\n"
 "        Textworker version {appver}\n"
@@ -188,389 +192,329 @@ msgstr ""
 "        Hệ máy {platform.machine()}\n"
 "        "
 
-#: textworker/mainwindow.py:394 po/mainmenu.pot:82
+#: textworker/mainwindow.py:304 po/mainmenu.pot:41
 msgid "System specs"
 msgstr "Cấu hình hệ thống"
 
-#: textworker/tabs.py:12
+#: textworker/tabs.py:13
 msgid "Untitled"
 msgstr "Không tên"
 
-#: textworker/tabs.py:55 textworker/editor.py:12
+#: textworker/tabs.py:53
 msgid "New file"
 msgstr "Tập tin mới"
 
-#: textworker/file_operations.py:29
+#: textworker/file_operations.py:36 po/mainmenu.pot:4
 msgid "Open a file"
 msgstr "Mở tập tin"
 
-#: textworker/file_operations.py:35
+#: textworker/file_operations.py:42
 msgid "Save this to..."
 msgstr "Lưu tệp này tới..."
 
-#: po/autosave.pot:2
+#: textworker/file_operations.py:73
+#, python-brace-format
+msgid "Save {path}? It has unsaved changes."
+msgstr ""
+
+#: textworker/file_operations.py:74
+msgid "Not saved"
+msgstr ""
+
+#: po/autosave.pot:1
 msgid "Auto-saving document configure"
 msgstr "Cài đặt tự động lưu"
 
-#: po/autosave.pot:4
+#: po/autosave.pot:2
 msgid "Time format: minutes"
 msgstr "Thời gian được để dưới dạng phút"
 
-#: po/autosave.pot:6
+#: po/autosave.pot:3
 msgid "Changes are automatically applied."
 msgstr ""
 
-#: po/autosave.pot:8
+#: po/autosave.pot:4
 msgid "Save this permanently"
 msgstr "Lưu giá trị này"
 
-#: po/preferences.pot:2 po/mainmenu.pot:70
-msgid "Settings"
-msgstr "Cài đặt"
-
-#: po/preferences.pot:4
-msgid "General"
-msgstr ""
-
-#: po/preferences.pot:6
-msgid "App updates"
-msgstr ""
-
-#: po/preferences.pot:8
-msgid "Automatically?"
-msgstr ""
-
-#: po/preferences.pot:10
-msgid "Check for updates"
-msgstr ""
-
-#: po/preferences.pot:12
-msgid "View release notes (requires internet)"
-msgstr ""
-
-#: po/preferences.pot:14
-msgid "Interface"
-msgstr ""
-
-#: po/preferences.pot:16
-msgid "Notebook tabs location"
-msgstr ""
-
-#: po/preferences.pot:18
-msgid "Left"
-msgstr ""
-
-#: po/preferences.pot:20
-msgid "Right"
-msgstr ""
-
-#: po/preferences.pot:22
-msgid "Top"
-msgstr ""
-
-#: po/preferences.pot:24
-msgid "Bottom"
-msgstr ""
-
-#: po/preferences.pot:26
-msgid "Nothing else;)"
-msgstr ""
-
-#: po/preferences.pot:28
-msgid "Colors"
-msgstr ""
-
-#: po/preferences.pot:30
-msgid "Color schemes"
-msgstr ""
-
-#: po/preferences.pot:34
-msgid "Dark"
-msgstr ""
-
-#: po/preferences.pot:36
-msgid "Light"
-msgstr ""
-
-#: po/preferences.pot:38
-msgid "Customize"
-msgstr ""
-
-#: po/preferences.pot:40
-msgid "Background"
-msgstr ""
-
-#: po/preferences.pot:42 po/preferences.pot:46
-msgid "#000000"
-msgstr ""
-
-#: po/preferences.pot:44
-msgid "Foreground"
-msgstr ""
-
-#: po/preferences.pot:48
-msgid "Different colors for dark/light mode (WIP)"
-msgstr ""
-
-#: po/preferences.pot:50
-msgid "Themes"
-msgstr ""
-
-#: po/preferences.pot:52
-msgid "Pre-made"
-msgstr ""
-
-#: po/preferences.pot:54
-msgid "Create new"
-msgstr ""
-
-#: po/preferences.pot:56
-msgid "Do it"
-msgstr ""
-
-#: po/preferences.pot:58
-#, fuzzy
-msgid "Editors"
-msgstr "&Chỉnh sửa"
-
-#: po/preferences.pot:60
-msgid "Indentation"
-msgstr ""
-
-#: po/preferences.pot:62
-msgid "Is enabled?"
-msgstr ""
-
-#: po/preferences.pot:64
-#, fuzzy
-msgid "Enabled - use tabs"
-msgstr "Không tìm thấy Git - cài đặt nó để sử dụng plugin này."
-
-#: po/preferences.pot:66
-#, fuzzy
-msgid "Enabled - use spaces"
-msgstr "Không tìm thấy Git - cài đặt nó để sử dụng plugin này."
-
-#: po/preferences.pot:68
-msgid "Disabled"
-msgstr ""
-
-#: po/preferences.pot:70
-msgid "Size"
-msgstr ""
-
-#: po/preferences.pot:72
-msgid "2"
-msgstr ""
-
-#: po/preferences.pot:74
-msgid "4"
-msgstr ""
-
-#: po/preferences.pot:76
-msgid "6"
-msgstr ""
-
-#: po/preferences.pot:78
-msgid "8"
-msgstr ""
-
-#: po/preferences.pot:80
-msgid "Backspace clears the indentation"
-msgstr ""
-
-#: po/preferences.pot:82 po/mainmenu.pot:66
-#, fuzzy
-msgid "Show indentation guides"
-msgstr "Hiện nhật kí"
-
-#: po/preferences.pot:84 po/mainmenu.pot:58
-#, fuzzy
-msgid "View"
-msgstr "Xem mã nguồn ứng dụng trực tuyến."
-
-#: po/preferences.pot:86
-msgid "View whitespaces"
-msgstr ""
-
-#: po/preferences.pot:88
-msgid "View end-of-line (EOL)"
-msgstr ""
-
-#: po/preferences.pot:90
-msgid "Line numbers"
-msgstr ""
-
-#: po/preferences.pot:92
-msgid "&Cancel"
-msgstr ""
-
 #: po/mainmenu.pot:2
-#, fuzzy
-msgid "File"
-msgstr "Mở tập tin"
-
-#: po/mainmenu.pot:4
-msgid "New tab\tCtrl+T"
+msgid "New tab"
 msgstr ""
 
-#: po/mainmenu.pot:6
-msgid "New window\tCtrl+N"
+#: po/mainmenu.pot:3
+msgid "New window"
 msgstr ""
 
-#: po/mainmenu.pot:8
-#, fuzzy
-msgid "Open a file\tCtrl+O"
-msgstr "Mở tập tin"
-
-#: po/mainmenu.pot:10
+#: po/mainmenu.pot:5
 #, fuzzy
 msgid "Open a folder..."
 msgstr "Chọn một thư mục để bắt đầu"
 
-#: po/mainmenu.pot:12
+#: po/mainmenu.pot:6
 #, fuzzy
-msgid "Open folder\tCtrl+Shift+D"
-msgstr "Mở thư mục\tCtrl+Shift+D"
+msgid "Open folder"
+msgstr "Chọn một thư mục để bắt đầu"
 
-#: po/mainmenu.pot:14
+#: po/mainmenu.pot:7
 #, fuzzy
 msgid "Open directory in a new window"
 msgstr "Mở thu mục cài đặt"
 
-#: po/mainmenu.pot:16
+#: po/mainmenu.pot:8
 msgid "Recents"
 msgstr ""
 
-#: po/mainmenu.pot:18
+#: po/mainmenu.pot:9
 #, fuzzy
-msgid "Save\tCtrl+S"
+msgid "Save"
+msgstr "Tự động lưu"
+
+#: po/mainmenu.pot:10
+#, fuzzy
+msgid "Save as..."
 msgstr "Lưu tệp này tới..."
 
-#: po/mainmenu.pot:20
-msgid "Save as...\tCtrl+Shift+S"
-msgstr "Lưu như...\tCtrl+Shift+S"
-
-#: po/mainmenu.pot:22
+#: po/mainmenu.pot:11
 msgid "Close all tabs"
 msgstr "Đóng tất cả tab"
 
-#: po/mainmenu.pot:24
-msgid "Quit\tAlt+F4"
-msgstr "Thoát\tAlt+F4"
+#: po/mainmenu.pot:12
+msgid "Quit"
+msgstr ""
 
-#: po/mainmenu.pot:26
+#: po/mainmenu.pot:13
 #, fuzzy
 msgid "Edit"
 msgstr "&Chỉnh sửa"
 
-#: po/mainmenu.pot:28
-#, fuzzy
-msgid "Undo\tCtrl+Z"
-msgstr "Cài đặt...\tCtrl+P"
+#: po/mainmenu.pot:14
+msgid "Undo"
+msgstr ""
 
-#: po/mainmenu.pot:30
-#, fuzzy
-msgid "Redo\tCtrl+Y"
-msgstr "Cài đặt...\tCtrl+P"
+#: po/mainmenu.pot:15
+msgid "Redo"
+msgstr ""
 
-#: po/mainmenu.pot:32
-#, fuzzy
-msgid "Cut\tCtrl+X"
-msgstr "Cài đặt...\tCtrl+P"
+#: po/mainmenu.pot:16
+msgid "Cut"
+msgstr ""
 
-#: po/mainmenu.pot:34
-#, fuzzy
-msgid "Copy\tCtrl+C"
-msgstr "Cài đặt...\tCtrl+P"
+#: po/mainmenu.pot:17
+msgid "Copy"
+msgstr ""
 
-#: po/mainmenu.pot:36
+#: po/mainmenu.pot:18
+msgid "Paste"
+msgstr ""
+
+#: po/mainmenu.pot:19
 #, fuzzy
-msgid "Paste\tCtrl+Y"
+msgid "Select all"
 msgstr "Phóng to\tCtrl++"
 
-#: po/mainmenu.pot:38
+#: po/mainmenu.pot:20
+msgid "Find"
+msgstr ""
+
+#: po/mainmenu.pot:21
 #, fuzzy
-msgid "Select all\tCtrl+A"
+msgid "Replace"
 msgstr "Phóng to\tCtrl++"
 
-#: po/mainmenu.pot:40
-#, fuzzy
-msgid "Find\tCtrl+F"
-msgstr "Cài đặt...\tCtrl+P"
-
-#: po/mainmenu.pot:42
-#, fuzzy
-msgid "Replace\tCtrl+R"
-msgstr "Phóng to\tCtrl++"
-
-#: po/mainmenu.pot:44
+#: po/mainmenu.pot:22
 msgid "Auto Save"
 msgstr "Tự động lưu"
 
-#: po/mainmenu.pot:46
+#: po/mainmenu.pot:23
 msgid "Global"
 msgstr "Chung"
 
-#: po/mainmenu.pot:48 po/mainmenu.pot:54
+#: po/mainmenu.pot:24 po/mainmenu.pot:27
 msgid "Configure"
 msgstr "Cài đặt"
 
-#: po/mainmenu.pot:50 po/mainmenu.pot:56
+#: po/mainmenu.pot:25 po/mainmenu.pot:28
 msgid "Is turned on?"
 msgstr "Được bật chưa?"
 
-#: po/mainmenu.pot:52
+#: po/mainmenu.pot:26
 msgid "The current editor"
 msgstr "Trình chỉnh sửa hiện tại"
 
-#: po/mainmenu.pot:60
-msgid "Zoom in\tCtrl++"
+#: po/mainmenu.pot:29
+#, fuzzy
+msgid "View"
+msgstr "Xem mã nguồn ứng dụng trực tuyến."
+
+#: po/mainmenu.pot:30
+#, fuzzy
+msgid "Zoom in"
 msgstr "Phóng to\tCtrl++"
 
-#: po/mainmenu.pot:62
-msgid "Zoom out\tCtrl+-"
+#: po/mainmenu.pot:31
+#, fuzzy
+msgid "Zoom out"
 msgstr "Thu nhỏ\tCtrl+-"
 
-#: po/mainmenu.pot:64
-msgid "Wrap by word\tCtrl+W"
+#: po/mainmenu.pot:32
+#, fuzzy
+msgid "Wrap by word"
 msgstr "Ngắt dòng bởi từ\tCtrl+W"
 
-#: po/mainmenu.pot:68
+#: po/mainmenu.pot:33
+#, fuzzy
+msgid "Show indentation guides"
+msgstr "Hiện nhật kí"
+
+#: po/mainmenu.pot:34
 msgid "View document as a HTML page"
 msgstr "Xem tài liệu dưới dạng một trang HTML"
 
-#: po/mainmenu.pot:72
-msgid "Settings...\tCtrl+P"
-msgstr "Cài đặt...\tCtrl+P"
+#: po/mainmenu.pot:35
+msgid "Settings"
+msgstr "Cài đặt"
 
-#: po/mainmenu.pot:74
+#: po/mainmenu.pot:36
+#, fuzzy
+msgid "Settings..."
+msgstr "Cài đặt"
+
+#: po/mainmenu.pot:37
 msgid "Reset everything"
 msgstr "Hoàn lại mọi thứ"
 
-#: po/mainmenu.pot:76
+#: po/mainmenu.pot:38
 msgid "Open the configuration directory"
 msgstr "Mở thu mục cài đặt"
 
-#: po/mainmenu.pot:78
+#: po/mainmenu.pot:39
 msgid "Help"
 msgstr "Trợ &giúp"
 
-#: po/mainmenu.pot:80
+#: po/mainmenu.pot:40
 msgid "About"
 msgstr "Về ứng dụng này"
 
-#: po/mainmenu.pot:84
+#: po/mainmenu.pot:42
 msgid "Show logs"
 msgstr "Hiện nhật kí"
 
-#: po/mainmenu.pot:86
+#: po/mainmenu.pot:43
+msgid "Show inspector"
+msgstr ""
+
+#: po/mainmenu.pot:44
 msgid "Report issues..."
 msgstr "Báo cáo sự cố..."
 
-#: po/mainmenu.pot:88
+#: po/mainmenu.pot:45
 msgid "Read documents"
 msgstr "Đọc tài liệu"
+
+#~ msgid "Git not found - install it to use this plugin."
+#~ msgstr "Không tìm thấy Git - cài đặt nó để sử dụng plugin này."
+
+#~ msgid "Open a folder to start"
+#~ msgstr "Chọn một thư mục để bắt đầu"
+
+#~ msgid "This needs your attention"
+#~ msgstr "Chú ý"
+
+#~ msgid ""
+#~ "The settings system has been changed recently and automatically merged "
+#~ "into your settings.Look for the changes below.All changes are required. "
+#~ "You just need to review what are they:)"
+#~ msgstr ""
+#~ "Hệ thống cài đặt đã được thay đổi gần đây và sẽ được áp dụng vào các cài "
+#~ "đặt hiện tại. Xem các thay đổi bên dưới - tất cả sẽ được áp dụng."
+
+#~ msgid "Moved to file..."
+#~ msgstr "Đã chuyển sang tệp..."
+
+#~ msgid "Not implemented yet."
+#~ msgstr "Tính năng chưa được viết."
+
+#~ msgid ""
+#~ "Invalid response received: Maybe an internet problem, or my data is "
+#~ "invalid."
+#~ msgstr ""
+#~ "Nhận được phản hồi không hợp lệ: Có thể do internet hoặc là dữ liệu của "
+#~ "tôi."
+
+#, python-brace-format
+#~ msgid "Changelog: {updater.RELEASES}{result[0]}"
+#~ msgstr "Thay đổi: {updater.RELEASES}{result[0]}"
+
+#~ msgid ""
+#~ "You need to get markdown2 package from Pypi first!\n"
+#~ "If you're running a packaged version, tell us."
+#~ msgstr ""
+#~ "Bạn cần cài đặt markdown2 từ kho Pypi trước đã!\n"
+#~ "Nếu đang sử dụng bản được đóng gói (thay vì chạy từ mã nguồn), báo chúng "
+#~ "tôi."
+
+#~ msgid "Extra package required"
+#~ msgstr "Cần gói bổ sung"
+
+#~ msgid "A simplified text editor."
+#~ msgstr "Một trình chỉnh sửa đơn giản."
+
+#, fuzzy
+#~ msgid "Editors"
+#~ msgstr "&Chỉnh sửa"
+
+#, fuzzy
+#~ msgid "Enabled - use tabs"
+#~ msgstr "Không tìm thấy Git - cài đặt nó để sử dụng plugin này."
+
+#, fuzzy
+#~ msgid "Enabled - use spaces"
+#~ msgstr "Không tìm thấy Git - cài đặt nó để sử dụng plugin này."
+
+#, fuzzy
+#~ msgid "Open a file\tCtrl+O"
+#~ msgstr "Mở tập tin"
+
+#, fuzzy
+#~ msgid "Open folder\tCtrl+Shift+D"
+#~ msgstr "Mở thư mục\tCtrl+Shift+D"
+
+#, fuzzy
+#~ msgid "Save\tCtrl+S"
+#~ msgstr "Lưu tệp này tới..."
+
+#~ msgid "Save as...\tCtrl+Shift+S"
+#~ msgstr "Lưu như...\tCtrl+Shift+S"
+
+#~ msgid "Quit\tAlt+F4"
+#~ msgstr "Thoát\tAlt+F4"
+
+#, fuzzy
+#~ msgid "Undo\tCtrl+Z"
+#~ msgstr "Cài đặt...\tCtrl+P"
+
+#, fuzzy
+#~ msgid "Redo\tCtrl+Y"
+#~ msgstr "Cài đặt...\tCtrl+P"
+
+#, fuzzy
+#~ msgid "Cut\tCtrl+X"
+#~ msgstr "Cài đặt...\tCtrl+P"
+
+#, fuzzy
+#~ msgid "Copy\tCtrl+C"
+#~ msgstr "Cài đặt...\tCtrl+P"
+
+#, fuzzy
+#~ msgid "Paste\tCtrl+Y"
+#~ msgstr "Phóng to\tCtrl++"
+
+#, fuzzy
+#~ msgid "Find\tCtrl+F"
+#~ msgstr "Cài đặt...\tCtrl+P"
+
+#~ msgid "Settings...\tCtrl+P"
+#~ msgstr "Cài đặt...\tCtrl+P"
 
 #~ msgid "Messages"
 #~ msgstr "Thông báo"
@@ -580,9 +524,6 @@ msgstr "Đọc tài liệu"
 
 #~ msgid "Show all configurations"
 #~ msgstr "Cài đặt tự động lưu"
-
-#~ msgid "Reset all configs"
-#~ msgstr "Reset tất cả cài đặt"
 
 #~ msgid "Run Setup"
 #~ msgstr "Chạy Setup"

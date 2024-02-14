@@ -1,5 +1,5 @@
 # SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR Le Bao Nguyen <bao12345yocoo@gmail.com>
+# Copyright (C) YEAR (C) 2024 Le Bao Nguyen and contributors.
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-11-15 22:45+0700\n"
+"POT-Creation-Date: 2024-02-14 14:54+0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,94 +17,86 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: textworker/extensions/multiview.py:32
+#: textworker/extensions/__init__.py:18
+#, python-brace-format
+msgid "{ABOUTDLG_PATH}: Ask the developer for a fix"
+msgstr ""
+
+#: textworker/extensions/__init__.py:29
+msgid "About this application"
+msgstr ""
+
+#: textworker/extensions/__init__.py:34
+msgid "Click to view in full size"
+msgstr ""
+
+#: textworker/extensions/__init__.py:37
+msgid "Textworker icon"
+msgstr ""
+
+#: textworker/extensions/__init__.py:48
+msgid "Click to open"
+msgstr ""
+
+#: textworker/extensions/__init__.py:51
+msgid ""
+"A simple and small text editor.\n"
+"Textworker allows its users to write many things they want, with gradually "
+"added new and cool features.\n"
+"Free and open source!"
+msgstr ""
+
+#: textworker/extensions/multiview.py:35
 msgid "Close the current tab"
 msgstr ""
 
-#: textworker/extensions/multiview.py:36
+#: textworker/extensions/multiview.py:39
 msgid "Disable this (open) tab"
 msgstr ""
 
-#: textworker/extensions/multiview.py:39
+#: textworker/extensions/multiview.py:42
 msgid "Close the side bar"
-msgstr ""
-
-#: textworker/extensions/gitsp.py:167
-msgid "Git not found - install it to use this plugin."
-msgstr ""
-
-#: textworker/extensions/gitsp.py:179
-msgid "Open a folder to start"
-msgstr ""
-
-#: textworker/extensions/mergedialog.py:12
-msgid "This needs your attention"
-msgstr ""
-
-#: textworker/extensions/mergedialog.py:17
-msgid "Merges ahead"
-msgstr ""
-
-#: textworker/extensions/mergedialog.py:21
-msgid ""
-"The settings system has been changed recently and automatically merged into "
-"your settings.Look for the changes below.All changes are required. You just "
-"need to review what are they:)"
-msgstr ""
-
-#: textworker/extensions/mergedialog.py:27
-msgid "Setting (section->option)"
-msgstr ""
-
-#: textworker/extensions/mergedialog.py:28
-msgid "New setting (section->option)"
-msgstr ""
-
-#: textworker/extensions/mergedialog.py:29
-msgid "Moved to file..."
 msgstr ""
 
 #: textworker/extensions/settings.py:99
 msgid "No changelog/unable to get."
 msgstr ""
 
-#: textworker/extensions/settings.py:155
+#: textworker/extensions/settings.py:118
+msgid "Dark"
+msgstr ""
+
+#: textworker/extensions/settings.py:118
+msgid "Light"
+msgstr ""
+
+#: textworker/extensions/settings.py:153
 msgid "Error while setting a new theme: Name required."
 msgstr ""
 
-#: textworker/extensions/settings.py:168
-msgid "Not implemented yet."
-msgstr ""
-
-#: textworker/extensions/settings.py:245
+#: textworker/extensions/settings.py:223
 msgid "The program is up-to-date"
 msgstr ""
 
-#: textworker/extensions/settings.py:249
-msgid ""
-"Invalid response received: Maybe an internet problem, or my data is invalid."
+#: textworker/extensions/settings.py:226
+msgid "Invalid response received"
 msgstr ""
 
-#: textworker/extensions/settings.py:257
+#: textworker/extensions/settings.py:229
 #, python-brace-format
-msgid "Changelog: {updater.RELEASES}{result[0]}"
+msgid "Update available: {result[0]} from branch {branch}.\n"
 msgstr ""
 
-#: textworker/extensions/settings.py:261
-#, python-brace-format
-msgid "Update available: {result[0]} from branch {result[2]}."
-msgstr ""
-
-#: textworker/extensions/settings.py:266 po/preferences.pot:32
+#: textworker/extensions/settings.py:246
 msgid "Automatic"
 msgstr ""
 
-#: textworker/main.py:20
+#: textworker/main.py:21
 #, python-format
 msgid "Cannot find file name %s - create it?"
 msgstr ""
 
-#: textworker/main.py:21
+#: textworker/main.py:22
 msgid "File not found"
 msgstr ""
 
@@ -114,44 +106,58 @@ msgid ""
 "You must be responsible for your changes."
 msgstr ""
 
-#: textworker/mainwindow.py:90
+#: textworker/main.py:83
+msgid "Exception caught"
+msgstr ""
+
+#: textworker/main.py:87
+msgid "An error occured and textworker caught it:\n"
+msgstr ""
+
+#: textworker/main.py:93 po/mainmenu.pot:1
+msgid "File"
+msgstr ""
+
+#: textworker/main.py:94
+msgid "Line"
+msgstr ""
+
+#: textworker/main.py:95
+msgid "Function"
+msgstr ""
+
+#: textworker/main.py:96
+msgid "Called code"
+msgstr ""
+
+#: textworker/mainwindow.py:70
 msgid "Log"
 msgstr ""
 
-#: textworker/mainwindow.py:111
+#: textworker/mainwindow.py:91
 msgid "This will only affect to this session"
 msgstr ""
 
-#: textworker/mainwindow.py:294
+#: textworker/mainwindow.py:227
 msgid "Select a folder to start"
 msgstr ""
 
-#: textworker/mainwindow.py:332
-msgid ""
-"You need to get markdown2 package from Pypi first!\n"
-"If you're running a packaged version, tell us."
-msgstr ""
-
-#: textworker/mainwindow.py:335
-msgid "Extra package required"
-msgstr ""
-
-#: textworker/mainwindow.py:355
+#: textworker/mainwindow.py:275
 msgid ""
 "Are you sure want to reset every settings?\n"
-"If so, finish your work first since the app will close afterthe operation.\n"
+"If so, finish your work first.\n"
 "(and you will need to reopen yourself)"
 msgstr ""
 
-#: textworker/mainwindow.py:372
-msgid "A simplified text editor."
+#: textworker/mainwindow.py:278
+msgid "Reset confirmation"
 msgstr ""
 
-#: textworker/mainwindow.py:381
+#: textworker/mainwindow.py:291
 msgid "Unknown"
 msgstr ""
 
-#: textworker/mainwindow.py:383
+#: textworker/mainwindow.py:293
 msgid ""
 "\n"
 "        Textworker version {appver}\n"
@@ -166,366 +172,207 @@ msgid ""
 "        "
 msgstr ""
 
-#: textworker/mainwindow.py:394 po/mainmenu.pot:82
+#: textworker/mainwindow.py:304 po/mainmenu.pot:41
 msgid "System specs"
 msgstr ""
 
-#: textworker/tabs.py:12
+#: textworker/tabs.py:13
 msgid "Untitled"
 msgstr ""
 
-#: textworker/tabs.py:55 textworker/editor.py:12
+#: textworker/tabs.py:53
 msgid "New file"
 msgstr ""
 
-#: textworker/file_operations.py:29
+#: textworker/file_operations.py:36 po/mainmenu.pot:4
 msgid "Open a file"
 msgstr ""
 
-#: textworker/file_operations.py:35
+#: textworker/file_operations.py:42
 msgid "Save this to..."
 msgstr ""
 
-#: po/autosave.pot:2
+#: textworker/file_operations.py:73
+#, python-brace-format
+msgid "Save {path}? It has unsaved changes."
+msgstr ""
+
+#: textworker/file_operations.py:74
+msgid "Not saved"
+msgstr ""
+
+#: po/autosave.pot:1
 msgid "Auto-saving document configure"
 msgstr ""
 
-#: po/autosave.pot:4
+#: po/autosave.pot:2
 msgid "Time format: minutes"
 msgstr ""
 
-#: po/autosave.pot:6
+#: po/autosave.pot:3
 msgid "Changes are automatically applied."
 msgstr ""
 
-#: po/autosave.pot:8
+#: po/autosave.pot:4
 msgid "Save this permanently"
 msgstr ""
 
-#: po/preferences.pot:2 po/mainmenu.pot:70
-msgid "Settings"
-msgstr ""
-
-#: po/preferences.pot:4
-msgid "General"
-msgstr ""
-
-#: po/preferences.pot:6
-msgid "App updates"
-msgstr ""
-
-#: po/preferences.pot:8
-msgid "Automatically?"
-msgstr ""
-
-#: po/preferences.pot:10
-msgid "Check for updates"
-msgstr ""
-
-#: po/preferences.pot:12
-msgid "View release notes (requires internet)"
-msgstr ""
-
-#: po/preferences.pot:14
-msgid "Interface"
-msgstr ""
-
-#: po/preferences.pot:16
-msgid "Notebook tabs location"
-msgstr ""
-
-#: po/preferences.pot:18
-msgid "Left"
-msgstr ""
-
-#: po/preferences.pot:20
-msgid "Right"
-msgstr ""
-
-#: po/preferences.pot:22
-msgid "Top"
-msgstr ""
-
-#: po/preferences.pot:24
-msgid "Bottom"
-msgstr ""
-
-#: po/preferences.pot:26
-msgid "Nothing else;)"
-msgstr ""
-
-#: po/preferences.pot:28
-msgid "Colors"
-msgstr ""
-
-#: po/preferences.pot:30
-msgid "Color schemes"
-msgstr ""
-
-#: po/preferences.pot:34
-msgid "Dark"
-msgstr ""
-
-#: po/preferences.pot:36
-msgid "Light"
-msgstr ""
-
-#: po/preferences.pot:38
-msgid "Customize"
-msgstr ""
-
-#: po/preferences.pot:40
-msgid "Background"
-msgstr ""
-
-#: po/preferences.pot:42 po/preferences.pot:46
-msgid "#000000"
-msgstr ""
-
-#: po/preferences.pot:44
-msgid "Foreground"
-msgstr ""
-
-#: po/preferences.pot:48
-msgid "Different colors for dark/light mode (WIP)"
-msgstr ""
-
-#: po/preferences.pot:50
-msgid "Themes"
-msgstr ""
-
-#: po/preferences.pot:52
-msgid "Pre-made"
-msgstr ""
-
-#: po/preferences.pot:54
-msgid "Create new"
-msgstr ""
-
-#: po/preferences.pot:56
-msgid "Do it"
-msgstr ""
-
-#: po/preferences.pot:58
-msgid "Editors"
-msgstr ""
-
-#: po/preferences.pot:60
-msgid "Indentation"
-msgstr ""
-
-#: po/preferences.pot:62
-msgid "Is enabled?"
-msgstr ""
-
-#: po/preferences.pot:64
-msgid "Enabled - use tabs"
-msgstr ""
-
-#: po/preferences.pot:66
-msgid "Enabled - use spaces"
-msgstr ""
-
-#: po/preferences.pot:68
-msgid "Disabled"
-msgstr ""
-
-#: po/preferences.pot:70
-msgid "Size"
-msgstr ""
-
-#: po/preferences.pot:72
-msgid "2"
-msgstr ""
-
-#: po/preferences.pot:74
-msgid "4"
-msgstr ""
-
-#: po/preferences.pot:76
-msgid "6"
-msgstr ""
-
-#: po/preferences.pot:78
-msgid "8"
-msgstr ""
-
-#: po/preferences.pot:80
-msgid "Backspace clears the indentation"
-msgstr ""
-
-#: po/preferences.pot:82 po/mainmenu.pot:66
-msgid "Show indentation guides"
-msgstr ""
-
-#: po/preferences.pot:84 po/mainmenu.pot:58
-msgid "View"
-msgstr ""
-
-#: po/preferences.pot:86
-msgid "View whitespaces"
-msgstr ""
-
-#: po/preferences.pot:88
-msgid "View end-of-line (EOL)"
-msgstr ""
-
-#: po/preferences.pot:90
-msgid "Line numbers"
-msgstr ""
-
-#: po/preferences.pot:92
-msgid "&Cancel"
-msgstr ""
-
 #: po/mainmenu.pot:2
-msgid "File"
+msgid "New tab"
 msgstr ""
 
-#: po/mainmenu.pot:4
-msgid "New tab\tCtrl+T"
+#: po/mainmenu.pot:3
+msgid "New window"
 msgstr ""
 
-#: po/mainmenu.pot:6
-msgid "New window\tCtrl+N"
-msgstr ""
-
-#: po/mainmenu.pot:8
-msgid "Open a file\tCtrl+O"
-msgstr ""
-
-#: po/mainmenu.pot:10
+#: po/mainmenu.pot:5
 msgid "Open a folder..."
 msgstr ""
 
-#: po/mainmenu.pot:12
-msgid "Open folder\tCtrl+Shift+D"
+#: po/mainmenu.pot:6
+msgid "Open folder"
 msgstr ""
 
-#: po/mainmenu.pot:14
+#: po/mainmenu.pot:7
 msgid "Open directory in a new window"
 msgstr ""
 
-#: po/mainmenu.pot:16
+#: po/mainmenu.pot:8
 msgid "Recents"
 msgstr ""
 
-#: po/mainmenu.pot:18
-msgid "Save\tCtrl+S"
+#: po/mainmenu.pot:9
+msgid "Save"
 msgstr ""
 
-#: po/mainmenu.pot:20
-msgid "Save as...\tCtrl+Shift+S"
+#: po/mainmenu.pot:10
+msgid "Save as..."
 msgstr ""
 
-#: po/mainmenu.pot:22
+#: po/mainmenu.pot:11
 msgid "Close all tabs"
 msgstr ""
 
-#: po/mainmenu.pot:24
-msgid "Quit\tAlt+F4"
+#: po/mainmenu.pot:12
+msgid "Quit"
 msgstr ""
 
-#: po/mainmenu.pot:26
+#: po/mainmenu.pot:13
 msgid "Edit"
 msgstr ""
 
-#: po/mainmenu.pot:28
-msgid "Undo\tCtrl+Z"
+#: po/mainmenu.pot:14
+msgid "Undo"
 msgstr ""
 
-#: po/mainmenu.pot:30
-msgid "Redo\tCtrl+Y"
+#: po/mainmenu.pot:15
+msgid "Redo"
 msgstr ""
 
-#: po/mainmenu.pot:32
-msgid "Cut\tCtrl+X"
+#: po/mainmenu.pot:16
+msgid "Cut"
 msgstr ""
 
-#: po/mainmenu.pot:34
-msgid "Copy\tCtrl+C"
+#: po/mainmenu.pot:17
+msgid "Copy"
 msgstr ""
 
-#: po/mainmenu.pot:36
-msgid "Paste\tCtrl+Y"
+#: po/mainmenu.pot:18
+msgid "Paste"
 msgstr ""
 
-#: po/mainmenu.pot:38
-msgid "Select all\tCtrl+A"
+#: po/mainmenu.pot:19
+msgid "Select all"
 msgstr ""
 
-#: po/mainmenu.pot:40
-msgid "Find\tCtrl+F"
+#: po/mainmenu.pot:20
+msgid "Find"
 msgstr ""
 
-#: po/mainmenu.pot:42
-msgid "Replace\tCtrl+R"
+#: po/mainmenu.pot:21
+msgid "Replace"
 msgstr ""
 
-#: po/mainmenu.pot:44
+#: po/mainmenu.pot:22
 msgid "Auto Save"
 msgstr ""
 
-#: po/mainmenu.pot:46
+#: po/mainmenu.pot:23
 msgid "Global"
 msgstr ""
 
-#: po/mainmenu.pot:48 po/mainmenu.pot:54
+#: po/mainmenu.pot:24 po/mainmenu.pot:27
 msgid "Configure"
 msgstr ""
 
-#: po/mainmenu.pot:50 po/mainmenu.pot:56
+#: po/mainmenu.pot:25 po/mainmenu.pot:28
 msgid "Is turned on?"
 msgstr ""
 
-#: po/mainmenu.pot:52
+#: po/mainmenu.pot:26
 msgid "The current editor"
 msgstr ""
 
-#: po/mainmenu.pot:60
-msgid "Zoom in\tCtrl++"
+#: po/mainmenu.pot:29
+msgid "View"
 msgstr ""
 
-#: po/mainmenu.pot:62
-msgid "Zoom out\tCtrl+-"
+#: po/mainmenu.pot:30
+msgid "Zoom in"
 msgstr ""
 
-#: po/mainmenu.pot:64
-msgid "Wrap by word\tCtrl+W"
+#: po/mainmenu.pot:31
+msgid "Zoom out"
 msgstr ""
 
-#: po/mainmenu.pot:68
+#: po/mainmenu.pot:32
+msgid "Wrap by word"
+msgstr ""
+
+#: po/mainmenu.pot:33
+msgid "Show indentation guides"
+msgstr ""
+
+#: po/mainmenu.pot:34
 msgid "View document as a HTML page"
 msgstr ""
 
-#: po/mainmenu.pot:72
-msgid "Settings...\tCtrl+P"
+#: po/mainmenu.pot:35
+msgid "Settings"
 msgstr ""
 
-#: po/mainmenu.pot:74
+#: po/mainmenu.pot:36
+msgid "Settings..."
+msgstr ""
+
+#: po/mainmenu.pot:37
 msgid "Reset everything"
 msgstr ""
 
-#: po/mainmenu.pot:76
+#: po/mainmenu.pot:38
 msgid "Open the configuration directory"
 msgstr ""
 
-#: po/mainmenu.pot:78
+#: po/mainmenu.pot:39
 msgid "Help"
 msgstr ""
 
-#: po/mainmenu.pot:80
+#: po/mainmenu.pot:40
 msgid "About"
 msgstr ""
 
-#: po/mainmenu.pot:84
+#: po/mainmenu.pot:42
 msgid "Show logs"
 msgstr ""
 
-#: po/mainmenu.pot:86
+#: po/mainmenu.pot:43
+msgid "Show inspector"
+msgstr ""
+
+#: po/mainmenu.pot:44
 msgid "Report issues..."
 msgstr ""
 
-#: po/mainmenu.pot:88
+#: po/mainmenu.pot:45
 msgid "Read documents"
 msgstr ""

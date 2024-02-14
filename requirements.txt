@@ -2,4 +2,3 @@ libtextworker[wx,autocolor] @ git+https://github.com/lebao3105/libtextworker.git
 requests
 wxPython >= 4.2.0
 markdown2
-pretty-errors

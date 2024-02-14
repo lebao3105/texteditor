@@ -112,18 +112,18 @@ The main concern is the [po](po/) directory, where all translations are placed.
 
 For translators:
 
-* Add your language code into [LINGUAS](po/LINGUAS). Make a copy of [textworker.pot](po/textworker.pot) and name it `<language code>.po`. Place it inside the po directory, of course.
+* Add your language code to LOCALES variable in [Makefile](Makefile). Make a copy of [textworker.pot](po/textworker.pot) and name it `<language code>.po`. Place it inside the po directory, of course.
 
 > Warning: translation templates (*.pot) are not always updated. For the best result use builder.py.
 
 * Translate the app, by editing the file manually or with the help of software like Poedit.
 
-* Use builder.py to generate .mo - compiled .po
+* Use Makefile to generate .mo - compiled .po
 
 * Try to run the app with your translation!
 
 For maintainers:
 
-* Just use builder.py to make sure all strings are not missing
+* Just use Makefile to make sure all strings are not missing
 
 * If you made a new file containing strings to translate, add it to [POTFILES](po/POTFILES).

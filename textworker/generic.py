@@ -6,7 +6,6 @@ import builtins
 import json
 import logging
 import os
-import pretty_errors
 import typing
 
 from libtextworker.general import (
@@ -51,15 +50,6 @@ filehdlr.setFormatter(formatter)
 
 logger.addHandler(filehdlr)
 logger.addHandler(strhdlr)
-
-## Pretty errors
-pretty_errors.configure(
-    filename_display = pretty_errors.FILENAME_EXTENDED,
-    filename_color = pretty_errors.CYAN,
-    line_number_first = True, line_number_color = pretty_errors.MAGENTA,
-    line_color = pretty_errors.RED + ">>> " + pretty_errors.default_config.line_color,
-    truncate_code = True, display_locals = True, display_arrow = True
-)
 
 # C/C++ users belike:
 builtins.true = True
