@@ -16,11 +16,11 @@ Online forums may help.
 
 You can make a GitHub issue [here.](https://github.com/lebao3105/texteditor/issues)
 
-3. about.py / preferences.py: File not found
+3. about.py / preferences.py / *.xrc: File not found
 
 Those are wx's generated files, which must be **done** before the global publishment.
 
-If you are running from source code: use wxFormBuilder to generate code from preferences.fbp and about.fbp. These files are in textworker/ui.
+If you are running from source code: use wxFormBuilder to generate code from .fbp files in textworker/ui.
 
 Using (py)wxrc does NOT work!
 
@@ -31,3 +31,11 @@ $ wxformbuilder -g textworker/ui/(file).fbp
 ```
 
 With ``(file)`` is the corresponding file name you need to use (about/preferences).
+
+Or with make:
+
+```bash
+$ make genui
+```
+
+This step is required for updating translations.
