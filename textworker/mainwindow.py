@@ -2,11 +2,10 @@ import platform
 import webbrowser
 
 import wx
-import wx.adv
-import wx.aui
 import wx.html2
 import wx.lib.splitter
 import wx.xrc
+import wx.lib.agw.aui as aui
 
 from wx.lib.inspection import InspectionTool
 from libtextworker import __version__ as libver
@@ -14,8 +13,9 @@ from libtextworker.general import ResetEveryConfig, logger, CraftItems
 from libtextworker.interface.wx.dirctrl import *
 from libtextworker.interface.wx.miscs import XMLBuilder, BindMenuEvents
 from libtextworker.versioning import *
+from textworker.ui.auistyles import AuiFlatDockArt, AuiFlatTabArt
 
-from . import ICON, __version__ as appver, _
+from . import __version__ as appver, _
 from .extensions import autosave, multiview, settings, AboutDialog
 from .generic import global_settings, TOPLV_DIR, UIRC_DIR, clrCall
 from .tabs import Tabber
@@ -37,22 +37,22 @@ class MainFrame(XMLBuilder):
         this.mainFrame = this.loadObject("mainFrame", "wxFrame")
         this.mainFrame.SetSize((860, 640))
 
-        this.mainFrame.SetIcon(ICON)
+        this._mgr = aui.AuiManager(this.mainFrame, aui.AUI_MGR_ALLOW_FLOATING | \
+                                   aui.AUI_MGR_ALLOW_ACTIVE_PANE | aui.AUI_MGR_ANIMATE_FRAMES)
+        this._mgr.SetArtProvider(AuiFlatDockArt())
+        this._mgr.SetAutoNotebookTabArt(AuiFlatTabArt())
 
         this.Show = this.mainFrame.Show
         this.Hide = this.mainFrame.Hide
         this.Close = this.mainFrame.Close
 
-        mainboxer = wx.BoxSizer(wx.VERTICAL)
-        editorBox = wx.lib.splitter.MultiSplitterWindow(this.mainFrame, style=wx.SP_LIVE_UPDATE)
-
-        # Editor
-        this.notebook = Tabber(editorBox)
+        # Editor area
+        this.notebook = Tabber(this.mainFrame)
 
         # Side bar
 
         ## Container
-        this.multiviewer = multiview.MultiViewer(editorBox)
+        this.multiviewer = multiview.MultiViewer(this.mainFrame)
 
         ## Explorer
         this.dirs = DirCtrl(this.multiviewer.tabs, w_styles=DC_HIDEROOT | DC_EDIT)
@@ -73,18 +73,26 @@ class MainFrame(XMLBuilder):
         wx.Log.SetActiveTarget(wx.LogTextCtrl(this.log))
 
         # Place everything
-        editorBox.AppendWindow(this.multiviewer.tabs, 246)
-        editorBox.AppendWindow(this.notebook)
-        mainboxer.Add(editorBox, 1, wx.GROW, 5)
 
         this.LoadMenu()
+
+        minsz = (150, 200)
+        def makePaneInf(title: str):
+            return aui.AuiPaneInfo().Caption(title).MinimizeButton(True) \
+                                    .MaximizeButton(True).MinSize(minsz) \
+                                    .PinButton(True).NotebookDockable(True)
+        
+        this._mgr.AddPane(this.multiviewer.tabs, makePaneInf("Multiview").Left())
+        this._mgr.AddPane(this.notebook, makePaneInf("Notebook").CenterPane())
+        this._mgr.Update()
+        
+        this.mainFrame.Layout()
+
+        # "Post init"
         this.mainFrame.Bind(wx.EVT_CLOSE, this.OnClose)
 
         clrCall.configure(this.mainFrame)
         clrCall.autocolor_run(this.mainFrame)
-
-        this.mainFrame.SetSizer(mainboxer)
-        this.mainFrame.Layout()
 
     def LoadMenu(this):
         def ToggleAutoSave(evt):
@@ -100,11 +108,8 @@ class MainFrame(XMLBuilder):
         helpmenu = this.mainFrame.GetMenuBar().GetMenu(4)
 
         # File menu
-        filemenu_events = [(this.notebook.AddTab, 0), (this.NewWindow, 1),
-                           # Separator
-                           (this.OpenFile, 3),
-                           # Open folder (submenu)
-                           # Recents
+        filemenu_events = [(this.notebook.AddTab, 0), (this.NewWindow, 1), # Separator
+                           (this.OpenFile, 3), # Open folder (submenu) and Recents
                            # Separator
                            (this.notebook.fileops.SaveFileEvent, 7),
                            (this.notebook.fileops.AskToSave, 8),
@@ -136,15 +141,11 @@ class MainFrame(XMLBuilder):
                            (lambda evt: this.notebook.GetCurrentPage().SelectAll(), 7)]
 
         ## Auto-save menus
-        global_autosv = editmenu.FindItemByPosition(12) \
-                                .GetSubMenu() \
-                                .FindItemByPosition(0) \
-                                .GetSubMenu()
+        global_autosv = editmenu.FindItemByPosition(12).GetSubMenu() \
+                                .FindItemByPosition(0).GetSubMenu()
         
-        editor_autosv = editmenu.FindItemByPosition(12) \
-                                .GetSubMenu() \
-                                .FindItemByPosition(1) \
-                                .GetSubMenu()
+        editor_autosv = editmenu.FindItemByPosition(12).GetSubMenu() \
+                                .FindItemByPosition(1).GetSubMenu()
 
         this.mainFrame.Bind(wx.EVT_MENU,
                             lambda evt: this.autosv_cfg.ConfigWindow(),
@@ -216,6 +217,7 @@ class MainFrame(XMLBuilder):
     """
 
     def OnClose(this, evt):
+        this._mgr.UnInit()
         if this.file_history.GetCount() > 0:
             with open(os.path.expanduser("~/.textworker_history"), "w") as f:
                 for i in range(this.file_history.GetCount()):
@@ -299,6 +301,7 @@ class MainFrame(XMLBuilder):
         OS type: {ostype}
         OS version {platform.version()}
         Machine architecture: {platform.machine()}
+        Is bytecode compiled: {'__compiled__' in __dict__}
         """
         )
         newdlg = wx.Dialog(this.mainFrame, title=_("System specs"))
@@ -324,9 +327,10 @@ class MainFrame(XMLBuilder):
         )
 
     def CloseAllPages(this, evt):
-        this.notebook.DeleteAllPages()
+        for i in range(this.notebook.GetPageCount()):
+            this.notebook.DeletePage(i)
         wx.PostEvent(this.notebook,
-                     wx.CommandEvent(wx.aui.wxEVT_AUINOTEBOOK_PAGE_CLOSED))
+                     wx.CommandEvent(aui.wxEVT_AUI_PANE_CLOSED))
 
     def OpenInspector(this, evt):
         wnd = wx.FindWindowAtPointer()

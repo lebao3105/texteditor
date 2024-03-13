@@ -1,23 +1,17 @@
-import os
 import webbrowser
-
-from libtextworker.general import CraftItems
 
 from textworker import DEVS, ARTISTS, DOCWRITERS, LICENSE
 from textworker import HOMEPAGE, _, ICON
 from textworker import branch, __version__, icon
-from textworker.generic import UIRC_DIR, clrCall
+from textworker.generic import clrCall
 
-from wx import EVT_LEFT_DOWN, EVT_TEXT_URL, Icon, Bitmap, Dialog, StaticBitmap
+from wx import EVT_LEFT_DOWN, EVT_TEXT_URL
 from wx import EVT_COLLAPSIBLEPANE_CHANGED
+from wx import Icon, Bitmap, Dialog, StaticBitmap
 
 __all__ = ("AboutDialog")
 
-ABOUTDLG_PATH = CraftItems(UIRC_DIR, "about.py")
-if not os.path.isfile(ABOUTDLG_PATH):
-    raise FileNotFoundError(_(f"{ABOUTDLG_PATH}: Ask the developer for a fix"))
-else:
-    from ..ui import about
+from ..ui import about
 
 class AboutDialog(about.AboutDialog):
 
@@ -57,7 +51,7 @@ class AboutDialog(about.AboutDialog):
         # Credits page
         def writeCredits(dicti, target):
             for name in dicti:
-                target.WriteText(name)
+                target.WriteText(name + " ")
                 if dicti[name]:
                     target.BeginBold()
                     target.BeginURL(dicti[name])
@@ -69,8 +63,8 @@ class AboutDialog(about.AboutDialog):
             target.SetEditable(false)
 
         for dicti, target, parent in [(DEVS, this.m_richText1, this.developers),
-                              (ARTISTS, this.m_richText2, this.artists),
-                              (DOCWRITERS, this.document_writers, this.docwriters)]:
+                                      (ARTISTS, this.m_richText2, this.artists),
+                                      (DOCWRITERS, this.document_writers, this.docwriters)]:
             writeCredits(dicti, target)
             parent.Bind(EVT_COLLAPSIBLEPANE_CHANGED, lambda evt: parent.Layout())
         

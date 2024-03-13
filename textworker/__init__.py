@@ -1,33 +1,26 @@
 import gettext
 import locale
-import os.path
-import pathlib
-
-currdir = pathlib.Path(__file__).parent
 
 from libtextworker.general import test_import
 from libtextworker.versioning import *
 
-require("libtextworker", "0.1.4")
+require("libtextworker", "0.1.4b0")
 test_import("wx")
 __version__ = "1.6b0"
 
+match is_development_version(__version__):
+    case True:
+        branch = "dev"
+    case _:
+        branch = "stable"
+
+from textworker.generic import currPath
+
 locale.setlocale(locale.LC_ALL, None)
 
-
-if not os.path.isdir(LOCALE_DIR := currdir / "po"):
-    LOCALE_DIR = currdir / ".." / "po"
-
-gettext.bindtextdomain("textworker", LOCALE_DIR)
+gettext.bindtextdomain("textworker", currPath / ".." / "po")
 gettext.textdomain("textworker")
 _ = gettext.gettext
-
-del LOCALE_DIR
-
-if is_development_version(__version__) == True:
-    branch = "dev"
-else:
-    branch = "stable"
 
 ICON = None # Will create later
 
@@ -38,7 +31,7 @@ DEVS = ARTISTS = DOCWRITERS = {
 }
 
 # License path
-LICENSE = currdir / "../LICENSE"
+LICENSE = str(currPath / ".." / "LICENSE")
 
 # URLs
 HOMEPAGE = "https://github.com/lebao3105/texteditor"

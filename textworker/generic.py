@@ -2,16 +2,14 @@
 @package textworker.generic
 @brief Stores most internal and public variables for the project.
 """
+
 import builtins
 import json
 import logging
 import os
 import typing
 
-from libtextworker.general import (
-    CraftItems, GetCurrentDir,
-    Logger, formatter, strhdlr
-)
+from libtextworker.general import CraftItems, GetCurrentDir, Logger, formatter, strhdlr
 from libtextworker.get_config import GetConfig
 from libtextworker.interface import stock_ui_configs, stock_editor_configs
 from libtextworker.interface.wx import ColorManager
@@ -19,15 +17,15 @@ from libtextworker.versioning import is_development_version_from_project
 from libtextworker import EDITOR_DIR, THEMES_DIR, TOPLV_DIR
 
 # Settings paths
-currPath = GetCurrentDir(__file__)
+currPath = GetCurrentDir(__file__, True)
 
 CONFIGS_PATH = os.path.expanduser(
     "~/.config/textworker/configs{}.ini".format(
         "_dev" if is_development_version_from_project("textworker") else ""
     )
 )
-DATA_PATH: str = CraftItems(currPath, "data")
-UIRC_DIR = CraftItems(currPath, "ui")
+DATA_PATH: str = str(currPath / "data")
+UIRC_DIR: str = str(currPath / "ui")
 
 # 
 clrCall: ColorManager
@@ -92,8 +90,8 @@ def ready():
     global_settings = GetConfig(configs, file=CONFIGS_PATH)
 
     TOPLV_DIR = os.path.dirname(CONFIGS_PATH)
-    THEMES_DIR = TOPLV_DIR + "/themes/"
-    EDITOR_DIR = TOPLV_DIR + "/editorconfigs/"
+    EDITOR_DIR = CraftItems(TOPLV_DIR, "editorconfigs")
+    THEMES_DIR = CraftItems(TOPLV_DIR, "themes")
 
     logger.info(f"Settings path: {CONFIGS_PATH}")
     logger.info(f"Application datas (icon, updater, default settings) are stored in {DATA_PATH}")

@@ -1,6 +1,7 @@
 import argparse
 import os
 import sys
+import wx
 
 from textworker import generic
 
@@ -27,6 +28,11 @@ config_flags.add_argument(
     "--custom-data-dir", metavar="PATH", type=str,
     help="load custom application data (should not be a relative path)",
 )
+config_flags.add_argument(
+    "--no-splash", type=bool, const=False, nargs="?",
+    metavar="BOOLEAN"
+)
+
 
 file_flags = parser.add_argument_group("file-related flags")
 file_flags.add_argument(
@@ -73,6 +79,14 @@ def main():
             else: files += [path]
 
     import textworker.main as main_entrypoint
-    main_entrypoint.start_app(files, dirs)
+    app = wx.App(0)
+    app.SetAppName("textworker")
+
+    if not options.no_splash:
+        main_entrypoint.SplashScreen(None, files, dirs)
+    else:
+        main_entrypoint.start_app(files, dirs)
+    
+    app.MainLoop()
 
 if __name__ == "__main__": main()

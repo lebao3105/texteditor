@@ -1,64 +1,23 @@
 import json
 import os
 import requests
+
 import wx
 import wx.html2
+import wx.lib.agw.cubecolourdialog
 import wx.xrc
 
 from libtextworker.general import CraftItems
 from libtextworker.interface.manager import hextorgb, AUTOCOLOR, ColorManager
+from libtextworker.interface.wx.miscs import localizePy
 
-from markdown2 import markdown
+# from markdown2 import markdown
 
 from . import _
 from .. import __version__, branch
 from ..generic import *
 
-content: str
-backup: str
-replaced: bool
-
-def initialize_work():
-    global content, backup, replaced
-    content = open(CraftItems(UIRC_DIR, "preferences.py"), "r").read()
-    replaced = content.startswith("from textworker import _")
-    if not replaced: backup = content
-
-def localize(forced: bool = False):
-    import re
-    global content, replaced, backup
-    if replaced and not forced: return
-
-    content = "from textworker import _\n" + backup # Add gettext import
-
-    # Made with the help of, yeah, AI. (cuz I'm bad at regex)
-    # I have modified it myself for the most perfect pattern.
-    # All strings in wxFormBuilder generated Python code are unicode type:
-    # u"<content>"
-    # Pattern with start with u. Then 4 regex groups:
-    # One for the first double quote (")
-    # One for the string content (. for every character except \n, + for >=1 match, ? to catch as much as posible)
-    # The matching quote (")
-    # The final look for space (just one space) OR a comma (,) but NOT include it to the catch result.
-    # One draw back is that numberic only strings are include, but can be skipped below.
-    pattern = r'u(")(.+?)(")(?=[\s,])'
-    matches = re.findall(pattern, content)
-    for match in matches:
-        # The match result will be a list of
-        # ('"', '<string>', '"') tuples.
-        # Skip number/float-only strings.
-        try: int(match[1]); float(match[1])
-        except: pass
-        else: continue
-        localized = f'_(u"{match[1]}")'
-        content = content.replace(f'u"{match[1]}"', localized)
-
-    open(CraftItems(UIRC_DIR, "preferences.py"), "w").write(content)
-    replaced = True
-
-initialize_work()
-localize()
-from ..ui import preferences
+preferences = localizePy(CraftItems(UIRC_DIR, "preferences.py"), "from textworker import _")
 
 class SettingsDialog(preferences.StDialog):
     """
@@ -95,37 +54,32 @@ class SettingsDialog(preferences.StDialog):
                         f"https://api.github.com/repos/lebao3105/texteditor/releases/v{__version__}"
                     ).text
                 )["body"]
-            except: # TODO: Check exception message
-                text = _("No changelog/unable to get.")
+            except Exception as e:
+                text = e
 
             wb = wx.html2.WebView.New(new)
-            wb.SetPage(markdown(text), "")
+            # wb.SetPage(markdown(text), "")
+            wb.SetPage(text, "")
             new.ShowModal()
 
         this.Bind(wx.EVT_BUTTON, showchangelog, this.m_button4)
 
-        this.Bind(
-            wx.EVT_CHOICE,
-            lambda evt: global_settings.set_and_update(
-                "extensions.textwkr.multiview",
-                "notebook_location",
-                this.m_choice2.GetStringSelection().lower(),
-            ),
-            this.m_choice2,
-        )
+        this.Bind(wx.EVT_CHOICE,
+                  lambda evt: global_settings.set_and_update(
+                      "extensions.textwkr.multiview",
+                      "notebook_location",
+                      this.m_choice2.GetStringSelection().lower()
+                  ),
+                  this.m_choice2)
 
         # Colors page
         colors = {_("Dark"): 1, _("Light"): 2} # Corresponding to the XRC file
 
         this.m_radioBox1.SetSelection(0 if this.AUTOCOLOR_CHANGE
-                                        else colors[_(clrCall.getkey("color", "background").capitalize())]
-        )
+                                        else colors[_(clrCall.getkey("color", "background").capitalize())])
+        
 
-        this.m_colourPicker1.SetColour(wx.Colour(*hextorgb(clrCall.GetColor()[0])))
-        this.m_colourPicker2.SetColour(wx.Colour(*hextorgb(clrCall.GetColor()[1])))
-
-        this.Bind(wx.EVT_RADIOBOX,
-                  lambda evt: this.apply_color(this.m_radioBox1.GetStringSelection()),
+        this.Bind(wx.EVT_RADIOBOX, lambda evt: this.apply_color(this.m_radioBox1.GetStringSelection()),
                   this.m_radioBox1)
 
         for i in os.listdir(THEMES_DIR):
@@ -133,20 +87,18 @@ class SettingsDialog(preferences.StDialog):
 
         this.m_choice3.SetStringSelection(this.CURRTHEME)
 
-        def target_type():
+        def target_type() -> str:
             if AUTOCOLOR and this.m_radioBox1.GetSelection() == 0 and this.m_checkBox71.IsChecked(): import darkdetect; return f"-{darkdetect.theme()}"
             elif this.m_checkBox71.IsChecked(): return "-" + {1: "dark", 2: "light"}.get(this.m_radioBox1.GetSelection())
             else: return ""
 
-        this.Bind(wx.EVT_COLOURPICKER_CHANGED,
-                  lambda evt: clrCall.set_and_update("color", "background" + target_type(),
-                                                     this.m_colourPicker1.GetColour().GetAsString(wx.C2S_HTML_SYNTAX)),
-                  this.m_colourPicker1)
+        def getandsetcolor(kind: str):
+            result = this.ShowAndSetColourIfAbleTo()
+            if result:
+                clrCall.set_and_update("color", kind + target_type(), result)
 
-        this.Bind(wx.EVT_COLOURPICKER_CHANGED,
-                  lambda evt: clrCall.set_and_update("color", "foreground" + target_type(),
-                                                     this.m_colourPicker2.GetColour().GetAsString(wx.C2S_HTML_SYNTAX)),
-                  this.m_colourPicker2)
+        this.m_button5.Bind(wx.EVT_BUTTON, lambda evt: getandsetcolor("background"))
+        this.m_button6.Bind(wx.EVT_BUTTON, lambda evt: getandsetcolor("foreground"))
 
         def newtheme(evt):
             if not this.m_textCtrl1.GetLabelText():
@@ -211,36 +163,33 @@ class SettingsDialog(preferences.StDialog):
     def check_updates(this, evt):
         import importlib.util
 
-        spec = importlib.util.spec_from_file_location(
-            "updater", f"{DATA_PATH}/updater.py"
-        )
+        spec = importlib.util.spec_from_file_location("updater", f"{DATA_PATH}/updater.py")
         updater = importlib.util.module_from_spec(spec)
         spec.loader.exec_module(updater)
         updater.currver = __version__
         result = updater.parse_json(CONFIGS_PATH)
 
-        if result is None:
-            return wx.MessageBox(_("The program is up-to-date"), parent=this)
+        match result:
+            case None:
+                return wx.MessageBox(_("The program is up-to-date"), parent=this)
         
-        elif result == "invalid_json":
-            return wx.MessageBox(_("Invalid response received"), parent=this)
-        
-        elif isinstance(result, tuple):
-            if wx.MessageBox(_(f"Update available: {result[0]} from branch {branch}.\n"
-                               f"Get via: {result[2]}" if result[2] else ""),
-                             parent=this,
-                             style=wx.YES_NO) == wx.YES:
-                new = wx.Frame(this)
-                text = wx.html2.WebView.New(new)
-                text.SetPage(markdown(result[1]), f"{result[0]} changelogs")
-                text.Show()
-                new.Show()
+            case "invalid_json":
+                return wx.MessageBox(_("Invalid response received"), parent=this)
 
-                # if result[2]: updater.install(result[2])
-                # else: wx.MessageBox(_("No downloadable files yet - this means you"
-                #                       "need to either wait or install from source code."))
+            case _:
+                if isinstance(result, tuple):
+                    # TODO: If packaging is still a problem, redirect the user to the release page.
+                    if wx.MessageBox(_(f"Your editor is outdated: new {result[0]} from branch {branch}.\n"
+                                       f"Get via: {result[2]}" if result[2] else ""),
+                                     _("Update available"), wx.YES_NO, this) == wx.YES:
+                        new = wx.Frame(this)
+                        text = wx.html2.WebView.New(new)
+                        # text.SetPage(markdown(result[1]), f"{result[0]} changelog")
+                        text.SetPage(result[1], f"{result[0]} changelog")
+                        text.Show()
+                        new.Show()
             
-            clrCall.configure(this)
+        clrCall.configure(this)
 
     def apply_color(this, string):
         if string != _("Automatic"):
@@ -249,3 +198,14 @@ class SettingsDialog(preferences.StDialog):
         else:
             clrCall.set_and_update("color", "background", "light")
             clrCall.set_and_update("color", "auto", "yes")
+
+    def ShowAndSetColourIfAbleTo(this) -> str | None:
+        dlg = wx.lib.agw.cubecolourdialog.CubeColourDialog(this)
+        clrCall.configure(dlg)
+        clrCall.autocolor_run(dlg)
+
+        if dlg.ShowModal() == wx.ID_OK:
+            colourdata = dlg.GetColourData()
+            return colourdata.GetColour().GetAsString(wx.C2S_HTML_SYNTAX)
+        
+        return None

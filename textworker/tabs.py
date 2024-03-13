@@ -1,6 +1,8 @@
 import wx
-import wx.aui
+import wx.lib.agw.aui as aui
 import wx.stc
+
+from textworker.ui.auistyles import AuiFlatTabArt
 
 from . import _
 from .editor import Editor
@@ -8,16 +10,13 @@ from .file_operations import DNDTarget, FileOperations
 from .generic import global_settings, clrCall, editorCfg
 
 
-class Tabber(wx.aui.AuiNotebook):
+class Tabber(aui.AuiNotebook):
     SetStatus: bool = false
     NewTabTitle: str = _("Untitled")
 
     def __init__(this, *args, **kwds):
-        kwds["style"] = (
-            kwds.get("style", 0)
-            | wx.aui.AUI_NB_WINDOWLIST_BUTTON
-            | wx.aui.AUI_NB_TAB_SPLIT
-        )
+        kwds["style"] = kwds.get("style", 0) | aui.AUI_NB_WINDOWLIST_BUTTON | aui.AUI_NB_TAB_SPLIT | aui.AUI_NB_DRAW_DND_TAB | aui.AUI_NB_HIDE_ON_SINGLE_TAB | aui.AUI_NB_TAB_FIXED_WIDTH
+
         # There are many styles (and I love them):
         # AUI_NB_CLOSE_ON_ALL_TABS : Close button on all tabs (disabled by default)
         # AUI_NB_MIDDLE_CLICK_CLOSE : Use middle click to close tabs
@@ -26,18 +25,16 @@ class Tabber(wx.aui.AuiNotebook):
         middle_close = global_settings.getkey("editor.tabs", "middle_close")
         this.close_on_no_tab = global_settings.getkey("editor.tabs", "close_on_no_tab")
 
-        if movetabs == true:
-            kwds["style"] |= wx.aui.AUI_NB_TAB_MOVE
+        if movetabs: kwds["style"] |= aui.AUI_NB_TAB_MOVE
 
-        if middle_close == true:
-            kwds["style"] |= wx.aui.AUI_NB_MIDDLE_CLICK_CLOSE
+        if middle_close: kwds["style"] |= aui.AUI_NB_MIDDLE_CLICK_CLOSE
 
-        if this.close_on_no_tab == true:
-            kwds["style"] |= wx.aui.AUI_NB_CLOSE_ON_ALL_TABS
-        else:
-            kwds["style"] |= wx.aui.AUI_NB_CLOSE_ON_ACTIVE_TAB
+        match this.close_on_no_tab in global_settings.yes_values:
+            case True: kwds["style"] |= aui.AUI_NB_CLOSE_ON_ALL_TABS
+            case _: kwds["style"] |= aui.AUI_NB_CLOSE_ON_ACTIVE_TAB      
 
-        wx.aui.AuiNotebook.__init__(this, *args, **kwds)
+        aui.AuiNotebook.__init__(this, *args, **kwds)
+        this.SetArtProvider(AuiFlatTabArt())
 
         this.fileops = FileOperations(this)
 
@@ -46,13 +43,12 @@ class Tabber(wx.aui.AuiNotebook):
         if editorCfg.getkey("editor", "dnd_enabled", True, True) in editorCfg.yes_values:
             this.SetDropTarget(DNDTarget(this))
 
-        this.Bind(wx.aui.EVT_AUINOTEBOOK_PAGE_CHANGED, this.OnPageChanged)
-        this.Bind(wx.aui.EVT_AUINOTEBOOK_PAGE_CLOSED, this.OnPageClosed)
+        this.Bind(aui.EVT_AUINOTEBOOK_PAGE_CHANGED, this.OnPageChanged)
+        this.Bind(aui.EVT_AUINOTEBOOK_PAGE_CLOSED, this.OnPageClosed)
         this.Bind(wx.EVT_WINDOW_DESTROY, this.OnSelfDestroy)
 
     def AddTab(this, evt=nil, tabname: str = _("New file")):
-        newte = Editor(this,
-                       style=wx.TE_MULTILINE | wx.EXPAND | wx.HSCROLL | wx.VSCROLL)
+        newte = Editor(this, style=wx.TE_MULTILINE | wx.EXPAND | wx.HSCROLL | wx.VSCROLL)
         newte.SetZoom(3)
 
         newte.Bind(wx.EVT_WINDOW_DESTROY, this.fileops.OnEditorDestroy)
@@ -79,11 +75,10 @@ class Tabber(wx.aui.AuiNotebook):
         this.SetTitle(tabname)
 
     def OnPageClosed(this, evt):
-        if this.GetPageCount() == 0:
-            if this.close_on_no_tab in global_settings.yes_values:
-                wx.GetApp().ExitMainLoop()
-            else:
-                this.AddTab()
+        if this.GetPageCount() - 1 == 0:
+            match this.close_on_no_tab in global_settings.yes_values:
+                case True: wx.GetApp().ExitMainLoop()
+                case _: this.AddTab()
 
     def OnSelfDestroy(this, evt):
         for i in range(this.GetPageCount()):

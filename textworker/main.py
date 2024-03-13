@@ -5,28 +5,35 @@ import wx
 
 import textworker
 import textworker.icon
+import textworker.splash
+
 from textworker.generic import logger, ready
+from wx.lib.agw.advancedsplash import AdvancedSplash, AS_TIMEOUT, AS_CENTER_ON_SCREEN
 
 ignore_not_exists: bool = False
 create_new: bool = False
 
+class SplashScreen(AdvancedSplash):
+
+    def __init__(this, parent, *args, **kwds):
+        AdvancedSplash.__init__(this, parent, bitmap=getattr(textworker.splash, textworker.branch).GetBitmap(),
+                                timeout=5000, agwStyle=AS_TIMEOUT | AS_CENTER_ON_SCREEN)
+        
+        this.fc = wx.CallLater(5000, start_app, *args, **kwds)
+        this.fc.Start()
 
 def _file_not_found(filename):
     if ignore_not_exists:
         return wx.ID_CANCEL
-    if create_new == True:
+    
+    if create_new:
         return wx.ID_YES
-    return wx.MessageDialog(
-        None,
-        message=textworker._("Cannot find file name %s - create it?") % filename,
-        caption=textworker._("File not found"),
-        style=wx.YES_NO | wx.ICON_INFORMATION,
-    ).ShowModal()
-
+    
+    return wx.MessageDialog(None,
+                            textworker._("Cannot find file name %s - create it?") % filename,
+                            textworker._("File not found"), wx.YES_NO | wx.ICON_INFORMATION).ShowModal()
 
 def start_app(files: list[str], directory: list[str]):
-    app = wx.App(0)
-    app.SetAppName("textworker")
 
     textworker.ICON = getattr(textworker.icon, textworker.branch).GetIcon()
     if files: logger.info("Passed files: ", " ".join(files))
@@ -36,6 +43,7 @@ def start_app(files: list[str], directory: list[str]):
     from .mainwindow import MainFrame
 
     fm = MainFrame()
+    fm.mainFrame.SetIcon(textworker.ICON)
 
     if len(files) >= 1:
         nb = fm.notebook
@@ -72,8 +80,6 @@ def start_app(files: list[str], directory: list[str]):
                                    "You must be responsible for your changes."),
                       style=wx.OK | wx.ICON_WARNING,
                       parent=fm.mainFrame)
-
-    app.SetTopWindow(fm.mainFrame)
     
     exchook = sys.excepthook
 
@@ -85,8 +91,8 @@ def start_app(files: list[str], directory: list[str]):
         box = wx.BoxSizer(wx.VERTICAL)
         box.Add(wx.StaticText(dlg, -1,
                               textworker._("An error occured and textworker caught it:\n"
-                                                 f"Exception type: {exc_type.__name__}\n"
-                                                 f"Exception message: {value}\n")),
+                                           f"Exception type: {exc_type.__name__}\n"
+                                           f"Exception message: {value}\n")),
                 0, wx.ALIGN_CENTER | wx.TOP, 10)
         
         boxInfo = wx.ListCtrl(dlg, style=wx.LC_REPORT | wx.SUNKEN_BORDER)
@@ -120,4 +126,3 @@ def start_app(files: list[str], directory: list[str]):
     sys.excepthook = handleexc
 
     fm.Show()
-    app.MainLoop()
