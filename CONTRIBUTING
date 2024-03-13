@@ -16,19 +16,17 @@ C. [Debugging options](#debugging-options)
 
 D. [Make translations](#make-translations)
 
+E. [Other maintaining stuff](#other-maintaining-stuff)
+
 ## Setup
 
-This project of course requires Python 3. Not tested on 3.10- as I said that it should work from Python 3.8.
+This project of course requires Python 3. 3.10 or higher.
 
-At the time of the writing all dependencies should work on the latest Python 3.12 series, but remember:
-
-> That Python is quite new, even this is Feb 2024.
-
-So you whatever should consider downgrading Python first.
-
-For a true developer environment (in case you don't know), install Git: a version control tool. Yes we use that to get, commit, push or changes.
+For a true developer environment (in case you don't know), install Git: a version control tool. We use that to get, commit, push or changes.
 
 GitHub itself is a Git hosting service, used for developers around the world.
+
+Using Git and GitHub shortens the time you update, push, require for a merge, wait for response (not always I check my mail box).
 
 Next: Install all dependencies as mentioned in [this README section](./README.md#build-and-install).
 
@@ -104,7 +102,7 @@ VSCode uses both of these in its [launch.json](.vscode/launch.json).
 
 You also can open Inspector tool from wxPython, available since 1.6dev1. 
 
-Use `importlib.reload` to reload your changes quickly. This can be ran on Inspector's own shell.
+Use `importlib.reload` to reload your changes quickly. This can be ran on Inspector.
 
 ## Make translations
 
@@ -114,7 +112,7 @@ For translators:
 
 * Add your language code to LOCALES variable in [Makefile](Makefile). Make a copy of [textworker.pot](po/textworker.pot) and name it `<language code>.po`. Place it inside the po directory, of course.
 
-> Warning: translation templates (*.pot) are not always updated. For the best result use builder.py.
+> Warning: translation templates (*.pot) are not always updated. For the best result regenerate the pot first.
 
 * Translate the app, by editing the file manually or with the help of software like Poedit.
 
@@ -127,3 +125,35 @@ For maintainers:
 * Just use Makefile to make sure all strings are not missing
 
 * If you made a new file containing strings to translate, add it to [POTFILES](po/POTFILES).
+
+Makefile targets for these:
+
+* makepot: Make po/textworker.pot
+
+* maketrans: Generate .po from textworker template and existing translation (if any)
+
+* genmo: Compile .po
+
+## Other maintaining stuff
+
+### Application images
+
+Assets, app icons, and splash screen are SVG files, this means you need to convert it manually first.
+
+Update assets with Makefile `assets` target.
+
+Update app icons with Makefile `icons` target.
+
+Update splash screens with Makefile `splash` target.
+
+By default embed results (.py files) are kept in the repository for convenient access.
+
+### MANIFEST.in
+
+This file shows what `setuptools` can collect, what it can't for the package it's going to build. So keeping it up-to-date is important.
+
+* Ignore tests
+
+* Ignore generated files for BUILDING (if any) - `.gitignore` may help
+
+* Ignore files that are used to be GENERATED and NOT used for application run (e.g .fbp : wxFormBuilder project file, it can output .xrc or .py depending on our destination; or .po which will be compiled to .mo and we use that)
