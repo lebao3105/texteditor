@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-02-14 14:54+0700\n"
+"POT-Creation-Date: 2024-02-18 21:11+0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -54,40 +54,36 @@ msgstr ""
 msgid "Disable this (open) tab"
 msgstr ""
 
-#: textworker/extensions/multiview.py:42
+#: textworker/extensions/multiview.py:43
 msgid "Close the side bar"
 msgstr ""
 
-#: textworker/extensions/settings.py:99
-msgid "No changelog/unable to get."
-msgstr ""
-
-#: textworker/extensions/settings.py:118
+#: textworker/extensions/settings.py:73
 msgid "Dark"
 msgstr ""
 
-#: textworker/extensions/settings.py:118
+#: textworker/extensions/settings.py:73
 msgid "Light"
 msgstr ""
 
-#: textworker/extensions/settings.py:153
+#: textworker/extensions/settings.py:106
 msgid "Error while setting a new theme: Name required."
 msgstr ""
 
-#: textworker/extensions/settings.py:223
+#: textworker/extensions/settings.py:174
 msgid "The program is up-to-date"
 msgstr ""
 
-#: textworker/extensions/settings.py:226
+#: textworker/extensions/settings.py:177
 msgid "Invalid response received"
 msgstr ""
 
-#: textworker/extensions/settings.py:229
+#: textworker/extensions/settings.py:180
 #, python-brace-format
 msgid "Update available: {result[0]} from branch {branch}.\n"
 msgstr ""
 
-#: textworker/extensions/settings.py:246
+#: textworker/extensions/settings.py:197
 msgid "Automatic"
 msgstr ""
 

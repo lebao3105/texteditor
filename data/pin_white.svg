@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="16"
+   height="16"
+   viewBox="0 0 16 16"
+   version="1.1"
+   id="svg1"
+   inkscape:version="1.3.2 (091e20e, 2023-11-25, custom)"
+   sodipodi:docname="pin_white.svg"
+   inkscape:export-filename="pin_white.png"
+   inkscape:export-xdpi="96"
+   inkscape:export-ydpi="96"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview1"
+     pagecolor="#000000"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#0e0e0e"
+     inkscape:document-units="px"
+     inkscape:zoom="25.28125"
+     inkscape:cx="9.552534"
+     inkscape:cy="4.7268232"
+     inkscape:window-width="1920"
+     inkscape:window-height="1009"
+     inkscape:window-x="-8"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="layer1" />
+  <defs
+     id="defs1" />
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <g
+       id="g3"
+       transform="matrix(0.87926509,0,0,0.87926509,0.75720333,1.0180483)"
+       style="fill:#ffffff;fill-opacity:1">
+      <rect
+         style="fill:#ffffff;fill-opacity:1;stroke-width:1.69892"
+         id="rect1"
+         width="5.1223731"
+         height="8.8998766"
+         x="5.6761432"
+         y="1.0284302" />
+      <rect
+         style="fill:#ffffff;fill-opacity:1;stroke-width:1.45512"
+         id="rect2"
+         width="1.3844252"
+         height="4.9245982"
+         x="7.5451174"
+         y="9.9283066" />
+      <rect
+         style="fill:#ffffff;fill-opacity:1;stroke-width:1.15919"
+         id="rect3"
+         width="7.5352287"
+         height="0.65265757"
+         x="4.4697156"
+         y="1.0284302" />
+    </g>
+  </g>
+</svg>

@@ -10,9 +10,6 @@
     <h3 align="right">
     A simple and cross-platform Python text editor.
     </h3>
-    <a href="https://github.com/psf/black">
-        <image src="https://img.shields.io/badge/code%20style-black-000000.svg" align="right"/>
-    </a>
     <a href="https://github.com/lebao3105/texteditor/actions/workflows/wheel.yml">
         <image src="https://github.com/lebao3105/texteditor/actions/workflows/wheel.yml/badge.svg" align="right"/>
     </a>
@@ -20,22 +17,16 @@
 
 <br clear="both">
 
-## For Tkinter builds
+> Tkinter version has been moved to [texteditor-tk](https://github.com/lebao3105/texteditor-tk).
 
-Releases from 1.5a0 and their source code will be placed in a new repository: lebao3105/texteditor-tk.
-
-This was made in order to make the updater for both 2 types of app works easier.
-
-So that: the `main` branch will place the latest (trunk) code (again).
-
-Texteditor-tk is still available in TestPypi, even for the 1.5 release.
+> Future releases will be placed in TestPypi.
 
 ## Features
 
 * Tabs split/rearrangement
 * Access to your files without opening File Explorer
 * ~~Run some tasks with Command Window~~
-* Customizable interface
+* Customizable interface, right on the native UI
 * Open history
 * ~~Partial Git support (1.6a3+)~~
 * Auto save
@@ -46,11 +37,13 @@ You can get wheels from [GitHub Actions](https://github.com/lebao3105/texteditor
 
 ## Setup
 
-Requires Python 3. Version 3.10+ maybe ideal.
+Requires Python 3.10 or later.
 
 Install all dependencies shown in [requirements.txt](requirements.txt)
 
 Additional dependencies may required for wxPython:
+
+* All: Install `attrdict3` from Pypi first
 
 * Linux: ```libgtk-3-dev``` and ```libsdl2-dev``` plus C++ compiler (g++). That's basic for now - you may need more
 
@@ -58,19 +51,13 @@ Additional dependencies may required for wxPython:
 
 * Windows: Microsoft Visual C++
 
+Wheels for some Linux distributions (and their based-ons): https://extras.wxpython.org/wxPython4/extras/linux/gtk3/
+
 Installable directly from Pypi as the ```textworker``` package.
 
-Run:
+Run this project like every Python projects else. Use `-h` / `--help` to see all available options.
 
-```bash
-$ python3 -m textworker [args]
-```
-
-For any additional arguments, please use ```-h``` / ```--help``` to show them.
-
-If you want to use the source code: Clone the source code, install dependencies as shown in pyproject.toml, run module `textworker` as a normal Python module.
-
-Install from source: ```pip install -e .``` or ```python3 builder.py install```
+There is a Makefile in this project. Run `make targets` to see all availale targets.
 
 ## Contributing
 
