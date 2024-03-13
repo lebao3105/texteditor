@@ -7,16 +7,18 @@ UI2PY = wxformbuilder
 GT = xgettext
 MSF = msgfmt
 MSM = msgmerge
+XRC2GT = pywxrc # Change it to wxrc if you want (not tested)
 
 # Project infomations
-COPYRIGHT = "(C) 2024 Le Bao Nguyen and contributors."
-PKGVER = "1.6b0" # Change this corresponding to the app version
 UIFILES = $(wildcard textworker/ui/*.fbp)
+XRCFILES = $(wildcard textworker/ui/*.xrc)
 LOCALES = vi # Language codes, separated using spaces
 POFILES = # Make later
 
 # Targets
-.PHONY: genui maketrans makepot genmo $(UIFILES) $(LOCALES)
+.PHONY: all genui maketrans makepot genmo $(UIFILES) $(LOCALES) build install icons splash assets
+
+all: clean icons splash assets build
 
 ## Generate .py and .xrc
 genui: $(UIFILES)
@@ -28,16 +30,18 @@ $(UIFILES):
 maketrans: makepot genmo
 
 makepot: genui
-	echo "[Translations] Making template..."
-	$(GT) --copyright-holder=$(COPYRIGHT) --package-version=$(PKGVER) \
-		--language=python -f po/POTFILES -d textworker -o po/textworker.pot
+	@echo "[Translations] Making templates..."
+	$(GT) --language=python -f po/POTFILES -d textworker -o po/textworker.pot
+
+$(XRCFILES):
+	$(XRC2GT) -g $@ -o po/
 
 genmo: $(LOCALES)
 $(LOCALES):
-	echo "[Translations] Making po for $@..."
+	@echo "[Translations] Making po for $@..."
 	$(MSM) po/$@.po po/textworker.pot -o po/$@.po
 
-	echo "[Translations] Compiling po for $@..."
+	@echo "[Translations] Compiling po for $@..."
 
 	if [ ! -d po/$@ ]; then \
 		mkdir po/$@; \
@@ -48,17 +52,27 @@ $(LOCALES):
 	fi
 	$(MSF) po/$@.po -o po/$@/LC_MESSAGE/$@.mo
 
+## Install
 install: maketrans
 	$(pip) install .
 
+## Build
 build: maketrans
 	$(pip) install build
 	$(python3) -m build .
 
-icons: $(wildcard textworker/data/icons/*.svg)
-	rm textworker/icon.py
-	touch textworker/icon.py
-	$(img2py) -a -n dev $? textworker/icon.py
+## Generate icons
+icons:
+	$(python) embedimgs.py -t icons -d $(DATAPATH)
 
-clean: $(wildcard po/*/LC_MESSAGES) $(wildcard textworker/ui/*.py)
+## Generate splash screen (both light and dark mode)
+splash:
+	$(python) embedimgs.py -t splash -d $(DATAPATH)
+
+## Generate assets (finally!)
+assets:
+	$(python) embedimgs.py -t assets
+
+## Clean
+clean: $(wildcard po/*/LC_MESSAGES) textworker/ui/preferences.py $(wildcard data/*.png)
 	rm -rf $?
