@@ -17,9 +17,12 @@
 
 <br clear="both">
 
-> Tkinter version has been moved to [texteditor-tk](https://github.com/lebao3105/texteditor-tk).
+> Tkinter version has been moved to [texteditor-tk](https://github.com/lebao3105/texteditor-tk). Its future release will still be placed in TestPypi.
 
-> Future releases will be placed in TestPypi.
+> This is the last Python version of the project. When version 1.6 comes out and have all fixes + new things as much as possible, the development will be temporary stopped (as I am the only one here) for C++ and build systems + templates preparation, then a fresh write will begin.
+> Happy summer!
+
+> All textworker projects have been moved to [GitLab](https://gitlab.com/textworker). This is the last commit on this GitHub repo.
 
 ## Features
 
@@ -43,7 +46,7 @@ Install all dependencies shown in [requirements.txt](requirements.txt)
 
 Additional dependencies may required for wxPython:
 
-* All: Install `attrdict3` from Pypi first
+* All: Install `attrdict3` from Pypi first BEFORE RUNNING `pip install wxpython`
 
 * Linux: ```libgtk-3-dev``` and ```libsdl2-dev``` plus C++ compiler (g++). That's basic for now - you may need more
 
