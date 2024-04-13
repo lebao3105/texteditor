@@ -1,6 +1,7 @@
 {
     "scm.alwaysShowActions": true,
     "python.analysis.extraPaths": [
+        "../libtextworker_py",
         "../libtextworker"
     ],
     "files.associations": {

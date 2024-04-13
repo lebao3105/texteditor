@@ -11,7 +11,7 @@ from .generic import global_settings, clrCall, editorCfg
 
 
 class Tabber(aui.AuiNotebook):
-    SetStatus: bool = false
+    SetStatus: bool = False
     NewTabTitle: str = _("Untitled")
 
     def __init__(this, *args, **kwds):
@@ -25,13 +25,12 @@ class Tabber(aui.AuiNotebook):
         middle_close = global_settings.getkey("editor.tabs", "middle_close")
         this.close_on_no_tab = global_settings.getkey("editor.tabs", "close_on_no_tab")
 
-        if movetabs: kwds["style"] |= aui.AUI_NB_TAB_MOVE
+        if movetabs in global_settings.yes_values: kwds["style"] |= aui.AUI_NB_TAB_MOVE
 
-        if middle_close: kwds["style"] |= aui.AUI_NB_MIDDLE_CLICK_CLOSE
+        if middle_close in global_settings.yes_values: kwds["style"] |= aui.AUI_NB_MIDDLE_CLICK_CLOSE
 
-        match this.close_on_no_tab in global_settings.yes_values:
-            case True: kwds["style"] |= aui.AUI_NB_CLOSE_ON_ALL_TABS
-            case _: kwds["style"] |= aui.AUI_NB_CLOSE_ON_ACTIVE_TAB      
+        if this.close_on_no_tab in global_settings.yes_values: kwds["style"] |= aui.AUI_NB_CLOSE_ON_ALL_TABS
+        else: kwds["style"] |= aui.AUI_NB_CLOSE_ON_ACTIVE_TAB
 
         aui.AuiNotebook.__init__(this, *args, **kwds)
         this.SetArtProvider(AuiFlatTabArt())
@@ -47,7 +46,7 @@ class Tabber(aui.AuiNotebook):
         this.Bind(aui.EVT_AUINOTEBOOK_PAGE_CLOSED, this.OnPageClosed)
         this.Bind(wx.EVT_WINDOW_DESTROY, this.OnSelfDestroy)
 
-    def AddTab(this, evt=nil, tabname: str = _("New file")):
+    def AddTab(this, evt=None, tabname: str = _("New file")):
         newte = Editor(this, style=wx.TE_MULTILINE | wx.EXPAND | wx.HSCROLL | wx.VSCROLL)
         newte.SetZoom(3)
 
@@ -58,7 +57,7 @@ class Tabber(aui.AuiNotebook):
         clrCall.autocolor_run(newte)
         newte.StyleClearAll()
 
-        this.AddPage(newte, tabname, select=true)
+        this.AddPage(newte, tabname, select=True)
         this.SetTitle(tabname)
 
     def SetTitle(this, title):
@@ -70,8 +69,7 @@ class Tabber(aui.AuiNotebook):
 
     def OnPageChanged(this, evt):
         tabname = this.GetPageText(evt.GetSelection())
-        if this.SetStatus is true:
-            wx.GetTopLevelParent(this).SetStatusText(tabname)
+        if this.SetStatus: wx.GetTopLevelParent(this).SetStatusText(tabname)
         this.SetTitle(tabname)
 
     def OnPageClosed(this, evt):

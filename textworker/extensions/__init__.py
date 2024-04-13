@@ -60,7 +60,7 @@ class AboutDialog(about.AboutDialog):
                     target.EndBold()
                 target.Newline()
             target.SetInsertionPoint(0)
-            target.SetEditable(false)
+            target.SetEditable(False)
 
         for dicti, target, parent in [(DEVS, this.m_richText1, this.developers),
                                       (ARTISTS, this.m_richText2, this.artists),

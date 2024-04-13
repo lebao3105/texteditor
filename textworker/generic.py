@@ -16,18 +16,8 @@ from libtextworker.interface.wx import ColorManager
 from libtextworker.versioning import is_development_version_from_project
 from libtextworker import EDITOR_DIR, THEMES_DIR, TOPLV_DIR
 
-# Settings paths
+
 currPath = GetCurrentDir(__file__, True)
-
-CONFIGS_PATH = os.path.expanduser(
-    "~/.config/textworker/configs{}.ini".format(
-        "_dev" if is_development_version_from_project("textworker") else ""
-    )
-)
-DATA_PATH: str = str(currPath / "data")
-UIRC_DIR: str = str(currPath / "ui")
-
-# 
 clrCall: ColorManager
 configs: str
 
@@ -49,14 +39,22 @@ filehdlr.setFormatter(formatter)
 logger.addHandler(filehdlr)
 logger.addHandler(strhdlr)
 
-# C/C++ users belike:
-builtins.true = True
-builtins.false = False
-builtins.nil = None
-
 # Settings system changes
 moves = json.loads(open(CraftItems(currPath, "merges.json")).read())
 
+CONFIGS_PATH = os.path.expanduser(
+    "~/.config/textworker/configs{}.json".format(
+        "_dev" if is_development_version_from_project("textworker") else ""
+    )
+)
+DATA_PATH: str = str(currPath / "data")
+UIRC_DIR: str = str(currPath / "ui")
+
+def test_type():
+    if os.path.isfile(CONFIGS_PATH): return CONFIGS_PATH
+    else: return CONFIGS_PATH.removesuffix(".json") + ".ini"
+
+CONFIGS_PATH = test_type() # We prefer JSON...
 
 def find_resource(t: typing.Literal["theme", "editor"]) -> str:
     if t == "theme":

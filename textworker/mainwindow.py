@@ -7,6 +7,7 @@ import wx.lib.splitter
 import wx.xrc
 import wx.lib.agw.aui as aui
 
+from textwrap import dedent
 from wx.lib.inspection import InspectionTool
 from libtextworker import __version__ as libver
 from libtextworker.general import ResetEveryConfig, logger, CraftItems
@@ -32,7 +33,7 @@ class MainFrame(XMLBuilder):
     logfmter = wx.LogFormatter()
 
     def __init__(this):
-        XMLBuilder.__init__(this, nil, CraftItems(UIRC_DIR, "mainmenu.xrc"), _)
+        XMLBuilder.__init__(this, None, CraftItems(UIRC_DIR, "mainmenu.xrc"), _)
 
         this.mainFrame = this.loadObject("mainFrame", "wxFrame")
         this.mainFrame.SetSize((860, 640))
@@ -118,7 +119,7 @@ class MainFrame(XMLBuilder):
                            (lambda evt: wx.PostEvent(this.mainFrame,
                                                      wx.CommandEvent(wx.wxEVT_CLOSE_WINDOW)), 11)]
 
-        for callback, pos in [(this.OpenDir, 0), (lambda evt: this.OpenDir(evt, newwind=true), 1)]:
+        for callback, pos in [(this.OpenDir, 0), (lambda evt: this.OpenDir(evt, newwind=True), 1)]:
             this.mainFrame.Bind(wx.EVT_MENU, callback,
                                 filemenu.FindItemByPosition(4).GetSubMenu().FindItemByPosition(pos))
 
@@ -156,8 +157,8 @@ class MainFrame(XMLBuilder):
                             editor_autosv.FindItemByPosition(0))
 
         if autosave.enabled in global_settings.yes_values:
-            global_autosv.FindItemByPosition(1).Check(true)
-            editor_autosv.FindItemByPosition(1).Check(true)
+            global_autosv.FindItemByPosition(1).Check(True)
+            editor_autosv.FindItemByPosition(1).Check(True)
             this.notebook.GetCurrentPage().Start()  # On init only 1 tab opened, so we can do this
 
         this.mainFrame.Bind(wx.EVT_MENU,
@@ -176,7 +177,7 @@ class MainFrame(XMLBuilder):
         viewmenu.FindItemByPosition(2).Check(
             bool(
                 this.notebook.GetCurrentPage().cfg.getkey(
-                    "editor", "wordwrap", true, true, true
+                    "editor", "wordwrap", True, True, True
                 )
             )
         )
@@ -198,7 +199,7 @@ class MainFrame(XMLBuilder):
         # Settings menu
         cfgmenu_events = [(lambda evt: this.wiz.ShowModal(), 0),
                           (this.ResetCfgs, 1),
-                          (lambda evt: this.OpenDir(evt, TOPLV_DIR, true), 2)]
+                          (lambda evt: this.OpenDir(evt, TOPLV_DIR, True), 2)]
 
         # Help menu
         helpmenu_events = [(this.ShowAbout, 0), (this.SysInf_Show, 1),
@@ -224,7 +225,7 @@ class MainFrame(XMLBuilder):
                     f.write(this.file_history.GetHistoryFile(i) + "\n")
         evt.Skip()
 
-    def OpenDir(this, evt, path: str = "", newwind: bool = false):
+    def OpenDir(this, evt, path: str = "", newwind: bool = False):
         if not path:
             ask = wx.DirDialog(this.mainFrame, _("Select a folder to start"))
             if ask.ShowModal() == wx.ID_OK:
@@ -269,7 +270,7 @@ class MainFrame(XMLBuilder):
 
         wind.Show()
         this.notebook.AddPage(wind, this.notebook.GetPageText(this.notebook.GetSelection()), True)
-        newwind.Show(true)
+        newwind.Show(True)
 
         this.notebook.GetCurrentPage().Bind(wx.EVT_CHAR, autorefresh)
 
@@ -291,7 +292,7 @@ class MainFrame(XMLBuilder):
 
     def SysInf_Show(this, evt):
         ostype = platform.system() if platform.system() else _("Unknown")
-        msg = _(
+        msg = dedent(_(
             f"""
         Textworker version {appver}
         Branch: {"Nightly" if is_development_version(appver) else "Stable"}
@@ -303,9 +304,9 @@ class MainFrame(XMLBuilder):
         Machine architecture: {platform.machine()}
         Is bytecode compiled: {'__compiled__' in __dict__}
         """
-        )
+        ))
         newdlg = wx.Dialog(this.mainFrame, title=_("System specs"))
-        wx.StaticText(newdlg, label=msg)
+        wx.TextCtrl(newdlg, value=msg, style=wx.TE_MULTILINE | wx.TE_READONLY)
         newdlg.ShowModal()
 
     def NewWindow(this, evt):

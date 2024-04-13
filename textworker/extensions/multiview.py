@@ -6,7 +6,7 @@ from ..generic import global_settings, clrCall
 class MultiViewer:
     def __init__(this, parent):
         location = global_settings.getkey(
-            "extensions.textwkr.multiview", "notebook_location", needed=true
+            "extensions.textwkr.multiview", "notebook_location", needed=True
         )
         nbside = getattr(wx, f"NB_{location.upper()}")
 
@@ -22,7 +22,7 @@ class MultiViewer:
         @return The result of the new section creation
         """
         clrCall.configure(content)
-        return this.tabs.AddPage(content, tabname, true)
+        return this.tabs.AddPage(content, tabname, True)
 
     def UnregisterTab(this, content) -> bool:
         return this.tabs.DeletePage(content)

@@ -12,10 +12,10 @@ from ..generic import global_settings, UIRC_DIR
 
 # Configs
 enabled = global_settings.getkey(
-    "editor.autosave", "enable", noraiseexp=true, make=false
+    "editor.autosave", "enable", noraiseexp=True, make=False
 )
 
-time = global_settings.getkey("editor.autosave", "time", noraiseexp=true, make=true)
+time = global_settings.getkey("editor.autosave", "time", noraiseexp=True, make=True)
 if not int(time):
     time = 30
 
@@ -34,7 +34,7 @@ class AutoSaveConfig(XMLBuilder):
         "30 minutes": 1800,
     }
     enabled = enabled
-    shown = false
+    shown = False
 
     def __init__(this, Parent: wx.Window):
         XMLBuilder.__init__(this, Parent, CraftItems(UIRC_DIR, "autosave.xrc"), _)
@@ -58,12 +58,12 @@ class AutoSaveConfig(XMLBuilder):
 
     def ConfigWindow(this):
         def onDlgClose(evt):
-            this.shown = false
+            this.shown = False
             evt.Skip()
 
         this.Dialog.ShowModal()
         this.Dialog.Bind(wx.EVT_CLOSE, onDlgClose)
-        this.shown = true
+        this.shown = True
 
 
 class AutoSave:

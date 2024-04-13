@@ -1,23 +1,36 @@
 {
     "interface->theme": {
-        "newpath": "config-paths.ui->theme"
+        "newpath": "config-paths->ui->name"
     },
     "interface->path": {
-        "newpath": "config-paths.ui->path"
+        "newpath": "config-paths->ui->path"
     },
     "extensions.multiview->notebook_location": {
-        "newpath": "extensions.textwkr.multiview->notebook_location"
+        "newpath": "extensions->multiview->sidebar_location"
     },
     "fun->empty_page_on_last_tab_close": {
-        "newpath": "editor.tabs->close_on_no_tab"
+        "newpath": "editor->tabs->close_on_no_tab"
     },
     "interface.tabs->move_tabs": {
-        "newpath": "editor.tabs->move_tabs"
+        "newpath": "editor->tabs->move_tabs"
     },
     "interface.tabs->middle_close": {
-        "newpath": "editor.tabs->middle_close"
+        "newpath": "editor->tabs->close_on_middle_click"
     },
     "interface.tabs->close_on_no_tab": {
-        "newpath": "editor.tabs->close_on_no_tab"
-    }
+        "newpath": "editor->tabs->close_on_no_tab"
+    },
+    "config-paths.ui->theme": {
+        "newpath": "config-paths->ui->name"
+    },
+    "config-paths.ui->path": {
+        "newpath": "config-paths->ui->path"
+    },
+    "config-paths.editor->name": {
+        "newpath": "config-paths->editor->name"
+    },
+    "config-paths.editor->path": {
+        "newpath": "config-paths->editor->path"
+    },
+    "editor.autosave": { "newpath": "editor->autosave" }
 }
