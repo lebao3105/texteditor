@@ -6,7 +6,7 @@ from .generic import global_settings
 from hashlib import md5
 from libtextworker.interface.wx.editor import DragNDropTarget
 
-searchdir = global_settings.getkey("editor", "searchdir", noraiseexp=true, make=true)
+searchdir = global_settings.getkey("editor", "searchdir", noraiseexp=True, make=True)
 if not os.path.isdir(searchdir):
     searchdir = os.path.expanduser("~/Documents")
 
@@ -26,26 +26,26 @@ class DNDTarget(DragNDropTarget):
 class FileOperations:
     Tabber: wx.Window
 
-    file_dialog = wx.FileDialog(nil, defaultDir=searchdir)
-    message = wx.MessageDialog(nil, "")
+    file_dialog = wx.FileDialog(None, defaultDir=searchdir)
+    message = wx.MessageDialog(None, "")
 
     def __init__(this, Tabber: wx.Window):
         this.Tabber = Tabber
 
-    def AskToOpen(this, evt=nil):
+    def AskToOpen(this, evt=None):
         this.file_dialog.SetName(_("Open a file"))
         result = this.file_dialog.ShowModal()
         if result == wx.ID_OK:
             this.OpenFile(this.file_dialog.GetPath())
 
-    def AskToSave(this, evt=nil):
+    def AskToSave(this, evt=None):
         this.file_dialog.SetName(_("Save this to..."))
         result = this.file_dialog.ShowModal()
 
         if result == wx.ID_OK:
             this.Tabber.GetCurrentPage().SaveFile(this.file_dialog.GetPath())
 
-    def SaveFileEvent(this, evt=nil):
+    def SaveFileEvent(this, evt=None):
         tablabel = this.Tabber.GetPageText(this.Tabber.GetSelection())
         if not os.path.isfile(tablabel):
             return this.AskToSave()
