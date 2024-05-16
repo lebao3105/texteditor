@@ -3,7 +3,7 @@
     "configurations": [
         {
             "name": "Run textworker only",
-            "type": "python",
+            "type": "debugpy",
             "request": "launch",
             "module": "textworker",
             "console": "internalConsole",
@@ -18,7 +18,7 @@
         },
         {
             "name": "Open README.md",
-            "type": "python",
+            "type": "debugpy",
             "request": "launch",
             "module": "textworker",
             "console": "internalConsole",
@@ -27,7 +27,7 @@
         },
         {
             "name": "Open textworker/",
-            "type": "python",
+            "type": "debugpy",
             "request": "launch",
             "module": "textworker",
             "console": "internalConsole",

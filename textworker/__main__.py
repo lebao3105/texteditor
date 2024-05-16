@@ -88,5 +88,6 @@ def main():
         main_entrypoint.start_app(files, dirs)
     
     app.MainLoop()
+    # main_entrypoint.start_app(files, dirs)
 
 if __name__ == "__main__": main()

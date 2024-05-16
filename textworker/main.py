@@ -35,11 +35,11 @@ def _file_not_found(filename):
 
 def start_app(files: list[str], directory: list[str]):
 
-    textworker.ICON = getattr(textworker.icon, textworker.branch).GetIcon()
     if files: logger.info("Passed files: ", " ".join(files))
     
     ready()
-    
+
+    textworker.ICON = getattr(textworker.icon, textworker.branch).GetIcon()
     from .mainwindow import MainFrame
 
     fm = MainFrame()
@@ -80,9 +80,8 @@ def start_app(files: list[str], directory: list[str]):
                                    "You must be responsible for your changes."),
                       style=wx.OK | wx.ICON_WARNING,
                       parent=fm.mainFrame)
-    
-    exchook = sys.excepthook
 
+    exchook = sys.excepthook
     def handleexc(exc_type, value, traceb):
         trace_back = traceback.extract_tb(traceb)
 

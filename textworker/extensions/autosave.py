@@ -11,11 +11,8 @@ from ..generic import global_settings, UIRC_DIR
 
 
 # Configs
-enabled = global_settings.getkey(
-    "editor.autosave", "enable", noraiseexp=True, make=False
-)
-
-time = global_settings.getkey("editor.autosave", "time", noraiseexp=True, make=True)
+enabled = eval(global_settings['editor']['autosave'])["enable"]
+time = eval(global_settings['editor']['autosave'])["time"]
 if not int(time):
     time = 30
 
@@ -52,9 +49,7 @@ class AutoSaveConfig(XMLBuilder):
     def OnChoiceSelected(this, evt):
         choice = this.Cmb.GetValue()
         if choice:
-            global_settings.set_and_update(
-                "editor.autosave", "time", this.timealiases[choice]
-            )
+            global_settings["editor"]["autosave"]["time"] = this.timealiases[choice]
 
     def ConfigWindow(this):
         def onDlgClose(evt):

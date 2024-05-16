@@ -24,11 +24,11 @@ class SettingsDialog(preferences.StDialog):
     A WIP settings page for text worker.
     """
 
-    AUTOUPDATE: bool = global_settings.getkey("base", "autoupdate", True, True, True) in global_settings.yes_values
-    NB_LOC: str = global_settings.getkey("extensions.textwkr.multiview", "notebook_location", True, True, True)
+    AUTOUPDATE: bool = global_settings["base"]["autoupdate"] in global_settings.yes_values
+    NB_LOC: str = eval(global_settings['extensions']['multiview'])['sidebar_location']
 
-    AUTOCOLOR_CHANGE: bool = clrCall.getkey("color", "auto", True, True, True) in clrCall.yes_values
-    CURRTHEME: str = global_settings.getkey("config-paths.ui", "theme", True, True, True)
+    AUTOCOLOR_CHANGE: bool = clrCall["color"]["auto"] in clrCall.yes_values
+    CURRTHEME: str = eval(global_settings["config-paths"]["ui"])["name"]
 
 
     def __init__(this, parent: wx.Window):

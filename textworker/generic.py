@@ -3,12 +3,12 @@
 @brief Stores most internal and public variables for the project.
 """
 
-import builtins
 import json
 import logging
 import os
 import typing
 
+from jsonschema import validate
 from libtextworker.general import CraftItems, GetCurrentDir, Logger, formatter, strhdlr
 from libtextworker.get_config import GetConfig
 from libtextworker.interface import stock_ui_configs, stock_editor_configs
@@ -50,20 +50,9 @@ CONFIGS_PATH = os.path.expanduser(
 DATA_PATH: str = str(currPath / "data")
 UIRC_DIR: str = str(currPath / "ui")
 
-def test_type():
-    if os.path.isfile(CONFIGS_PATH): return CONFIGS_PATH
-    else: return CONFIGS_PATH.removesuffix(".json") + ".ini"
-
-CONFIGS_PATH = test_type() # We prefer JSON...
-
-def find_resource(t: typing.Literal["theme", "editor"]) -> str:
-    if t == "theme":
-        _name = global_settings["config-paths.ui"]["theme"]
-        _path = global_settings["config-paths.ui"]["path"]
-
-    else:
-        _name = global_settings["config-paths.editor"]["name"]
-        _path = global_settings["config-paths.editor"]["path"]
+def find_resource(t: typing.Literal["ui", "editor"]) -> str:
+    _name = eval(global_settings['config-paths'][t])['name']
+    _path = eval(global_settings['config-paths'][t])['path']
 
     _name += ".ini"
 
@@ -74,6 +63,32 @@ def find_resource(t: typing.Literal["theme", "editor"]) -> str:
 
     return CraftItems(_path, _name)
 
+# THIS IS PAIN THIS IS PAIN
+def defaults_from_schema() -> tuple[str, dict]:
+    """
+    Creates a dictionary of the application's defaults from the current JSON schema.
+    """
+
+    result = {}
+    data = json.loads(open(CraftItems(DATA_PATH, "schema")).read())
+
+    def get_defaults(iterable):
+        if not 'properties' in iterable:
+            return iterable['default'] if 'default' in iterable else ''
+        res = {}
+        for property in iterable['properties']:
+            res[property] = iterable['properties'][property]['default']
+        return res
+    
+    result['base'] = get_defaults(data['properties']['base']).copy()
+    for tp in [('config-paths', ['ui', 'editor']),
+               ('editor', ['searchdir', 'autosave', 'tabs']),
+               ('extensions', ['multiview'])]:
+        for i in range(len(tp[1])):
+            if not tp[0] in result: result[tp[0]] = {}
+            result[tp[0]][tp[1][i]] = get_defaults(data['properties'][tp[0]]['properties'][tp[1][i]])
+    
+    return data, result
 
 def ready():
     """
@@ -84,8 +99,18 @@ def ready():
     global clrCall, configs, global_settings, editorCfg
     global THEMES_DIR, EDITOR_DIR, TOPLV_DIR
 
-    configs = open(CraftItems(DATA_PATH, "appconfig.ini"), "r").read()
-    global_settings = GetConfig(configs, file=CONFIGS_PATH)
+    schema, configs = defaults_from_schema()
+
+    if os.path.isfile(CONFIGS_PATH) and (content := open(CONFIGS_PATH).read()):
+        if content.startswith('{'):
+            content = json.loads(content)
+            validate(content, schema)
+        global_settings = GetConfig(defaults=configs, load=content)
+    else:
+        global_settings = GetConfig(defaults=configs, load=configs)
+
+    global_settings._file = CONFIGS_PATH
+    global_settings.update()
 
     TOPLV_DIR = os.path.dirname(CONFIGS_PATH)
     EDITOR_DIR = CraftItems(TOPLV_DIR, "editorconfigs")
@@ -94,14 +119,14 @@ def ready():
     logger.info(f"Settings path: {CONFIGS_PATH}")
     logger.info(f"Application datas (icon, updater, default settings) are stored in {DATA_PATH}")
 
-    _theme_load = find_resource("theme")
+    _theme_load = find_resource("ui")
     _editor_config_load = find_resource("editor")
 
     logger.info(f"Themes directory: {THEMES_DIR}")
     logger.info(f"Editor settings directory: {EDITOR_DIR}")
 
-    clrCall = ColorManager(stock_ui_configs, _theme_load)
-    editorCfg = GetConfig(stock_editor_configs, _editor_config_load)
+    clrCall = ColorManager(default_configs=stock_ui_configs, customfilepath=_theme_load)
+    editorCfg = GetConfig(defaults=stock_editor_configs, load=_editor_config_load)
 
     import wx.stc
     logger.debug("Setting background + foregroud functions for editors...")
@@ -120,5 +145,5 @@ def ready():
 
     # clrCall.setfontandcolorfunc(wx.stc.StyledTextCtrl, "StyleSetSpec",
     #                             (wx.stc.STC_STYLE_LINENUMBER, "fore:%(font),back:%(color)"))
-
+    t = dict(global_settings)
     logger.info("Ready to go!")

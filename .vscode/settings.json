@@ -2,7 +2,9 @@
     "scm.alwaysShowActions": true,
     "python.analysis.extraPaths": [
         "../libtextworker_py",
-        "../libtextworker"
+        "../libtextworker",
+        "./libtextworker",
+        "./libtextworker_py"
     ],
     "files.associations": {
         "*.xrc": "xml",
