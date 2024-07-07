@@ -8,7 +8,7 @@ import wx.lib.agw.cubecolourdialog
 import wx.xrc
 
 from libtextworker.general import CraftItems
-from libtextworker.interface.manager import hextorgb, AUTOCOLOR, ColorManager
+from libtextworker.interface.manager import AUTOCOLOR, ColorManager
 from libtextworker.interface.wx.miscs import localizePy
 
 # from markdown2 import markdown
@@ -25,10 +25,10 @@ class SettingsDialog(preferences.StDialog):
     """
 
     AUTOUPDATE: bool = global_settings["base"]["autoupdate"] in global_settings.yes_values
-    NB_LOC: str = eval(global_settings['extensions']['multiview'])['sidebar_location']
+    NB_LOC: str = global_settings['extensions.textwkr.multiview']['notebook_location']
 
     AUTOCOLOR_CHANGE: bool = clrCall["color"]["auto"] in clrCall.yes_values
-    CURRTHEME: str = eval(global_settings["config-paths"]["ui"])["name"]
+    CURRTHEME: str = global_settings["config-paths.ui"]["theme"]
 
 
     def __init__(this, parent: wx.Window):
@@ -64,11 +64,10 @@ class SettingsDialog(preferences.StDialog):
 
         this.Bind(wx.EVT_BUTTON, showchangelog, this.m_button4)
 
-        this.Bind(wx.EVT_CHOICE,
-                  lambda evt: global_settings.set_and_update(
-                      "extensions.textwkr.multiview",
-                      "notebook_location",
-                      this.m_choice2.GetStringSelection().lower()
+        this.Bind(wx.EVT_CHOICE, lambda evt: global_settings.set_and_update(
+                    "extensions.textwkr.multiview",
+                    "notebook_location",
+                    this.m_choice2.GetStringSelection().lower()
                   ),
                   this.m_choice2)
 
@@ -79,16 +78,20 @@ class SettingsDialog(preferences.StDialog):
                                         else colors[_(clrCall.getkey("color", "background").capitalize())])
         
 
-        this.Bind(wx.EVT_RADIOBOX, lambda evt: this.apply_color(this.m_radioBox1.GetStringSelection()),
-                  this.m_radioBox1)
+        this.Bind(wx.EVT_RADIOBOX, lambda evt: this.apply_color(this.m_radioBox1.GetStringSelection()), this.m_radioBox1)
 
         for i in os.listdir(THEMES_DIR):
             this.m_choice3.Append(i.removesuffix(".ini"))
 
+        def setTheme(evt):
+            global_settings.set_and_update("config-paths.ui", "theme", this.m_choice3.GetStringSelection().lower())
+            wx.MessageBox(_("Restart the application to get the effect"), _("Completed"), parent=this)
+
         this.m_choice3.SetStringSelection(this.CURRTHEME)
+        this.Bind(wx.EVT_CHOICE, setTheme, this.m_choice3)
 
         def target_type() -> str:
-            if AUTOCOLOR and this.m_radioBox1.GetSelection() == 0 and this.m_checkBox71.IsChecked(): import darkdetect; return f"-{darkdetect.theme()}"
+            if AUTOCOLOR and (this.m_radioBox1.GetSelection() == 0) and this.m_checkBox71.IsChecked(): import darkdetect; return f"-{darkdetect.theme()}"
             elif this.m_checkBox71.IsChecked(): return "-" + {1: "dark", 2: "light"}.get(this.m_radioBox1.GetSelection())
             else: return ""
 
@@ -113,6 +116,9 @@ class SettingsDialog(preferences.StDialog):
                 # wx.MessageBox(_("Not implemented yet."))
 
         this.Bind(wx.EVT_BUTTON, newtheme, this.m_button31)
+
+        # this.m_fontPicker1 with EVT_FONTPICKER_CHANGED event
+        this.m_fontPicker1.SetSelectedFont(clrCall.GetFont())
 
         # Editors page
 
