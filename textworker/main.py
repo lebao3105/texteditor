@@ -13,15 +13,6 @@ from wx.lib.agw.advancedsplash import AdvancedSplash, AS_TIMEOUT, AS_CENTER_ON_S
 ignore_not_exists: bool = False
 create_new: bool = False
 
-class SplashScreen(AdvancedSplash):
-
-    def __init__(this, parent, *args, **kwds):
-        AdvancedSplash.__init__(this, parent, bitmap=getattr(textworker.splash, textworker.branch).GetBitmap(),
-                                timeout=5000, agwStyle=AS_TIMEOUT | AS_CENTER_ON_SCREEN)
-        
-        this.fc = wx.CallLater(5000, start_app, *args, **kwds)
-        this.fc.Start()
-
 def _file_not_found(filename):
     if ignore_not_exists:
         return wx.ID_CANCEL
@@ -33,10 +24,10 @@ def _file_not_found(filename):
                             textworker._("Cannot find file name %s - create it?") % filename,
                             textworker._("File not found"), wx.YES_NO | wx.ICON_INFORMATION).ShowModal()
 
-def start_app(files: list[str], directory: list[str]):
+def start_app(files: list[str], directory: list[str], showsplash: bool):
 
     if files: logger.info("Passed files: ", " ".join(files))
-    
+
     ready()
 
     textworker.ICON = getattr(textworker.icon, textworker.branch).GetIcon()
@@ -112,7 +103,8 @@ def start_app(files: list[str], directory: list[str]):
         box.Add(boxInfo, 1, wx.EXPAND | wx.ALL, 5)
 
         from textworker.generic import clrCall
-        clrCall.configure(dlg, True)
+        clrCall.configure(dlg)
+        clrCall.autocolor_run(dlg)
         
         # logger.exception(f"Exception occured (type {exc_type}): {value}\n{trace_back}")
 
@@ -124,4 +116,9 @@ def start_app(files: list[str], directory: list[str]):
 
     sys.excepthook = handleexc
 
-    fm.Show()
+    if showsplash:
+        AdvancedSplash(fm.mainFrame, bitmap=getattr(textworker.splash, textworker.branch).GetBitmap(),
+                       timeout=5000, agwStyle=AS_TIMEOUT | AS_CENTER_ON_SCREEN)
+        wx.CallLater(5000, fm.Show).Start() # Prevent the frame to show at the same time with the splash
+    else:
+        fm.Show()

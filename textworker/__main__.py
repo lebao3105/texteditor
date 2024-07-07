@@ -53,11 +53,9 @@ def main():
     if options.ignore_not_exists and options.create_new:  # Conflict args
         parser.error("2 conlict arguments: --ignore-not-exists/-ig and --create-new/-c")
 
-    if options.ignore_not_exists:
-        ignore_not_exists = bool(options.ignore_not_exists)
+    if options.ignore_not_exists: ignore_not_exists = bool(options.ignore_not_exists)
 
-    if options.create_new:
-        create_new = bool(options.create_new)
+    if options.create_new: create_new = bool(options.create_new)
 
     if options.custom_config_dir:
         options.custom_config_dir = os.path.normpath(options.custom_config_dir)
@@ -66,8 +64,7 @@ def main():
             os.path.normpath(options.custom_config_dir),
         )
 
-    if options.custom_data_dir:
-        generic.DATA_PATH = os.path.normpath(options.custom_data_dir)
+    if options.custom_data_dir: generic.DATA_PATH = os.path.normpath(options.custom_data_dir)
 
     files: list[str] = []
     dirs: list[str] = []
@@ -82,12 +79,8 @@ def main():
     app = wx.App(0)
     app.SetAppName("textworker")
 
-    if not options.no_splash:
-        main_entrypoint.SplashScreen(None, files, dirs)
-    else:
-        main_entrypoint.start_app(files, dirs)
+    main_entrypoint.start_app(files, dirs, not options.no_splash)
     
     app.MainLoop()
-    # main_entrypoint.start_app(files, dirs)
 
 if __name__ == "__main__": main()
