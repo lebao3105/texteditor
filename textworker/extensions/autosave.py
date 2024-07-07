@@ -11,8 +11,8 @@ from ..generic import global_settings, UIRC_DIR
 
 
 # Configs
-enabled = eval(global_settings['editor']['autosave'])["enable"]
-time = eval(global_settings['editor']['autosave'])["time"]
+enabled = global_settings['editor.autosave']["enable"]
+time = global_settings['editor.autosave']["time"]
 if not int(time):
     time = 30
 

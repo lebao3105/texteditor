@@ -21,9 +21,9 @@ class Tabber(aui.AuiNotebook):
         # AUI_NB_CLOSE_ON_ALL_TABS : Close button on all tabs (disabled by default)
         # AUI_NB_MIDDLE_CLICK_CLOSE : Use middle click to close tabs
         # AUI_NB_TAB_MOVE : Move tab
-        movetabs = eval(global_settings['editor']['tabs'])["move_tabs"]
-        middle_close = eval(global_settings['editor']['tabs'])["close_on_middle_click"]
-        this.close_on_no_tab = eval(global_settings['editor']['tabs'])["close_on_no_tab"]
+        movetabs = global_settings['editor.tabs']["move_tabs"]
+        middle_close = global_settings['editor.tabs']["middle_close"]
+        this.close_on_no_tab = global_settings['editor.tabs']["close_on_no_tab"]
 
         if movetabs in global_settings.yes_values: kwds["style"] |= aui.AUI_NB_TAB_MOVE
 

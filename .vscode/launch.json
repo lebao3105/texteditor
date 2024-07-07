@@ -8,11 +8,12 @@
             "module": "textworker",
             "console": "internalConsole",
             "env": {
-                "PYTHONPATH": "../libtextworker"
+                "PYTHONPATH": "../libtextworker_py"
             },
             "args": [
                 "--custom-data-dir",
-                "../tew-data"
+                "../tew-data",
+                "--no-splash=2"
             ],
             "justMyCode": true
         },
