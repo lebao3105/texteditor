@@ -10,14 +10,14 @@
     <h3 align="right">
     A simple and cross-platform Python text editor.
     </h3>
-    <a href="https://github.com/lebao3105/texteditor/actions/workflows/wheel.yml">
-        <image src="https://github.com/lebao3105/texteditor/actions/workflows/wheel.yml/badge.svg" align="right"/>
-    </a>
+    <!-- <a href="https://gitlab.com/textworker/textworker_py/actions/workflows/wheel.yml">
+        <image src="https://gitlab.com/textworker/texteditor/actions/workflows/wheel.yml/badge.svg" align="right"/>
+    </a> -->
 </p>
 
 <br clear="both">
 
-> Tkinter version has been moved to [texteditor-tk](https://github.com/lebao3105/texteditor-tk).
+> Tkinter version has been moved to [texteditor-tk](https://gitlab.com/textworker/textworker_tk).
 
 > Future releases will be placed in TestPypi.
 
@@ -31,9 +31,7 @@
 * ~~Partial Git support (1.6a3+)~~
 * Auto save
 
-See all app releases [here.](https://github.com/lebao3105/texteditor/releases)
-
-You can get wheels from [GitHub Actions](https://github.com/lebao3105/texteditor/actions).
+See all app releases [here.](https://gitlab.com/textworker/textworker_py/releases)
 
 ## Setup
 
