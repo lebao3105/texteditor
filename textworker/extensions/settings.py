@@ -11,7 +11,7 @@ from libtextworker.general import CraftItems
 from libtextworker.interface.manager import AUTOCOLOR, ColorManager
 from libtextworker.interface.wx.miscs import localizePy
 
-# from markdown2 import markdown
+from markdown2 import markdown
 
 from . import _
 from .. import __version__, branch
@@ -58,7 +58,7 @@ class SettingsDialog(preferences.StDialog):
                 text = e
 
             wb = wx.html2.WebView.New(new)
-            # wb.SetPage(markdown(text), "")
+            wb.SetPage(markdown(text), "")
             wb.SetPage(text, "")
             new.ShowModal()
 
@@ -190,8 +190,7 @@ class SettingsDialog(preferences.StDialog):
                                      _("Update available"), wx.YES_NO, this) == wx.YES:
                         new = wx.Frame(this)
                         text = wx.html2.WebView.New(new)
-                        # text.SetPage(markdown(result[1]), f"{result[0]} changelog")
-                        text.SetPage(result[1], f"{result[0]} changelog")
+                        text.SetPage(markdown(result[1]), f"{result[0]} changelog")
                         text.Show()
                         new.Show()
             
