@@ -19,10 +19,10 @@ requires-python = ">=3.10"
 dynamic = ["dependencies"]
 
 [project.urls]
-Homepage = "https://gitlab.com/textworker/legacy_python/textworker"
-Repository = "https://gitlab.com/textworker/legacy_python/textworker"
-Issues = "https://gitlab.com/textworker/legacy_python/textworker/issues"
-Changelog = "https://gitlab.com/textworker/legacy_python/textworker/blob/main/CHANGELOG"
+Homepage = "https://gitlab.com/textworker/legacy-python/textworker"
+Repository = "https://gitlab.com/textworker/legacy-python/textworker"
+Issues = "https://gitlab.com/textworker/legacy-python/textworker/issues"
+Changelog = "https://gitlab.com/textworker/legacy-python/textworker/blob/main/CHANGELOG"
 
 [project.gui-scripts]
 textworker = "textworker.__main__:main"

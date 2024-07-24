@@ -17,7 +17,7 @@
 
 <br clear="both">
 
-> Tkinter version has been moved to [texteditor-tk](https://gitlab.com/textworker/legacy_python/textworker-tkinter).
+> Tkinter version has been moved to [texteditor-tk](https://gitlab.com/textworker/legacy-python/textworker-tkinter).
 
 > Future releases will be placed in TestPypi.
 
@@ -31,7 +31,7 @@
 * ~~Partial Git support (1.6a3+)~~
 * Auto save
 
-See all app releases [here.](https://gitlab.com/textworker/legacy_python/textworker/releases)
+See all app releases [here.](https://gitlab.com/textworker/legacy-python/textworker/releases)
 
 ## Setup
 

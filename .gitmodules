@@ -1,3 +1,3 @@
 [submodule "textworker/data"]
 	path = textworker/data
-	url = https://gitlab.com/textworker/legacy_python/assets
+	url = https://gitlab.com/textworker/legacy-python/assets
