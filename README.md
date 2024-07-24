@@ -17,7 +17,7 @@
 
 <br clear="both">
 
-> Tkinter version has been moved to [texteditor-tk](https://gitlab.com/textworker/textworker_tk).
+> Tkinter version has been moved to [texteditor-tk](https://gitlab.com/textworker/legacy_python/textworker-tkinter).
 
 > Future releases will be placed in TestPypi.
 
@@ -26,12 +26,12 @@
 * Tabs split/rearrangement
 * Access to your files without opening File Explorer
 * ~~Run some tasks with Command Window~~
-* Customizable interface, right on the native UI
+* Customizable interface
 * Open history
 * ~~Partial Git support (1.6a3+)~~
 * Auto save
 
-See all app releases [here.](https://gitlab.com/textworker/textworker_py/releases)
+See all app releases [here.](https://gitlab.com/textworker/legacy_python/textworker/releases)
 
 ## Setup
 
@@ -59,9 +59,7 @@ There is a Makefile in this project. Run `make targets` to see all availale targ
 
 ## Contributing
 
-Feel free to do that!
-
-As the code is hosted on GitHub, that means you use GitHub to report issues, share ideas, or make your own work and do a PR.
+We welcome people to make forks, make issues, and submit patches, features (request) as well!
 
 Before reporting issues:
 
