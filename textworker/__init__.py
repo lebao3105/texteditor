@@ -4,9 +4,9 @@ import locale
 from libtextworker.general import test_import
 from libtextworker.versioning import *
 
-require("libtextworker", "0.1.4b0")
+require("libtextworker", "0.1.4")
 test_import("wx")
-__version__ = "1.6b0"
+__version__ = "1.6"
 
 if is_development_version(__version__):
     branch = "dev"
