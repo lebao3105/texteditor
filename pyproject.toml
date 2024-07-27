@@ -32,8 +32,15 @@ Changelog = "https://gitlab.com/textworker/legacy-python/textworker/blob/main/CH
 [project.gui-scripts]
 textworker = "textworker.__main__:main"
 
+[project.scripts]
+textworker = "textworker.__main__:main"
+
 [tool.setuptools]
 include-package-data = true
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["textworker*", "textworker.ui*"]
 
 # https://stackoverflow.com/questions/73600082
 [tool.setuptools.dynamic]
