@@ -7,96 +7,26 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-02-18 21:11+0700\n"
-"PO-Revision-Date: 2023-11-15 23:17+0700\n"
+"POT-Creation-Date: 2024-07-27 17:11+0700\n"
+"PO-Revision-Date: 2024-07-27 18:03+0700\n"
 "Last-Translator: LeBaoNguyen (lebao3105)\n"
 "Language-Team: \n"
 "Language: vi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 3.4\n"
+"X-Generator: Poedit 3.4.4\n"
 
-#: textworker/extensions/__init__.py:18
-#, python-brace-format
-msgid "{ABOUTDLG_PATH}: Ask the developer for a fix"
-msgstr ""
-
-#: textworker/extensions/__init__.py:29
-msgid "About this application"
-msgstr ""
-
-#: textworker/extensions/__init__.py:34
-msgid "Click to view in full size"
-msgstr ""
-
-#: textworker/extensions/__init__.py:37
-msgid "Textworker icon"
-msgstr ""
-
-#: textworker/extensions/__init__.py:48
-msgid "Click to open"
-msgstr ""
-
-#: textworker/extensions/__init__.py:51
-msgid ""
-"A simple and small text editor.\n"
-"Textworker allows its users to write many things they want, with gradually "
-"added new and cool features.\n"
-"Free and open source!"
-msgstr ""
-
-#: textworker/extensions/multiview.py:35
-msgid "Close the current tab"
-msgstr "Đóng tab đang mở"
-
-#: textworker/extensions/multiview.py:39
-msgid "Disable this (open) tab"
-msgstr "Khóa tab đang mở"
-
-#: textworker/extensions/multiview.py:43
-msgid "Close the side bar"
-msgstr "Đóng side bar"
-
-#: textworker/extensions/settings.py:73
-msgid "Dark"
-msgstr ""
-
-#: textworker/extensions/settings.py:73
-msgid "Light"
-msgstr ""
-
-#: textworker/extensions/settings.py:106
-msgid "Error while setting a new theme: Name required."
-msgstr "Lỗi khi tạo một chủ đề mới: chưa đặt tên"
-
-#: textworker/extensions/settings.py:174
-msgid "The program is up-to-date"
-msgstr "Chương trình này đang ở phiên bản mới nhất"
-
-#: textworker/extensions/settings.py:177
-msgid "Invalid response received"
-msgstr ""
-
-#: textworker/extensions/settings.py:180
-#, fuzzy, python-brace-format
-msgid "Update available: {result[0]} from branch {branch}.\n"
-msgstr "Có bản cập nhật: {result[0] từ kênh {result[2]}."
-
-#: textworker/extensions/settings.py:197
-msgid "Automatic"
-msgstr "Tự động"
-
-#: textworker/main.py:21
+#: textworker/main.py:24
 #, python-format
 msgid "Cannot find file name %s - create it?"
 msgstr "Không thấy tệp %s - tạo nó?"
 
-#: textworker/main.py:22
+#: textworker/main.py:25
 msgid "File not found"
 msgstr "Không thấy tệp"
 
-#: textworker/main.py:71
+#: textworker/main.py:66
 msgid ""
 "You are running this program as root.\n"
 "You must be responsible for your changes."
@@ -104,70 +34,334 @@ msgstr ""
 "Chương trình đang được chạy dưới quyền quản trị viên (admin).\n"
 "Hãy sống có trách nhiệm, cho cả những thay đổi bạn tạo ra ở đây."
 
-#: textworker/main.py:83
+#: textworker/main.py:76
 msgid "Exception caught"
-msgstr ""
+msgstr "Phát hiện ngoại lệ"
+
+#: textworker/main.py:80
+msgid "An error occured and textworker caught it:\n"
+msgstr "Một lỗi xảy ra và textworker đã phát hiện ra nó:\n"
+
+#: textworker/main.py:86 textworker/ui/mainmenu_generated.py:65
+msgid "File"
+msgstr "Tập tin"
 
 #: textworker/main.py:87
-msgid "An error occured and textworker caught it:\n"
-msgstr ""
+msgid "Line"
+msgstr "Dòng"
 
-#: textworker/main.py:93 po/mainmenu.pot:1
-#, fuzzy
-msgid "File"
+#: textworker/main.py:88
+msgid "Function"
+msgstr "Hàm"
+
+#: textworker/main.py:89
+msgid "Called code"
+msgstr "Mã được gọi"
+
+#: textworker/ui/about.py:16
+msgid "About this application"
+msgstr "Về ứng dụng này"
+
+#: textworker/ui/about.py:31
+msgid "Click to view in full size"
+msgstr "Bấm vào để xem kích thước đầy đủ"
+
+#: textworker/ui/about.py:47
+msgid "Project version"
+msgstr "Phiên bản dự án"
+
+#: textworker/ui/about.py:60
+msgid "Home page"
+msgstr "Trang chủ"
+
+#: textworker/ui/about.py:65
+msgid "Click to open"
+msgstr "Bấm để mở"
+
+#: textworker/ui/about.py:75
+msgid "Description"
+msgstr "Mô tả"
+
+#: textworker/ui/about.py:83
+msgid ""
+"A simple and small text editor.\n"
+"Textworker allows its users to write many things they want, with gradually added new and "
+"cool features.\n"
+"Free and open source!"
+msgstr ""
+"Một trình sửa văn bản nhỏ và đơn gain.\n"
+"Textworker cho phép người dùng viết những thứ họ muốn, với những tính năng mới dần được "
+"them vào.\n"
+"Miễn phí và nguồn mở!"
+
+#: textworker/ui/about.py:104 textworker/ui/mainmenu_generated.py:155
+msgid "About"
+msgstr "Về ứng dụng này"
+
+#: textworker/ui/about.py:108
+msgid "This program is made possible thanks to:"
+msgstr "Chương trình này được tạo ra với:"
+
+#: textworker/ui/about.py:112 textworker/ui/about.py:158
+msgid "Developers"
+msgstr "Nhà phát triển"
+
+#: textworker/ui/about.py:126
+msgid "Artists"
+msgstr "Họa sĩ"
+
+#: textworker/ui/about.py:140
+msgid "Documentation writers"
+msgstr "Người viết tài liệu"
+
+#: textworker/ui/about.py:189
+msgid "License"
+msgstr "Giấy phép"
+
+#: textworker/ui/autosave.py:23
+msgid "30 seconds"
+msgstr "30 giây"
+
+#: textworker/ui/autosave.py:24
+msgid "1 minute"
+msgstr "Một phút"
+
+#: textworker/ui/autosave.py:25
+msgid "2 minutes"
+msgstr "Hai phút"
+
+#: textworker/ui/autosave.py:26
+msgid "5 minutes"
+msgstr "Năm phút"
+
+#: textworker/ui/autosave.py:27
+msgid "10 minutes"
+msgstr "Mười phút"
+
+#: textworker/ui/autosave.py:28
+msgid "15 minutes"
+msgstr "15 phút"
+
+#: textworker/ui/autosave.py:29
+msgid "20 minutes"
+msgstr "20 phút"
+
+#: textworker/ui/autosave.py:30
+msgid "30 minutes"
+msgstr "30 phút"
+
+#: textworker/ui/autosave_generated.py:23
+msgid "Auto-saving document configure"
+msgstr "Cài đặt tự động lưu"
+
+#: textworker/ui/autosave_generated.py:29
+msgid "Time format: minutes"
+msgstr "Thời gian được để dưới dạng phút"
+
+#: textworker/ui/autosave_generated.py:40
+msgid "Changes are automatically applied."
+msgstr "Mọi thay đổi đều được tự động áp dụng."
+
+#: textworker/ui/autosave_generated.py:45
+msgid "Save this permanently"
+msgstr "Lưu giá trị này"
+
+#: textworker/ui/mainmenu_generated.py:29
+msgid "New tab"
+msgstr "Tab mới"
+
+#: textworker/ui/mainmenu_generated.py:34 textworker/ui/tabs.py:75
+msgid "Open a file"
 msgstr "Mở tập tin"
 
-#: textworker/main.py:94
-msgid "Line"
-msgstr ""
+#: textworker/ui/mainmenu_generated.py:38
+msgid "Open folder"
+msgstr "Mở thư mục"
 
-#: textworker/main.py:95
-msgid "Function"
-msgstr ""
+#: textworker/ui/mainmenu_generated.py:41
+msgid "Open directory in a new window"
+msgstr "Mở thư mục ở cửa sổ mới"
 
-#: textworker/main.py:96
-msgid "Called code"
-msgstr ""
+#: textworker/ui/mainmenu_generated.py:44
+msgid "Open a folder..."
+msgstr "Mở một thư mục..."
 
-#: textworker/mainwindow.py:70
+#: textworker/ui/mainmenu_generated.py:47
+msgid "Recents"
+msgstr "Gần đây"
+
+#: textworker/ui/mainmenu_generated.py:51
+msgid "Save"
+msgstr "Lưu"
+
+#: textworker/ui/mainmenu_generated.py:54
+msgid "Save as..."
+msgstr "Lưu như..."
+
+#: textworker/ui/mainmenu_generated.py:59
+msgid "Close all tabs"
+msgstr "Đóng tất cả tab"
+
+#: textworker/ui/mainmenu_generated.py:62
+msgid "Quit"
+msgstr "Thoát"
+
+#: textworker/ui/mainmenu_generated.py:68
+msgid "Undo"
+msgstr "Hoàn nguyên"
+
+#: textworker/ui/mainmenu_generated.py:71
+msgid "Redo"
+msgstr "Thực hiện lại"
+
+#: textworker/ui/mainmenu_generated.py:76
+msgid "Cut"
+msgstr "Cắt"
+
+#: textworker/ui/mainmenu_generated.py:79
+msgid "Copy"
+msgstr "Sao chép"
+
+#: textworker/ui/mainmenu_generated.py:82
+msgid "Paste"
+msgstr "Dán"
+
+#: textworker/ui/mainmenu_generated.py:87
+msgid "Select all"
+msgstr "Chọn hết"
+
+#: textworker/ui/mainmenu_generated.py:92
+msgid "Find"
+msgstr "Tìm"
+
+#: textworker/ui/mainmenu_generated.py:95
+msgid "Replace"
+msgstr "Thay thế"
+
+#: textworker/ui/mainmenu_generated.py:102 textworker/ui/mainmenu_generated.py:111
+msgid "Configure"
+msgstr "Cài đặt"
+
+#: textworker/ui/mainmenu_generated.py:105 textworker/ui/mainmenu_generated.py:114
+msgid "Is turned on?"
+msgstr "Được bật chưa?"
+
+#: textworker/ui/mainmenu_generated.py:108
+msgid "Global"
+msgstr "Chung"
+
+#: textworker/ui/mainmenu_generated.py:117
+msgid "The current editor"
+msgstr "Trình chỉnh sửa hiện tại"
+
+#: textworker/ui/mainmenu_generated.py:119
+msgid "Auto Save"
+msgstr "Tự động lưu"
+
+#: textworker/ui/mainmenu_generated.py:121
+msgid "Edit"
+msgstr "Chỉnh sửa"
+
+#: textworker/ui/mainmenu_generated.py:124
+msgid "Zoom in"
+msgstr "Phóng to"
+
+#: textworker/ui/mainmenu_generated.py:127
+msgid "Zoom out"
+msgstr "Thu nhỏ"
+
+#: textworker/ui/mainmenu_generated.py:130
+msgid "Wrap by word"
+msgstr "Ngắ́t dòng"
+
+#: textworker/ui/mainmenu_generated.py:134 textworker/ui/preferences_generated.py:274
+msgid "Show indentation guides"
+msgstr "Hiện đường chỉ thụt lề"
+
+#: textworker/ui/mainmenu_generated.py:137
+msgid "View document as a HTML page"
+msgstr "Xem tài liệu dưới dạng một trang HTML"
+
+#: textworker/ui/mainmenu_generated.py:140 textworker/ui/preferences_generated.py:289
+msgid "View"
+msgstr "Xem"
+
+#: textworker/ui/mainmenu_generated.py:143
+msgid "Settings..."
+msgstr "Cài đặt..."
+
+#: textworker/ui/mainmenu_generated.py:146
+msgid "Reset everything"
+msgstr "Hoàn lại mọi thứ"
+
+#: textworker/ui/mainmenu_generated.py:149
+msgid "Open the configuration directory"
+msgstr "Mở thu mục cài đặt"
+
+#: textworker/ui/mainmenu_generated.py:152 textworker/ui/preferences_generated.py:23
+msgid "Settings"
+msgstr "Cài đặt"
+
+#: textworker/ui/mainmenu_generated.py:158 textworker/ui/mainwindow.py:260
+msgid "System specs"
+msgstr "Cấu hình hệ thống"
+
+#: textworker/ui/mainmenu_generated.py:161
+msgid "Show logs"
+msgstr "Hiện nhật kí"
+
+#: textworker/ui/mainmenu_generated.py:164
+msgid "Show inspector"
+msgstr "Mở một inspector"
+
+#: textworker/ui/mainmenu_generated.py:169
+msgid "Report issues..."
+msgstr "Báo cáo sự cố..."
+
+#: textworker/ui/mainmenu_generated.py:172
+msgid "Read documents"
+msgstr "Đọc tài liệu"
+
+#: textworker/ui/mainmenu_generated.py:175
+msgid "Help"
+msgstr "Trợ giúp"
+
+#: textworker/ui/mainwindow.py:59
 msgid "Log"
 msgstr "Nhật kí"
 
-#: textworker/mainwindow.py:91
+#: textworker/ui/mainwindow.py:92
 msgid "This will only affect to this session"
 msgstr "Chỉ áp dụng cho phiên hiện tại"
 
-#: textworker/mainwindow.py:227
+#: textworker/ui/mainwindow.py:184
 msgid "Select a folder to start"
 msgstr "Mở một thư mục để bắt đầu"
 
-#: textworker/mainwindow.py:275
-#, fuzzy
+#: textworker/ui/mainwindow.py:232
 msgid ""
 "Are you sure want to reset every settings?\n"
 "If so, finish your work first.\n"
 "(and you will need to reopen yourself)"
 msgstr ""
 "Bạn có chắc mình muốn hoàn lại mọi cài đặt?\n"
-"Nếu vậy thì hoàn thành công việc của bạn trước, vì chương trình sẽ đóng sau "
-"tác vụ hoàn tác.\n"
-"(và bạn phải tự mở lại nó)"
+"Nếu vậy thì hoàn thành công việc của bạn trước, vì chương trình sẽ đóng sau tác vụ hoàn "
+"tác.\n"
+"(và bạn phải tự mở lại nó)"
 
-#: textworker/mainwindow.py:278
-#, fuzzy
+#: textworker/ui/mainwindow.py:235
 msgid "Reset confirmation"
-msgstr "Reset tất cả cài đặt"
+msgstr "Xác nhận reset"
 
-#: textworker/mainwindow.py:291
+#: textworker/ui/mainwindow.py:247
 msgid "Unknown"
 msgstr "Không xác định"
 
-#: textworker/mainwindow.py:293
+#: textworker/ui/mainwindow.py:249
 msgid ""
 "\n"
 "        Textworker version {appver}\n"
-"        Branch: {\"Nightly\" if is_development_version(appver) else "
-"\"Stable\"}\n"
+"        Branch: {\"Nightly\" if is_development_version(appver) else \"Stable\"}\n"
 "        libtextworker verison {libver}\n"
 "        wxPython version: {wx.__version__}\n"
 "        Python version: {platform.python_version()}\n"
@@ -178,8 +372,7 @@ msgid ""
 msgstr ""
 "\n"
 "        Textworker {appver}\n"
-"        Kênh {\"Nightly\" if is_development_version(appver) else "
-"\"Stable\"}\n"
+"        Kênh {\"Nightly\" if is_development_version(appver) else \"Stable\"}\n"
 "        libtextworker phiên bản {libver}\n"
 "        wxPython phiên bản {wx.__version__}\n"
 "        Python {platform.python_version()}\n"
@@ -188,224 +381,258 @@ msgstr ""
 "        Hệ máy {platform.machine()}\n"
 "        "
 
-#: textworker/mainwindow.py:304 po/mainmenu.pot:41
-msgid "System specs"
-msgstr "Cấu hình hệ thống"
+#: textworker/ui/multiview.py:34
+msgid "Close the current tab"
+msgstr "Đóng tab đang mở"
 
-#: textworker/tabs.py:13
+#: textworker/ui/multiview.py:38
+msgid "Disable this (open) tab"
+msgstr "Khóa tab đang mở"
+
+#: textworker/ui/multiview.py:42
+msgid "Close the side bar"
+msgstr "Đóng thanh bên"
+
+#: textworker/ui/preferences_generated.py:36
+msgid "App updates"
+msgstr "Bản cập nhật ứng dụng"
+
+#: textworker/ui/preferences_generated.py:38
+msgid "Automatically?"
+msgstr "Tự động?"
+
+#: textworker/ui/preferences_generated.py:44
+msgid "Check for updates"
+msgstr "Kiểm tra cập nhật"
+
+#: textworker/ui/preferences_generated.py:47
+msgid "View release notes (requires internet)"
+msgstr "Đọc release note (yêu cầu internet)"
+
+#: textworker/ui/preferences_generated.py:53
+msgid "Interface"
+msgstr "Giao diện"
+
+#: textworker/ui/preferences_generated.py:57
+msgid "Notebook tabs location"
+msgstr "Vị trí đặt tab"
+
+#: textworker/ui/preferences_generated.py:62
+msgid "Left"
+msgstr "Trái"
+
+#: textworker/ui/preferences_generated.py:62
+msgid "Right"
+msgstr "Phải"
+
+#: textworker/ui/preferences_generated.py:62
+msgid "Top"
+msgstr "Trên"
+
+#: textworker/ui/preferences_generated.py:62
+msgid "Bottom"
+msgstr "Dưới"
+
+#: textworker/ui/preferences_generated.py:72
+msgid "Font"
+msgstr "Phông chữ"
+
+#: textworker/ui/preferences_generated.py:91
+msgid "General"
+msgstr "Chung"
+
+#: textworker/ui/preferences_generated.py:95 textworker/ui/settings.py:198
+msgid "Automatic"
+msgstr "Tự động"
+
+#: textworker/ui/preferences_generated.py:95 textworker/ui/settings.py:73
+msgid "Dark"
+msgstr "Tối"
+
+#: textworker/ui/preferences_generated.py:95 textworker/ui/settings.py:73
+msgid "Light"
+msgstr "Sáng"
+
+#: textworker/ui/preferences_generated.py:96
+msgid "Color schemes"
+msgstr "Chế độ màu"
+
+#: textworker/ui/preferences_generated.py:100
+msgid "Customize"
+msgstr "Tùy biến"
+
+#: textworker/ui/preferences_generated.py:104
+msgid "Background"
+msgstr "Màu nền"
+
+#: textworker/ui/preferences_generated.py:109 textworker/ui/preferences_generated.py:122
+#: textworker/ui/preferences_generated.py:137 textworker/ui/preferences_generated.py:154
+msgid "Picker"
+msgstr ""
+
+#: textworker/ui/preferences_generated.py:117
+msgid "Foreground"
+msgstr "Màu chữ"
+
+#: textworker/ui/preferences_generated.py:130
+msgid "Background (dark mode)"
+msgstr "Màu nền (chế độ tối)"
+
+#: textworker/ui/preferences_generated.py:147
+msgid "Foreground (dark mode)"
+msgstr "Màu chữ (chế độ tối)"
+
+#: textworker/ui/preferences_generated.py:164
+msgid "Different colors for dark/light mode (WIP)"
+msgstr "Màu cho từng chế độ sáng/tối (WIP)"
+
+#: textworker/ui/preferences_generated.py:178
+msgid "Themes"
+msgstr "Chủ đề"
+
+#: textworker/ui/preferences_generated.py:182 textworker/ui/preferences_generated.py:338
+msgid "Pre-made"
+msgstr "Được tạo sẵn"
+
+#: textworker/ui/preferences_generated.py:197 textworker/ui/preferences_generated.py:353
+msgid "Create new"
+msgstr "Tạo mới"
+
+#: textworker/ui/preferences_generated.py:205 textworker/ui/preferences_generated.py:361
+msgid "Do it"
+msgstr "Thực hiện"
+
+#: textworker/ui/preferences_generated.py:211
+msgid ""
+"If you want to make a new theme, create and switch to it first before doing any color "
+"changes."
+msgstr "Nếu bạn muốn tạo chủ đề mới, tạo và chuyển sang nó trước khi tạo bất cứ thay đổi nào."
+
+#: textworker/ui/preferences_generated.py:223
+msgid "Colors"
+msgstr "Màu"
+
+#: textworker/ui/preferences_generated.py:227
+msgid "Indentation"
+msgstr "Thụt lề"
+
+#: textworker/ui/preferences_generated.py:231
+msgid "Is enabled?"
+msgstr "Đã bật?"
+
+#: textworker/ui/preferences_generated.py:236
+msgid "Enabled - use tabs"
+msgstr "Bật - dùng tab"
+
+#: textworker/ui/preferences_generated.py:236
+msgid "Enabled - use spaces"
+msgstr "Bật - dùng dấu cách"
+
+#: textworker/ui/preferences_generated.py:236
+msgid "Disabled"
+msgstr "Tắt"
+
+#: textworker/ui/preferences_generated.py:246
+msgid "Size"
+msgstr "Cỡ"
+
+#: textworker/ui/preferences_generated.py:251
+msgid "2"
+msgstr ""
+
+#: textworker/ui/preferences_generated.py:251 textworker/ui/preferences_generated.py:252
+msgid "4"
+msgstr ""
+
+#: textworker/ui/preferences_generated.py:251
+msgid "6"
+msgstr ""
+
+#: textworker/ui/preferences_generated.py:251
+msgid "8"
+msgstr ""
+
+#: textworker/ui/preferences_generated.py:261
+msgid "Backspace clears the indentation"
+msgstr "Backspace xóa thụt lề gần nhất"
+
+#: textworker/ui/preferences_generated.py:293
+msgid "View whitespaces"
+msgstr "Xem dấu cách"
+
+#: textworker/ui/preferences_generated.py:306
+msgid "View end-of-line (EOL)"
+msgstr "Xem kí hiệu hết dòng (EOL - End Of Line)"
+
+#: textworker/ui/preferences_generated.py:319
+msgid "Line numbers"
+msgstr "Hiện số dòng"
+
+#: textworker/ui/preferences_generated.py:334
+msgid "Save settings"
+msgstr "Lưu cài đặt"
+
+#: textworker/ui/preferences_generated.py:367
+msgid ""
+"If you want to make new settings pack, create and switch to it first before doing any "
+"changes."
+msgstr ""
+"Nếu bạn muốn tạo một pack cài đặt mới, tạo và chuyển sang nó trước khi tạo bất cứ thay đổi "
+"nào."
+
+#: textworker/ui/preferences_generated.py:379
+msgid "Editors"
+msgstr "Các editor"
+
+#: textworker/ui/settings.py:86
+msgid "Restart the application to get the effect"
+msgstr "Khởi động lại ứng dụng để thấy sự thay đổi"
+
+#: textworker/ui/settings.py:86
+msgid "Completed"
+msgstr "Đã xong"
+
+#: textworker/ui/settings.py:106
+msgid "Error while setting a new theme: Name required."
+msgstr "Lỗi khi tạo một chủ đề mới: chưa đặt tên."
+
+#: textworker/ui/settings.py:178
+msgid "The program is up-to-date"
+msgstr "Chương trình này đang ở phiên bản mới nhất"
+
+#: textworker/ui/settings.py:181
+msgid "Invalid response received"
+msgstr "Nhận được phản hồi không hợp lệ"
+
+#: textworker/ui/settings.py:186
+#, python-brace-format
+msgid "Your editor is outdated: new {result[0]} from branch {branch}.\n"
+msgstr "Có bản cập nhật: {result[0]} từ kênh {branch}.\n"
+
+#: textworker/ui/settings.py:188
+msgid "Update available"
+msgstr "Có bản cập nhật mới"
+
+#: textworker/ui/tabs.py:24
 msgid "Untitled"
 msgstr "Không tên"
 
-#: textworker/tabs.py:53
+#: textworker/ui/tabs.py:57
 msgid "New file"
 msgstr "Tập tin mới"
 
-#: textworker/file_operations.py:36 po/mainmenu.pot:4
-msgid "Open a file"
-msgstr "Mở tập tin"
-
-#: textworker/file_operations.py:42
+#: textworker/ui/tabs.py:80
 msgid "Save this to..."
 msgstr "Lưu tệp này tới..."
 
-#: textworker/file_operations.py:73
+#: textworker/ui/tabs.py:138
 #, python-brace-format
 msgid "Save {path}? It has unsaved changes."
-msgstr ""
+msgstr "Lưu {path}? Nó có thay đổi chưa được lưu."
 
-#: textworker/file_operations.py:74
+#: textworker/ui/tabs.py:139
 msgid "Not saved"
-msgstr ""
-
-#: po/autosave.pot:1
-msgid "Auto-saving document configure"
-msgstr "Cài đặt tự động lưu"
-
-#: po/autosave.pot:2
-msgid "Time format: minutes"
-msgstr "Thời gian được để dưới dạng phút"
-
-#: po/autosave.pot:3
-msgid "Changes are automatically applied."
-msgstr ""
-
-#: po/autosave.pot:4
-msgid "Save this permanently"
-msgstr "Lưu giá trị này"
-
-#: po/mainmenu.pot:2
-msgid "New tab"
-msgstr ""
-
-#: po/mainmenu.pot:3
-msgid "New window"
-msgstr ""
-
-#: po/mainmenu.pot:5
-#, fuzzy
-msgid "Open a folder..."
-msgstr "Chọn một thư mục để bắt đầu"
-
-#: po/mainmenu.pot:6
-#, fuzzy
-msgid "Open folder"
-msgstr "Chọn một thư mục để bắt đầu"
-
-#: po/mainmenu.pot:7
-#, fuzzy
-msgid "Open directory in a new window"
-msgstr "Mở thu mục cài đặt"
-
-#: po/mainmenu.pot:8
-msgid "Recents"
-msgstr ""
-
-#: po/mainmenu.pot:9
-#, fuzzy
-msgid "Save"
-msgstr "Tự động lưu"
-
-#: po/mainmenu.pot:10
-#, fuzzy
-msgid "Save as..."
-msgstr "Lưu tệp này tới..."
-
-#: po/mainmenu.pot:11
-msgid "Close all tabs"
-msgstr "Đóng tất cả tab"
-
-#: po/mainmenu.pot:12
-msgid "Quit"
-msgstr ""
-
-#: po/mainmenu.pot:13
-#, fuzzy
-msgid "Edit"
-msgstr "&Chỉnh sửa"
-
-#: po/mainmenu.pot:14
-msgid "Undo"
-msgstr ""
-
-#: po/mainmenu.pot:15
-msgid "Redo"
-msgstr ""
-
-#: po/mainmenu.pot:16
-msgid "Cut"
-msgstr ""
-
-#: po/mainmenu.pot:17
-msgid "Copy"
-msgstr ""
-
-#: po/mainmenu.pot:18
-msgid "Paste"
-msgstr ""
-
-#: po/mainmenu.pot:19
-#, fuzzy
-msgid "Select all"
-msgstr "Phóng to\tCtrl++"
-
-#: po/mainmenu.pot:20
-msgid "Find"
-msgstr ""
-
-#: po/mainmenu.pot:21
-#, fuzzy
-msgid "Replace"
-msgstr "Phóng to\tCtrl++"
-
-#: po/mainmenu.pot:22
-msgid "Auto Save"
-msgstr "Tự động lưu"
-
-#: po/mainmenu.pot:23
-msgid "Global"
-msgstr "Chung"
-
-#: po/mainmenu.pot:24 po/mainmenu.pot:27
-msgid "Configure"
-msgstr "Cài đặt"
-
-#: po/mainmenu.pot:25 po/mainmenu.pot:28
-msgid "Is turned on?"
-msgstr "Được bật chưa?"
-
-#: po/mainmenu.pot:26
-msgid "The current editor"
-msgstr "Trình chỉnh sửa hiện tại"
-
-#: po/mainmenu.pot:29
-#, fuzzy
-msgid "View"
-msgstr "Xem mã nguồn ứng dụng trực tuyến."
-
-#: po/mainmenu.pot:30
-#, fuzzy
-msgid "Zoom in"
-msgstr "Phóng to\tCtrl++"
-
-#: po/mainmenu.pot:31
-#, fuzzy
-msgid "Zoom out"
-msgstr "Thu nhỏ\tCtrl+-"
-
-#: po/mainmenu.pot:32
-#, fuzzy
-msgid "Wrap by word"
-msgstr "Ngắt dòng bởi từ\tCtrl+W"
-
-#: po/mainmenu.pot:33
-#, fuzzy
-msgid "Show indentation guides"
-msgstr "Hiện nhật kí"
-
-#: po/mainmenu.pot:34
-msgid "View document as a HTML page"
-msgstr "Xem tài liệu dưới dạng một trang HTML"
-
-#: po/mainmenu.pot:35
-msgid "Settings"
-msgstr "Cài đặt"
-
-#: po/mainmenu.pot:36
-#, fuzzy
-msgid "Settings..."
-msgstr "Cài đặt"
-
-#: po/mainmenu.pot:37
-msgid "Reset everything"
-msgstr "Hoàn lại mọi thứ"
-
-#: po/mainmenu.pot:38
-msgid "Open the configuration directory"
-msgstr "Mở thu mục cài đặt"
-
-#: po/mainmenu.pot:39
-msgid "Help"
-msgstr "Trợ &giúp"
-
-#: po/mainmenu.pot:40
-msgid "About"
-msgstr "Về ứng dụng này"
-
-#: po/mainmenu.pot:42
-msgid "Show logs"
-msgstr "Hiện nhật kí"
-
-#: po/mainmenu.pot:43
-msgid "Show inspector"
-msgstr ""
-
-#: po/mainmenu.pot:44
-msgid "Report issues..."
-msgstr "Báo cáo sự cố..."
-
-#: po/mainmenu.pot:45
-msgid "Read documents"
-msgstr "Đọc tài liệu"
+msgstr "Chưa được lưu"
 
 #~ msgid "No changelog/unable to get."
 #~ msgstr "Không có thay đổi nào được ghi lại / không thể lấy bây giờ."
@@ -420,12 +647,12 @@ msgstr "Đọc tài liệu"
 #~ msgstr "Chú ý"
 
 #~ msgid ""
-#~ "The settings system has been changed recently and automatically merged "
-#~ "into your settings.Look for the changes below.All changes are required. "
-#~ "You just need to review what are they:)"
+#~ "The settings system has been changed recently and automatically merged into your "
+#~ "settings.Look for the changes below.All changes are required. You just need to review "
+#~ "what are they:)"
 #~ msgstr ""
-#~ "Hệ thống cài đặt đã được thay đổi gần đây và sẽ được áp dụng vào các cài "
-#~ "đặt hiện tại. Xem các thay đổi bên dưới - tất cả sẽ được áp dụng."
+#~ "Hệ thống cài đặt đã được thay đổi gần đây và sẽ được áp dụng vào các cài đặt hiện tại. "
+#~ "Xem các thay đổi bên dưới - tất cả sẽ được áp dụng."
 
 #~ msgid "Moved to file..."
 #~ msgstr "Đã chuyển sang tệp..."
@@ -433,12 +660,8 @@ msgstr "Đọc tài liệu"
 #~ msgid "Not implemented yet."
 #~ msgstr "Tính năng chưa được viết."
 
-#~ msgid ""
-#~ "Invalid response received: Maybe an internet problem, or my data is "
-#~ "invalid."
-#~ msgstr ""
-#~ "Nhận được phản hồi không hợp lệ: Có thể do internet hoặc là dữ liệu của "
-#~ "tôi."
+#~ msgid "Invalid response received: Maybe an internet problem, or my data is invalid."
+#~ msgstr "Nhận được phản hồi không hợp lệ: Có thể do internet hoặc là dữ liệu của tôi."
 
 #, python-brace-format
 #~ msgid "Changelog: {updater.RELEASES}{result[0]}"
@@ -449,26 +672,13 @@ msgstr "Đọc tài liệu"
 #~ "If you're running a packaged version, tell us."
 #~ msgstr ""
 #~ "Bạn cần cài đặt markdown2 từ kho Pypi trước đã!\n"
-#~ "Nếu đang sử dụng bản được đóng gói (thay vì chạy từ mã nguồn), báo chúng "
-#~ "tôi."
+#~ "Nếu đang sử dụng bản được đóng gói (thay vì chạy từ mã nguồn), báo chúng tôi."
 
 #~ msgid "Extra package required"
 #~ msgstr "Cần gói bổ sung"
 
 #~ msgid "A simplified text editor."
 #~ msgstr "Một trình chỉnh sửa đơn giản."
-
-#, fuzzy
-#~ msgid "Editors"
-#~ msgstr "&Chỉnh sửa"
-
-#, fuzzy
-#~ msgid "Enabled - use tabs"
-#~ msgstr "Không tìm thấy Git - cài đặt nó để sử dụng plugin này."
-
-#, fuzzy
-#~ msgid "Enabled - use spaces"
-#~ msgstr "Không tìm thấy Git - cài đặt nó để sử dụng plugin này."
 
 #, fuzzy
 #~ msgid "Open a file\tCtrl+O"

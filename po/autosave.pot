@@ -1,4 +1,0 @@
-_("Auto-saving document configure");
-_("Time format: minutes");
-_("Changes are automatically applied.");
-_("Save this permanently");
