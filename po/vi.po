@@ -85,13 +85,13 @@ msgstr "Mô tả"
 #: textworker/ui/about.py:83
 msgid ""
 "A simple and small text editor.\n"
-"Textworker allows its users to write many things they want, with gradually added new and "
-"cool features.\n"
+"Textworker allows its users to write many things they want, with gradually "
+"added new and cool features.\n"
 "Free and open source!"
 msgstr ""
 "Một trình sửa văn bản nhỏ và đơn gain.\n"
-"Textworker cho phép người dùng viết những thứ họ muốn, với những tính năng mới dần được "
-"them vào.\n"
+"Textworker cho phép người dùng viết những thứ họ muốn, với những tính năng "
+"mới dần được them vào.\n"
 "Miễn phí và nguồn mở!"
 
 #: textworker/ui/about.py:104 textworker/ui/mainmenu_generated.py:155
@@ -238,11 +238,13 @@ msgstr "Tìm"
 msgid "Replace"
 msgstr "Thay thế"
 
-#: textworker/ui/mainmenu_generated.py:102 textworker/ui/mainmenu_generated.py:111
+#: textworker/ui/mainmenu_generated.py:102
+#: textworker/ui/mainmenu_generated.py:111
 msgid "Configure"
 msgstr "Cài đặt"
 
-#: textworker/ui/mainmenu_generated.py:105 textworker/ui/mainmenu_generated.py:114
+#: textworker/ui/mainmenu_generated.py:105
+#: textworker/ui/mainmenu_generated.py:114
 msgid "Is turned on?"
 msgstr "Được bật chưa?"
 
@@ -274,7 +276,8 @@ msgstr "Thu nhỏ"
 msgid "Wrap by word"
 msgstr "Ngắ́t dòng"
 
-#: textworker/ui/mainmenu_generated.py:134 textworker/ui/preferences_generated.py:274
+#: textworker/ui/mainmenu_generated.py:134
+#: textworker/ui/preferences_generated.py:274
 msgid "Show indentation guides"
 msgstr "Hiện đường chỉ thụt lề"
 
@@ -282,7 +285,8 @@ msgstr "Hiện đường chỉ thụt lề"
 msgid "View document as a HTML page"
 msgstr "Xem tài liệu dưới dạng một trang HTML"
 
-#: textworker/ui/mainmenu_generated.py:140 textworker/ui/preferences_generated.py:289
+#: textworker/ui/mainmenu_generated.py:140
+#: textworker/ui/preferences_generated.py:289
 msgid "View"
 msgstr "Xem"
 
@@ -298,7 +302,8 @@ msgstr "Hoàn lại mọi thứ"
 msgid "Open the configuration directory"
 msgstr "Mở thu mục cài đặt"
 
-#: textworker/ui/mainmenu_generated.py:152 textworker/ui/preferences_generated.py:23
+#: textworker/ui/mainmenu_generated.py:152
+#: textworker/ui/preferences_generated.py:23
 msgid "Settings"
 msgstr "Cài đặt"
 
@@ -345,8 +350,8 @@ msgid ""
 "(and you will need to reopen yourself)"
 msgstr ""
 "Bạn có chắc mình muốn hoàn lại mọi cài đặt?\n"
-"Nếu vậy thì hoàn thành công việc của bạn trước, vì chương trình sẽ đóng sau tác vụ hoàn "
-"tác.\n"
+"Nếu vậy thì hoàn thành công việc của bạn trước, vì chương trình sẽ đóng sau "
+"tác vụ hoàn tác.\n"
 "(và bạn phải tự mở lại nó)"
 
 #: textworker/ui/mainwindow.py:235
@@ -361,7 +366,8 @@ msgstr "Không xác định"
 msgid ""
 "\n"
 "        Textworker version {appver}\n"
-"        Branch: {\"Nightly\" if is_development_version(appver) else \"Stable\"}\n"
+"        Branch: {\"Nightly\" if is_development_version(appver) else "
+"\"Stable\"}\n"
 "        libtextworker verison {libver}\n"
 "        wxPython version: {wx.__version__}\n"
 "        Python version: {platform.python_version()}\n"
@@ -372,7 +378,8 @@ msgid ""
 msgstr ""
 "\n"
 "        Textworker {appver}\n"
-"        Kênh {\"Nightly\" if is_development_version(appver) else \"Stable\"}\n"
+"        Kênh {\"Nightly\" if is_development_version(appver) else "
+"\"Stable\"}\n"
 "        libtextworker phiên bản {libver}\n"
 "        wxPython phiên bản {wx.__version__}\n"
 "        Python {platform.python_version()}\n"
@@ -465,8 +472,10 @@ msgstr "Tùy biến"
 msgid "Background"
 msgstr "Màu nền"
 
-#: textworker/ui/preferences_generated.py:109 textworker/ui/preferences_generated.py:122
-#: textworker/ui/preferences_generated.py:137 textworker/ui/preferences_generated.py:154
+#: textworker/ui/preferences_generated.py:109
+#: textworker/ui/preferences_generated.py:122
+#: textworker/ui/preferences_generated.py:137
+#: textworker/ui/preferences_generated.py:154
 msgid "Picker"
 msgstr ""
 
@@ -490,23 +499,28 @@ msgstr "Màu cho từng chế độ sáng/tối (WIP)"
 msgid "Themes"
 msgstr "Chủ đề"
 
-#: textworker/ui/preferences_generated.py:182 textworker/ui/preferences_generated.py:338
+#: textworker/ui/preferences_generated.py:182
+#: textworker/ui/preferences_generated.py:338
 msgid "Pre-made"
 msgstr "Được tạo sẵn"
 
-#: textworker/ui/preferences_generated.py:197 textworker/ui/preferences_generated.py:353
+#: textworker/ui/preferences_generated.py:197
+#: textworker/ui/preferences_generated.py:353
 msgid "Create new"
 msgstr "Tạo mới"
 
-#: textworker/ui/preferences_generated.py:205 textworker/ui/preferences_generated.py:361
+#: textworker/ui/preferences_generated.py:205
+#: textworker/ui/preferences_generated.py:361
 msgid "Do it"
 msgstr "Thực hiện"
 
 #: textworker/ui/preferences_generated.py:211
 msgid ""
-"If you want to make a new theme, create and switch to it first before doing any color "
-"changes."
-msgstr "Nếu bạn muốn tạo chủ đề mới, tạo và chuyển sang nó trước khi tạo bất cứ thay đổi nào."
+"If you want to make a new theme, create and switch to it first before doing "
+"any color changes."
+msgstr ""
+"Nếu bạn muốn tạo chủ đề mới, tạo và chuyển sang nó trước khi tạo bất cứ thay "
+"đổi nào."
 
 #: textworker/ui/preferences_generated.py:223
 msgid "Colors"
@@ -540,7 +554,8 @@ msgstr "Cỡ"
 msgid "2"
 msgstr ""
 
-#: textworker/ui/preferences_generated.py:251 textworker/ui/preferences_generated.py:252
+#: textworker/ui/preferences_generated.py:251
+#: textworker/ui/preferences_generated.py:252
 msgid "4"
 msgstr ""
 
@@ -574,11 +589,11 @@ msgstr "Lưu cài đặt"
 
 #: textworker/ui/preferences_generated.py:367
 msgid ""
-"If you want to make new settings pack, create and switch to it first before doing any "
-"changes."
+"If you want to make new settings pack, create and switch to it first before "
+"doing any changes."
 msgstr ""
-"Nếu bạn muốn tạo một pack cài đặt mới, tạo và chuyển sang nó trước khi tạo bất cứ thay đổi "
-"nào."
+"Nếu bạn muốn tạo một pack cài đặt mới, tạo và chuyển sang nó trước khi tạo "
+"bất cứ thay đổi nào."
 
 #: textworker/ui/preferences_generated.py:379
 msgid "Editors"
@@ -647,12 +662,12 @@ msgstr "Chưa được lưu"
 #~ msgstr "Chú ý"
 
 #~ msgid ""
-#~ "The settings system has been changed recently and automatically merged into your "
-#~ "settings.Look for the changes below.All changes are required. You just need to review "
-#~ "what are they:)"
+#~ "The settings system has been changed recently and automatically merged "
+#~ "into your settings.Look for the changes below.All changes are required. "
+#~ "You just need to review what are they:)"
 #~ msgstr ""
-#~ "Hệ thống cài đặt đã được thay đổi gần đây và sẽ được áp dụng vào các cài đặt hiện tại. "
-#~ "Xem các thay đổi bên dưới - tất cả sẽ được áp dụng."
+#~ "Hệ thống cài đặt đã được thay đổi gần đây và sẽ được áp dụng vào các cài "
+#~ "đặt hiện tại. Xem các thay đổi bên dưới - tất cả sẽ được áp dụng."
 
 #~ msgid "Moved to file..."
 #~ msgstr "Đã chuyển sang tệp..."
@@ -660,8 +675,12 @@ msgstr "Chưa được lưu"
 #~ msgid "Not implemented yet."
 #~ msgstr "Tính năng chưa được viết."
 
-#~ msgid "Invalid response received: Maybe an internet problem, or my data is invalid."
-#~ msgstr "Nhận được phản hồi không hợp lệ: Có thể do internet hoặc là dữ liệu của tôi."
+#~ msgid ""
+#~ "Invalid response received: Maybe an internet problem, or my data is "
+#~ "invalid."
+#~ msgstr ""
+#~ "Nhận được phản hồi không hợp lệ: Có thể do internet hoặc là dữ liệu của "
+#~ "tôi."
 
 #, python-brace-format
 #~ msgid "Changelog: {updater.RELEASES}{result[0]}"
@@ -672,7 +691,8 @@ msgstr "Chưa được lưu"
 #~ "If you're running a packaged version, tell us."
 #~ msgstr ""
 #~ "Bạn cần cài đặt markdown2 từ kho Pypi trước đã!\n"
-#~ "Nếu đang sử dụng bản được đóng gói (thay vì chạy từ mã nguồn), báo chúng tôi."
+#~ "Nếu đang sử dụng bản được đóng gói (thay vì chạy từ mã nguồn), báo chúng "
+#~ "tôi."
 
 #~ msgid "Extra package required"
 #~ msgstr "Cần gói bổ sung"
