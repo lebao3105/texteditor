@@ -173,12 +173,15 @@ cython_debug/
 *.flatpak
 
 # Generated Python files
-textworker/ui/*.py
-!textworker/ui/about.py
-!textworker/ui/auistyles.py
+textworker/ui/*_generated.py
 
 # XRC
 *.xrc
 
 # Generated PNGs
-*.png
+#*.png
+
+# Generated Python from PNGs
+textworker/icons.py
+textworker/splash.py
+textworker/assets.py

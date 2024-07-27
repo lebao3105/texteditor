@@ -1,4 +1,3 @@
-import json
 import logging
 import os
 import typing
@@ -33,9 +32,6 @@ filehdlr.setFormatter(formatter)
 logger.addHandler(filehdlr)
 logger.addHandler(strhdlr)
 
-# Settings system changes
-moves = json.loads(open(CraftItems(currPath, "merges.json")).read())
-
 CONFIGS_PATH = os.path.expanduser(
     "~/.config/textworker/configs{}.ini".format(
         "_dev" if is_development_version_from_project("textworker") else ""
@@ -45,8 +41,8 @@ DATA_PATH: str = str(currPath / "data")
 UIRC_DIR: str = str(currPath / "ui")
 
 def find_resource(t: typing.Literal["ui", "editor"]) -> str:
-    _name = global_settings[f'config-paths.{t}']['name' if t == "editor" else "theme"]
-    _path = global_settings[f'config-paths.{t}']['path']
+    _name = global_settings.getkey(f'config-paths.{t}', 'name' if t == "editor" else "theme", True, True, True, True)
+    _path = global_settings.getkey(f'config-paths.{t}', 'path', True, True, True, True)
 
     _name += ".ini"
 

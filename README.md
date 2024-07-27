@@ -19,7 +19,7 @@
 
 > Tkinter version has been moved to [texteditor-tk](https://gitlab.com/textworker/legacy-python/textworker-tkinter).
 
-> Future releases will be placed in TestPypi.
+> Its future releases will be placed in TestPypi.
 
 ## Features
 
@@ -39,6 +39,8 @@ Requires Python 3.10 or later.
 
 Install all dependencies shown in [requirements.txt](requirements.txt)
 
+Install wxFormBuilder and add it to `PATH`.
+
 Additional dependencies may required for wxPython:
 
 * All: Install `attrdict3` from Pypi first
@@ -51,11 +53,27 @@ Additional dependencies may required for wxPython:
 
 Wheels for some Linux distributions (and their based-ons): https://extras.wxpython.org/wxPython4/extras/linux/gtk3/
 
-Installable directly from Pypi as the ```textworker``` package.
-
 Run this project like every Python projects else. Use `-h` / `--help` to see all available options.
 
-There is a Makefile in this project. Run `make targets` to see all availale targets.
+## Build/install
+
+Generate some Python files: `make genui`. Only run this once if you have no modifications to .fbp files.
+
+It is highly advised to compile .po for translations first:
+
+`make maketrans`.
+
+Some targets below will do that first, only if you use `make`.
+
+* Generate assets (required, only need to run once): `make icons` and `make splash` and `make assets`.
+
+* Make a wheel: `make build` or `pip install build` then `python3 -m build`.
+
+* Combine everything ABOVE (+ clean first): `make all`
+
+* Install: `make install` or `pip install .`
+
+* Clean: `make clean`
 
 ## Contributing
 

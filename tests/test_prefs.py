@@ -1,4 +1,4 @@
-from textworker.extensions.settings import SettingsDialog
+from textworker.ui.settings import SettingsDialog
 from wx import App, MessageBox, EVT_CLOSE
 
 def test_prefs():
@@ -13,6 +13,6 @@ def test_prefs():
         "Warning"
     )
     prefs = SettingsDialog(None)
-    prefs.dlg.Show()
-    prefs.dlg.Bind(EVT_CLOSE, OnClose)
+    prefs.Show()
+    prefs.Bind(EVT_CLOSE, OnClose)
     app.MainLoop()

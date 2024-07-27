@@ -4,14 +4,17 @@
     - ~~Setup Window on first launch/update (needs some fixes to be done)~~
     - Side bar
     - Use guesslang to "guess" language of the text (cancelled)
-    - Settings window (almost done!)
+    - Settings window (completed)
     - Unsaved changes checker
+
 - 1.7:
     - File backup (ends with ~ or .bck)
-    - Make FirstRunDialog great
+    - Make FirstRunDialog
     - Merge dialog
+    - Markdown preview in new tab
     - Further we can make extensions support
     - Attempt for another UI work (icons etc)
+    - Do NOT allow --custom-data-dir for builds
 
 Side requests:
 - Dependency management

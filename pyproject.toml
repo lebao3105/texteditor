@@ -1,10 +1,9 @@
 [build-system]
-requires = ["setuptools", "wheel"]
+requires = ["setuptools"]
 build-backend = "setuptools.build_meta"
 
 [project]
 name = "textworker"
-version = "1.6b0"
 
 description = "Just a text editor"
 readme = "README.md"
@@ -16,7 +15,13 @@ authors = [
 license = {file = "LICENSE"}
 
 requires-python = ">=3.10"
-dynamic = ["dependencies"]
+dynamic = ["dependencies", "version"]
+
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: GNU General Public License v3 (GPLv3)"
+]
 
 [project.urls]
 Homepage = "https://gitlab.com/textworker/legacy-python/textworker"
@@ -30,9 +35,7 @@ textworker = "textworker.__main__:main"
 [tool.setuptools]
 include-package-data = true
 
-[tool.setuptools.packages.find]
-where = ["textworker"]
-
 # https://stackoverflow.com/questions/73600082
 [tool.setuptools.dynamic]
 dependencies = {file = ["requirements.txt"]}
+version = {attr = "textworker.__version__"}

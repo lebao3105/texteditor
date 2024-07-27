@@ -33,4 +33,4 @@ DEVS = ARTISTS = DOCWRITERS = {
 LICENSE = str(currPath / ".." / "LICENSE")
 
 # URLs
-HOMEPAGE = "https://gitlab.com/textworker/textworker_py"
+HOMEPAGE = "https://gitlab.com/textworker/legacy-python/textworker"

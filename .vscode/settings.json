@@ -9,5 +9,6 @@
     "files.associations": {
         "*.xrc": "xml",
         "*.fbp": "xml"
-    }
+    },
+    "python.analysis.autoImportCompletions": true
 }

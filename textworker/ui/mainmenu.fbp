@@ -1,34 +1,36 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <wxFormBuilder_Project>
-  <FileVersion major="1" minor="17"/>
+  <FileVersion major="1" minor="18"/>
   <object class="Project" expanded="true">
-    <property name="class_decoration">; </property>
-    <property name="code_generation">XRC</property>
-    <property name="disconnect_events">1</property>
-    <property name="disconnect_mode">source_name</property>
-    <property name="disconnect_php_events">0</property>
-    <property name="disconnect_python_events">0</property>
+    <property name="code_generation">Python</property>
+    <property name="cpp_class_decoration">; </property>
+    <property name="cpp_disconnect_events">1</property>
+    <property name="cpp_event_generation">connect</property>
+    <property name="cpp_help_provider">none</property>
+    <property name="cpp_namespace"></property>
+    <property name="cpp_precompiled_header"></property>
+    <property name="cpp_use_array_enum">0</property>
+    <property name="cpp_use_enum">0</property>
     <property name="embedded_files_path">res</property>
     <property name="encoding">UTF-8</property>
-    <property name="event_generation">connect</property>
-    <property name="file">mainmenu</property>
-    <property name="first_id">1000</property>
-    <property name="help_provider">none</property>
-    <property name="image_path_wrapper_function_name"></property>
-    <property name="indent_with_spaces"></property>
-    <property name="internationalize">0</property>
+    <property name="file">mainmenu_generated</property>
+    <property name="first_id">6000</property>
+    <property name="internationalize">1</property>
+    <property name="lua_skip_events">1</property>
+    <property name="lua_ui_table">UI</property>
     <property name="name">MyProject1</property>
-    <property name="namespace"></property>
     <property name="path">.</property>
-    <property name="precompiled_header"></property>
+    <property name="php_disconnect_events">0</property>
+    <property name="php_disconnect_mode">source_name</property>
+    <property name="php_skip_events">1</property>
+    <property name="python_disconnect_events">0</property>
+    <property name="python_disconnect_mode">source_name</property>
+    <property name="python_image_path_wrapper_function_name"></property>
+    <property name="python_indent_with_spaces"></property>
+    <property name="python_skip_events">1</property>
     <property name="relative_path">1</property>
-    <property name="skip_lua_events">1</property>
-    <property name="skip_php_events">1</property>
-    <property name="skip_python_events">1</property>
-    <property name="ui_table">UI</property>
-    <property name="use_array_enum">0</property>
-    <property name="use_enum">0</property>
     <property name="use_microsoft_bom">0</property>
+    <property name="use_native_eol">0</property>
     <object class="Frame" expanded="true">
       <property name="aui_managed">0</property>
       <property name="aui_manager_style">wxAUI_MGR_DEFAULT</property>
@@ -82,7 +84,7 @@
         <property name="window_style"></property>
         <object class="wxMenu" expanded="true">
           <property name="label">File</property>
-          <property name="name">m_menu1</property>
+          <property name="name">filemenu</property>
           <property name="permission">protected</property>
           <object class="wxMenuItem" expanded="true">
             <property name="bitmap"></property>
@@ -92,22 +94,9 @@
             <property name="id">wxID_ANY</property>
             <property name="kind">wxITEM_NORMAL</property>
             <property name="label">New tab</property>
-            <property name="name">m_menuItem5</property>
+            <property name="name">newtab</property>
             <property name="permission">none</property>
             <property name="shortcut">Ctrl+T</property>
-            <property name="unchecked_bitmap"></property>
-          </object>
-          <object class="wxMenuItem" expanded="true">
-            <property name="bitmap"></property>
-            <property name="checked">0</property>
-            <property name="enabled">1</property>
-            <property name="help"></property>
-            <property name="id">wxID_ANY</property>
-            <property name="kind">wxITEM_NORMAL</property>
-            <property name="label">New window</property>
-            <property name="name">m_menuItem6</property>
-            <property name="permission">none</property>
-            <property name="shortcut">Ctrl+N</property>
             <property name="unchecked_bitmap"></property>
           </object>
           <object class="separator" expanded="true">
@@ -122,7 +111,7 @@
             <property name="id">wxID_OPEN</property>
             <property name="kind">wxITEM_NORMAL</property>
             <property name="label">Open a file</property>
-            <property name="name">m_menuItem7</property>
+            <property name="name">openf</property>
             <property name="permission">none</property>
             <property name="shortcut">Ctrl+O</property>
             <property name="unchecked_bitmap"></property>
@@ -130,7 +119,7 @@
           <object class="submenu" expanded="true">
             <property name="bitmap"></property>
             <property name="label">Open a folder...</property>
-            <property name="name">m_menu21</property>
+            <property name="name">openf_menu</property>
             <property name="permission">protected</property>
             <object class="wxMenuItem" expanded="true">
               <property name="bitmap"></property>
@@ -140,7 +129,7 @@
               <property name="id">wxID_ANY</property>
               <property name="kind">wxITEM_NORMAL</property>
               <property name="label">Open folder</property>
-              <property name="name">m_menuItem8</property>
+              <property name="name">openfd</property>
               <property name="permission">none</property>
               <property name="shortcut">Ctrl+Shift+D</property>
               <property name="unchecked_bitmap"></property>
@@ -153,7 +142,7 @@
               <property name="id">wxID_ANY</property>
               <property name="kind">wxITEM_NORMAL</property>
               <property name="label">Open directory in a new window</property>
-              <property name="name">m_menuItem9</property>
+              <property name="name">openfd_w</property>
               <property name="permission">none</property>
               <property name="shortcut"></property>
               <property name="unchecked_bitmap"></property>
@@ -162,7 +151,7 @@
           <object class="submenu" expanded="true">
             <property name="bitmap"></property>
             <property name="label">Recents</property>
-            <property name="name">m_menu11</property>
+            <property name="name">recents_menu</property>
             <property name="permission">protected</property>
           </object>
           <object class="separator" expanded="true">
@@ -177,7 +166,7 @@
             <property name="id">wxID_SAVE</property>
             <property name="kind">wxITEM_NORMAL</property>
             <property name="label">Save</property>
-            <property name="name">m_menuItem99</property>
+            <property name="name">save</property>
             <property name="permission">none</property>
             <property name="shortcut">Ctrl+S</property>
             <property name="unchecked_bitmap"></property>
@@ -190,7 +179,7 @@
             <property name="id">wxID_SAVEAS</property>
             <property name="kind">wxITEM_NORMAL</property>
             <property name="label">Save as...</property>
-            <property name="name">m_menuItem10</property>
+            <property name="name">save_as</property>
             <property name="permission">none</property>
             <property name="shortcut">Ctrl+Shift+S</property>
             <property name="unchecked_bitmap"></property>
@@ -204,10 +193,10 @@
             <property name="checked">0</property>
             <property name="enabled">1</property>
             <property name="help"></property>
-            <property name="id">wxID_CLOSEALL</property>
+            <property name="id">wxID_ANY</property>
             <property name="kind">wxITEM_NORMAL</property>
             <property name="label">Close all tabs</property>
-            <property name="name">m_menuItem11</property>
+            <property name="name">closeall</property>
             <property name="permission">none</property>
             <property name="shortcut"></property>
             <property name="unchecked_bitmap"></property>
@@ -220,7 +209,7 @@
             <property name="id">wxID_EXIT</property>
             <property name="kind">wxITEM_NORMAL</property>
             <property name="label">Quit</property>
-            <property name="name">m_menuItem12</property>
+            <property name="name">quit</property>
             <property name="permission">none</property>
             <property name="shortcut">Alt+F4</property>
             <property name="unchecked_bitmap"></property>
@@ -228,7 +217,7 @@
         </object>
         <object class="wxMenu" expanded="true">
           <property name="label">Edit</property>
-          <property name="name">m_menu2</property>
+          <property name="name">editmenu</property>
           <property name="permission">protected</property>
           <object class="wxMenuItem" expanded="true">
             <property name="bitmap"></property>
@@ -238,7 +227,7 @@
             <property name="id">wxID_UNDO</property>
             <property name="kind">wxITEM_NORMAL</property>
             <property name="label">Undo</property>
-            <property name="name">m_menuItem13</property>
+            <property name="name">undo</property>
             <property name="permission">none</property>
             <property name="shortcut">Ctrl+Z</property>
             <property name="unchecked_bitmap"></property>
@@ -251,7 +240,7 @@
             <property name="id">wxID_REDO</property>
             <property name="kind">wxITEM_NORMAL</property>
             <property name="label">Redo</property>
-            <property name="name">m_menuItem14</property>
+            <property name="name">redo</property>
             <property name="permission">none</property>
             <property name="shortcut">Ctrl+Y</property>
             <property name="unchecked_bitmap"></property>
@@ -268,7 +257,7 @@
             <property name="id">wxID_CUT</property>
             <property name="kind">wxITEM_NORMAL</property>
             <property name="label">Cut</property>
-            <property name="name">m_menuItem15</property>
+            <property name="name">cut</property>
             <property name="permission">none</property>
             <property name="shortcut">Ctrl+X</property>
             <property name="unchecked_bitmap"></property>
@@ -281,7 +270,7 @@
             <property name="id">wxID_COPY</property>
             <property name="kind">wxITEM_NORMAL</property>
             <property name="label">Copy</property>
-            <property name="name">m_menuItem16</property>
+            <property name="name">copy</property>
             <property name="permission">none</property>
             <property name="shortcut">Ctrl+C</property>
             <property name="unchecked_bitmap"></property>
@@ -294,7 +283,7 @@
             <property name="id">wxID_PASTE</property>
             <property name="kind">wxITEM_NORMAL</property>
             <property name="label">Paste</property>
-            <property name="name">m_menuItem17</property>
+            <property name="name">paste</property>
             <property name="permission">none</property>
             <property name="shortcut">Ctrl+Y</property>
             <property name="unchecked_bitmap"></property>
@@ -311,7 +300,7 @@
             <property name="id">wxID_SELECTALL</property>
             <property name="kind">wxITEM_NORMAL</property>
             <property name="label">Select all</property>
-            <property name="name">m_menuItem18</property>
+            <property name="name">selectall</property>
             <property name="permission">none</property>
             <property name="shortcut">Ctrl+A</property>
             <property name="unchecked_bitmap"></property>
@@ -328,7 +317,7 @@
             <property name="id">wxID_FIND</property>
             <property name="kind">wxITEM_NORMAL</property>
             <property name="label">Find</property>
-            <property name="name">m_menuItem19</property>
+            <property name="name">find</property>
             <property name="permission">none</property>
             <property name="shortcut">Ctrl+F</property>
             <property name="unchecked_bitmap"></property>
@@ -341,7 +330,7 @@
             <property name="id">wxID_REPLACE</property>
             <property name="kind">wxITEM_NORMAL</property>
             <property name="label">Replace</property>
-            <property name="name">m_menuItem20</property>
+            <property name="name">replace</property>
             <property name="permission">none</property>
             <property name="shortcut">Ctrl+R</property>
             <property name="unchecked_bitmap"></property>
@@ -353,7 +342,7 @@
           <object class="submenu" expanded="true">
             <property name="bitmap"></property>
             <property name="label">Auto Save</property>
-            <property name="name">m_menu31</property>
+            <property name="name">autosave</property>
             <property name="permission">protected</property>
             <object class="submenu" expanded="true">
               <property name="bitmap"></property>
@@ -368,7 +357,7 @@
                 <property name="id">wxID_ANY</property>
                 <property name="kind">wxITEM_NORMAL</property>
                 <property name="label">Configure</property>
-                <property name="name">m_menuItem29</property>
+                <property name="name">as_global</property>
                 <property name="permission">none</property>
                 <property name="shortcut"></property>
                 <property name="unchecked_bitmap"></property>
@@ -381,7 +370,7 @@
                 <property name="id">wxID_ANY</property>
                 <property name="kind">wxITEM_CHECK</property>
                 <property name="label">Is turned on?</property>
-                <property name="name">m_menuItem34</property>
+                <property name="name">as_global_tg</property>
                 <property name="permission">none</property>
                 <property name="shortcut"></property>
                 <property name="unchecked_bitmap"></property>
@@ -400,7 +389,7 @@
                 <property name="id">wxID_ANY</property>
                 <property name="kind">wxITEM_NORMAL</property>
                 <property name="label">Configure</property>
-                <property name="name">m_menuItem31</property>
+                <property name="name">as_local</property>
                 <property name="permission">none</property>
                 <property name="shortcut"></property>
                 <property name="unchecked_bitmap"></property>
@@ -413,7 +402,7 @@
                 <property name="id">wxID_ANY</property>
                 <property name="kind">wxITEM_CHECK</property>
                 <property name="label">Is turned on?</property>
-                <property name="name">m_menuItem35</property>
+                <property name="name">as_local_tg</property>
                 <property name="permission">none</property>
                 <property name="shortcut"></property>
                 <property name="unchecked_bitmap"></property>
@@ -423,7 +412,7 @@
         </object>
         <object class="wxMenu" expanded="true">
           <property name="label">View</property>
-          <property name="name">m_menu3</property>
+          <property name="name">viewmenu</property>
           <property name="permission">protected</property>
           <object class="wxMenuItem" expanded="true">
             <property name="bitmap"></property>
@@ -433,7 +422,7 @@
             <property name="id">wxID_ANY</property>
             <property name="kind">wxITEM_NORMAL</property>
             <property name="label">Zoom in</property>
-            <property name="name">m_menuItem21</property>
+            <property name="name">zoomin</property>
             <property name="permission">none</property>
             <property name="shortcut">Ctrl++</property>
             <property name="unchecked_bitmap"></property>
@@ -446,7 +435,7 @@
             <property name="id">wxID_ANY</property>
             <property name="kind">wxITEM_NORMAL</property>
             <property name="label">Zoom out</property>
-            <property name="name">m_menuItem22</property>
+            <property name="name">zoomout</property>
             <property name="permission">none</property>
             <property name="shortcut">Ctrl+-</property>
             <property name="unchecked_bitmap"></property>
@@ -459,7 +448,7 @@
             <property name="id">wxID_ANY</property>
             <property name="kind">wxITEM_CHECK</property>
             <property name="label">Wrap by word</property>
-            <property name="name">m_menuItem23</property>
+            <property name="name">wrap</property>
             <property name="permission">none</property>
             <property name="shortcut">Ctrl+W</property>
             <property name="unchecked_bitmap"></property>
@@ -472,7 +461,7 @@
             <property name="id">wxID_ANY</property>
             <property name="kind">wxITEM_CHECK</property>
             <property name="label">Show indentation guides</property>
-            <property name="name">m_menuItem37</property>
+            <property name="name">showguides</property>
             <property name="permission">none</property>
             <property name="shortcut"></property>
             <property name="unchecked_bitmap"></property>
@@ -485,7 +474,7 @@
             <property name="id">wxID_ANY</property>
             <property name="kind">wxITEM_NORMAL</property>
             <property name="label">View document as a HTML page</property>
-            <property name="name">m_menuItem28</property>
+            <property name="name">preview</property>
             <property name="permission">none</property>
             <property name="shortcut"></property>
             <property name="unchecked_bitmap"></property>
@@ -493,7 +482,7 @@
         </object>
         <object class="wxMenu" expanded="true">
           <property name="label">Settings</property>
-          <property name="name">m_menu4</property>
+          <property name="name">settingsmenu</property>
           <property name="permission">protected</property>
           <object class="wxMenuItem" expanded="true">
             <property name="bitmap"></property>
@@ -503,7 +492,7 @@
             <property name="id">wxID_PREFERENCES</property>
             <property name="kind">wxITEM_NORMAL</property>
             <property name="label">Settings...</property>
-            <property name="name">m_menuItem24</property>
+            <property name="name">settings</property>
             <property name="permission">none</property>
             <property name="shortcut">Ctrl+P</property>
             <property name="unchecked_bitmap"></property>
@@ -516,7 +505,7 @@
             <property name="id">wxID_RESET</property>
             <property name="kind">wxITEM_NORMAL</property>
             <property name="label">Reset everything</property>
-            <property name="name">m_menuItem25</property>
+            <property name="name">reset</property>
             <property name="permission">none</property>
             <property name="shortcut"></property>
             <property name="unchecked_bitmap"></property>
@@ -529,7 +518,7 @@
             <property name="id">wxID_ANY</property>
             <property name="kind">wxITEM_NORMAL</property>
             <property name="label">Open the configuration directory</property>
-            <property name="name">m_menuItem26</property>
+            <property name="name">opencfg</property>
             <property name="permission">none</property>
             <property name="shortcut"></property>
             <property name="unchecked_bitmap"></property>
@@ -537,7 +526,7 @@
         </object>
         <object class="wxMenu" expanded="true">
           <property name="label">Help</property>
-          <property name="name">m_menu5</property>
+          <property name="name">helpmenu</property>
           <property name="permission">protected</property>
           <object class="wxMenuItem" expanded="true">
             <property name="bitmap"></property>
@@ -547,7 +536,7 @@
             <property name="id">wxID_ABOUT</property>
             <property name="kind">wxITEM_NORMAL</property>
             <property name="label">About</property>
-            <property name="name">m_menuItem1</property>
+            <property name="name">about</property>
             <property name="permission">none</property>
             <property name="shortcut"></property>
             <property name="unchecked_bitmap"></property>
@@ -560,7 +549,7 @@
             <property name="id">wxID_ANY</property>
             <property name="kind">wxITEM_NORMAL</property>
             <property name="label">System specs</property>
-            <property name="name">m_menuItem2</property>
+            <property name="name">sysspecs</property>
             <property name="permission">none</property>
             <property name="shortcut"></property>
             <property name="unchecked_bitmap"></property>
@@ -573,7 +562,7 @@
             <property name="id">wxID_ANY</property>
             <property name="kind">wxITEM_NORMAL</property>
             <property name="label">Show logs</property>
-            <property name="name">m_menuItem36</property>
+            <property name="name">logs</property>
             <property name="permission">none</property>
             <property name="shortcut"></property>
             <property name="unchecked_bitmap"></property>
@@ -586,7 +575,7 @@
             <property name="id">wxID_ANY</property>
             <property name="kind">wxITEM_NORMAL</property>
             <property name="label">Show inspector</property>
-            <property name="name">m_menuItem351</property>
+            <property name="name">showinsp</property>
             <property name="permission">none</property>
             <property name="shortcut">F6</property>
             <property name="unchecked_bitmap"></property>
@@ -603,7 +592,7 @@
             <property name="id">wxID_ANY</property>
             <property name="kind">wxITEM_NORMAL</property>
             <property name="label">Report issues...</property>
-            <property name="name">m_menuItem3</property>
+            <property name="name">report</property>
             <property name="permission">none</property>
             <property name="shortcut"></property>
             <property name="unchecked_bitmap"></property>
@@ -616,7 +605,7 @@
             <property name="id">wxID_ANY</property>
             <property name="kind">wxITEM_NORMAL</property>
             <property name="label">Read documents</property>
-            <property name="name">m_menuItem4</property>
+            <property name="name">docs</property>
             <property name="permission">none</property>
             <property name="shortcut"></property>
             <property name="unchecked_bitmap"></property>

@@ -1,11 +1,21 @@
 This contains shortened version of textworker changelogs.
 
+### 1.6
+- Fixed some small bugs
+- Improved building scripts
+- Updated translations
+- wxFormBuilder projects now generated Python files
+- Reorganized all UI files (dialogs, windows etc)
+- Merge Tabber, FileOperations together
+- Are assets in data/ available after the 1.6dev1 release?
+
 ### 1.6dev1
 * New:
 - Redesigned about dialog
 - Added wxPython's inspector window
 - Preferences page
 - App updates
+
 * Updates
 - Use libtextworker 0.1.4
 - App logos have been embedded using img2py

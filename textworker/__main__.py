@@ -4,18 +4,19 @@ import sys
 import wx
 
 from textworker import generic
+from textwrap import dedent
 
 ignore_not_exists: bool
 create_new: bool
 
 parser = argparse.ArgumentParser(sys.argv[0],
-                                 description = \
-    """
-    A simple, cross-platform text editor.\n
-    (C) 2022-2024 Le Bao Nguyen and contributors.\n
-    Read documents online: https://lebao3105.gitbook.io/texteditor_doc\n
-    Where the source code goes: https://github.com/lebao3105/texteditor
-    """)
+                                 description =
+"""
+A simple, cross-platform text editor.\n
+(C) 2022-2024 Le Bao Nguyen and contributors.\n
+Read documents online: https://lebao3105.gitbook.io/texteditor_doc\n
+Where the source code goes: https://github.com/lebao3105/texteditor\n
+""")
 parser.add_argument("paths", nargs="*", help="paths to be used (files/folders)")
 
 # Flags

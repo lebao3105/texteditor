@@ -9,15 +9,13 @@ import wx.xrc
 
 from libtextworker.general import CraftItems
 from libtextworker.interface.manager import AUTOCOLOR, ColorManager
-from libtextworker.interface.wx.miscs import localizePy
 
 from markdown2 import markdown
 
-from . import _
+from .. import _
 from .. import __version__, branch
 from ..generic import *
-
-preferences = localizePy(CraftItems(UIRC_DIR, "preferences.py"), "from textworker import _")
+from . import preferences_generated as preferences
 
 class SettingsDialog(preferences.StDialog):
     """

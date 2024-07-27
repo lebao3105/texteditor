@@ -7,34 +7,34 @@ UI2PY = wxformbuilder
 GT = xgettext
 MSF = msgfmt
 MSM = msgmerge
-XRC2GT = pywxrc # Change it to wxrc if you want (not tested)
 
 # Project infomations
-UIFILES = $(wildcard textworker/ui/*.fbp)
-XRCFILES = $(wildcard textworker/ui/*.xrc)
+FBPFILES = $(wildcard textworker/ui/*.fbp)
+GENERATED_FILES = $(wildcard textworker/ui/*_generated.py)
 LOCALES = vi # Language codes, separated using spaces
 POFILES = # Make later
+EMBEDIMG_WHERE = -d $(DATAPATH)
+ifeq ($(DATAPATH),)
+EMBEDIMG_WHERE =
+endif
 
 # Targets
-.PHONY: all genui maketrans makepot genmo $(UIFILES) $(LOCALES) build install icons splash assets
+.PHONY: all genui maketrans makepot genmo $(FBPFILES) $(LOCALES) build install icons splash assets
 
-all: clean icons splash assets build
+all: clean genui icons splash assets build
 
-## Generate .py and .xrc
-genui: $(UIFILES)
+## Generate .py
+genui: $(FBPFILES)
 
-$(UIFILES):
+$(FBPFILES):
 	$(UI2PY) -g $@
 
 ## Generate translations
 maketrans: makepot genmo
 
-makepot: genui
+makepot:
 	@echo "[Translations] Making templates..."
 	$(GT) --language=python -f po/POTFILES -d textworker -o po/textworker.pot
-
-$(XRCFILES):
-	$(XRC2GT) -g $@ -o po/
 
 genmo: $(LOCALES)
 $(LOCALES):
@@ -59,20 +59,21 @@ install: maketrans
 ## Build
 build: maketrans
 	$(pip) install build
-	$(python3) -m build .
+	$(python3) -m build
+
 
 ## Generate icons
 icons:
-	$(python) embedimgs.py -t icons -d $(DATAPATH)
+	$(python) embedimgs.py -t icons $(EMBEDIMG_WHERE)
 
 ## Generate splash screen (both light and dark mode)
 splash:
-	$(python) embedimgs.py -t splash -d $(DATAPATH)
+	$(python) embedimgs.py -t splash $(EMBEDIMG_WHERE)
 
 ## Generate assets (finally!)
 assets:
 	$(python) embedimgs.py -t assets
 
 ## Clean
-clean: $(wildcard po/*/LC_MESSAGES) textworker/ui/preferences.py $(wildcard data/*.png)
+clean: $(wildcard po/*/LC_MESSAGES) $(wildcard textworker/ui/*_generated.py) $(wildcard data/*.png)
 	rm -rf $?

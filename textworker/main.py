@@ -1,40 +1,36 @@
 import os
 import sys
+import textworker
 import traceback
 import wx
 
-import textworker
-import textworker.icon
-import textworker.splash
-
+from textworker import _
+from textworker.splash import splash
+from textworker.icons import icon
 from textworker.generic import logger, ready
 from wx.lib.agw.advancedsplash import AdvancedSplash, AS_TIMEOUT, AS_CENTER_ON_SCREEN
 
 ignore_not_exists: bool = False
 create_new: bool = False
 
-def _file_not_found(filename):
-    if ignore_not_exists:
-        return wx.ID_CANCEL
-    
-    if create_new:
-        return wx.ID_YES
-    
-    return wx.MessageDialog(None,
-                            textworker._("Cannot find file name %s - create it?") % filename,
-                            textworker._("File not found"), wx.YES_NO | wx.ICON_INFORMATION).ShowModal()
 
 def start_app(files: list[str], directory: list[str], showsplash: bool):
+
+    def _file_not_found(filename):
+        if ignore_not_exists: return wx.ID_CANCEL
+        
+        if create_new: return wx.ID_YES
+        
+        return wx.MessageBox(_("Cannot find file name %s - create it?") % filename,
+                             _("File not found"), wx.YES_NO | wx.ICON_INFORMATION, fm)
 
     if files: logger.info("Passed files: ", " ".join(files))
 
     ready()
 
-    textworker.ICON = getattr(textworker.icon, textworker.branch).GetIcon()
-    from .mainwindow import MainFrame
+    textworker.ICON = icon.GetIcon()
+    from .ui.mainwindow import MainFrame
 
-    fm = MainFrame()
-    fm.mainFrame.SetIcon(textworker.ICON)
 
     if len(files) >= 1:
         nb = fm.notebook
@@ -55,7 +51,7 @@ def start_app(files: list[str], directory: list[str], showsplash: bool):
                 nb.DeletePage(nb.GetSelection())
                 raise e
             else:
-                nb.fileops.OpenFile(files[i])
+                nb.OpenFile(files[i])
 
     for path in directory: fm.OpenDir(None, path)
 
@@ -64,32 +60,33 @@ def start_app(files: list[str], directory: list[str], showsplash: bool):
 
         is_admin = ctypes.windll.shell32.IsUserAnAdmin()
     else:
-        is_admin = os.getuid() == 0
+        is_admin = (os.getuid() == 0)
 
     if is_admin:
-        wx.MessageBox(textworker._("You are running this program as root.\n"
+        wx.MessageBox(_("You are running this program as root.\n"
                                    "You must be responsible for your changes."),
                       style=wx.OK | wx.ICON_WARNING,
-                      parent=fm.mainFrame)
+                      parent=fm)
+    del is_admin
 
     exchook = sys.excepthook
     def handleexc(exc_type, value, traceb):
         trace_back = traceback.extract_tb(traceb)
 
-        dlg = wx.Dialog(fm.mainFrame, title=textworker._("Exception caught"),
+        dlg = wx.Dialog(None, title=_("Exception caught"),
                         style=wx.DEFAULT_DIALOG_STYLE)
         box = wx.BoxSizer(wx.VERTICAL)
         box.Add(wx.StaticText(dlg, -1,
-                              textworker._("An error occured and textworker caught it:\n"
-                                           f"Exception type: {exc_type.__name__}\n"
-                                           f"Exception message: {value}\n")),
+                              _("An error occured and textworker caught it:\n"
+                                f"Exception type: {exc_type.__name__}\n"
+                                f"Exception message: {value}\n")),
                 0, wx.ALIGN_CENTER | wx.TOP, 10)
         
         boxInfo = wx.ListCtrl(dlg, style=wx.LC_REPORT | wx.SUNKEN_BORDER)
-        boxInfo.InsertColumn(0, textworker._("File"))
-        boxInfo.InsertColumn(1, textworker._("Line"))
-        boxInfo.InsertColumn(2, textworker._("Function"))
-        boxInfo.InsertColumn(3, textworker._("Called code"))
+        boxInfo.InsertColumn(0, _("File"))
+        boxInfo.InsertColumn(1, _("Line"))
+        boxInfo.InsertColumn(2, _("Function"))
+        boxInfo.InsertColumn(3, _("Called code"))
         
         for x in range(len(trace_back)):
             data = trace_back[x]
@@ -116,9 +113,19 @@ def start_app(files: list[str], directory: list[str], showsplash: bool):
 
     sys.excepthook = handleexc
 
+    # https://stackoverflow.com/a/27872625
+    if sys.platform == "win32":
+        import ctypes
+
+        myappid = "me.lebao3105.textworker"
+        ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(myappid)
+
+    fm = MainFrame()
+    fm.SetIcon(textworker.ICON)
+
     if showsplash:
-        AdvancedSplash(fm.mainFrame, bitmap=getattr(textworker.splash, textworker.branch).GetBitmap(),
-                       timeout=5000, agwStyle=AS_TIMEOUT | AS_CENTER_ON_SCREEN)
-        wx.CallLater(5000, fm.Show).Start() # Prevent the frame to show at the same time with the splash
+        AdvancedSplash(fm, bitmap=splash.GetBitmap(), timeout=5000,
+                       agwStyle=AS_TIMEOUT | AS_CENTER_ON_SCREEN)
+        wx.CallLater(5000, fm.Show).Start()
     else:
         fm.Show()

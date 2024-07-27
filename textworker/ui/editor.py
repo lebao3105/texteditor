@@ -4,11 +4,11 @@ import wx.stc
 
 from libtextworker.interface.wx.editor import StyledTextControl
 
-from .extensions.autosave import AutoSave, AutoSaveConfig
-from .generic import editorCfg
+from .autosave import AutoSave, AutoSaveConfig
+from ..generic import editorCfg
 
 
-class Editor(StyledTextControl, AutoSave, AutoSaveConfig):
+class Editor(StyledTextControl, AutoSave):
 
     def __init__(this, *args, **kwds):
         this.Function = this.SaveFile
@@ -16,7 +16,9 @@ class Editor(StyledTextControl, AutoSave, AutoSaveConfig):
 
         StyledTextControl.__init__(this, *args, **kwds)
         AutoSave.__init__(this)
-        AutoSaveConfig.__init__(this, this)
+
+        this.asDlg = AutoSaveConfig(this)
+        this.asDlg.OnChoiceSelected = this.OnChoiceSelected
 
         this.cfg = editorCfg
 
@@ -31,11 +33,11 @@ class Editor(StyledTextControl, AutoSave, AutoSaveConfig):
         this.SetWrapMode(this.cfg.getkey("editor", "wordwrap") in this.cfg.yes_values)
 
     # AutoSaveConfig
-    def ConfigWindow(this):
-        wx.xrc.XRCCTRL(this.Dialog, "m_checkBox1", "wxCheckBox").Hide()
-        AutoSaveConfig.ConfigWindow(this)
+    def ASConfig(this):
+        this.asDlg.ChkBox.Hide()
+        this.asDlg.ConfigWindow(this)
 
     def OnChoiceSelected(this, evt):
-        value = this.Cmb.GetValue()
+        value = this.asDlg.Cmb.GetValue()
         if value:
-            this.Start(this.timealiases[value])
+            this.Start(this.asDlg.timealiases[value])
