@@ -64,15 +64,15 @@ build: maketrans
 
 ## Generate icons
 icons:
-	$(python) embedimgs.py -t icons $(EMBEDIMG_WHERE)
+	$(python3) embedimgs.py -t icons $(EMBEDIMG_WHERE)
 
 ## Generate splash screen (both light and dark mode)
 splash:
-	$(python) embedimgs.py -t splash $(EMBEDIMG_WHERE)
+	$(python3) embedimgs.py -t splash $(EMBEDIMG_WHERE)
 
 ## Generate assets (finally!)
 assets:
-	$(python) embedimgs.py -t assets
+	$(python3) embedimgs.py -t assets
 
 ## Clean
 clean: $(wildcard po/*/LC_MESSAGES) $(wildcard textworker/ui/*_generated.py) $(wildcard data/*.png)

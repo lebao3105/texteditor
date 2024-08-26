@@ -27,10 +27,10 @@ class Editor(StyledTextControl, AutoSave):
         this.DNDSupport()
         this.IndentationSet()
 
-        if this.cfg.getkey("menu", "enabled") in this.cfg.yes_values:
+        if this.cfg.Get("menu", "enabled") in this.cfg.yes_values:
             this.Bind(wx.EVT_RIGHT_DOWN, this.MenuPopup)
 
-        this.SetWrapMode(this.cfg.getkey("editor", "wordwrap") in this.cfg.yes_values)
+        this.SetWrapMode(this.cfg.Get("editor", "wordwrap") in this.cfg.yes_values)
 
     # AutoSaveConfig
     def ASConfig(this):

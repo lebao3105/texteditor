@@ -11,7 +11,7 @@ from .editor import Editor
 from ..generic import global_settings, clrCall
 from .auistyles import AuiFlatTabArt
 
-searchdir = global_settings.getkey("editor", "searchdir", noraiseexp=True, make=True)
+searchdir = global_settings.Get("editor", "searchdir", noraiseexp=True, make=True)
 if not os.path.isdir(searchdir):
     searchdir = os.path.expanduser("~/Documents")
 

@@ -73,7 +73,7 @@ class SettingsDialog(preferences.StDialog):
         colors = {_("Dark"): 1, _("Light"): 2} # Corresponding to the XRC file
 
         this.m_radioBox1.SetSelection(0 if this.AUTOCOLOR_CHANGE
-                                        else colors[_(clrCall.getkey("color", "background").capitalize())])
+                                        else colors[_(clrCall.Get("color", "background").capitalize())])
         
 
         this.Bind(wx.EVT_RADIOBOX, lambda evt: this.apply_color(this.m_radioBox1.GetStringSelection()), this.m_radioBox1)
@@ -122,13 +122,13 @@ class SettingsDialog(preferences.StDialog):
 
         indentationTypes = ["tabs", "spaces"]
 
-        this.m_choice1.SetSelection(indentationTypes.index(editorCfg.getkey("indentation", "type").lower()))
-        this.m_comboBox1.SetValue(editorCfg.getkey("indentation", "size"))
-        this.m_checkBox3.SetValue(editorCfg.getkey("indentation", "backspace_unindents"))
-        this.m_checkBox6.SetValue(editorCfg.getkey("indentation", "show_guide"))
-        this.m_checkBox4.SetValue(editorCfg.getkey("editor", "view_whitespaces"))
-        this.m_checkBox5.SetValue(editorCfg.getkey("editor", "viewEOL"))
-        this.m_checkBox7.SetValue(editorCfg.getkey("editor", "line_count"))
+        this.m_choice1.SetSelection(indentationTypes.index(editorCfg.Get("indentation", "type").lower()))
+        this.m_comboBox1.SetValue(editorCfg.Get("indentation", "size"))
+        this.m_checkBox3.SetValue(editorCfg.Get("indentation", "backspace_unindents"))
+        this.m_checkBox6.SetValue(editorCfg.Get("indentation", "show_guide"))
+        this.m_checkBox4.SetValue(editorCfg.Get("editor", "view_whitespaces"))
+        this.m_checkBox5.SetValue(editorCfg.Get("editor", "viewEOL"))
+        this.m_checkBox7.SetValue(editorCfg.Get("editor", "line_count"))
 
         for item in os.listdir(EDITOR_DIR):
             this.m_choice31.Append(item)

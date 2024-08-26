@@ -41,8 +41,8 @@ DATA_PATH: str = str(currPath / "data")
 UIRC_DIR: str = str(currPath / "ui")
 
 def find_resource(t: typing.Literal["ui", "editor"]) -> str:
-    _name = global_settings.getkey(f'config-paths.{t}', 'name' if t == "editor" else "theme", True, True, True, True)
-    _path = global_settings.getkey(f'config-paths.{t}', 'path', True, True, True, True)
+    _name = global_settings.Get(f'config-paths.{t}', 'name' if t == "editor" else "theme", True, True, True, True)
+    _path = global_settings.Get(f'config-paths.{t}', 'path', True, True, True, True)
 
     _name += ".ini"
 

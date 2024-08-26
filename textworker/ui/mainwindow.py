@@ -140,7 +140,7 @@ class MainFrame(mainmenu_generated.mainFrame):
                            (this.ShowMarkdown, this.preview)]
 
         this.wrap.Check(
-            this.notebook.GetCurrentPage().cfg.getkey(
+            this.notebook.GetCurrentPage().cfg.Get(
                 "editor", "wordwrap", True, True, True
             ) in global_settings.yes_values
         )

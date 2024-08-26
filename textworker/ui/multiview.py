@@ -5,7 +5,7 @@ from ..generic import global_settings, clrCall
 
 class MultiViewer:
     def __init__(this, parent):
-        location = global_settings.getkey(
+        location = global_settings.Get(
             "extensions.textwkr.multiview", "notebook_location", needed=True
         )
         nbside = getattr(wx, f"NB_{location.upper()}")
